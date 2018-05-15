@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="athleticsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="alertnessLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="actingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="dodgeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="burglaryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="brawlLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="leadershipLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="empathyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="subterfugeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="intimidationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                      <Component id="burglaryField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="dodgeField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="athleticsField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="brawlField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="alertnessField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="actingField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="leadershipField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="empathyField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="intimidationField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="subterfugeField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="talentsLabel" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="talentsPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="talentsMaxPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="83" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="talentsWeightingComboBox" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="meleeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rideLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="survivalLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="stealthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="herbalismLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="etiquetteLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="animalKenLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="archeryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="craftsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="musicLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="98" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="archeryField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="survivalField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="craftsField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                      <Component id="herbalismField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="meleeField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="etiquetteField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="stealthField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="musicField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="rideField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="animalKenField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="skillsLabel" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+                      <Component id="skillsPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="skillsMaxPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                      <Component id="skillsWeightingComboBox" min="-2" pref="90" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="occultLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="scienceLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="medicineLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="politicsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="investigationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="linguisticsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lawLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="folkloreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="administrationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="academicKnowledgeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="30" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                  <Component id="administrationField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="folkloreField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="lawField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="linguisticsField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="investigationField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="politicsField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="medicineField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="scienceField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="occultField" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="academicKnowledgeField" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="knowledgesPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="knowledgesMaxPointsTextField" min="-2" pref="30" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="knowledgesLabel" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="knowledgesWeightingComboBox" min="-2" pref="90" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="backButton" min="-2" pref="80" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="nextButton" min="-2" pref="80" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="talentsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="skillsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="knowledgesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="academicKnowledgeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="academicKnowledgeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="talentsWeightingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="skillsWeightingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="knowledgesWeightingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="actingField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="actingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="animalKenLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="animalKenField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="alertnessField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="alertnessLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="archeryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="archeryField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="administrationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="administrationField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="athleticsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="athleticsField" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="craftsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="craftsField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="folkloreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="folkloreField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="brawlField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="brawlLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="etiquetteLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="etiquetteField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="investigationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lawField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="burglaryField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="burglaryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="herbalismLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="herbalismField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lawLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="linguisticsField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="dodgeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dodgeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="meleeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="meleeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="linguisticsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="medicineField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="empathyField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="empathyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="musicLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="musicField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="medicineLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="investigationField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="intimidationField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="intimidationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rideField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="occultLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="occultField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="leadershipField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="leadershipLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="stealthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="stealthField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="politicsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="politicsField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="subterfugeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="subterfugeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="survivalLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="survivalField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scienceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scienceField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="skillsPointsTextField" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="skillsMaxPointsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="knowledgesPointsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="knowledgesMaxPointsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="talentsPointsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="talentsMaxPointsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="backButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JSpinner" name="alertnessField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(alertnessField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="athleticsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Athletics"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="skillsWeightingComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DefaultComboBoxModel(Weighting.values())" type="code"/>
+        </Property>
+        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="1" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="skillsWeightingComboBoxActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="knowledgesWeightingComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DefaultComboBoxModel(Weighting.values())" type="code"/>
+        </Property>
+        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="2" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="knowledgesWeightingComboBoxActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="talentsPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="talentsMaxPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="13"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="meleeField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(meleeField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="skillsPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="skillsPointsTextFieldActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="etiquetteField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(etiquetteField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="skillsMaxPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="9"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="herbalismLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Herbalism"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="knowledgesPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="rideField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(rideField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="knowledgesMaxPointsTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="3"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="musicLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Music"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="backButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Back"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="stealthLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stealth"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="nextButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Next"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="stealthField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(stealthField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="athleticsField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(athleticsField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="craftsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Crafts"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="talentsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Talents"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="musicField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(musicField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="skillsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Skills"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="rideLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ride"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="knowledgesLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Knowledges"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="actingLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Acting"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="burglaryField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(burglaryField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="brawlLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Brawl"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="dodgeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Dodge"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="dodgeField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(dodgeField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="brawlField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(brawlField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="survivalLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Survival"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="craftsField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(craftsField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="survivalField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(survivalField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="animalKenLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Animal Ken"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="herbalismField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(herbalismField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="etiquetteLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Etiquette"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="meleeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Melee"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="animalKenField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(animalKenField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="archeryLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Archery"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="administrationField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(administrationField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="linguisticsField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(linguisticsField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="investigationField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(investigationField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lawLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Law"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="occultField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(occultField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="medicineLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Medicine"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="politicsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Politics"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="politicsField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(politicsField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="folkloreLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Folklore"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="medicineField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(medicineField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="occultLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Occult"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="scienceLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Science"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="folkloreField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(folkloreField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="scienceField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(scienceField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="academicKnowledgeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Academic knowledge"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="burglaryLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Burglary"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="lawField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(lawField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="intimidationField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(intimidationField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="investigationLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Investigation"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="empathyLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Empathy"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="linguisticsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Linguistics"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="leadershipLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Leadership"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="academicKnowledgeField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(academicKnowledgeField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="leadershipField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(leadershipField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="administrationLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Administration"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="empathyField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(empathyField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="talentsWeightingComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DefaultComboBoxModel(Weighting.values())" type="code"/>
+        </Property>
+        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="0" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="talentsWeightingComboBoxActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="intimidationLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Intimidation"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="subterfugeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Subterfuge"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="subterfugeField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(subterfugeField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="archeryField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(archeryField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="actingField">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.addChangeListener(actingField);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="alertnessLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Alertness"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

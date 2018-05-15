@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<generations>
+	<generation value="3">
+		<maximumAttributes>10</maximumAttributes>
+		<maximumBloodStock>-1</maximumBloodStock>
+		<bloodPerRound>-1</bloodPerRound>
+	</generation>
+	<generation value="4">
+		<maximumAttributes>9</maximumAttributes>
+		<maximumBloodStock>50</maximumBloodStock>
+		<bloodPerRound>10</bloodPerRound>
+	</generation>
+	<generation value="5">
+		<maximumAttributes>8</maximumAttributes>
+		<maximumBloodStock>40</maximumBloodStock>
+		<bloodPerRound>8</bloodPerRound>
+	</generation>
+	<generation value="6">
+		<maximumAttributes>7</maximumAttributes>
+		<maximumBloodStock>30</maximumBloodStock>
+		<bloodPerRound>6</bloodPerRound>
+	</generation>
+	<generation value="7">
+		<maximumAttributes>6</maximumAttributes>
+		<maximumBloodStock>20</maximumBloodStock>
+		<bloodPerRound>5</bloodPerRound>
+	</generation>
+	<generation value="8">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>15</maximumBloodStock>
+		<bloodPerRound>3</bloodPerRound>
+	</generation>
+	<generation value="9">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>14</maximumBloodStock>
+		<bloodPerRound>2</bloodPerRound>
+	</generation>
+	<generation value="10">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>13</maximumBloodStock>
+		<bloodPerRound>1</bloodPerRound>
+	</generation>
+	<generation value="11">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>12</maximumBloodStock>
+		<bloodPerRound>1</bloodPerRound>
+	</generation>
+	<generation value="12">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>11</maximumBloodStock>
+		<bloodPerRound>1</bloodPerRound>
+	</generation>
+	<generation value="13">
+		<maximumAttributes>5</maximumAttributes>
+		<maximumBloodStock>10</maximumBloodStock>
+		<bloodPerRound>1</bloodPerRound>
+	</generation>
+</generations>

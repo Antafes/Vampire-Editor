@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<advantages>
+	<advantage key="allies">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Allies</English>
+            <German>Verbündete</German>
+        </name>
+	</advantage>
+	<advantage key="contacts">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Contacts</English>
+            <German>Kontakte</German>
+        </name>
+	</advantage>
+	<advantage key="generation">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Generation</English>
+            <German>Generation</German>
+        </name>
+	</advantage>
+	<advantage key="herd">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Herd</English>
+            <German>Herde</German>
+        </name>
+	</advantage>
+	<advantage key="influence">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Influence</English>
+            <German>Einfluss</German>
+        </name>
+	</advantage>
+	<advantage key="mentor">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Mentor</English>
+            <German>Mentor</German>
+        </name>
+	</advantage>
+	<advantage key="resources">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Resources</English>
+            <German>Ressourcen</German>
+        </name>
+	</advantage>
+	<advantage key="retainers">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Retainers</English>
+            <German>Gefolgsleute</German>
+        </name>
+	</advantage>
+	<advantage key="status">
+		<type>BACKGROUND</type>
+		<name>
+            <English>Status</English>
+            <German>Status</German>
+        </name>
+	</advantage>
+	<advantage key="animalism">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Animalism</English>
+            <German>Tierhaftigkeit</German>
+        </name>
+	</advantage>
+	<advantage key="auspex">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Auspex</English>
+            <German>Auspex</German>
+        </name>
+	</advantage>
+	<advantage key="celerity">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Celerity</English>
+            <German>Geschwindigkeit</German>
+        </name>
+	</advantage>
+	<advantage key="chimerstry">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Chimerstry</English>
+            <German>Schimären</German>
+        </name>
+	</advantage>
+	<advantage key="dementation">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Dementation</English>
+            <German>Irrsinn</German>
+        </name>
+	</advantage>
+	<advantage key="dominate">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Dominate</English>
+            <German>Beherrschung</German>
+        </name>
+	</advantage>
+	<advantage key="fortitude">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Fortitude</English>
+            <German>Seelenstärke</German>
+        </name>
+	</advantage>
+	<advantage key="mortis">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Mortis</English>
+            <German>Mortis</German>
+        </name>
+	</advantage>
+	<advantage key="obfuscate">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Obfuscate</English>
+            <German>Verdunkelung</German>
+        </name>
+	</advantage>
+	<advantage key="potence">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Potence</English>
+            <German>Stärke</German>
+        </name>
+	</advantage>
+	<advantage key="presence">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Presence</English>
+            <German>Präsenz</German>
+        </name>
+	</advantage>
+	<advantage key="protean">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Protean</English>
+            <German>Gestaltwandel</German>
+        </name>
+	</advantage>
+	<advantage key="quietus">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Quietus</English>
+            <German>Quietus</German>
+        </name>
+	</advantage>
+	<advantage key="serpentis">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Serpentis</English>
+            <German>Serpentis</German>
+        </name>
+	</advantage>
+	<advantage key="thaumaturgy">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Thaumaturgy</English>
+            <German>Thaumaturgie</German>
+        </name>
+	</advantage>
+	<advantage key="vicissitude">
+		<type>DISCIPLIN</type>
+		<name>
+            <English>Vicissitude</English>
+            <German>Fleischformen</German>
+        </name>
+	</advantage>
+	<advantage key="conscience">
+		<type>VIRTUE</type>
+		<name>
+            <English>Conscience</English>
+            <German>Gewissen</German>
+        </name>
+	</advantage>
+	<advantage key="courage">
+		<type>VIRTUE</type>
+		<name>
+            <English>Courage</English>
+            <German>Mut</German>
+        </name>
+	</advantage>
+	<advantage key="self-control">
+		<type>VIRTUE</type>
+		<name>
+            <English>Self-control</English>
+            <German>Selbstbeherrschung</German>
+        </name>
+	</advantage>
+</advantages>
