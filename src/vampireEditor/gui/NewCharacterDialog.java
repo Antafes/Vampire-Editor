@@ -23,18 +23,12 @@ package vampireEditor.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatter;
 import vampireEditor.Configuration;
 import vampireEditor.language.LanguageInterface;
 
@@ -50,6 +44,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private LooksPanel looksPanel;
     private AttributesPanel attributesPanel;
     private AbilitiesPanel abilitiesPanel;
+    private BenefitsPanel benefitsPanel;
 
     /**
      * Creates new form NewCharacterDialog
@@ -87,12 +82,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         backgroundGroupTemplate = new javax.swing.ButtonGroup();
         cancelButton = new javax.swing.JButton();
         characterTabPane = new javax.swing.JTabbedPane();
-        benefitsPanel = new javax.swing.JPanel();
-        benefitsBackButton = new javax.swing.JButton();
-        benefitsNextButton = new javax.swing.JButton();
-        talentsLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        actingField1 = new javax.swing.JSpinner();
         freeAdditionalPointsTextField = new javax.swing.JTextField();
         freeAdditionalMaxPointsTextField = new javax.swing.JTextField();
         freeAdditionalPointsLabel = new javax.swing.JLabel();
@@ -113,67 +102,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.add(this.attributesPanel);
         this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
         characterTabPane.add(this.abilitiesPanel);
-
-        benefitsBackButton.setText("Back");
-        benefitsBackButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                benefitsBackButtonActionPerformed(evt);
-            }
-        });
-
-        benefitsNextButton.setText("Next");
-        benefitsNextButton.setEnabled(false);
-        benefitsNextButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                benefitsNextButtonActionPerformed(evt);
-            }
-        });
-
-        talentsLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        talentsLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        talentsLabel1.setText("Background");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        actingField1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-
-        javax.swing.GroupLayout benefitsPanelLayout = new javax.swing.GroupLayout(benefitsPanel);
-        benefitsPanel.setLayout(benefitsPanelLayout);
-        benefitsPanelLayout.setHorizontalGroup(
-            benefitsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(benefitsPanelLayout.createSequentialGroup()
-                .addComponent(talentsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, benefitsPanelLayout.createSequentialGroup()
-                .addContainerGap(386, Short.MAX_VALUE)
-                .addComponent(benefitsBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(benefitsNextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(benefitsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(actingField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        benefitsPanelLayout.setVerticalGroup(
-            benefitsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, benefitsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(talentsLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(benefitsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(actingField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 352, Short.MAX_VALUE)
-                .addGroup(benefitsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(benefitsNextButton)
-                    .addComponent(benefitsBackButton))
-                .addContainerGap())
-        );
-
-        characterTabPane.addTab("Benefits", benefitsPanel);
+        this.benefitsPanel = new BenefitsPanel(this, this.configuration);
+        characterTabPane.add(this.benefitsPanel);
 
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
@@ -224,14 +154,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void benefitsBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_benefitsBackButtonActionPerformed
-        this.characterTabPane.setSelectedComponent(this.abilitiesPanel);
-    }//GEN-LAST:event_benefitsBackButtonActionPerformed
-
-    private void benefitsNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_benefitsNextButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_benefitsNextButtonActionPerformed
-
     /**
      * Set the maximum value for the attribute spinners.
      *
@@ -277,6 +199,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.characterTabPane.setTitleAt(0, this.language.translate("looks"));
         this.characterTabPane.setTitleAt(1, this.language.translate("attributes"));
         this.characterTabPane.setTitleAt(2, this.language.translate("abilities"));
+        this.characterTabPane.setTitleAt(3, this.language.translate("benefits"));
     }
 
     /**
@@ -508,18 +431,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner actingField1;
     private javax.swing.ButtonGroup backgroundGroupTemplate;
-    private javax.swing.JButton benefitsBackButton;
-    private javax.swing.JButton benefitsNextButton;
-    private javax.swing.JPanel benefitsPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTabbedPane characterTabPane;
     private javax.swing.JTextField freeAdditionalMaxPointsTextField;
     private javax.swing.JLabel freeAdditionalPointsLabel;
     private javax.swing.JTextField freeAdditionalPointsTextField;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel talentsLabel1;
     // End of variables declaration//GEN-END:variables
     // </editor-fold>
 }

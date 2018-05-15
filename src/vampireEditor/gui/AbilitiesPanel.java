@@ -41,7 +41,6 @@ public class AbilitiesPanel extends javax.swing.JPanel {
     private final Configuration configuration;
     private final LanguageInterface language;
     private final NewCharacterDialog parent;
-    private ComponentDocumentListener documentListener;
 
     /**
      * Creates new form AbilitiesPanel
@@ -743,6 +742,9 @@ public class AbilitiesPanel extends javax.swing.JPanel {
         order.add(this.occultField);
         order.add(this.politicsField);
         order.add(this.scienceField);
+
+        order.add(this.nextButton);
+        order.add(this.backButton);
 
         this.setFocusTraversalPolicy(new NewCharacterFocusTraversalPolicy(order));
         this.setFocusTraversalPolicyProvider(true);

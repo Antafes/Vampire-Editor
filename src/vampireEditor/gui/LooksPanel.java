@@ -22,6 +22,8 @@
 package vampireEditor.gui;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -35,8 +37,10 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.JTextComponent;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
+import vampireEditor.character.Clan;
 import vampireEditor.character.Generation;
 import vampireEditor.language.LanguageInterface;
+import vampireEditor.utility.ClanComparator;
 
 /**
  *
@@ -540,8 +544,10 @@ public class LooksPanel extends javax.swing.JPanel {
     public DefaultComboBoxModel getClans() {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("");
+        ArrayList<Clan> sortedClans = new ArrayList<>(VampireEditor.getClans().values());
+        Collections.sort(sortedClans, new ClanComparator());
 
-        VampireEditor.getClans().forEach((key, clan) -> {
+        sortedClans.forEach((clan) -> {
             model.addElement(clan);
         });
 

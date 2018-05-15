@@ -133,6 +133,7 @@ public class German implements LanguageInterface {
         this.translations.put("occult", "Okkultismus");
         this.translations.put("politics", "Politik");
         this.translations.put("science", "Naturwissenschaft");
+        this.translations.put("benefits", "Vorteile");
     }
 
     /**
