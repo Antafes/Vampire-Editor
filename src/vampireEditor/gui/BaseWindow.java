@@ -266,6 +266,11 @@ public class BaseWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_aboutTextPaneKeyPressed
 
+    /**
+     * Action that will be performed on changing the language.
+     *
+     * @param evt
+     */
     private void languageMenuItemActionPerformed(ActionEvent evt) {
         if (evt.getActionCommand().equals("English")) {
             this.configuration.setLanguage(Configuration.Language.ENGLISH);
@@ -279,6 +284,9 @@ public class BaseWindow extends javax.swing.JFrame {
         this.setFieldTexts();
     }
 
+    /**
+     * Initialize everything.
+     */
     private void init() {
         // Set look and feel
         try {

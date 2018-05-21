@@ -204,7 +204,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="111" max="32767" attributes="0"/>
+              <EmptySpace pref="74" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="backButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -217,6 +217,9 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="makerField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="maker" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="sizeLabel">
       <Properties>
@@ -229,12 +232,16 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="weightField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="weight" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="clanComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="this.getClans()" type="code"/>
         </Property>
+        <Property name="name" type="java.lang.String" value="clan" noResource="true"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clanComboBoxActionPerformed"/>
@@ -249,6 +256,7 @@
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="this.getSexes()" type="code"/>
         </Property>
+        <Property name="name" type="java.lang.String" value="sex" noResource="true"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -269,6 +277,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="sectField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="sect" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="backButton">
       <Properties>
@@ -287,6 +298,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="sizeField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="size" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="weightLabel">
       <Properties>
@@ -294,11 +308,17 @@
       </Properties>
     </Component>
     <Component class="vampireEditor.gui.PlaceholderFormattedTextField" name="dayOfBirthField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="dayOfBirth" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));&#xa;dayOfBirthField.setPlaceholder(dateFormatter.getFormat().format(date));"/>
       </AuxValues>
     </Component>
     <Component class="vampireEditor.gui.PlaceholderFormattedTextField" name="dayOfDeathField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="dayOfDeath" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));&#xa;dayOfDeathField.setPlaceholder(dateFormatter.getFormat().format(date));"/>
       </AuxValues>
@@ -309,12 +329,16 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="hairColorField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="hairColor" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="generationComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="this.getGenerations()" type="code"/>
         </Property>
+        <Property name="name" type="java.lang.String" value="generation" noResource="true"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generationComboBoxActionPerformed"/>
@@ -340,11 +364,17 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="natureField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="nature" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(natureField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(natureField);&#xa;natureField.getDocument().addDocumentListener(this.documentListener);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="eyeColorField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="eyeColor" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="hideoutLabel">
       <Properties>
@@ -357,8 +387,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="hideoutField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="hideout" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="skinColorField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="skinColor" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="playerLabel">
       <Properties>
@@ -366,10 +402,19 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="nationalityField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="nationality" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="playerField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="player" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="ageField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="age" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="behaviourLabel">
       <Properties>
@@ -382,16 +427,25 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="behaviourField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="behaviour" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(behaviourField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(behaviourField);&#xa;behaviourField.getDocument().addDocumentListener(this.documentListener);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="conceptField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="concept" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(conceptField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(conceptField);&#xa;conceptField.getDocument().addDocumentListener(this.documentListener);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="nameField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="name" noResource="true"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(nameField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(nameField);&#xa;nameField.getDocument().addDocumentListener(this.documentListener);"/>
       </AuxValues>
@@ -407,6 +461,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="chronicleField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="chronicle" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="generationLabel">
       <Properties>
@@ -419,6 +476,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="looksLikeAgeField">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="looksLikeAge" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="conceptLabel">
       <Properties>

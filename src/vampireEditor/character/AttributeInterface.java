@@ -21,6 +21,9 @@
  */
 package vampireEditor.character;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Attribute interface.
  *
@@ -34,6 +37,46 @@ public interface AttributeInterface {
         PHYSICAL,
         SOCIAL,
         MENTAL;
+
+        private ArrayList<String> attributes;
+
+        /**
+         * Create a new AttributeType enum.
+         */
+        private AttributeType() {
+            this.fillAttributes();
+        }
+
+        /**
+         * Fill all available attributes.
+         */
+        private void fillAttributes() {
+            String[] elements;
+
+            switch (this.name()) {
+                case "PHYSICAL":
+                    elements = new String[] {"strength", "dexterity", "stamina"};
+                    break;
+                case "SOCIAL":
+                    elements = new String[] {"charisma", "appearance", "manipulation"};
+                    break;
+                case "MENTAL":
+                default:
+                    elements = new String[] {"intelligence", "perception", "wits"};
+                    break;
+            }
+
+            this.attributes = new ArrayList<>(Arrays.asList(elements));
+        }
+
+        /**
+         * Get the list of attributes.
+         *
+         * @return
+         */
+        public ArrayList<String> getAttributes() {
+            return attributes;
+        }
     }
 
     /**

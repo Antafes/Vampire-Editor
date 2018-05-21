@@ -134,12 +134,17 @@ public class LooksPanel extends javax.swing.JPanel {
         makerLabel = new javax.swing.JLabel();
         nationalityLabel = new javax.swing.JLabel();
 
+        makerField.setName("maker"); // NOI18N
+
         sizeLabel.setText("Size");
 
         clanLabel.setText("Clan*");
 
+        weightField.setName("weight"); // NOI18N
+
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
         clanComboBox.setModel(this.getClans());
+        clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clanComboBoxActionPerformed(evt);
@@ -147,6 +152,7 @@ public class LooksPanel extends javax.swing.JPanel {
         });
 
         sexField.setModel(this.getSexes());
+        sexField.setName("sex"); // NOI18N
 
         sectLabel.setText("Sect");
 
@@ -158,6 +164,8 @@ public class LooksPanel extends javax.swing.JPanel {
             }
         });
 
+        sectField.setName("sect"); // NOI18N
+
         backButton.setText("Back");
         backButton.setEnabled(false);
 
@@ -165,20 +173,27 @@ public class LooksPanel extends javax.swing.JPanel {
 
         requiredLabel.setText("Required: *");
 
+        sizeField.setName("size"); // NOI18N
+
         weightLabel.setText("Weight");
 
         dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
         dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));
         dayOfBirthField.setPlaceholder(dateFormatter.getFormat().format(date));
+        dayOfBirthField.setName("dayOfBirth"); // NOI18N
 
         dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
         dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));
         dayOfDeathField.setPlaceholder(dateFormatter.getFormat().format(date));
+        dayOfDeathField.setName("dayOfDeath"); // NOI18N
 
         hairColorLabel.setText("Hair color");
 
+        hairColorField.setName("hairColor"); // NOI18N
+
         this.enteredFields.put(generationComboBox, Boolean.FALSE);
         generationComboBox.setModel(this.getGenerations());
+        generationComboBox.setName("generation"); // NOI18N
         generationComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generationComboBoxActionPerformed(evt);
@@ -195,12 +210,25 @@ public class LooksPanel extends javax.swing.JPanel {
         this.documentListener = this.createDocumentListener();
         this.documentListener.setComponent(natureField);
         natureField.getDocument().addDocumentListener(this.documentListener);
+        natureField.setName("nature"); // NOI18N
+
+        eyeColorField.setName("eyeColor"); // NOI18N
 
         hideoutLabel.setText("Hideout");
 
         skinColorLabel.setText("Skin color");
 
+        hideoutField.setName("hideout"); // NOI18N
+
+        skinColorField.setName("skinColor"); // NOI18N
+
         playerLabel.setText("Player");
+
+        nationalityField.setName("nationality"); // NOI18N
+
+        playerField.setName("player"); // NOI18N
+
+        ageField.setName("age"); // NOI18N
 
         behaviourLabel.setText("Behaviour*");
 
@@ -210,24 +238,31 @@ public class LooksPanel extends javax.swing.JPanel {
         this.documentListener = this.createDocumentListener();
         this.documentListener.setComponent(behaviourField);
         behaviourField.getDocument().addDocumentListener(this.documentListener);
+        behaviourField.setName("behaviour"); // NOI18N
 
         this.enteredFields.put(conceptField, Boolean.FALSE);
         this.documentListener = this.createDocumentListener();
         this.documentListener.setComponent(conceptField);
         conceptField.getDocument().addDocumentListener(this.documentListener);
+        conceptField.setName("concept"); // NOI18N
 
         this.enteredFields.put(nameField, Boolean.FALSE);
         this.documentListener = this.createDocumentListener();
         this.documentListener.setComponent(nameField);
         nameField.getDocument().addDocumentListener(this.documentListener);
+        nameField.setName("name"); // NOI18N
 
         nameLabel.setText("Name*");
 
         chronicleLabel.setText("Chronicle");
 
+        chronicleField.setName("chronicle"); // NOI18N
+
         generationLabel.setText("Generation*");
 
         looksLikeAgeLabel.setText("Looks like age");
+
+        looksLikeAgeField.setName("looksLikeAge"); // NOI18N
 
         conceptLabel.setText("Concept*");
 
@@ -397,7 +432,7 @@ public class LooksPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sectLabel)
                             .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
                     .addComponent(backButton)

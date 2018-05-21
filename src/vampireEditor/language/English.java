@@ -133,7 +133,7 @@ public class English implements LanguageInterface {
         this.translations.put("occult", "Occult");
         this.translations.put("politics", "Politics");
         this.translations.put("science", "Science");
-        this.translations.put("benefits", "Benefits");
+        this.translations.put("advantages", "Advantages");
     }
 
     /**

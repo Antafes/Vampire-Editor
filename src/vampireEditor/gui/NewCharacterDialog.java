@@ -25,7 +25,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -44,7 +43,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private LooksPanel looksPanel;
     private AttributesPanel attributesPanel;
     private AbilitiesPanel abilitiesPanel;
-    private BenefitsPanel benefitsPanel;
+    private AdvantagesPanel advantagesPanel;
 
     /**
      * Creates new form NewCharacterDialog
@@ -82,8 +81,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         backgroundGroupTemplate = new javax.swing.ButtonGroup();
         cancelButton = new javax.swing.JButton();
         characterTabPane = new javax.swing.JTabbedPane();
-        freeAdditionalPointsTextField = new javax.swing.JTextField();
-        freeAdditionalMaxPointsTextField = new javax.swing.JTextField();
+        freeAdditionalPointsTextField = new javax.swing.JTextField("0");
+        freeAdditionalMaxPointsTextField = new javax.swing.JTextField("15");
         freeAdditionalPointsLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -102,17 +101,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.add(this.attributesPanel);
         this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
         characterTabPane.add(this.abilitiesPanel);
-        this.benefitsPanel = new BenefitsPanel(this, this.configuration);
-        characterTabPane.add(this.benefitsPanel);
 
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
-        //characterTabPane.setEnabledAt(3, false);
 
-        freeAdditionalPointsTextField.setText("0");
         freeAdditionalPointsTextField.setEnabled(false);
 
-        freeAdditionalMaxPointsTextField.setText("15");
         freeAdditionalMaxPointsTextField.setEnabled(false);
 
         freeAdditionalPointsLabel.setText("Free additional points");
@@ -160,8 +154,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @param maximum
      */
     public void setAttributeMaximum(int maximum) {
-        this.attributesPanel.setAttributeMaximum(maximum);
-        this.abilitiesPanel.setAttributeMaximum(maximum);
+        this.attributesPanel.setSpinnerMaximum(maximum);
+//        this.abilitiesPanel.setSpinnerMaximum(maximum);
     }
 
     /**
@@ -199,7 +193,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.characterTabPane.setTitleAt(0, this.language.translate("looks"));
         this.characterTabPane.setTitleAt(1, this.language.translate("attributes"));
         this.characterTabPane.setTitleAt(2, this.language.translate("abilities"));
-        this.characterTabPane.setTitleAt(3, this.language.translate("benefits"));
     }
 
     /**
@@ -233,7 +226,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return
      */
     private boolean checkPhysicalPoints() {
-        return this.attributesPanel.checkPhysicalPoints();
+        return this.attributesPanel.checkPhyiscalPoints();
     }
 
     /**
@@ -242,7 +235,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return
      */
     private int getPhysicalMaxPoints() {
-        return this.attributesPanel.getPhysicalMaxPoints();
+        return this.attributesPanel.getPhyiscalMaxPoints();
     }
 
     /**
@@ -414,19 +407,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.freeAdditionalPointsTextField.setText(Integer.toString(freeSum));
 
         if (freeSum > freeMaximum) {
-            this.freeAdditionalPointsLabel.setForeground(Color.red);
+            this.freeAdditionalPointsLabel.setForeground(Color.RED);
         } else {
             this.freeAdditionalPointsLabel.setForeground(Color.DARK_GRAY);
         }
-    }
-
-    /**
-     * Get the sexes for showing them in the form.
-     *
-     * @return
-     */
-    public DefaultComboBoxModel getWeightings() {
-        return new DefaultComboBoxModel(Weighting.values());
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">

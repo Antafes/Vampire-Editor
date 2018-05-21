@@ -21,6 +21,9 @@
  */
 package vampireEditor.character;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Skill interface.
  *
@@ -34,6 +37,46 @@ public interface AbilityInterface {
         TALENT,
         SKILL,
         KNOWLEDGE;
+
+        private ArrayList<String> abilities;
+
+        /**
+         * Create a new AbilityType enum.
+         */
+        private AbilityType() {
+            this.fillAbilities();
+        }
+
+        /**
+         * Fill all available abilities.
+         */
+        private void fillAbilities() {
+            String[] elements;
+
+            switch (this.name()) {
+                case "TALENT":
+                    elements = new String[] {"acting", "alertness", "athletics", "brawl", "burglary", "dodge", "empathy", "intimidation", "leadership", "subterfuge"};
+                    break;
+                case "SKILL":
+                    elements = new String[] {"animalKen", "archery", "crafts", "etiquette", "herbalism", "melee", "music", "ride", "stealth", "survival"};
+                    break;
+                case "KNOWLEDGE":
+                default:
+                    elements = new String[] {"academicKnowledge", "administration", "folklore", "investigation", "law", "linguistics", "medicine", "occult", "politics", "science"};
+                    break;
+            }
+
+            this.abilities = new ArrayList<>(Arrays.asList(elements));
+        }
+
+        /**
+         * Get the list of abilities.
+         *
+         * @return
+         */
+        public ArrayList<String> getAbilities() {
+            return abilities;
+        }
     }
 
     /**

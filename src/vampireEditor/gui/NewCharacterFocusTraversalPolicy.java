@@ -25,6 +25,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.util.Vector;
+import javax.swing.JSpinner;
 
 /**
  *
@@ -60,6 +61,30 @@ class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
         Container focusCycleRoot, Component aComponent
     ) {
         int idx = (order.indexOf(aComponent) + 1) % order.size();
+
+        if (order.indexOf(aComponent) == -1) {
+            for (Component component : order) {
+                if (component instanceof JSpinner) {
+                    JSpinner element = (JSpinner) component;
+
+                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(aComponent)) {
+                        idx = (order.indexOf(component) + 1) % order.size();
+                        Component nextElement = order.get(idx);
+
+                        if (nextElement instanceof JSpinner) {
+                            return ((JSpinner.DefaultEditor) ((JSpinner) nextElement).getEditor()).getTextField();
+                        } else {
+                            return nextElement;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (order.get(idx) instanceof JSpinner) {
+            return ((JSpinner.DefaultEditor) ((JSpinner) order.get(idx)).getEditor()).getTextField();
+        }
+
         return order.get(idx);
     }
 
@@ -76,9 +101,35 @@ class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
         Container focusCycleRoot, Component aComponent
     ) {
         int idx = order.indexOf(aComponent) - 1;
+
         if (idx < 0) {
             idx = order.size() - 1;
         }
+
+        if (order.indexOf(aComponent) == -1) {
+            for (Component component : order) {
+                if (component instanceof JSpinner) {
+                    JSpinner element = (JSpinner) component;
+
+                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(aComponent)) {
+                        idx = order.indexOf(component) - 1;
+
+                        if (idx == -1) {
+                            idx = order.size() - 1;
+                        }
+
+                        Component previousElement = order.get(idx);
+
+                        if (previousElement instanceof JSpinner) {
+                            return ((JSpinner.DefaultEditor) ((JSpinner) previousElement).getEditor()).getTextField();
+                        } else {
+                            return previousElement;
+                        }
+                    }
+                }
+            }
+        }
+
         return order.get(idx);
     }
 
@@ -103,7 +154,13 @@ class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
      */
     @Override
     public Component getLastComponent(Container focusCycleRoot) {
-        return order.lastElement();
+        Component component = order.lastElement();
+
+        if (component instanceof JSpinner) {
+            return ((JSpinner.DefaultEditor) ((JSpinner) component).getEditor()).getTextField();
+        }
+
+        return component;
     }
 
     /**
@@ -115,6 +172,12 @@ class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
      */
     @Override
     public Component getFirstComponent(Container focusCycleRoot) {
-        return order.get(0);
+        Component component = order.get(0);
+
+        if (component instanceof JSpinner) {
+            return ((JSpinner.DefaultEditor) ((JSpinner) component).getEditor()).getTextField();
+        }
+
+        return component;
     }
 }
