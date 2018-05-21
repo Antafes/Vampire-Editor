@@ -197,6 +197,107 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         GroupLayout layout = (GroupLayout) this.getLayout();
         JLabel groupLabel = new JLabel(this.language.translate(headline));
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        JComboBox weightingElement = this.addWeighting(headline);
+        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
+            .addGap(11, 11, 11)
+            .addComponent(groupLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
+                .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
+            );
+        this.outerSequentialHorizontalGroup
+            .addGroup(
+                layout.createSequentialGroup().addGroup(listHorizontalGroup)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+
+        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
+            .addGap(11, 11, 11)
+            .addComponent(groupLabel)
+            .addGap(6, 6, 6)
+            .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+            .addGap(11, 11, 11);
+        this.outerParallelVerticalGroup
+            .addGroup(listVerticalGroup);
+
+        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
+        outerLabelHorizontalGroup.addGap(11, 11, 11);
+        GroupLayout.SequentialGroup outerElementHorizontalGroup = layout.createSequentialGroup();
+        outerElementHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        GroupLayout.ParallelGroup elementHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+
+        elementList.forEach((element) -> {
+            HashMap<String, GroupLayout.Group> groups = new HashMap<>();
+            groups.put("labelHorizontalGroup", labelHorizontalGroup);
+            groups.put("elementHorizontalGroup", elementHorizontalGroup);
+            groups.put("listVerticalGroup", listVerticalGroup);
+            this.addRow(element, spinnerMinimum, this.fields.get(headline), groups, layout);
+        });
+
+        HashMap<String, GroupLayout.Group> groups = new HashMap<>();
+        groups.put("listVerticalGroup", listVerticalGroup);
+        groups.put("listHorizontalGroup", listHorizontalGroup);
+        this.addPointFields(headline, weightingElement, groups, layout);
+
+        outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
+        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
+        outerElementHorizontalGroup.addGroup(elementHorizontalGroup);
+        listHorizontalGroup.addGroup(outerElementHorizontalGroup);
+        outerLabelHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE);
+    }
+
+    /**
+     * Add a single row to the current column.
+     *
+     * @param element
+     * @param spinnerMinimum
+     * @param fields
+     * @param groups
+     * @param layout
+     */
+    protected HashMap<String, Component> addRow(
+        String element,
+        int spinnerMinimum,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout
+    ) {
+        JLabel elementLabel = new JLabel(this.language.translate(element));
+        JSpinner spinner = new JSpinner();
+        spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
+        Dimension spinnerDimension = new Dimension(36, 20);
+        spinner.setPreferredSize(spinnerDimension);
+        spinner.setMinimumSize(spinnerDimension);
+        spinner.setMaximumSize(spinnerDimension);
+        spinner.setName(element);
+        this.addChangeListener(spinner);
+        this.order.add(spinner);
+        fields.add(spinner);
+        groups.get("labelHorizontalGroup").addComponent(elementLabel);
+        groups.get("elementHorizontalGroup").addComponent(spinner);
+        GroupLayout.ParallelGroup verticalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        verticalGroup.addComponent(elementLabel)
+            .addComponent(spinner);
+        groups.get("listVerticalGroup").addGroup(verticalGroup)
+            .addGap(6, 6, 6);
+
+        HashMap<String, Component> elements = new HashMap<>();
+        elements.put("label", elementLabel);
+        elements.put("spinner", spinner);
+
+        return elements;
+    }
+
+    /**
+     * Add a weighting field.
+     *
+     * @param headline
+     *
+     * @return
+     */
+    protected JComboBox addWeighting(String headline) {
         JComboBox weightingElement = new JComboBox();
         weightingElement.setModel(new DefaultComboBoxModel(Weighting.values()));
         weightingElement.setSelectedIndex(0);
@@ -228,58 +329,21 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         this.order.add(this.weightingCounter, weightingElement);
         this.weightingCounter++;
         this.weightings.add(weightingElement);
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
-                .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
-            );
-        this.outerSequentialHorizontalGroup
-            .addGroup(
-                layout.createSequentialGroup().addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
 
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel)
-            .addGap(6, 6, 6)
-            .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-            .addGap(11, 11, 11);
-        this.outerParallelVerticalGroup
-            .addGroup(listVerticalGroup);
+        return weightingElement;
+    }
 
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        outerLabelHorizontalGroup.addGap(11, 11, 11);
-        GroupLayout.SequentialGroup outerElementHorizontalGroup = layout.createSequentialGroup();
-        outerElementHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-        GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        GroupLayout.ParallelGroup elementHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        GroupLayout.ParallelGroup verticalGroup;
-
-        for (String talent : elementList) {
-            JLabel elementLabel = new JLabel(this.language.translate(talent));
-            JSpinner spinner = new JSpinner();
-            spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
-            Dimension spinnerDimension = new Dimension(36, 20);
-            spinner.setPreferredSize(spinnerDimension);
-            spinner.setMinimumSize(spinnerDimension);
-            spinner.setMaximumSize(spinnerDimension);
-            spinner.setName(talent);
-            this.addChangeListener(spinner);
-            this.order.add(spinner);
-            this.fields.get(headline).add(spinner);
-            labelHorizontalGroup.addComponent(elementLabel);
-            elementHorizontalGroup.addComponent(spinner);
-            verticalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-            verticalGroup.addComponent(elementLabel)
-                .addComponent(spinner);
-            listVerticalGroup.addGroup(verticalGroup)
-                .addGap(6, 6, 6);
-        }
-
+    /**
+     * Add the point fields for the column.
+     *
+     * @param headline
+     * @param weightingElement
+     * @param groups
+     * @param layout
+     */
+    protected void addPointFields(
+        String headline, JComboBox weightingElement, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+    ) {
         Dimension pointsDimension = new Dimension(36, 20);
         JTextField pointsField = new JTextField("0");
         pointsField.setEnabled(false);
@@ -293,25 +357,19 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         maxPointsField.setMaximumSize(pointsDimension);
         this.pointFields.get(headline).put("points", pointsField);
         this.pointFields.get(headline).put("maxPoints", maxPointsField);
-        listVerticalGroup.addGap(14, 14, 14)
+        groups.get("listVerticalGroup").addGap(14, 14, 14)
             .addGroup(layout.createParallelGroup()
                 .addComponent(pointsField)
                 .addComponent(maxPointsField)
             )
             .addGap(10, 10, 10);
-        listHorizontalGroup.addGroup(
+        groups.get("listHorizontalGroup").addGroup(
             layout.createSequentialGroup()
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
                 .addComponent(pointsField)
                 .addComponent(maxPointsField)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
         );
-
-        outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
-        outerElementHorizontalGroup.addGroup(elementHorizontalGroup);
-        listHorizontalGroup.addGroup(outerElementHorizontalGroup);
-        outerLabelHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE);
     }
 
     /**
@@ -334,7 +392,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * @param second
      * @param third
      */
-    private void switchWeightings(JComboBox first, JComboBox second, JComboBox third) {
+    protected void switchWeightings(JComboBox first, JComboBox second, JComboBox third) {
         Weighting firstSelection = (Weighting) first.getSelectedItem();
         Weighting secondSelection = (Weighting) second.getSelectedItem();
         Weighting thirdSelection = (Weighting) third.getSelectedItem();
@@ -351,7 +409,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      *
      * @param field
      */
-    private void addChangeListener(JSpinner field) {
+    protected void addChangeListener(JSpinner field) {
         ComponentChangeListener attributesListener = this.createChangeListener();
         attributesListener.setComponent(field);
         DefaultFormatter attributesFormatter = (DefaultFormatter) ((JSpinner.DefaultEditor) field.getEditor()).getTextField().getFormatter();
@@ -366,7 +424,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      *
      * @return
      */
-    private JTextField getPointsField(String type) {
+    protected JTextField getPointsField(String type) {
         return (JTextField) this.pointFields.get(type).get("points");
     }
 
@@ -377,7 +435,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      *
      * @return
      */
-    private JTextField getMaxPointsFields(String type) {
+    protected JTextField getMaxPointsFields(String type) {
         return (JTextField) this.pointFields.get(type).get("maxPoints");
     }
 
@@ -483,6 +541,105 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      */
     public NewCharacterDialog getParentComponent() {
         return this.parent;
+    }
+
+    /**
+     * Get the configuration object.
+     *
+     * @return
+     */
+    protected Configuration getConfiguration() {
+        return this.configuration;
+    }
+
+    /**
+     * Get the language object.
+     *
+     * @return
+     */
+    protected LanguageInterface getLanguage() {
+        return this.language;
+    }
+
+    /**
+     * Get the point fields map.
+     *
+     * @return
+     */
+    protected HashMap<String, JTextField> getPointFields(String type) {
+        return this.pointFields.get(type);
+    }
+
+    /**
+     * Get the point fields hashmap.
+     *
+     * @return
+     */
+    protected HashMap<String, HashMap<String, JTextField>> getPointFields() {
+        return pointFields;
+    }
+
+    /**
+     * Get the order vector for the traversal policy.
+     *
+     * @return
+     */
+    protected Vector<Component> getOrder() {
+        return this.order;
+    }
+
+    /**
+     * Get the fields hashmap.
+     *
+     * @return
+     */
+    protected HashMap<String, ArrayList<Component>> getFields() {
+        return fields;
+    }
+
+    /**
+     * Get the weightings list.
+     *
+     * @return
+     */
+    protected ArrayList<JComboBox> getWeightings() {
+        return weightings;
+    }
+
+    /**
+     * Get the weighting counter.
+     *
+     * @return
+     */
+    protected int getWeightingCounter() {
+        return weightingCounter;
+    }
+
+    /**
+     * Set the weighting counter.
+     *
+     * @param weightingCounter
+     */
+    protected void setWeightingCounter(int weightingCounter) {
+        this.weightingCounter = weightingCounter;
+    }
+
+    /**
+     * Get the outer parallel vertical group.
+     *
+     * @return
+     */
+    protected GroupLayout.ParallelGroup getOuterParallelVerticalGroup() {
+        return outerParallelVerticalGroup;
+    }
+
+    /**
+     * Get the outer sequential horizontal group.
+     *
+     * @return
+     */
+    protected GroupLayout.SequentialGroup getOuterSequentialHorizontalGroup() {
+        return outerSequentialHorizontalGroup;
     }
 
     /**
