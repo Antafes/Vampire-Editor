@@ -29,6 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
+import vampireEditor.character.Clan;
 import vampireEditor.language.LanguageInterface;
 
 /**
@@ -101,9 +102,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.add(this.attributesPanel);
         this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
         characterTabPane.add(this.abilitiesPanel);
+        this.advantagesPanel = new AdvantagesPanel(this, this.configuration);
+        characterTabPane.add(this.advantagesPanel);
 
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
+        characterTabPane.setEnabledAt(3, false);
 
         freeAdditionalPointsTextField.setEnabled(false);
 
@@ -155,7 +159,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      */
     public void setAttributeMaximum(int maximum) {
         this.attributesPanel.setSpinnerMaximum(maximum);
-//        this.abilitiesPanel.setSpinnerMaximum(maximum);
+        this.abilitiesPanel.setSpinnerMaximum(maximum);
+        this.advantagesPanel.setSpinnerMaximum(maximum);
     }
 
     /**
@@ -193,6 +198,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.characterTabPane.setTitleAt(0, this.language.translate("looks"));
         this.characterTabPane.setTitleAt(1, this.language.translate("attributes"));
         this.characterTabPane.setTitleAt(2, this.language.translate("abilities"));
+        this.characterTabPane.setTitleAt(3, this.language.translate("advantages"));
     }
 
     /**
@@ -374,6 +380,87 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
+     * Calculate and return the sum of points spent for backgrounds.
+     *
+     * @return
+     */
+    private int getBackgroundPointsSum() {
+        return this.advantagesPanel.getBackgroundPointsSum();
+    }
+
+    /**
+     * Check if the spent points for backgrounds is above its maximum.
+     *
+     * @return
+     */
+    private boolean checkBackgroundPoints() {
+        return this.advantagesPanel.checkBackgroundPoints();
+    }
+
+    /**
+     * Get the maximum points available for backgrounds.
+     *
+     * @return
+     */
+    private int getBackgroundMaxPoints() {
+        return this.advantagesPanel.getBackgroundMaxPoints();
+    }
+
+    /**
+     * Calculate and return the sum of points spent for disciplins.
+     *
+     * @return
+     */
+    private int getDisciplinPointsSum() {
+        return this.advantagesPanel.getDisciplinPointsSum();
+    }
+
+    /**
+     * Check if the spent points for disciplins is above its maximum.
+     *
+     * @return
+     */
+    private boolean checkDisciplinPoints() {
+        return this.advantagesPanel.checkDisciplinPoints();
+    }
+
+    /**
+     * Get the maximum points available for disciplins.
+     *
+     * @return
+     */
+    private int getDisciplinMaxPoints() {
+        return this.advantagesPanel.getDisciplinMaxPoints();
+    }
+
+    /**
+     * Calculate and return the sum of points spent for virtues.
+     *
+     * @return
+     */
+    private int getVirtuePointsSum() {
+        return this.advantagesPanel.getVirtuePointsSum();
+    }
+
+    /**
+     * Check if the spent points for virtues is above its maximum.
+     *
+     * @return
+     */
+    private boolean checkVirtuePoints() {
+        return this.advantagesPanel.checkVirtuePoints();
+    }
+
+    /**
+     * Get the maximum points available for virtues.
+     *
+     * @return
+     */
+    private int getVirtueMaxPoints() {
+        return this.advantagesPanel.getVirtueMaxPoints();
+    }
+
+    /**
      * Calculate the used free additional points.
      */
     public void calculateUsedFreeAdditionalPoints() {
@@ -404,6 +491,18 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             freeSum += (this.getKnowledgePointsSum() - this.getKnowledgeMaxPoints()) * 2;
         }
 
+        if (this.checkBackgroundPoints()) {
+            freeSum += (this.getBackgroundPointsSum() - this.getBackgroundMaxPoints()) * 1;
+        }
+
+        if (this.checkDisciplinPoints()) {
+            freeSum += (this.getDisciplinPointsSum() - this.getDisciplinMaxPoints()) * 7;
+        }
+
+        if (this.checkVirtuePoints()) {
+            freeSum += (this.getVirtuePointsSum() - this.getVirtueMaxPoints()) * 2;
+        }
+
         this.freeAdditionalPointsTextField.setText(Integer.toString(freeSum));
 
         if (freeSum > freeMaximum) {
@@ -411,6 +510,15 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         } else {
             this.freeAdditionalPointsLabel.setForeground(Color.DARK_GRAY);
         }
+    }
+
+    /**
+     * Set the clan disciplins on the advantages panel.
+     *
+     * @param clan
+     */
+    public void setClanDisciplins(Clan clan) {
+        this.advantagesPanel.setDisciplins(clan);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">

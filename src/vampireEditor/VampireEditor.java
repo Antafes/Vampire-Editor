@@ -213,7 +213,7 @@ public class VampireEditor {
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
 
         advantages.forEach((listElement) -> {
-            disciplins.add(VampireEditor.getAdvantage(listElement.getNodeValue()));
+            disciplins.add(VampireEditor.getAdvantage(listElement.getChildNodes().item(0).getNodeValue()));
         });
 
         return disciplins;

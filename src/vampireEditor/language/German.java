@@ -134,6 +134,9 @@ public class German implements LanguageInterface {
         this.translations.put("politics", "Politik");
         this.translations.put("science", "Naturwissenschaft");
         this.translations.put("advantages", "Vorteile");
+        this.translations.put("background", "Hintergrund");
+        this.translations.put("disciplins", "Disziplinen");
+        this.translations.put("virtues", "Tugenden");
     }
 
     /**

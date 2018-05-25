@@ -134,6 +134,9 @@ public class English implements LanguageInterface {
         this.translations.put("politics", "Politics");
         this.translations.put("science", "Science");
         this.translations.put("advantages", "Advantages");
+        this.translations.put("background", "Background");
+        this.translations.put("disciplins", "Disciplins");
+        this.translations.put("virtues", "Virtues");
     }
 
     /**

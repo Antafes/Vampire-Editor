@@ -55,7 +55,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     private final Vector<Component> order;
     private final HashMap<String, ArrayList<Component>> fields;
     private final HashMap<String, HashMap<String, JTextField>> pointFields;
-    private final ArrayList<JComboBox> weightings;
+    private final HashMap<String, JComboBox> weightings;
     private javax.swing.JButton backButton;
     private javax.swing.JButton nextButton;
     private int weightingCounter = 0;
@@ -74,16 +74,24 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         this.order = new Vector<>();
         this.fields = new HashMap<>();
         this.pointFields = new HashMap<>();
-        this.weightings = new ArrayList<>();
+        this.weightings = new HashMap<>();
 
-        this.initComponents();
+        this.start();
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
+     * Start up the creation process.
+     */
+    private void start() {
+        this.initComponents();
+        this.init();
+    }
+
+    /**
+     * This method is called to initialize the form.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {
+    protected void initComponents() {
 
         backButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
@@ -129,8 +137,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
                 )
             )
         );
-
-        this.init();
     }
 
     /**
@@ -239,7 +245,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         HashMap<String, GroupLayout.Group> groups = new HashMap<>();
         groups.put("listVerticalGroup", listVerticalGroup);
         groups.put("listHorizontalGroup", listHorizontalGroup);
-        this.addPointFields(headline, weightingElement, groups, layout);
+        this.addPointFields(headline, groups, layout);
 
         outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
         listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
@@ -313,7 +319,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         weightingElement.addActionListener((ActionEvent e) -> {
             JComboBox element = (JComboBox) e.getSource();
             JComboBox second, third;
-            ArrayList<JComboBox> elements = new ArrayList<>(this.weightings);
+            ArrayList<JComboBox> elements = new ArrayList<>(this.weightings.values());
             elements.remove(element);
             second = elements.get(0);
             third = elements.get(1);
@@ -328,7 +334,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         });
         this.order.add(this.weightingCounter, weightingElement);
         this.weightingCounter++;
-        this.weightings.add(weightingElement);
+        this.weightings.put(headline, weightingElement);
 
         return weightingElement;
     }
@@ -337,12 +343,11 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * Add the point fields for the column.
      *
      * @param headline
-     * @param weightingElement
      * @param groups
      * @param layout
      */
     protected void addPointFields(
-        String headline, JComboBox weightingElement, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+        String headline, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
     ) {
         Dimension pointsDimension = new Dimension(36, 20);
         JTextField pointsField = new JTextField("0");
@@ -350,14 +355,20 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         pointsField.setPreferredSize(pointsDimension);
         pointsField.setMinimumSize(pointsDimension);
         pointsField.setMaximumSize(pointsDimension);
-        JTextField maxPointsField = this.getMaxPointsField(((Weighting) weightingElement.getSelectedItem()));
+        JTextField maxPointsField = this.getMaxPointsField(headline);
         maxPointsField.setEnabled(false);
         maxPointsField.setPreferredSize(pointsDimension);
         maxPointsField.setMinimumSize(pointsDimension);
         maxPointsField.setMaximumSize(pointsDimension);
         this.pointFields.get(headline).put("points", pointsField);
         this.pointFields.get(headline).put("maxPoints", maxPointsField);
-        groups.get("listVerticalGroup").addGap(14, 14, 14)
+        GroupLayout.SequentialGroup listVerticalGroup = (GroupLayout.SequentialGroup) groups.get("listVerticalGroup");
+
+        if (groups.containsKey("listOuterVerticalGroup")) {
+            listVerticalGroup = (GroupLayout.SequentialGroup) groups.get("listOuterVerticalGroup");
+        }
+
+        listVerticalGroup.addGap(14, 14, 14)
             .addGroup(layout.createParallelGroup()
                 .addComponent(pointsField)
                 .addComponent(maxPointsField)
@@ -370,6 +381,17 @@ abstract class BaseListPanel extends javax.swing.JPanel {
                 .addComponent(maxPointsField)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
         );
+    }
+
+    /**
+     * Get the maximum available points for setting them in the max points field.
+     *
+     * @param headline
+     *
+     * @return
+     */
+    protected int getMaxPointsForField(String headline) {
+        return this.getWeightingMax((Weighting) this.weightings.get(headline).getSelectedItem());
     }
 
     /**
@@ -602,7 +624,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      *
      * @return
      */
-    protected ArrayList<JComboBox> getWeightings() {
+    protected HashMap<String, JComboBox> getWeightings() {
         return weightings;
     }
 
@@ -645,12 +667,12 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     /**
      * Get the max points field with the propery weighting values set.
      *
-     * @param weighting
+     * @param headline
      *
      * @return
      */
-    protected JTextField getMaxPointsField(Weighting weighting) {
-        return new JTextField(Integer.toString(this.getWeightingMax(weighting)));
+    protected JTextField getMaxPointsField(String headline) {
+        return new JTextField(Integer.toString(this.getMaxPointsForField(headline)));
     }
 
     /**

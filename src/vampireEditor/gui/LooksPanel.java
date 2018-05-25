@@ -447,6 +447,7 @@ public class LooksPanel extends javax.swing.JPanel {
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkEnteredFields();
+            this.parent.setClanDisciplins((Clan) ((JComboBox) evt.getSource()).getSelectedItem());
         }
     }//GEN-LAST:event_clanComboBoxActionPerformed
 

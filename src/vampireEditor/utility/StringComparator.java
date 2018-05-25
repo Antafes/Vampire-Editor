@@ -19,55 +19,29 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.character;
+package vampireEditor.utility;
+
+import java.util.Comparator;
 
 /**
- * Advantage interface.
  *
  * @author Marian Pollzien
  */
-public interface AdvantageInterface {
+public class StringComparator implements Comparator {
+
     /**
-     * List of advantage types.
+     * Compare two clans by name.
+     *
+     * @param o1
+     * @param o2
+     *
+     * @return
      */
-    public static enum AdvantageType {
-        BACKGROUND,
-        DISCIPLIN,
-        VIRTUE;
+    @Override
+    public int compare(Object o1, Object o2) {
+        String s1 = o1.toString();
+        String s2 = o2.toString();
+
+        return s1.compareTo(s2);
     }
-
-    /**
-     * Get the key for the advantage.
-     *
-     * @return
-     */
-    public String getKey();
-
-    /**
-     * Get the name of the advantage.
-     *
-     * @return
-     */
-    public String getName();
-
-    /**
-     * Get the type of advantage.
-     *
-     * @return
-     */
-    public AdvantageType getType();
-
-    /**
-     * Get the value of the advantage.
-     *
-     * @return
-     */
-    public int getValue();
-
-    /**
-     * Set the current value of the advantage.
-     *
-     * @param value
-     */
-    public void setValue(int value);
 }

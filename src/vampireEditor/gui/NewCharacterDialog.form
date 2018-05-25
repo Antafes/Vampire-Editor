@@ -71,8 +71,8 @@
     </Component>
     <Container class="javax.swing.JTabbedPane" name="characterTabPane">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.looksPanel = new LooksPanel(this, this.configuration);&#xa;characterTabPane.add(this.looksPanel);&#xa;this.attributesPanel = new AttributesPanel(this, this.configuration);&#xa;characterTabPane.add(this.attributesPanel);&#xa;this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);&#xa;characterTabPane.add(this.abilitiesPanel);"/>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="characterTabPane.setEnabledAt(1, false);&#xa;characterTabPane.setEnabledAt(2, false);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.looksPanel = new LooksPanel(this, this.configuration);&#xa;characterTabPane.add(this.looksPanel);&#xa;this.attributesPanel = new AttributesPanel(this, this.configuration);&#xa;characterTabPane.add(this.attributesPanel);&#xa;this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);&#xa;characterTabPane.add(this.abilitiesPanel);&#xa;this.advantagesPanel = new AdvantagesPanel(this, this.configuration);&#xa;characterTabPane.add(this.advantagesPanel);"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="characterTabPane.setEnabledAt(1, false);&#xa;characterTabPane.setEnabledAt(2, false);&#xa;characterTabPane.setEnabledAt(3, false);"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
