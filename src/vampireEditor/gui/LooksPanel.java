@@ -86,7 +86,7 @@ public class LooksPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        makerField = new javax.swing.JTextField();
+        sireField = new javax.swing.JTextField();
         sizeLabel = new javax.swing.JLabel();
         clanLabel = new javax.swing.JLabel();
         weightField = new javax.swing.JTextField();
@@ -131,10 +131,10 @@ public class LooksPanel extends javax.swing.JPanel {
         looksLikeAgeField = new javax.swing.JTextField();
         conceptLabel = new javax.swing.JLabel();
         dayOfBirthLabel = new javax.swing.JLabel();
-        makerLabel = new javax.swing.JLabel();
+        sireLabel = new javax.swing.JLabel();
         nationalityLabel = new javax.swing.JLabel();
 
-        makerField.setName("maker"); // NOI18N
+        sireField.setName("maker"); // NOI18N
 
         sizeLabel.setText("Size");
 
@@ -268,7 +268,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
         dayOfBirthLabel.setText("Day of birth");
 
-        makerLabel.setText("Maker");
+        sireLabel.setText("Sire");
 
         nationalityLabel.setText("Nationality");
 
@@ -287,7 +287,7 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(playerLabel)
                     .addComponent(behaviourLabel)
                     .addComponent(conceptLabel)
-                    .addComponent(makerLabel)
+                    .addComponent(sireLabel)
                     .addComponent(clanLabel)
                     .addComponent(sectLabel))
                 .addGap(18, 18, 18)
@@ -296,7 +296,7 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(playerField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(behaviourField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(conceptField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(makerField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sireField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(natureField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,8 +422,8 @@ public class LooksPanel extends javax.swing.JPanel {
                             .addComponent(conceptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(makerLabel)
-                            .addComponent(makerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sireLabel)
+                            .addComponent(sireField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(clanLabel)
@@ -447,7 +447,9 @@ public class LooksPanel extends javax.swing.JPanel {
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkEnteredFields();
-            this.parent.setClanDisciplins((Clan) ((JComboBox) evt.getSource()).getSelectedItem());
+            Clan clan = (Clan) ((JComboBox) evt.getSource()).getSelectedItem();
+            this.parent.setClanDisciplins(clan);
+            this.parent.adjustAttributesToClan(clan);
         }
     }//GEN-LAST:event_clanComboBoxActionPerformed
 
@@ -489,7 +491,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.playerLabel.setText(this.language.translate("player"));
         this.behaviourLabel.setText(this.language.translate("behaviour") + "*");
         this.conceptLabel.setText(this.language.translate("concept") + "*");
-        this.makerLabel.setText(this.language.translate("maker"));
+        this.sireLabel.setText(this.language.translate("sire"));
         this.clanLabel.setText(this.language.translate("clan") + "*");
         this.sectLabel.setText(this.language.translate("sect"));
 
@@ -614,7 +616,7 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.playerField);
         order.add(this.behaviourField);
         order.add(this.conceptField);
-        order.add(this.makerField);
+        order.add(this.sireField);
         order.add(this.clanComboBox);
         order.add(this.sectField);
         order.add(this.ageField);
@@ -660,8 +662,6 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel hideoutLabel;
     private javax.swing.JTextField looksLikeAgeField;
     private javax.swing.JLabel looksLikeAgeLabel;
-    private javax.swing.JTextField makerField;
-    private javax.swing.JLabel makerLabel;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nationalityField;
@@ -676,6 +676,8 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel sectLabel;
     private javax.swing.JComboBox<String> sexField;
     private javax.swing.JLabel sexLabel;
+    private javax.swing.JTextField sireField;
+    private javax.swing.JLabel sireLabel;
     private javax.swing.JTextField sizeField;
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JTextField skinColorField;

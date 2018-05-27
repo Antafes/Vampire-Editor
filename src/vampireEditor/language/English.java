@@ -62,7 +62,7 @@ public class English implements LanguageInterface {
         this.translations.put("player", "Player");
         this.translations.put("behaviour", "Behaviour");
         this.translations.put("concept", "Concept");
-        this.translations.put("maker", "Maker");
+        this.translations.put("sire", "Sire");
         this.translations.put("clan", "Clan");
         this.translations.put("sect", "Sect");
         this.translations.put("age", "Age");

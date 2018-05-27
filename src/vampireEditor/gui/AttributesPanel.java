@@ -21,11 +21,14 @@
  */
 package vampireEditor.gui;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
 import vampireEditor.character.AttributeInterface;
+import vampireEditor.character.Clan;
 import vampireEditor.utility.TranslatedComparator;
 
 /**
@@ -261,5 +264,41 @@ public class AttributesPanel extends BaseListPanel {
     @Override
     protected int getWeightingMax(Weighting weighting) {
         return weighting.getAttributeMax();
+    }
+
+    /**
+     * Adjust the attribute spinners to the clans.
+     *
+     * @param clan
+     */
+    public void adjustAttributesToClan(Clan clan) {
+        ArrayList<Component> fields = this.getFields("social");
+
+        fields.stream().filter((field) -> (field.getName().equals("appearance"))).map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            int value = (int) spinner.getValue(),
+                maximum = (int) ((SpinnerNumberModel) spinner.getModel()).getMaximum(),
+                minimum = 1;
+
+            if (clan.getKey().equals("nosferatu")) {
+                value = 0;
+                minimum = 0;
+                spinner.setEnabled(false);
+            } else {
+                if (value == 0) {
+                    value = minimum;
+                }
+
+                spinner.setEnabled(true);
+            }
+
+            spinner.setModel(
+                new SpinnerNumberModel(
+                    value > maximum ? maximum : value,
+                    minimum,
+                    maximum,
+                    1
+                )
+            );
+        });
     }
 }

@@ -32,7 +32,7 @@ import vampireEditor.Configuration;
 public enum Weighting {
     PRIMARY (7, 13),
     SECONDARY (5, 9),
-    TERTIARY (3, 3);
+    TERTIARY (3, 5);
 
     private final int attributeMax;
     private final int abilitiesMax;

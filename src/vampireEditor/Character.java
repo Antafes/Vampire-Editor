@@ -37,20 +37,20 @@ public class Character {
     private String chronicle;
     private int experience;
     private String nature;
-    private String maker;
+    private String sire;
     private String player;
     private String hideout;
     private String concept;
     private String sect;
-    private ArrayList<Attribute> attributes;
-    private ArrayList<Ability> abilities;
-    private ArrayList<Advantage> benefits;
-    private ArrayList<Merit> advantages;
-    private ArrayList<Flaw> disadvantages;
+    private final ArrayList<Attribute> attributes;
+    private final ArrayList<Ability> abilities;
+    private final ArrayList<Advantage> benefits;
+    private final ArrayList<Merit> advantages;
+    private final ArrayList<Flaw> disadvantages;
     /**
      * List of additional attributes/traits.
      */
-    private ArrayList<Trait> traits;
+    private final ArrayList<Trait> traits;
     private int humanity;
     private int willpower;
     private int bloodStock;
@@ -93,7 +93,7 @@ public class Character {
      * @param chronicle
      * @param experience
      * @param nature
-     * @param maker
+     * @param sire
      * @param player
      * @param hideout
      * @param concept
@@ -123,7 +123,7 @@ public class Character {
      */
     public Character(
         String name, Clan clan, Generation generation, String chronicle,
-        int experience, String nature, String maker, String player,
+        int experience, String nature, String sire, String player,
         String hideout, String concept, String sect,
         ArrayList<Attribute> attributes, ArrayList<Ability> skills,
         ArrayList<Advantage> benefits, ArrayList<Merit> advantages,
@@ -139,7 +139,7 @@ public class Character {
         this.chronicle = chronicle;
         this.experience = experience;
         this.nature = nature;
-        this.maker = maker;
+        this.sire = sire;
         this.player = player;
         this.hideout = hideout;
         this.concept = concept;
@@ -223,12 +223,12 @@ public class Character {
     }
 
     /**
-     * Get the maker of the character.
+     * Get the sire of the character.
      *
      * @return
      */
-    public String getMaker() {
-        return maker;
+    public String getSire() {
+        return sire;
     }
 
     /**
@@ -521,12 +521,12 @@ public class Character {
     }
 
     /**
-     * Set the characters maker.
+     * Set the characters sire.
      *
-     * @param maker
+     * @param sire
      */
-    public void setMaker(String maker) {
-        this.maker = maker;
+    public void setSire(String sire) {
+        this.sire = sire;
     }
 
     /**

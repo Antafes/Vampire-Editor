@@ -62,7 +62,7 @@ public class German implements LanguageInterface {
         this.translations.put("player", "Spieler");
         this.translations.put("behaviour", "Verhalten");
         this.translations.put("concept", "Konzept");
-        this.translations.put("maker", "Erzeuger");
+        this.translations.put("sire", "Erzeuger");
         this.translations.put("clan", "Clan");
         this.translations.put("sect", "Sekte");
         this.translations.put("age", "Alter");

@@ -512,6 +512,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         }
     }
 
+    public void adjustAttributesToClan(Clan clan) {
+        this.attributesPanel.adjustAttributesToClan(clan);
+    }
+
     /**
      * Set the clan disciplins on the advantages panel.
      *

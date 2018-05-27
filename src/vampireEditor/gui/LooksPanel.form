@@ -27,7 +27,7 @@
                   <Component id="playerLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="behaviourLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="conceptLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="makerLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="sireLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="clanLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="sectLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -37,7 +37,7 @@
                   <Component id="playerField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="behaviourField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="conceptField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
-                  <Component id="makerField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
+                  <Component id="sireField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="sectField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="clanComboBox" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="natureField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
@@ -189,8 +189,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="makerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="makerField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="sireLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="sireField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -216,7 +216,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="makerField">
+    <Component class="javax.swing.JTextField" name="sireField">
       <Properties>
         <Property name="name" type="java.lang.String" value="maker" noResource="true"/>
       </Properties>
@@ -490,9 +490,9 @@
         <Property name="text" type="java.lang.String" value="Day of birth"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="makerLabel">
+    <Component class="javax.swing.JLabel" name="sireLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Maker"/>
+        <Property name="text" type="java.lang.String" value="Sire"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="nationalityLabel">
