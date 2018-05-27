@@ -23,6 +23,7 @@ package vampireEditor.gui;
 
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
@@ -47,11 +48,12 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      */
     @Override
     protected void init() {
+        super.init();
+
         this.setUseWeightings(false);
         this.addBackgroundFields();
         this.addDisciplinFields();
         this.addVirtueFields();
-        super.init();
     }
 
     /**

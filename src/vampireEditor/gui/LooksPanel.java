@@ -136,8 +136,10 @@ public class LooksPanel extends javax.swing.JPanel {
 
         sireField.setName("maker"); // NOI18N
 
+        sizeLabel.setLabelFor(sizeField);
         sizeLabel.setText("Size");
 
+        clanLabel.setLabelFor(clanComboBox);
         clanLabel.setText("Clan*");
 
         weightField.setName("weight"); // NOI18N
@@ -154,6 +156,7 @@ public class LooksPanel extends javax.swing.JPanel {
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
 
+        sectLabel.setLabelFor(sectField);
         sectLabel.setText("Sect");
 
         nextButton.setText("Next");
@@ -169,12 +172,14 @@ public class LooksPanel extends javax.swing.JPanel {
         backButton.setText("Back");
         backButton.setEnabled(false);
 
+        dayOfDeathLabel.setLabelFor(dayOfDeathField);
         dayOfDeathLabel.setText("Day of death");
 
         requiredLabel.setText("Required: *");
 
         sizeField.setName("size"); // NOI18N
 
+        weightLabel.setLabelFor(weightField);
         weightLabel.setText("Weight");
 
         dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
@@ -187,6 +192,7 @@ public class LooksPanel extends javax.swing.JPanel {
         dayOfDeathField.setPlaceholder(dateFormatter.getFormat().format(date));
         dayOfDeathField.setName("dayOfDeath"); // NOI18N
 
+        hairColorLabel.setLabelFor(hairColorField);
         hairColorLabel.setText("Hair color");
 
         hairColorField.setName("hairColor"); // NOI18N
@@ -200,10 +206,13 @@ public class LooksPanel extends javax.swing.JPanel {
             }
         });
 
+        sexLabel.setLabelFor(sexField);
         sexLabel.setText("Sex");
 
+        natureLabel.setLabelFor(natureField);
         natureLabel.setText("Nature*");
 
+        eyeColorLabel.setLabelFor(eyeColorField);
         eyeColorLabel.setText("Eye color");
 
         this.enteredFields.put(natureField, Boolean.FALSE);
@@ -214,14 +223,17 @@ public class LooksPanel extends javax.swing.JPanel {
 
         eyeColorField.setName("eyeColor"); // NOI18N
 
+        hideoutLabel.setLabelFor(hideoutField);
         hideoutLabel.setText("Hideout");
 
+        skinColorLabel.setLabelFor(skinColorField);
         skinColorLabel.setText("Skin color");
 
         hideoutField.setName("hideout"); // NOI18N
 
         skinColorField.setName("skinColor"); // NOI18N
 
+        playerLabel.setLabelFor(playerField);
         playerLabel.setText("Player");
 
         nationalityField.setName("nationality"); // NOI18N
@@ -230,8 +242,10 @@ public class LooksPanel extends javax.swing.JPanel {
 
         ageField.setName("age"); // NOI18N
 
+        behaviourLabel.setLabelFor(behaviourField);
         behaviourLabel.setText("Behaviour*");
 
+        ageLabel.setLabelFor(ageField);
         ageLabel.setText("Age");
 
         this.enteredFields.put(behaviourField, Boolean.FALSE);
@@ -252,24 +266,32 @@ public class LooksPanel extends javax.swing.JPanel {
         nameField.getDocument().addDocumentListener(this.documentListener);
         nameField.setName("name"); // NOI18N
 
+        nameLabel.setLabelFor(nameField);
         nameLabel.setText("Name*");
 
+        chronicleLabel.setLabelFor(chronicleField);
         chronicleLabel.setText("Chronicle");
 
         chronicleField.setName("chronicle"); // NOI18N
 
+        generationLabel.setLabelFor(generationComboBox);
         generationLabel.setText("Generation*");
 
+        looksLikeAgeLabel.setLabelFor(looksLikeAgeField);
         looksLikeAgeLabel.setText("Looks like age");
 
         looksLikeAgeField.setName("looksLikeAge"); // NOI18N
 
+        conceptLabel.setLabelFor(conceptField);
         conceptLabel.setText("Concept*");
 
+        dayOfBirthLabel.setLabelFor(dayOfBirthField);
         dayOfBirthLabel.setText("Day of birth");
 
+        sireLabel.setLabelFor(sireField);
         sireLabel.setText("Sire");
 
+        nationalityLabel.setLabelFor(nationalityField);
         nationalityLabel.setText("Nationality");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

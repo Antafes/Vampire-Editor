@@ -50,6 +50,10 @@ public class German implements LanguageInterface {
         this.translations.put("close", "Schließen");
         this.translations.put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
         this.translations.put("cancel", "Abbrechen");
+        this.translations.put("next", "Weiter");
+        this.translations.put("ok", "Ok");
+        this.translations.put("back", "Zurück");
+        this.translations.put("finish", "Fertig");
         this.translations.put("new", "Neu");
         this.translations.put("newMnemonic", "N");
         this.translations.put("newCharacter", "Neuer Charakter");
@@ -79,9 +83,6 @@ public class German implements LanguageInterface {
         this.translations.put("MALE", "männlich");
         this.translations.put("FEMALE", "weiblich");
         this.translations.put("required", "Felder mit * sind Pflichtfelder.");
-        this.translations.put("next", "Weiter");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Zurück");
         this.translations.put("PRIMARY", "Primär");
         this.translations.put("SECONDARY", "Sekundär");
         this.translations.put("TERTIARY", "Tertiär");
@@ -137,6 +138,13 @@ public class German implements LanguageInterface {
         this.translations.put("background", "Hintergrund");
         this.translations.put("disciplins", "Disziplinen");
         this.translations.put("virtues", "Tugenden");
+        this.translations.put("lastSteps", "Letzte Schritte");
+        this.translations.put("merits", "Vorzüge");
+        this.translations.put("flaws", "Schwächen");
+        this.translations.put("road", "Pfad");
+        this.translations.put("humanity", "Menschlichkeit");
+        this.translations.put("roadOf", "Pfad der ...");
+        this.translations.put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
     }
 
     /**

@@ -43,10 +43,11 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     protected void init() {
+        super.init();
+
         this.addTalentFields();
         this.addSkillFields();
         this.addKnowledgeFields();
-        super.init();
     }
 
     /**

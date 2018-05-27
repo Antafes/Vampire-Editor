@@ -21,24 +21,30 @@
  */
 package vampireEditor.character;
 
+import java.util.HashMap;
+import vampireEditor.Configuration;
+
 /**
  * SpecialFeature object.
  *
  * @author Marian Pollzien
  */
 public abstract class SpecialFeature implements SpecialFeatureInterface {
-    private String name;
-    private int cost;
+    private final HashMap<Configuration.Language, String> name;
+    private final int cost;
+    private final SpecialFeatureType type;
 
     /**
      * Create a new special feature object.
      *
      * @param name
      * @param cost
+     * @param type
      */
-    public SpecialFeature(String name, int cost) {
+    public SpecialFeature(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
         this.name = name;
         this.cost = cost;
+        this.type = type;
     }
 
     /**
@@ -48,7 +54,24 @@ public abstract class SpecialFeature implements SpecialFeatureInterface {
      */
     @Override
     public String getName() {
-        return name;
+        Configuration configuration = new Configuration();
+        configuration.loadProperties();
+
+        if (!this.name.containsKey(configuration.getLanguage())) {
+            return this.name.get(Configuration.Language.ENGLISH);
+        }
+
+        return this.name.get(configuration.getLanguage());
+    }
+
+    /**
+     * Get the type of the special feature.
+     *
+     * @return
+     */
+    @Override
+    public SpecialFeatureType getType() {
+        return type;
     }
 
     /**
@@ -59,5 +82,15 @@ public abstract class SpecialFeature implements SpecialFeatureInterface {
     @Override
     public int getCost() {
         return cost;
+    }
+
+    /**
+     * Get a string representation of the special feature.
+     *
+     * @return
+     */
+    @Override
+    public String toString() {
+        return this.getName() + " (" + this.getCost() + ")";
     }
 }

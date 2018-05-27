@@ -46,10 +46,11 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected void init() {
+        super.init();
+
         this.addPhyiscalFields();
         this.addSocialFields();
         this.addMentalFields();
-        super.init();
     }
 
     /**

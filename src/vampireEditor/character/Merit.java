@@ -21,6 +21,9 @@
  */
 package vampireEditor.character;
 
+import java.util.HashMap;
+import vampireEditor.Configuration;
+
 /**
  * Merit object.
  *
@@ -32,8 +35,9 @@ public class Merit extends SpecialFeature {
      *
      * @param name
      * @param cost
+     * @param type
      */
-    public Merit(String name, int cost) {
-        super(name, cost);
+    public Merit(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+        super(name, cost, type);
     }
 }

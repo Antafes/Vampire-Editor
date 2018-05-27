@@ -26,7 +26,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
@@ -37,27 +36,15 @@ import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.DefaultFormatter;
 import vampireEditor.Configuration;
-import vampireEditor.language.LanguageInterface;
 
 /**
  *
  * @author Marian Pollzien
  */
-abstract class BaseListPanel extends javax.swing.JPanel {
+abstract class BaseListPanel extends BasePanel {
 
-    private final Configuration configuration;
-    private final LanguageInterface language;
-    private final NewCharacterDialog parent;
-    private GroupLayout.ParallelGroup outerParallelHorizontalGroup;
-    private GroupLayout.ParallelGroup outerParallelVerticalGroup;
-    private GroupLayout.SequentialGroup outerSequentialHorizontalGroup;
-    private GroupLayout.SequentialGroup outerSequentialVerticalGroup;
-    private final Vector<Component> order;
-    private final HashMap<String, ArrayList<Component>> fields;
-    private final HashMap<String, HashMap<String, JTextField>> pointFields;
-    private final HashMap<String, JComboBox> weightings;
-    private javax.swing.JButton backButton;
-    private javax.swing.JButton nextButton;
+    private HashMap<String, HashMap<String, JTextField>> pointFields;
+    private HashMap<String, JComboBox> weightings;
     private int weightingCounter = 0;
 
     /**
@@ -67,110 +54,18 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * @param configuration
      */
     public BaseListPanel(NewCharacterDialog parent, Configuration configuration) {
-        super();
-        this.parent = parent;
-        this.configuration = configuration;
-        this.language = this.configuration.getLanguageObject();
-        this.order = new Vector<>();
-        this.fields = new HashMap<>();
-        this.pointFields = new HashMap<>();
-        this.weightings = new HashMap<>();
-
-        this.start();
-    }
-
-    /**
-     * Start up the creation process.
-     */
-    private void start() {
-        this.initComponents();
-        this.init();
-    }
-
-    /**
-     * This method is called to initialize the form.
-     */
-    @SuppressWarnings("unchecked")
-    protected void initComponents() {
-
-        backButton = new javax.swing.JButton();
-        nextButton = new javax.swing.JButton();
-
-        backButton.setText("Back");
-        backButton.addActionListener((ActionEvent evt) -> {
-            backButtonActionPerformed(evt);
-        });
-
-        nextButton.setText("Next");
-        nextButton.setEnabled(false);
-        nextButton.addActionListener((ActionEvent evt) -> {
-            nextButtonActionPerformed(evt);
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        this.outerParallelHorizontalGroup = layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
-        this.outerSequentialHorizontalGroup = layout.createSequentialGroup();
-        layout.setHorizontalGroup(
-            this.outerParallelHorizontalGroup
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, this.outerSequentialHorizontalGroup)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(479, Short.MAX_VALUE)
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap()
-            )
-        );
-        this.outerParallelVerticalGroup = layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
-        this.outerSequentialVerticalGroup = layout.createSequentialGroup();
-        layout.setVerticalGroup(
-            this.outerParallelVerticalGroup
-            .addGroup(this.outerSequentialVerticalGroup
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(nextButton)
-                        .addComponent(backButton)
-                    )
-                    .addContainerGap()
-                )
-            )
-        );
-    }
-
-    /**
-     * ActionPerformed listener for the back button.
-     *
-     * @param evt
-     */
-    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.parent.getCharacterTabPane().setSelectedIndex(this.parent.getCharacterTabPane().getSelectedIndex() - 1);
-    }
-
-    /**
-     * ActionPerformed listener for the next button.
-     *
-     * @param evt
-     */
-    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.parent.getCharacterTabPane().setSelectedIndex(this.parent.getCharacterTabPane().getSelectedIndex() + 1);
+        super(parent, configuration);
     }
 
     /**
      * Initialize everything.
      */
+    @Override
     protected void init() {
-        this.setFieldTexts();
-        this.createFocusTraversalPolicy();
-    }
+        this.pointFields = new HashMap<>();
+        this.weightings = new HashMap<>();
 
-    /**
-     * Set the translated texts for the fields and labels on the skills tab.
-     */
-    private void setFieldTexts() {
-        this.nextButton.setText(this.language.translate("next"));
-        this.backButton.setText(this.language.translate("back"));
+        super.init();
     }
 
     /**
@@ -180,6 +75,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * @param headline
      * @param elementList
      */
+    @Override
     protected void addFields(String headline, ArrayList<String> elementList) {
         this.addFields(headline, elementList, 0);
     }
@@ -192,8 +88,8 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * @param spinnerMinimum
      */
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
-        if (!this.fields.containsKey(headline)) {
-            this.fields.put(headline, new ArrayList<>());
+        if (!this.getFields().containsKey(headline)) {
+            this.getFields().put(headline, new ArrayList<>());
         }
 
         if (!this.pointFields.containsKey(headline)) {
@@ -201,7 +97,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         }
 
         GroupLayout layout = (GroupLayout) this.getLayout();
-        JLabel groupLabel = new JLabel(this.language.translate(headline));
+        JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         JComboBox weightingElement = this.addWeighting(headline);
         GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
@@ -212,7 +108,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
                 .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
             );
-        this.outerSequentialHorizontalGroup
+        this.getOuterSequentialHorizontalGroup()
             .addGroup(
                 layout.createSequentialGroup().addGroup(listHorizontalGroup)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -224,7 +120,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
             .addGap(6, 6, 6)
             .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
             .addGap(11, 11, 11);
-        this.outerParallelVerticalGroup
+        this.getOuterParallelVerticalGroup()
             .addGroup(listVerticalGroup);
 
         GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
@@ -239,7 +135,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
             groups.put("labelHorizontalGroup", labelHorizontalGroup);
             groups.put("elementHorizontalGroup", elementHorizontalGroup);
             groups.put("listVerticalGroup", listVerticalGroup);
-            this.addRow(element, spinnerMinimum, this.fields.get(headline), groups, layout);
+            this.addRow(element, spinnerMinimum, this.getFields(headline), groups, layout);
         });
 
         HashMap<String, GroupLayout.Group> groups = new HashMap<>();
@@ -258,6 +154,21 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * Add a single row to the current column.
      *
      * @param element
+     * @param fields
+     * @param groups
+     * @param layout
+     */
+    @Override
+    protected HashMap<String, Component> addRow(
+        String element, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+    ) {
+        return this.addRow(element, 0, fields, groups, layout);
+    }
+
+    /**
+     * Add a single row to the current column.
+     *
+     * @param element
      * @param spinnerMinimum
      * @param fields
      * @param groups
@@ -270,8 +181,9 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         HashMap<String, GroupLayout.Group> groups,
         GroupLayout layout
     ) {
-        JLabel elementLabel = new JLabel(this.language.translate(element));
+        JLabel elementLabel = new JLabel(this.getLanguage().translate(element));
         JSpinner spinner = new JSpinner();
+        elementLabel.setLabelFor(spinner);
         spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
         Dimension spinnerDimension = new Dimension(36, 20);
         spinner.setPreferredSize(spinnerDimension);
@@ -279,7 +191,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
         spinner.setMaximumSize(spinnerDimension);
         spinner.setName(element);
         this.addChangeListener(spinner);
-        this.order.add(spinner);
+        this.getOrder().add(spinner);
         fields.add(spinner);
         groups.get("labelHorizontalGroup").addComponent(elementLabel);
         groups.get("elementHorizontalGroup").addComponent(spinner);
@@ -330,9 +242,9 @@ abstract class BaseListPanel extends javax.swing.JPanel {
             );
             Weighting weighting = (Weighting) element.getSelectedItem();
             this.getMaxPointsFields(headline).setText(Integer.toString(this.getWeightingMax(weighting)));
-            this.parent.calculateUsedFreeAdditionalPoints();
+            this.getParentComponent().calculateUsedFreeAdditionalPoints();
         });
-        this.order.add(this.weightingCounter, weightingElement);
+        this.getOrder().add(this.weightingCounter, weightingElement);
         this.weightingCounter++;
         this.weightings.put(headline, weightingElement);
 
@@ -392,17 +304,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      */
     protected int getMaxPointsForField(String headline) {
         return this.getWeightingMax((Weighting) this.weightings.get(headline).getSelectedItem());
-    }
-
-    /**
-     * Create the focus traversal policy for the attributes tab.
-     */
-    private void createFocusTraversalPolicy() {
-        this.order.add(this.nextButton);
-        this.order.add(this.backButton);
-
-        this.setFocusTraversalPolicy(new NewCharacterFocusTraversalPolicy(this.order));
-        this.setFocusTraversalPolicyProvider(true);
     }
 
     /**
@@ -488,7 +389,7 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     public int getPointsSum(String type) {
         int sum = 0;
 
-        sum = this.fields.get(type).stream().map((component) -> (JSpinner) component)
+        sum = this.getFields(type).stream().map((component) -> (JSpinner) component)
             .map((spinner) -> Integer.parseInt(spinner.getValue().toString()) - Integer.parseInt(((SpinnerNumberModel) spinner.getModel()).getMinimum().toString()))
             .reduce(sum, Integer::sum);
 
@@ -539,51 +440,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Enable the next button.
-     */
-    protected void enableNextButton() {
-        this.nextButton.setEnabled(true);
-    }
-
-    /**
-     * Get the fields for the given type.
-     *
-     * @param type
-     *
-     * @return
-     */
-    public ArrayList<Component> getFields(String type) {
-        return this.fields.get(type);
-    }
-
-    /**
-     * Get the parent component.
-     *
-     * @return
-     */
-    public NewCharacterDialog getParentComponent() {
-        return this.parent;
-    }
-
-    /**
-     * Get the configuration object.
-     *
-     * @return
-     */
-    protected Configuration getConfiguration() {
-        return this.configuration;
-    }
-
-    /**
-     * Get the language object.
-     *
-     * @return
-     */
-    protected LanguageInterface getLanguage() {
-        return this.language;
-    }
-
-    /**
      * Get the point fields map.
      *
      * @return
@@ -599,24 +455,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      */
     protected HashMap<String, HashMap<String, JTextField>> getPointFields() {
         return pointFields;
-    }
-
-    /**
-     * Get the order vector for the traversal policy.
-     *
-     * @return
-     */
-    protected Vector<Component> getOrder() {
-        return this.order;
-    }
-
-    /**
-     * Get the fields hashmap.
-     *
-     * @return
-     */
-    protected HashMap<String, ArrayList<Component>> getFields() {
-        return fields;
     }
 
     /**
@@ -647,24 +485,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Get the outer parallel vertical group.
-     *
-     * @return
-     */
-    protected GroupLayout.ParallelGroup getOuterParallelVerticalGroup() {
-        return outerParallelVerticalGroup;
-    }
-
-    /**
-     * Get the outer sequential horizontal group.
-     *
-     * @return
-     */
-    protected GroupLayout.SequentialGroup getOuterSequentialHorizontalGroup() {
-        return outerSequentialHorizontalGroup;
-    }
-
-    /**
      * Get the max points field with the propery weighting values set.
      *
      * @param headline
@@ -683,18 +503,6 @@ abstract class BaseListPanel extends javax.swing.JPanel {
     abstract protected ComponentChangeListener createChangeListener();
 
     /**
-     * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
-     */
-    abstract public void setSpinnerMaximum(int maximum);
-
-    /**
-     * Check if every attribute has been set.
-     */
-    abstract protected void checkFieldsFilled();
-
-    /**
      * Get the proper weighting value.
      *
      * @param weighting
@@ -702,4 +510,11 @@ abstract class BaseListPanel extends javax.swing.JPanel {
      * @return
      */
     abstract protected int getWeightingMax(Weighting weighting);
+
+    /**
+     * Set the maximum value for the attribute spinners.
+     *
+     * @param maximum
+     */
+    abstract public void setSpinnerMaximum(int maximum);
 }

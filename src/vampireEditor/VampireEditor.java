@@ -47,6 +47,9 @@ public class VampireEditor {
     private static final HashMap<String, Weakness> WEAKNESSES = new HashMap<>();
     private static final HashMap<String, Clan> CLANS = new HashMap<>();
     private static final HashMap<String, Font> FONTS = new HashMap<>();
+    private static final HashMap<String, Merit> MERITS = new HashMap<>();
+    private static final HashMap<String, Flaw> FLAWS = new HashMap<>();
+    private static final HashMap<String, Road> ROADS = new HashMap<>();
 
     /**
      * @param args the command line arguments
@@ -63,6 +66,9 @@ public class VampireEditor {
         this.loadAdvantages();
         this.loadWeaknesses();
         this.loadClans();
+        this.loadMerits();
+        this.loadFlaws();
+        this.loadRoads();
         this.loadFonts();
         this.openBaseWindow();
     }
@@ -202,6 +208,95 @@ public class VampireEditor {
     }
 
     /**
+     * Load the available merits.
+     */
+    private void loadMerits() {
+        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/merits.xml");
+        XMLParser xp = new XMLParser();
+
+        if (xp.parse(is)) {
+            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
+                HashMap<Configuration.Language, String> names = new HashMap<>();
+
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
+                    names.put(
+                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                        name.getFirstChild().getNodeValue()
+                    );
+                });
+
+                VampireEditor.MERITS.put(
+                    element.getAttribute("key"),
+                    new Merit(
+                        names,
+                        XMLParser.getTagValueInt("cost", element),
+                        SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))
+                    )
+                );
+            });
+        }
+    }
+
+    /**
+     * Load the available merits.
+     */
+    private void loadFlaws() {
+        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/flaws.xml");
+        XMLParser xp = new XMLParser();
+
+        if (xp.parse(is)) {
+            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
+                HashMap<Configuration.Language, String> names = new HashMap<>();
+
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
+                    names.put(
+                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                        name.getFirstChild().getNodeValue()
+                    );
+                });
+
+                VampireEditor.FLAWS.put(
+                    element.getAttribute("key"),
+                    new Flaw(
+                        names,
+                        XMLParser.getTagValueInt("cost", element),
+                        SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))
+                    )
+                );
+            });
+        }
+    }
+
+    /**
+     * Load the available roads.
+     */
+    private void loadRoads() {
+        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/roads.xml");
+        XMLParser xp = new XMLParser();
+
+        if (xp.parse(is)) {
+            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
+                HashMap<Configuration.Language, String> names = new HashMap<>();
+
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
+                    names.put(
+                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                        name.getFirstChild().getNodeValue()
+                    );
+                });
+
+                VampireEditor.ROADS.put(
+                    element.getAttribute("key"),
+                    new Road(
+                        element.getAttribute("key"),
+                        names
+                    )
+                );
+            });
+        }
+    }
+
+    /**
      * Get the disciplins of the given clan element.
      *
      * @param element
@@ -334,5 +429,32 @@ public class VampireEditor {
      */
     public static Clan getClan(String key) {
         return VampireEditor.CLANS.get(key);
+    }
+
+    /**
+     * Get every merit that is available.
+     *
+     * @return
+     */
+    public static HashMap<String, Merit> getMerits() {
+        return VampireEditor.MERITS;
+    }
+
+    /**
+     * Get every flaw that is available.
+     *
+     * @return
+     */
+    public static HashMap<String, Flaw> getFlaws() {
+        return VampireEditor.FLAWS;
+    }
+
+    /**
+     * Get every road that is available.
+     *
+     * @return
+     */
+    public static HashMap<String, Road> getRoads() {
+        return VampireEditor.ROADS;
     }
 }

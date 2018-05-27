@@ -69,14 +69,6 @@ abstract class BaseEditableListPanel extends BaseListPanel {
     }
 
     /**
-     * Initialize everything.
-     */
-    @Override
-    protected void init() {
-        super.init();
-    }
-
-    /**
      * Add labels and spinners by the given list and under the given headline.
      *
      * @param headline

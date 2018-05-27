@@ -25,7 +25,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
@@ -45,6 +48,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private AttributesPanel attributesPanel;
     private AbilitiesPanel abilitiesPanel;
     private AdvantagesPanel advantagesPanel;
+    private LastStepsPanel lastStepsPanel;
 
     /**
      * Creates new form NewCharacterDialog
@@ -103,11 +107,18 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
         characterTabPane.add(this.abilitiesPanel);
         this.advantagesPanel = new AdvantagesPanel(this, this.configuration);
-        characterTabPane.add(this.advantagesPanel);
+        JScrollPane advantagesScrollPane = new JScrollPane(this.advantagesPanel);
+        advantagesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        characterTabPane.add(advantagesScrollPane);
+        this.lastStepsPanel = new LastStepsPanel(this, this.configuration);
+        JScrollPane lastStepsScrollPane = new JScrollPane(this.lastStepsPanel);
+        lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        characterTabPane.add(lastStepsScrollPane);
 
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
         characterTabPane.setEnabledAt(3, false);
+        //characterTabPane.setEnabledAt(4, false);
 
         freeAdditionalPointsTextField.setEnabled(false);
 
@@ -199,6 +210,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.characterTabPane.setTitleAt(1, this.language.translate("attributes"));
         this.characterTabPane.setTitleAt(2, this.language.translate("abilities"));
         this.characterTabPane.setTitleAt(3, this.language.translate("advantages"));
+        this.characterTabPane.setTitleAt(4, this.language.translate("lastSteps"));
     }
 
     /**
@@ -464,7 +476,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * Calculate the used free additional points.
      */
     public void calculateUsedFreeAdditionalPoints() {
-        int freeMaximum = Integer.parseInt(this.freeAdditionalMaxPointsTextField.getText());
         int freeSum = 0;
 
         if (this.checkPhysicalPoints()) {
@@ -503,15 +514,34 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             freeSum += (this.getVirtuePointsSum() - this.getVirtueMaxPoints()) * 2;
         }
 
+        freeSum += this.lastStepsPanel.getMeritPoints();
+
         this.freeAdditionalPointsTextField.setText(Integer.toString(freeSum));
 
-        if (freeSum > freeMaximum) {
+        if (this.checkFreeAdditionalPoints()) {
             this.freeAdditionalPointsLabel.setForeground(Color.RED);
         } else {
             this.freeAdditionalPointsLabel.setForeground(Color.DARK_GRAY);
         }
     }
 
+    /**
+     * Check more free additional points are used than are available.
+     *
+     * @return True if the used points are higher than the maximum
+     */
+    public boolean checkFreeAdditionalPoints() {
+        int usedPoints = Integer.parseInt(this.freeAdditionalPointsTextField.getText());
+        int maxPoints = Integer.parseInt(this.freeAdditionalMaxPointsTextField.getText());
+
+        return usedPoints > maxPoints;
+    }
+
+    /**
+     * Adjust the attributes according to the selected clan.
+     *
+     * @param clan
+     */
     public void adjustAttributesToClan(Clan clan) {
         this.attributesPanel.adjustAttributesToClan(clan);
     }
@@ -523,6 +553,31 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      */
     public void setClanDisciplins(Clan clan) {
         this.advantagesPanel.setDisciplins(clan);
+    }
+
+    /**
+     * Get the textfield for the maximum free additional points.
+     *
+     * @return
+     */
+    public JTextField getFreeAdditionalMaxPointsTextField() {
+        return freeAdditionalMaxPointsTextField;
+    }
+
+    /**
+     * Get the textfield for the used free additional points.
+     *
+     * @return
+     */
+    public JTextField getFreeAdditionalPointsTextField() {
+        return freeAdditionalPointsTextField;
+    }
+
+    /**
+     * Finish the character and send the new character object over to the BaseWindow.
+     * @TODO Implement this.
+     */
+    public void finishCharacter() {
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">

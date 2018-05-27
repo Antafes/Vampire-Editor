@@ -28,11 +28,28 @@ package vampireEditor.character;
  */
 public interface SpecialFeatureInterface {
     /**
+     * List of special feature types.
+     */
+    public static enum SpecialFeatureType {
+        PHYSICAL,
+        MENTAL,
+        SOCIAL,
+        SUPERNATURAL;
+    }
+
+    /**
      * Get the name of the special feature.
      *
      * @return
      */
     public String getName();
+
+    /**
+     * Get the type of the special feature.
+     *
+     * @return
+     */
+    public SpecialFeatureType getType();
 
     /**
      * Get the cost of the special feature.

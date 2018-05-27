@@ -50,6 +50,10 @@ public class English implements LanguageInterface {
         this.translations.put("close", "Close");
         this.translations.put("aboutText", "This tool was created by Marian Pollzien.");
         this.translations.put("cancel", "Cancel");
+        this.translations.put("next", "Next");
+        this.translations.put("ok", "Ok");
+        this.translations.put("back", "Back");
+        this.translations.put("finish", "Finish");
         this.translations.put("new", "New");
         this.translations.put("newMnemonic", "N");
         this.translations.put("newCharacter", "New character");
@@ -79,9 +83,6 @@ public class English implements LanguageInterface {
         this.translations.put("MALE", "male");
         this.translations.put("FEMALE", "female");
         this.translations.put("required", "Fields marked with * are required.");
-        this.translations.put("next", "Next");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Back");
         this.translations.put("PRIMARY", "Primary");
         this.translations.put("SECONDARY", "Secondary");
         this.translations.put("TERTIARY", "Tertiary");
@@ -137,6 +138,13 @@ public class English implements LanguageInterface {
         this.translations.put("background", "Background");
         this.translations.put("disciplins", "Disciplins");
         this.translations.put("virtues", "Virtues");
+        this.translations.put("lastSteps", "Last steps");
+        this.translations.put("merits", "Merits");
+        this.translations.put("flaws", "Flaws");
+        this.translations.put("road", "Road");
+        this.translations.put("humanity", "Humanity");
+        this.translations.put("roadOf", "Road of ...");
+        this.translations.put("flawInfoTooMany", "Your selected flaws exceed the maximum of 7 points.");
     }
 
     /**

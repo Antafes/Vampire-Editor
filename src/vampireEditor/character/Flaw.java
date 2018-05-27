@@ -21,6 +21,9 @@
  */
 package vampireEditor.character;
 
+import java.util.HashMap;
+import vampireEditor.Configuration;
+
 /**
  * Flaw object.
  *
@@ -32,8 +35,9 @@ public class Flaw extends SpecialFeature {
      *
      * @param name
      * @param cost
+     * @param type
      */
-    public Flaw(String name, int cost) {
-        super(name, cost);
+    public Flaw(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+        super(name, cost, type);
     }
 }

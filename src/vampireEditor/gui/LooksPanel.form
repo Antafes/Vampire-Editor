@@ -223,11 +223,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="sizeLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="sizeField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Size"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="clanLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="clanComboBox"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Clan*"/>
       </Properties>
     </Component>
@@ -264,6 +270,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="sectLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="sectField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Sect"/>
       </Properties>
     </Component>
@@ -289,6 +298,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="dayOfDeathLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="dayOfDeathField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Day of death"/>
       </Properties>
     </Component>
@@ -304,6 +316,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="weightLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="weightField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Weight"/>
       </Properties>
     </Component>
@@ -325,6 +340,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="hairColorLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="hairColorField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Hair color"/>
       </Properties>
     </Component>
@@ -350,16 +368,25 @@
     </Component>
     <Component class="javax.swing.JLabel" name="sexLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="sexField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Sex"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="natureLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="natureField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nature*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="eyeColorLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="eyeColorField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Eye color"/>
       </Properties>
     </Component>
@@ -378,11 +405,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="hideoutLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="hideoutField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Hideout"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="skinColorLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="skinColorField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Skin color"/>
       </Properties>
     </Component>
@@ -398,6 +431,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="playerLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="playerField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Player"/>
       </Properties>
     </Component>
@@ -418,11 +454,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="behaviourLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="behaviourField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Behaviour*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="ageLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="ageField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Age"/>
       </Properties>
     </Component>
@@ -452,11 +494,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="nameLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="nameField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Name*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="chronicleLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="chronicleField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Chronicle"/>
       </Properties>
     </Component>
@@ -467,11 +515,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="generationLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="generationComboBox"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Generation*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="looksLikeAgeLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="looksLikeAgeField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Looks like age"/>
       </Properties>
     </Component>
@@ -482,21 +536,33 @@
     </Component>
     <Component class="javax.swing.JLabel" name="conceptLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="conceptField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Concept*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="dayOfBirthLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="dayOfBirthField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Day of birth"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="sireLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="sireField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Sire"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="nationalityLabel">
       <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="nationalityField"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nationality"/>
       </Properties>
     </Component>
