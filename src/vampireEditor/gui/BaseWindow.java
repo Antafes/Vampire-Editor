@@ -76,6 +76,7 @@ public class BaseWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         aboutTextPane = new javax.swing.JTextPane();
         characterTabPane = new javax.swing.JTabbedPane();
+        characterCreatedLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -141,6 +142,8 @@ public class BaseWindow extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        characterTabPane.addTab("tab1", characterCreatedLabel);
 
         fileMenu.setText("File");
 
@@ -248,8 +251,9 @@ public class BaseWindow extends javax.swing.JFrame {
         int x, y, width, height;
 
         // Add the new character dialog.
-        JDialog newDialog = new NewCharacterDialog(this, true);
+        NewCharacterDialog newDialog = new NewCharacterDialog(this, true);
         newDialog.setVisible(false);
+        newDialog.setParent(this);
 
         width = newDialog.getWidth();
         height = newDialog.getHeight();
@@ -352,10 +356,21 @@ public class BaseWindow extends javax.swing.JFrame {
         root.getActionMap().put( dispatchWindowClosingActionMapKey, dispatchClosing);
     }
 
+    /**
+     * Add a new character to the tabbed panel.
+     *
+     * @param character
+     */
+    public void addNewCharacter(vampireEditor.Character character) {
+        this.characterCreatedLabel.setText(character.getName() + " added.");
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog aboutDialog;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JTextPane aboutTextPane;
+    private javax.swing.JLabel characterCreatedLabel;
     private javax.swing.JTabbedPane characterTabPane;
     private javax.swing.JButton closeAboutButton;
     private javax.swing.JMenuItem closeMenuItem;
@@ -370,4 +385,5 @@ public class BaseWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     // End of variables declaration//GEN-END:variables
+    // </editor-fold>
 }

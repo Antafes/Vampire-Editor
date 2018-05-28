@@ -172,6 +172,13 @@ abstract class BasePanel extends JPanel {
     }
 
     /**
+     * Disable the next button.
+     */
+    protected void disableNextButton() {
+        this.nextButton.setEnabled(false);
+    }
+
+    /**
      * Get the fields for the given type.
      *
      * @param type
@@ -287,4 +294,18 @@ abstract class BasePanel extends JPanel {
      * Check if every attribute has been set.
      */
     abstract protected void checkFieldsFilled();
+
+    /**
+     * This method checks every input made by the user for duplicate entries or other inconsistencies.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    abstract public boolean checkAllFields();
+
+    /**
+     * Get a list with all field values.
+     *
+     * @param character
+     */
+    abstract public void fillCharacter(vampireEditor.Character character);
 }

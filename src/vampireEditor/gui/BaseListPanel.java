@@ -57,14 +57,19 @@ abstract class BaseListPanel extends BasePanel {
         super(parent, configuration);
     }
 
+    @Override
+    protected void initComponents() {
+        super.initComponents();
+
+        this.pointFields = new HashMap<>();
+        this.weightings = new HashMap<>();
+    }
+
     /**
      * Initialize everything.
      */
     @Override
     protected void init() {
-        this.pointFields = new HashMap<>();
-        this.weightings = new HashMap<>();
-
         super.init();
     }
 
@@ -254,12 +259,12 @@ abstract class BaseListPanel extends BasePanel {
     /**
      * Add the point fields for the column.
      *
-     * @param headline
+     * @param type
      * @param groups
      * @param layout
      */
     protected void addPointFields(
-        String headline, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+        String type, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
     ) {
         Dimension pointsDimension = new Dimension(36, 20);
         JTextField pointsField = new JTextField("0");
@@ -267,13 +272,13 @@ abstract class BaseListPanel extends BasePanel {
         pointsField.setPreferredSize(pointsDimension);
         pointsField.setMinimumSize(pointsDimension);
         pointsField.setMaximumSize(pointsDimension);
-        JTextField maxPointsField = this.getMaxPointsField(headline);
+        JTextField maxPointsField = this.getMaxPointsField(type);
         maxPointsField.setEnabled(false);
         maxPointsField.setPreferredSize(pointsDimension);
         maxPointsField.setMinimumSize(pointsDimension);
         maxPointsField.setMaximumSize(pointsDimension);
-        this.pointFields.get(headline).put("points", pointsField);
-        this.pointFields.get(headline).put("maxPoints", maxPointsField);
+        this.pointFields.get(type).put("points", pointsField);
+        this.pointFields.get(type).put("maxPoints", maxPointsField);
         GroupLayout.SequentialGroup listVerticalGroup = (GroupLayout.SequentialGroup) groups.get("listVerticalGroup");
 
         if (groups.containsKey("listOuterVerticalGroup")) {
@@ -298,12 +303,12 @@ abstract class BaseListPanel extends BasePanel {
     /**
      * Get the maximum available points for setting them in the max points field.
      *
-     * @param headline
+     * @param type
      *
      * @return
      */
-    protected int getMaxPointsForField(String headline) {
-        return this.getWeightingMax((Weighting) this.weightings.get(headline).getSelectedItem());
+    protected int getMaxPointsForField(String type) {
+        return this.getWeightingMax((Weighting) this.weightings.get(type).getSelectedItem());
     }
 
     /**
@@ -404,7 +409,7 @@ abstract class BaseListPanel extends BasePanel {
      * @return
      */
     public boolean checkPoints(String type) {
-        return this.getPointsSum(type)> this.getMaxPoints(type);
+        return this.getPointsSum(type) > this.getMaxPoints(type);
     }
 
     /**
@@ -487,12 +492,12 @@ abstract class BaseListPanel extends BasePanel {
     /**
      * Get the max points field with the propery weighting values set.
      *
-     * @param headline
+     * @param type
      *
      * @return
      */
-    protected JTextField getMaxPointsField(String headline) {
-        return new JTextField(Integer.toString(this.getMaxPointsForField(headline)));
+    protected JTextField getMaxPointsField(String type) {
+        return new JTextField(Integer.toString(this.getMaxPointsForField(type)));
     }
 
     /**

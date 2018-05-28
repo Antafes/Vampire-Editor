@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
+import vampireEditor.character.Ability;
 import vampireEditor.character.AbilityInterface;
 import vampireEditor.utility.TranslatedComparator;
 
@@ -43,11 +44,11 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     protected void init() {
-        super.init();
-
         this.addTalentFields();
         this.addSkillFields();
         this.addKnowledgeFields();
+
+        super.init();
     }
 
     /**
@@ -262,5 +263,47 @@ public class AbilitiesPanel extends BaseListPanel {
     @Override
     protected int getWeightingMax(Weighting weighting) {
         return weighting.getAbilitiesMax();
+    }
+
+    /**
+     * This method checks every input made by the user for duplicate entries or other inconsistencies.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    @Override
+    public boolean checkAllFields() {
+        if (this.getPointsSum("knowledges") < this.getMaxPoints("knowledges")) {
+            return true;
+        }
+
+        if (this.getPointsSum("skills") < this.getMaxPoints("skills")) {
+            return true;
+        }
+
+        return this.getPointsSum("talents") < this.getMaxPoints("talents");
+    }
+
+    /**
+     * Get a list with all field values.
+     *
+     * @param character
+     */
+    @Override
+    public void fillCharacter(vampireEditor.Character character) {
+        this.getFields("talents").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAbilities().add(
+                new Ability(spinner.getName(), AbilityInterface.AbilityType.TALENT, (int) spinner.getValue())
+            );
+        });
+        this.getFields("skills").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAbilities().add(
+                new Ability(spinner.getName(), AbilityInterface.AbilityType.SKILL, (int) spinner.getValue())
+            );
+        });
+        this.getFields("knowledges").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAbilities().add(
+                new Ability(spinner.getName(), AbilityInterface.AbilityType.KNOWLEDGE, (int) spinner.getValue())
+            );
+        });
     }
 }

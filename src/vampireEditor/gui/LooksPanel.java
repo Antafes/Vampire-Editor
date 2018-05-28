@@ -657,6 +657,46 @@ public class LooksPanel extends javax.swing.JPanel {
         this.setFocusTraversalPolicyProvider(true);
     }
 
+    /**
+     * This method checks every input made by the user for duplicate entries.
+     * This method is only implemented to achive consistency for every panel.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    public boolean checkAllFields() {
+        return false;
+    }
+
+    /**
+     * Get a list with all field values.
+     *
+     * @param character
+     */
+    public void fillCharacter(vampireEditor.Character character) {
+        character.setName(this.nameField.getText());
+        character.setChronicle(this.chronicleField.getText());
+        character.setGeneration((Generation) this.generationComboBox.getSelectedItem());
+        character.setNature(this.natureField.getText());
+        character.setHideout(this.hideoutField.getText());
+        character.setPlayer(this.playerField.getText());
+        character.setBehaviour(this.behaviourField.getText());
+        character.setConcept(this.conceptField.getText());
+        character.setSire(this.sireField.getText());
+        character.setClan((Clan) this.clanComboBox.getSelectedItem());
+        character.setSect(this.sectField.getText());
+        character.setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0);
+        character.setLooksLikeAge(!"".equals(this.looksLikeAgeField.getText()) ? Integer.parseInt(this.looksLikeAgeField.getText()) : 0);
+        character.setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null);
+        character.setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null);
+        character.setHairColor(this.hairColorField.getText());
+        character.setEyeColor(this.eyeColorField.getText());
+        character.setSkinColor(this.skinColorField.getText());
+        character.setNationality(this.nationalityField.getText());
+        character.setSize(!this.sizeField.getText().equals("") ? Integer.parseInt(this.sizeField.getText()) : 0);
+        character.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
+        character.setSex((vampireEditor.Character.Sex) this.sexField.getSelectedItem());
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageField;

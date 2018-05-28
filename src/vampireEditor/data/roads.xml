@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<roads>
+    <road key="roadOfBeast">
+        <name>
+            <English>Road of Beast</English>
+        </name>
+    </road>
+    <road key="roadOfHeaven">
+        <name>
+            <English>Road of Heaven</English>
+        </name>
+    </road>
+    <road key="roadOfHumanity">
+        <name>
+            <English>Road of Humanity</English>
+        </name>
+    </road>
+    <road key="roadOfKings">
+        <name>
+            <English>Road of Kings</English>
+        </name>
+    </road>
+    <road key="roadOfLilith">
+        <name>
+            <English>Road of Lilith</English>
+        </name>
+    </road>
+    <road key="roadOfMetamorphosis">
+        <name>
+            <English>Road of Metamorphosis</English>
+        </name>
+    </road>
+    <road key="roadOfSin">
+        <name>
+            <English>Road of Sin</English>
+        </name>
+    </road>
+    <road key="roadOfBones">
+        <name>
+            <English>Road of Bones</English>
+        </name>
+    </road>
+    <road key="roadOfYasa">
+        <name>
+            <English>Road of Yasa</English>
+        </name>
+    </road>
+</roads>

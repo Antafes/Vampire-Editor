@@ -146,12 +146,12 @@ abstract class BaseEditableListPanel extends BaseListPanel {
      * @param maxFields
      */
     protected void addFields(String headline, String type, ArrayList<String> elementList, int spinnerMinimum, int maxFields) {
-        if (!this.getFields().containsKey(headline)) {
-            this.getFields().put(headline, new ArrayList<>());
+        if (!this.getFields().containsKey(type)) {
+            this.getFields().put(type, new ArrayList<>());
         }
 
-        if (!this.getPointFields().containsKey(headline)) {
-            this.getPointFields().put(headline, new HashMap<>());
+        if (!this.getPointFields().containsKey(type)) {
+            this.getPointFields().put(type, new HashMap<>());
         }
 
         if (!this.comboBoxes.containsKey(headline)) {
@@ -208,22 +208,22 @@ abstract class BaseEditableListPanel extends BaseListPanel {
 
         elementList.forEach((element) -> {
             HashMap<String, Component> newElements = this.addRow(
-                element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(headline), groups, layout
+                element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
             );
             this.comboBoxes.get(type).add((JComboBox) newElements.get("comboBox"));
         });
 
-        if (maxFields == this.UNLIMITEDMAXFIELDS || this.getFields(headline).size() < maxFields) {
+        if (maxFields == this.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
             HashMap<String, Component> newElements = this.addRow(
-                null, type, spinnerMinimum, this.getFields(headline), groups, layout
+                null, type, spinnerMinimum, this.getFields(type), groups, layout
             );
             ((JComboBox) newElements.get("comboBox")).addItemListener(
-                this.getComboBoxItemListener(type, spinnerMinimum, this.getFields(headline), groups, layout, maxFields)
+                this.getComboBoxItemListener(type, spinnerMinimum, this.getFields(type), groups, layout, maxFields)
             );
             this.comboBoxes.get(type).add((JComboBox) newElements.get("comboBox"));
         }
 
-        this.addPointFields(headline, groups, layout);
+        this.addPointFields(type, groups, layout);
         outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
         listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
         outerElementHorizontalGroup.addGroup(elementHorizontalGroup);
@@ -386,27 +386,6 @@ abstract class BaseEditableListPanel extends BaseListPanel {
             this.revalidate();
             this.repaint();
         };
-    }
-
-    /**
-     * Get the maximum available points for setting them in the max points field.
-     *
-     * @param headline
-     *
-     * @return
-     */
-    @Override
-    protected int getMaxPointsForField(String headline) {
-        switch (headline) {
-            case "background":
-                return 5;
-            case "disciplins":
-                return 4;
-            case "virtues":
-                return 7;
-            default:
-                return 0;
-        }
     }
 
     /**

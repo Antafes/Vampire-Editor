@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<merits>
+    <merit key="celestialAttunement">
+        <name>
+            <English>Celestial Attunement</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="commonSense">
+        <name>
+            <English>Common Sense</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="literacy">
+        <name>
+            <English>Literacy</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="eideticMemory">
+        <name>
+            <English>Eidetic Memory</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="lightSleeper">
+        <name>
+            <English>Light Sleeper</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="multiLingual">
+        <name>
+            <English>Multi-Lingual</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="ambidextrous">
+        <name>
+            <English>Ambidextrous</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="deceptiveEating">
+        <name>
+            <English>Deceptive Eating</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="blushOfHealth">
+        <name>
+            <English>Blush of Health</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="withoutATrace">
+        <name>
+            <English>Without a Trace</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="efficientDigestion">
+        <name>
+            <English>Efficient Digestion</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="sturdy">
+        <name>
+            <English>Sturdy</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>4</cost>
+    </merit>
+    <merit key="linguaFranca">
+        <name>
+            <English>Lingua Franca</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="prestigiousSire">
+        <name>
+            <English>Prestigious Sire</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="theCompanyOfSaintsAndHeroes">
+        <name>
+            <English>The company of Saints and Heroes</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="patron1">
+        <name>
+            <English>Patron</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="patron2">
+        <name>
+            <English>Patron</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="patron3">
+        <name>
+            <English>Patron</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="patron4">
+        <name>
+            <English>Patron</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </merit>
+    <merit key="patron5">
+        <name>
+            <English>Patron</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>5</cost>
+    </merit>
+    <merit key="debtOfGratitude1">
+        <name>
+            <English>Debt of Gratitude</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="debtOfGratitude3">
+        <name>
+            <English>Debt of Gratitude</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="inoffensiveToAnimals">
+        <name>
+            <English>Inoffensive to Animals</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="clanApostate">
+        <name>
+            <English>Clan Apostate</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="darksight">
+        <name>
+            <English>Darksight</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="medium">
+        <name>
+            <English>Medium</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="weakAura">
+        <name>
+            <English>Weak Aura</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="oracularAbility">
+        <name>
+            <English>Oracular Ability</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="potentAura">
+        <name>
+            <English>Potent Aura</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="spiritMentor">
+        <name>
+            <English>Spirit Mentor</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="unbondable">
+        <name>
+            <English>Unbondable</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="trueLove">
+        <name>
+            <English>True Love</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </merit>
+    <merit key="nineLives">
+        <name>
+            <English>Nine Lives</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>6</cost>
+    </merit>
+    <merit key="lucky1">
+        <name>
+            <English>Lucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="lucky2">
+        <name>
+            <English>Lucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </merit>
+    <merit key="lucky3">
+        <name>
+            <English>Lucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </merit>
+    <merit key="lucky4">
+        <name>
+            <English>Lucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </merit>
+    <merit key="lucky5">
+        <name>
+            <English>Lucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </merit>
+</merits>

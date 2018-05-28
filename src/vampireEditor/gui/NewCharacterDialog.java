@@ -49,6 +49,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private AbilitiesPanel abilitiesPanel;
     private AdvantagesPanel advantagesPanel;
     private LastStepsPanel lastStepsPanel;
+    private BaseWindow parent;
 
     /**
      * Creates new form NewCharacterDialog
@@ -118,7 +119,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
         characterTabPane.setEnabledAt(3, false);
-        //characterTabPane.setEnabledAt(4, false);
+        characterTabPane.setEnabledAt(4, false);
 
         freeAdditionalPointsTextField.setEnabled(false);
 
@@ -574,10 +575,44 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
+     * Set the parent container.
+     *
+     * @param parent
+     */
+    public void setParent(BaseWindow parent) {
+        this.parent = parent;
+    }
+
+    /**
      * Finish the character and send the new character object over to the BaseWindow.
-     * @TODO Implement this.
      */
     public void finishCharacter() {
+        if (this.checkAllInputs()) {
+            return;
+        }
+
+        vampireEditor.Character character = new vampireEditor.Character();
+        this.looksPanel.fillCharacter(character);
+        this.attributesPanel.fillCharacter(character);
+        this.abilitiesPanel.fillCharacter(character);
+        this.advantagesPanel.fillCharacter(character);
+        this.lastStepsPanel.fillCharacter(character);
+
+        this.parent.addNewCharacter(character);
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    /**
+     * This method checks every input made by the user for duplicate entries on any panel.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    private boolean checkAllInputs() {
+        return this.looksPanel.checkAllFields()
+            || this.attributesPanel.checkAllFields()
+            || this.abilitiesPanel.checkAllFields()
+            || this.advantagesPanel.checkAllFields()
+            || this.lastStepsPanel.checkAllFields();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">

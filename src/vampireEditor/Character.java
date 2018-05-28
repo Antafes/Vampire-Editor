@@ -35,23 +35,21 @@ public class Character {
     private Clan clan;
     private Generation generation;
     private String chronicle;
-    private int experience;
+    private int experience = 0;
     private String nature;
-    private String sire;
-    private String player;
     private String hideout;
+    private String player;
+    private String behaviour;
     private String concept;
+    private String sire;
     private String sect;
     private final ArrayList<Attribute> attributes;
     private final ArrayList<Ability> abilities;
-    private final ArrayList<Advantage> benefits;
-    private final ArrayList<Merit> advantages;
-    private final ArrayList<Flaw> disadvantages;
-    /**
-     * List of additional attributes/traits.
-     */
+    private final ArrayList<Advantage> advantages;
+    private final ArrayList<Merit> merits;
+    private final ArrayList<Flaw> flaws;
     private final ArrayList<Trait> traits;
-    private int humanity;
+    private Road road;
     private int willpower;
     private int bloodStock;
     private int age;
@@ -85,87 +83,15 @@ public class Character {
     }
 
     /**
-     * Create a new character with every possible property.
-     *
-     * @param name
-     * @param clan
-     * @param generation
-     * @param chronicle
-     * @param experience
-     * @param nature
-     * @param sire
-     * @param player
-     * @param hideout
-     * @param concept
-     * @param sect
-     * @param attributes
-     * @param skills
-     * @param benefits
-     * @param advantages
-     * @param disadvantages
-     * @param traits
-     * @param humanity
-     * @param willpower
-     * @param bloodStock
-     * @param age
-     * @param looksLikeAge
-     * @param dayOfBirth
-     * @param dayOfDeath
-     * @param hairColor
-     * @param eyeColor
-     * @param skinColor
-     * @param nationality
-     * @param size
-     * @param weight
-     * @param sex
-     * @param story
-     * @param description
+     * Create a new character.
      */
-    public Character(
-        String name, Clan clan, Generation generation, String chronicle,
-        int experience, String nature, String sire, String player,
-        String hideout, String concept, String sect,
-        ArrayList<Attribute> attributes, ArrayList<Ability> skills,
-        ArrayList<Advantage> benefits, ArrayList<Merit> advantages,
-        ArrayList<Flaw> disadvantages, ArrayList<Trait> traits,
-        int humanity, int willpower, int bloodStock, int age, int looksLikeAge,
-        Date dayOfBirth, Date dayOfDeath, String hairColor, String eyeColor,
-        String skinColor, String nationality, int size, int weight, Sex sex,
-        String story, String description
-    ) {
-        this.name = name;
-        this.clan = clan;
-        this.generation = generation;
-        this.chronicle = chronicle;
-        this.experience = experience;
-        this.nature = nature;
-        this.sire = sire;
-        this.player = player;
-        this.hideout = hideout;
-        this.concept = concept;
-        this.sect = sect;
-        this.attributes = attributes;
-        this.abilities = skills;
-        this.benefits = benefits;
-        this.advantages = advantages;
-        this.disadvantages = disadvantages;
-        this.traits = traits;
-        this.humanity = humanity;
-        this.willpower = willpower;
-        this.bloodStock = bloodStock;
-        this.age = age;
-        this.looksLikeAge = looksLikeAge;
-        this.dayOfBirth = dayOfBirth;
-        this.dayOfDeath = dayOfDeath;
-        this.hairColor = hairColor;
-        this.eyeColor = eyeColor;
-        this.skinColor = skinColor;
-        this.nationality = nationality;
-        this.size = size;
-        this.weight = weight;
-        this.sex = sex;
-        this.story = story;
-        this.description = description;
+    public Character() {
+        this.attributes = new ArrayList<>();
+        this.abilities = new ArrayList<>();
+        this.advantages = new ArrayList<>();
+        this.merits = new ArrayList<>();
+        this.flaws = new ArrayList<>();
+        this.traits = new ArrayList<>();
     }
 
     /**
@@ -223,12 +149,12 @@ public class Character {
     }
 
     /**
-     * Get the sire of the character.
+     * Get the hideout of the character.
      *
      * @return
      */
-    public String getSire() {
-        return sire;
+    public String getHideout() {
+        return hideout;
     }
 
     /**
@@ -241,12 +167,12 @@ public class Character {
     }
 
     /**
-     * Get the hideout of the character.
+     * Get the behaviour of the character.
      *
      * @return
      */
-    public String getHideout() {
-        return hideout;
+    public String getBehaviour() {
+        return behaviour;
     }
 
     /**
@@ -256,6 +182,15 @@ public class Character {
      */
     public String getConcept() {
         return concept;
+    }
+
+    /**
+     * Get the sire of the character.
+     *
+     * @return
+     */
+    public String getSire() {
+        return sire;
     }
 
     /**
@@ -286,30 +221,30 @@ public class Character {
     }
 
     /**
-     * Get the list of benefits the character has.
-     *
-     * @return
-     */
-    public ArrayList<Advantage> getBenefits() {
-        return benefits;
-    }
-
-    /**
      * Get the list of advantages the character has.
      *
      * @return
      */
-    public ArrayList<Merit> getAdvantages() {
+    public ArrayList<Advantage> getAdvantages() {
         return advantages;
     }
 
     /**
-     * Get the list of disadvantages the character has.
+     * Get the list of merits the character has.
      *
      * @return
      */
-    public ArrayList<Flaw> getDisadvantages() {
-        return disadvantages;
+    public ArrayList<Merit> getMerits() {
+        return merits;
+    }
+
+    /**
+     * Get the list of flaws the character has.
+     *
+     * @return
+     */
+    public ArrayList<Flaw> getFlaws() {
+        return flaws;
     }
 
     /**
@@ -326,8 +261,8 @@ public class Character {
      *
      * @return
      */
-    public int getHumanity() {
-        return humanity;
+    public Road getRoad() {
+        return road;
     }
 
     /**
@@ -521,12 +456,12 @@ public class Character {
     }
 
     /**
-     * Set the characters sire.
+     * Set the hideout of the character.
      *
-     * @param sire
+     * @param hideout
      */
-    public void setSire(String sire) {
-        this.sire = sire;
+    public void setHideout(String hideout) {
+        this.hideout = hideout;
     }
 
     /**
@@ -539,12 +474,12 @@ public class Character {
     }
 
     /**
-     * Set the hideout of the character.
+     * Set the behaviour of the character.
      *
-     * @param hideout
+     * @param behaviour
      */
-    public void setHideout(String hideout) {
-        this.hideout = hideout;
+    public void setBehaviour(String behaviour) {
+        this.behaviour = behaviour;
     }
 
     /**
@@ -554,6 +489,15 @@ public class Character {
      */
     public void setConcept(String concept) {
         this.concept = concept;
+    }
+
+    /**
+     * Set the characters sire.
+     *
+     * @param sire
+     */
+    public void setSire(String sire) {
+        this.sire = sire;
     }
 
     /**
@@ -568,10 +512,10 @@ public class Character {
     /**
      * Set the amount of humanity that's left in the character.
      *
-     * @param humanity
+     * @param road
      */
-    public void setHumanity(int humanity) {
-        this.humanity = humanity;
+    public void setRoad(Road road) {
+        this.road = road;
     }
 
     /**

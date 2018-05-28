@@ -48,6 +48,7 @@ import vampireEditor.utility.StringComparator;
  */
 public class LastStepsPanel extends BasePanel {
     private JLabel flawInfoLabel;
+    private JComboBox roadComboBox;
 
     /**
      * Create the last steps panel.
@@ -64,11 +65,11 @@ public class LastStepsPanel extends BasePanel {
      */
     @Override
     protected void init() {
-        super.init();
-
         this.addMeritAndFlawFields();
         this.addRoadFields();
         this.adjustNextButton();
+
+        super.init();
     }
 
     /**
@@ -161,38 +162,25 @@ public class LastStepsPanel extends BasePanel {
         GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
         GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 
-        JComboBox comboBox = new JComboBox();
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement(this.getLanguage().translate("humanity"));
-        model.addElement(this.getLanguage().translate("roadOf"));
-        comboBox.setModel(model);
-
-        JComboBox roadComboBox = new JComboBox();
-        roadComboBox.setEnabled(false);
+        this.roadComboBox = new JComboBox();
         DefaultComboBoxModel roadModel = new DefaultComboBoxModel();
         roadModel.addElement("");
-        roadComboBox.setModel(roadModel);
+        this.roadComboBox.setModel(roadModel);
         this.getRoadValues().forEach((road) -> {
             roadModel.addElement(road);
         });
-
-        comboBox.addItemListener((ItemEvent e) -> {
-            JComboBox combobox = (JComboBox) e.getSource();
-
-            if (comboBox.getSelectedItem().equals(this.getLanguage().translate("humanity"))) {
-                roadComboBox.setEnabled(false);
+        this.roadComboBox.addItemListener((ItemEvent e) -> {
+            if (this.roadComboBox.getSelectedItem().equals("")) {
+                this.disableNextButton();
             } else {
-                roadComboBox.setEnabled(true);
+                this.enableNextButton();
             }
         });
-        roadComboBox.setMaximumRowCount(roadComboBox.getModel().getSize() < 20 ? roadComboBox.getModel().getSize() : 20);
+        this.roadComboBox.setMaximumRowCount(this.roadComboBox.getModel().getSize() < 20 ? this.roadComboBox.getModel().getSize() : 20);
 
-        comboBoxHorizontalGroup.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 150, 300)
-            .addComponent(roadComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
+        comboBoxHorizontalGroup.addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
         listOuterVerticalGroup
-            .addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-            .addGap(6, 6, 6)
-            .addComponent(roadComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
+            .addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
 
         outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
         listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
@@ -262,7 +250,6 @@ public class LastStepsPanel extends BasePanel {
         ((JComboBox) newElements.get("comboBox")).addItemListener(
             this.getComboBoxItemListener(type, this.getFields(type), innerGroups, layout)
         );
-        this.getFields(type).add(newElements.get("comboBox"));
 
         outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
         listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
@@ -298,6 +285,7 @@ public class LastStepsPanel extends BasePanel {
             .addGap(6, 6, 6);
 
         HashMap<String, Component> elements = new HashMap<>();
+        fields.add(elementComboBox);
         elements.put("comboBox", elementComboBox);
 
         return elements;
@@ -368,7 +356,6 @@ public class LastStepsPanel extends BasePanel {
     private void adjustNextButton() {
         JButton nextButton = this.getNextButton();
         nextButton.setText(this.getConfiguration().getLanguageObject().translate("finish"));
-        nextButton.setEnabled(true);
 
         for (ActionListener actionListener : nextButton.getActionListeners()) {
             nextButton.removeActionListener(actionListener);
@@ -432,5 +419,31 @@ public class LastStepsPanel extends BasePanel {
             .reduce(sum, Integer::sum);
 
         return sum;
+    }
+
+    /**
+     * This method checks every input made by the user for duplicate entries or other inconsistencies.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    @Override
+    public boolean checkAllFields() {
+        return false;
+    }
+
+    /**
+     * Get a list with all field values.
+     *
+     * @param character
+     */
+    @Override
+    public void fillCharacter(vampireEditor.Character character) {
+        this.getFields("merit").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
+            character.getMerits().add((Merit) combobox.getSelectedItem());
+        });
+        this.getFields("flaw").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
+            character.getFlaws().add((Flaw) combobox.getSelectedItem());
+        });
+        character.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }

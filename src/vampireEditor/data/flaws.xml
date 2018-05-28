@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flaws>
+    <flaw key="deepSleeper">
+        <name>
+            <English>Deep Sleeper</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="nightmares">
+        <name>
+            <English>Nightmares</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="preyExclusion">
+        <name>
+            <English>Prey Exclusion</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="amnesia">
+        <name>
+            <English>Amnesia</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="fleshEater">
+        <name>
+            <English>Flesh Eater</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="vengeful">
+        <name>
+            <English>Vengeful</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="ethicalProhibition2">
+        <name>
+            <English>Ethical Prohibition</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="ethicalProhibition4">
+        <name>
+            <English>Ethical Prohibition</English>
+        </name>
+        <type>MENTAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="oddGait">
+        <name>
+            <English>Odd Gait</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="raggedBite">
+        <name>
+            <English>Ragged Bite</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="addiction">
+        <name>
+            <English>Addiction</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="monstrous">
+        <name>
+            <English>Monstrous</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="permanentWound">
+        <name>
+            <English>Permanent Wound</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="slowHealing">
+        <name>
+            <English>Slow Healing</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="child">
+        <name>
+            <English>Child</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="impairedSense">
+        <name>
+            <English>Impaired Sense</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="mute">
+        <name>
+            <English>Mute</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="fleshOfTheCorpse">
+        <name>
+            <English>Flesh of the Corpse</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="unclean2">
+        <name>
+            <English>Unclean</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="unclean3">
+        <name>
+            <English>Unclean</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="uncleanNosferatu">
+        <name>
+            <English>Unclean - Nosferatu</English>
+        </name>
+        <type>PHYSICAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="darkSecret">
+        <name>
+            <English>Dark Secret</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="infamousSire">
+        <name>
+            <English>Infamous Sire</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="mistakenIdentity">
+        <name>
+            <English>Mistaken Identity</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="outsider">
+        <name>
+            <English>Outsider</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="siresResentment">
+        <name>
+            <English>Sire's Resentment</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="smellOfTheGrave">
+        <name>
+            <English>Smell of the Grave</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="vulgar">
+        <name>
+            <English>Vulgar</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="apostate">
+        <name>
+            <English>Apostate</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="territorial">
+        <name>
+            <English>Territorial</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="hunted">
+        <name>
+            <English>Hunted</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="markedForDeath">
+        <name>
+            <English>Marked for Death</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="oathbreaker">
+        <name>
+            <English>Oathbreaker</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="outspokenHeretic">
+        <name>
+            <English>Outspoken Heretic</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="nameless">
+        <name>
+            <English>Nameless</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="enemy1">
+        <name>
+            <English>Enemy</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="enemy2">
+        <name>
+            <English>Enemy</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="enemy3">
+        <name>
+            <English>Enemy</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="enemy4">
+        <name>
+            <English>Enemy</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="enemy5">
+        <name>
+            <English>Enemy</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="rivalry1">
+        <name>
+            <English>Rivalry</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="rivalry2">
+        <name>
+            <English>Rivalry</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="rivalry3">
+        <name>
+            <English>Rivalry</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="rivalry4">
+        <name>
+            <English>Rivalry</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="rivalry5">
+        <name>
+            <English>Rivalry</English>
+        </name>
+        <type>SOCIAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="castNoReflection">
+        <name>
+            <English>Cast no Reflection</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="initiateOfTheRoad">
+        <name>
+            <English>Initiate of the Road</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="repulsedByGarlic">
+        <name>
+            <English>Repulsed by Garlic</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="touchOfFrost">
+        <name>
+            <English>Touch of Frost</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="cannotEmbrace">
+        <name>
+            <English>Cannot Embrace</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="eeriePresence">
+        <name>
+            <English>Eerie Presence</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="repulsiveToAnimals">
+        <name>
+            <English>Repulsive to Animals</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="thirteenthGeneration">
+        <name>
+            <English>Thirteenth Generation</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="weakAura">
+        <name>
+            <English>Weak Aura</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="animateShadow">
+        <name>
+            <English>Animate Shadow</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="cloakedByShadow">
+        <name>
+            <English>Cloaked by Shadow</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="haunted">
+        <name>
+            <English>Haunted</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="potentAura">
+        <name>
+            <English>Potent Aura</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="cantCrossRunningWater">
+        <name>
+            <English>Can't cross running Water</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="gripOfTheDamned">
+        <name>
+            <English>Grip of the Damned</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="darkFate">
+        <name>
+            <English>Dark Fate</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="harbingerOfTheAbyss">
+        <name>
+            <English>Harbinger of the Abyss</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="lightSensitive">
+        <name>
+            <English>Light-Sensitive</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="weakBlood">
+        <name>
+            <English>Weak Blood</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="cursed1">
+        <name>
+            <English>Cursed</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="cursed2">
+        <name>
+            <English>Cursed</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="cursed3">
+        <name>
+            <English>Crused</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="cursed4">
+        <name>
+            <English>Crused</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="cursed5">
+        <name>
+            <English>Crused</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="demonHounded1">
+        <name>
+            <English>Demon-Hounded</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="demonHounded2">
+        <name>
+            <English>Demon-Hounded</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="demonHounded3">
+        <name>
+            <English>Demon-Hounded</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="demonHounded4">
+        <name>
+            <English>Demon-Hounded</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="demonHounded5">
+        <name>
+            <English>Demon-Hounded</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="unlucky1">
+        <name>
+            <English>Unlucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </flaw>
+    <flaw key="unlucky2">
+        <name>
+            <English>Unlucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="unlucky3">
+        <name>
+            <English>Unlucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>3</cost>
+    </flaw>
+    <flaw key="unlucky4">
+        <name>
+            <English>Unlucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+    <flaw key="unlucky5">
+        <name>
+            <English>Unlucky</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>5</cost>
+    </flaw>
+    <flaw key="permanentThirdEye2">
+        <name>
+            <English>Permanent Third Eye</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>2</cost>
+    </flaw>
+    <flaw key="permanentThirdEye4">
+        <name>
+            <English>Permanent Third Eye</English>
+        </name>
+        <type>SUPERNATURAL</type>
+        <cost>4</cost>
+    </flaw>
+</flaws>

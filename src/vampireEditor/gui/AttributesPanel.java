@@ -27,6 +27,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
+import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.character.Clan;
 import vampireEditor.utility.TranslatedComparator;
@@ -46,11 +47,11 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected void init() {
-        super.init();
-
         this.addPhyiscalFields();
         this.addSocialFields();
         this.addMentalFields();
+
+        super.init();
     }
 
     /**
@@ -299,6 +300,48 @@ public class AttributesPanel extends BaseListPanel {
                     maximum,
                     1
                 )
+            );
+        });
+    }
+
+    /**
+     * This method checks every input made by the user for duplicate entries or other inconsistencies.
+     *
+     * @return Returns true if a duplicate entry has been found.
+     */
+    @Override
+    public boolean checkAllFields() {
+        if (this.getPointsSum("physical") < this.getMaxPoints("physical")) {
+            return true;
+        }
+
+        if (this.getPointsSum("social") < this.getMaxPoints("social")) {
+            return true;
+        }
+
+        return this.getPointsSum("mental") < this.getMaxPoints("mental");
+    }
+
+    /**
+     * Get a list with all field values.
+     *
+     * @param character
+     */
+    @Override
+    public void fillCharacter(vampireEditor.Character character) {
+        this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAttributes().add(
+                new Attribute(spinner.getName(), AttributeInterface.AttributeType.PHYSICAL, (int) spinner.getValue())
+            );
+        });
+        this.getFields("social").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAttributes().add(
+                new Attribute(spinner.getName(), AttributeInterface.AttributeType.SOCIAL, (int) spinner.getValue())
+            );
+        });
+        this.getFields("mental").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
+            character.getAttributes().add(
+                new Attribute(spinner.getName(), AttributeInterface.AttributeType.MENTAL, (int) spinner.getValue())
             );
         });
     }
