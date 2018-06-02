@@ -36,7 +36,7 @@ import vampireEditor.utility.TranslatedComparator;
  *
  * @author Marian Pollzien
  */
-public class AttributesPanel extends BaseListPanel implements TranslatableComponent {
+public class AttributesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
     private vampireEditor.Character character = null;
 
     /**
@@ -126,6 +126,7 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
      *
      * @param character
      */
+    @Override
     public void setCharacter(Character character) {
         this.character = character;
     }
@@ -133,7 +134,8 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Fill in the character data. If no character is set, nothing will be added.
      */
-    protected void fillCharacterData() {
+    @Override
+    public void fillCharacterData() {
         if (this.character == null) {
             return;
         }

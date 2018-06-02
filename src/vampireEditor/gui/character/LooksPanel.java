@@ -41,7 +41,7 @@ import vampireEditor.utility.ClanComparator;
  *
  * @author Marian Pollzien
  */
-public class LooksPanel extends JPanel implements TranslatableComponent {
+public class LooksPanel extends JPanel implements TranslatableComponent, CharacterPanelInterface {
 
     private final Configuration configuration;
     private LanguageInterface language;
@@ -512,6 +512,7 @@ public class LooksPanel extends JPanel implements TranslatableComponent {
      *
      * @param character
      */
+    @Override
     public void setCharacter(Character character) {
         this.character = character;
     }
@@ -519,7 +520,8 @@ public class LooksPanel extends JPanel implements TranslatableComponent {
     /**
      * Fill in the character data. If no character is set, nothing will be added.
      */
-    protected void fillCharacterData() {
+    @Override
+    public void fillCharacterData() {
         if (this.character == null) {
             return;
         }
