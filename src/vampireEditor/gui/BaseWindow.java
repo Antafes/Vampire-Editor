@@ -39,6 +39,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
+import vampireEditor.character.Attribute;
+import vampireEditor.character.AttributeInterface;
 import vampireEditor.language.LanguageInterface;
 
 /**
@@ -79,6 +81,15 @@ public class BaseWindow extends javax.swing.JFrame {
         character.setConcept("Really no concept!");
         character.setClan(VampireEditor.getClan("brujah"));
         character.setSex(vampireEditor.Character.Sex.MALE);
+        character.getAttributes().add(new Attribute("strength", AttributeInterface.AttributeType.PHYSICAL, 4));
+        character.getAttributes().add(new Attribute("dexterity", AttributeInterface.AttributeType.PHYSICAL, 3));
+        character.getAttributes().add(new Attribute("stamina", AttributeInterface.AttributeType.PHYSICAL, 3));
+        character.getAttributes().add(new Attribute("charisma", AttributeInterface.AttributeType.SOCIAL, 3));
+        character.getAttributes().add(new Attribute("appearance", AttributeInterface.AttributeType.SOCIAL, 3));
+        character.getAttributes().add(new Attribute("manipulation", AttributeInterface.AttributeType.SOCIAL, 2));
+        character.getAttributes().add(new Attribute("intelligence", AttributeInterface.AttributeType.MENTAL, 2));
+        character.getAttributes().add(new Attribute("perception", AttributeInterface.AttributeType.MENTAL, 3));
+        character.getAttributes().add(new Attribute("wits", AttributeInterface.AttributeType.MENTAL, 1));
 
         return character;
     }
