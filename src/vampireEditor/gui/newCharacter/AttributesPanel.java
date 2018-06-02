@@ -19,7 +19,7 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -30,6 +30,10 @@ import vampireEditor.Configuration;
 import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.character.Clan;
+import vampireEditor.gui.BaseListPanel;
+import vampireEditor.gui.ComponentChangeListener;
+import vampireEditor.gui.NewCharacterDialog;
+import vampireEditor.gui.Weighting;
 import vampireEditor.utility.TranslatedComparator;
 
 /**

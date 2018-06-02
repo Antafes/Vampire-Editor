@@ -19,7 +19,7 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -39,6 +39,9 @@ import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.character.Clan;
 import vampireEditor.character.Generation;
+import vampireEditor.gui.ComponentDocumentListener;
+import vampireEditor.gui.NewCharacterDialog;
+import vampireEditor.gui.NewCharacterFocusTraversalPolicy;
 import vampireEditor.language.LanguageInterface;
 import vampireEditor.utility.ClanComparator;
 
@@ -54,7 +57,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private final NewCharacterDialog parent;
     private ComponentDocumentListener documentListener;
     private DateFormatter dateFormatter;
-    private Date date;
+    private final Date date;
 
     /**
      * Creates new form looksPanel
@@ -72,9 +75,15 @@ public class LooksPanel extends javax.swing.JPanel {
         GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.set(1200, 0, 1);
         this.date = calendar.getTime();
+    }
 
+    /**
+     * Init everything.
+     */
+    public void init() {
         this.initComponents();
-        this.init();
+        this.setFieldTexts();
+        this.createFocusTraversalPolicy();
     }
 
     /**
@@ -494,14 +503,6 @@ public class LooksPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_generationComboBoxActionPerformed
 
     /**
-     * Init everything.
-     */
-    private void init() {
-        this.setFieldTexts();
-        this.createFocusTraversalPolicy();
-    }
-
-    /**
      * Set the translated texts for the fields and labels of the looks tab.
      */
     private void setFieldTexts() {
@@ -696,8 +697,7 @@ public class LooksPanel extends javax.swing.JPanel {
         character.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
         character.setSex((vampireEditor.Character.Sex) this.sexField.getSelectedItem());
     }
-
-    // <editor-fold defaultstate="collapsed" desc="Generated variables">
+// <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageField;
     private javax.swing.JLabel ageLabel;

@@ -37,7 +37,7 @@ import vampireEditor.language.LanguageInterface;
  *
  * @author Marian Pollzien
  */
-abstract class BasePanel extends JPanel {
+abstract public class BasePanel extends JPanel {
 
     private final Configuration configuration;
     private final LanguageInterface language;

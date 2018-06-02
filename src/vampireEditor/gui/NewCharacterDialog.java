@@ -21,6 +21,7 @@
  */
 package vampireEditor.gui;
 
+import vampireEditor.gui.newCharacter.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Level;
@@ -102,6 +103,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         });
 
         this.looksPanel = new LooksPanel(this, this.configuration);
+        this.looksPanel.init();
         characterTabPane.add(this.looksPanel);
         this.attributesPanel = new AttributesPanel(this, this.configuration);
         characterTabPane.add(this.attributesPanel);
@@ -598,7 +600,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.advantagesPanel.fillCharacter(character);
         this.lastStepsPanel.fillCharacter(character);
 
-        this.parent.addNewCharacter(character);
+        this.parent.addCharacter(character);
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 

@@ -21,6 +21,8 @@
  */
 package vampireEditor.gui;
 
+import java.awt.Component;
+import vampireEditor.gui.character.CharacterTabbedPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -36,6 +38,7 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
+import vampireEditor.VampireEditor;
 import vampireEditor.language.LanguageInterface;
 
 /**
@@ -58,6 +61,26 @@ public class BaseWindow extends javax.swing.JFrame {
         this.initComponents();
         this.init();
         this.setFieldTexts();
+
+        this.addCharacter(this.createTestCharacter());
+    }
+
+    /**
+     * !!! This is only for testing the character frames !!!
+     *
+     * @return
+     */
+    private vampireEditor.Character createTestCharacter() {
+        vampireEditor.Character character = new vampireEditor.Character();
+        character.setName("Test Character");
+        character.setGeneration(VampireEditor.getGenerations().get(4));
+        character.setNature("wise");
+        character.setBehaviour("strict");
+        character.setConcept("Really no concept!");
+        character.setClan(VampireEditor.getClan("brujah"));
+        character.setSex(vampireEditor.Character.Sex.MALE);
+
+        return character;
     }
 
     /**
@@ -75,8 +98,7 @@ public class BaseWindow extends javax.swing.JFrame {
         closeAboutButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         aboutTextPane = new javax.swing.JTextPane();
-        characterTabPane = new javax.swing.JTabbedPane();
-        characterCreatedLabel = new javax.swing.JLabel();
+        charactersTabPane = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -142,8 +164,6 @@ public class BaseWindow extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        characterTabPane.addTab("tab1", characterCreatedLabel);
 
         fileMenu.setText("File");
 
@@ -214,11 +234,11 @@ public class BaseWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(characterTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1100, Short.MAX_VALUE)
+            .addComponent(charactersTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1100, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(characterTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+            .addComponent(charactersTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
         );
 
         pack();
@@ -227,7 +247,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuItemActionPerformed
         this.configuration.setWindowLocation(this.getLocationOnScreen());
         this.configuration.saveProperties();
-		System.exit(0);
+        System.exit(0);
     }//GEN-LAST:event_closeMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
@@ -286,6 +306,11 @@ public class BaseWindow extends javax.swing.JFrame {
         this.language = this.configuration.getLanguageObject();
         this.languageMenu.setIcon(this.configuration.getLanguage().getIcon());
         this.setFieldTexts();
+
+        for (Component component : this.charactersTabPane.getComponents()) {
+            CharacterTabbedPane pane = (CharacterTabbedPane) component;
+            pane.updateTexts();
+        }
     }
 
     /**
@@ -338,7 +363,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param dialog
      */
-    public static void installEscapeCloseOperation(final JDialog dialog) {
+    public static void installEscapeCloseOperation(JDialog dialog) {
         Action dispatchClosing = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -361,8 +386,16 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param character
      */
-    public void addNewCharacter(vampireEditor.Character character) {
-        this.characterCreatedLabel.setText(character.getName() + " added.");
+    public void addCharacter(vampireEditor.Character character) {
+        try {
+            CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
+            characterTabbedPane.setCharacter(character);
+            characterTabbedPane.init();
+            this.charactersTabPane.add(characterTabbedPane);
+            this.charactersTabPane.setTitleAt(this.charactersTabPane.indexOfComponent(characterTabbedPane), character.getName());
+        } catch (Exception ex) {
+            Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated variables">
@@ -370,8 +403,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private javax.swing.JDialog aboutDialog;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JTextPane aboutTextPane;
-    private javax.swing.JLabel characterCreatedLabel;
-    private javax.swing.JTabbedPane characterTabPane;
+    private javax.swing.JTabbedPane charactersTabPane;
     private javax.swing.JButton closeAboutButton;
     private javax.swing.JMenuItem closeMenuItem;
     private javax.swing.JRadioButtonMenuItem englishMenuItem;

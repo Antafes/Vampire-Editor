@@ -19,7 +19,7 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -40,6 +40,9 @@ import vampireEditor.character.Flaw;
 import vampireEditor.character.Merit;
 import vampireEditor.character.Road;
 import vampireEditor.character.SpecialFeature;
+import vampireEditor.gui.BasePanel;
+import vampireEditor.gui.NewCharacterDialog;
+import vampireEditor.gui.WideComboBox;
 import vampireEditor.utility.StringComparator;
 
 /**

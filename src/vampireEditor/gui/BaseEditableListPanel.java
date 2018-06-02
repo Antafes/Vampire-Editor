@@ -40,7 +40,7 @@ import vampireEditor.Configuration;
  *
  * @author Marian Pollzien
  */
-abstract class BaseEditableListPanel extends BaseListPanel {
+abstract public class BaseEditableListPanel extends BaseListPanel {
     public final int UNLIMITEDMAXFIELDS = -1;
 
     private boolean useWeightings = true;

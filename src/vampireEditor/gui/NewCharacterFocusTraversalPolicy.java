@@ -31,7 +31,7 @@ import javax.swing.JSpinner;
  *
  * @author Marian Pollzien
  */
-class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
+public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
 {
     /**
      * The order in which the components will gain focus.

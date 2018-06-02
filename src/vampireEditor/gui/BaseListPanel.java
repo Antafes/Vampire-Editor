@@ -41,7 +41,7 @@ import vampireEditor.Configuration;
  *
  * @author Marian Pollzien
  */
-abstract class BaseListPanel extends BasePanel {
+abstract public class BaseListPanel extends BasePanel {
 
     private HashMap<String, HashMap<String, JTextField>> pointFields;
     private HashMap<String, JComboBox> weightings;
