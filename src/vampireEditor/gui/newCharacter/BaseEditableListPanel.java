@@ -19,8 +19,9 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.gui.newCharacter;
 
+import vampireEditor.gui.*;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;

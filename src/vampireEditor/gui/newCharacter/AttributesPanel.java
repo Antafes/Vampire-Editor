@@ -30,7 +30,6 @@ import vampireEditor.Configuration;
 import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.character.Clan;
-import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;

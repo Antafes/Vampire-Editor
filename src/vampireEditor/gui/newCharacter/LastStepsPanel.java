@@ -40,7 +40,6 @@ import vampireEditor.character.Flaw;
 import vampireEditor.character.Merit;
 import vampireEditor.character.Road;
 import vampireEditor.character.SpecialFeature;
-import vampireEditor.gui.BasePanel;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.WideComboBox;
 import vampireEditor.utility.StringComparator;

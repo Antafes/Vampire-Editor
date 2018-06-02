@@ -27,7 +27,6 @@ import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
 import vampireEditor.character.Ability;
 import vampireEditor.character.AbilityInterface;
-import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;

@@ -30,7 +30,6 @@ import vampireEditor.VampireEditor;
 import vampireEditor.character.Advantage;
 import vampireEditor.character.AdvantageInterface;
 import vampireEditor.character.Clan;
-import vampireEditor.gui.BaseEditableListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
