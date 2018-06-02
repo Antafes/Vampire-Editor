@@ -41,6 +41,7 @@ import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.character.Ability;
 import vampireEditor.character.AbilityInterface;
+import vampireEditor.character.Advantage;
 import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.language.LanguageInterface;
@@ -105,6 +106,31 @@ public class BaseWindow extends javax.swing.JFrame {
         character.getAbilities().add(new Ability("crafts", AbilityInterface.AbilityType.SKILL, 2));
         character.getAbilities().add(new Ability("investigation", AbilityInterface.AbilityType.KNOWLEDGE, 3));
         character.getAbilities().add(new Ability("law", AbilityInterface.AbilityType.KNOWLEDGE, 2));
+
+        Advantage allies = VampireEditor.getAdvantage("allies");
+        allies.setValue(3);
+        character.getAdvantages().add(allies);
+        Advantage influence = VampireEditor.getAdvantage("influence");
+        influence.setValue(2);
+        character.getAdvantages().add(influence);
+        Advantage auspex = VampireEditor.getAdvantage("auspex");
+        auspex.setValue(2);
+        character.getAdvantages().add(auspex);
+        Advantage celerity = VampireEditor.getAdvantage("celerity");
+        celerity.setValue(1);
+        character.getAdvantages().add(celerity);
+        Advantage dominate = VampireEditor.getAdvantage("dominate");
+        dominate.setValue(1);
+        character.getAdvantages().add(dominate);
+        Advantage conscience = VampireEditor.getAdvantage("conscience");
+        conscience.setValue(3);
+        character.getAdvantages().add(conscience);
+        Advantage courage = VampireEditor.getAdvantage("courage");
+        courage.setValue(2);
+        character.getAdvantages().add(courage);
+        Advantage selfControl = VampireEditor.getAdvantage("self-control");
+        selfControl.setValue(2);
+        character.getAdvantages().add(selfControl);
 
         return character;
     }
