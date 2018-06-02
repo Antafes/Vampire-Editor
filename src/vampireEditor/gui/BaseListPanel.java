@@ -81,7 +81,7 @@ abstract public class BaseListPanel extends BasePanel {
         }
 
         GroupLayout layout = (GroupLayout) this.getLayout();
-        JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
+        JLabel groupLabel = this.createGroupLabel(headline);
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
             .addGap(11, 11, 11)
@@ -156,7 +156,7 @@ abstract public class BaseListPanel extends BasePanel {
         HashMap<String, GroupLayout.Group> groups,
         GroupLayout layout
     ) {
-        JLabel elementLabel = new JLabel(this.getLanguage().translate(element));
+        JLabel elementLabel = this.createLabel(element);
         JSpinner spinner = new JSpinner();
         elementLabel.setLabelFor(spinner);
         spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));

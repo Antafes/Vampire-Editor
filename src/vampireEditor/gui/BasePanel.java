@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.GroupLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import vampireEditor.Configuration;
 import vampireEditor.language.LanguageInterface;
@@ -45,6 +46,8 @@ abstract public class BasePanel extends JPanel {
     private GroupLayout.SequentialGroup outerSequentialVerticalGroup;
     private final Vector<Component> order;
     private final HashMap<String, ArrayList<Component>> fields;
+    private boolean translateFieldLabels = true;
+    private boolean translateGroupLabels = true;
 
     /**
      * Creates new form AbilitiesPanel
@@ -204,20 +207,98 @@ abstract public class BasePanel extends JPanel {
         return this.outerParallelHorizontalGroup;
     }
 
+    /**
+     * Set the outer parallel horizontal group.
+     *
+     * @param outerParallelHorizontalGroup
+     */
     public void setOuterParallelHorizontalGroup(GroupLayout.ParallelGroup outerParallelHorizontalGroup) {
         this.outerParallelHorizontalGroup = outerParallelHorizontalGroup;
     }
 
+    /**
+     * Set the outer parallel vertical group.
+     *
+     * @param outerParallelVerticalGroup
+     */
     public void setOuterParallelVerticalGroup(GroupLayout.ParallelGroup outerParallelVerticalGroup) {
         this.outerParallelVerticalGroup = outerParallelVerticalGroup;
     }
 
+    /**
+     * Set the outer sequential horizontal group.
+     *
+     * @param outerSequentialHorizontalGroup
+     */
     public void setOuterSequentialHorizontalGroup(GroupLayout.SequentialGroup outerSequentialHorizontalGroup) {
         this.outerSequentialHorizontalGroup = outerSequentialHorizontalGroup;
     }
 
+    /**
+     * Set the outer sequential vertical group.
+     *
+     * @param outerSequentialVerticalGroup
+     */
     public void setOuterSequentialVerticalGroup(GroupLayout.SequentialGroup outerSequentialVerticalGroup) {
         this.outerSequentialVerticalGroup = outerSequentialVerticalGroup;
+    }
+
+    /**
+     * Set whether the field labels should be translated or not.
+     *
+     * @param translateFieldLabels
+     */
+    protected void setTranslateFieldLabels(boolean translateFieldLabels) {
+        this.translateFieldLabels = translateFieldLabels;
+    }
+
+    /**
+     * Set whether the group labels should be translated or not.
+     *
+     * @param translateGroupLabels
+     */
+    public void setTranslateGroupLabels(boolean translateGroupLabels) {
+        this.translateGroupLabels = translateGroupLabels;
+    }
+
+    /**
+     * Create a label element for a field.
+     * Depending on whether translateFieldLabels is set to true or not, the label text will be translated.
+     *
+     * @param text
+     *
+     * @return
+     */
+    protected JLabel createLabel(String text) {
+        JLabel label = new JLabel();
+
+        if (this.translateFieldLabels) {
+            label.setText(this.language.translate(text));
+        } else {
+            label.setText(text);
+        }
+
+        return label;
+    }
+
+    /**
+     * Create a label element for a group of fields.
+     * Depending on whether translateFieldLabels is set to true or not, the label text will be translated.
+     *
+     * @param text
+     *
+     * @return
+     */
+    protected JLabel createGroupLabel(String text) {
+        JLabel label = new JLabel();
+
+        if (this.translateGroupLabels) {
+            label.setText(this.language.translate(text));
+        } else {
+            label.setText(text);
+        }
+
+        return label;
     }
 
     /**
