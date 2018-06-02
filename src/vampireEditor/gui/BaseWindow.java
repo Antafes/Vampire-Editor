@@ -39,6 +39,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
+import vampireEditor.character.Ability;
+import vampireEditor.character.AbilityInterface;
 import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.language.LanguageInterface;
@@ -81,6 +83,7 @@ public class BaseWindow extends javax.swing.JFrame {
         character.setConcept("Really no concept!");
         character.setClan(VampireEditor.getClan("brujah"));
         character.setSex(vampireEditor.Character.Sex.MALE);
+
         character.getAttributes().add(new Attribute("strength", AttributeInterface.AttributeType.PHYSICAL, 4));
         character.getAttributes().add(new Attribute("dexterity", AttributeInterface.AttributeType.PHYSICAL, 3));
         character.getAttributes().add(new Attribute("stamina", AttributeInterface.AttributeType.PHYSICAL, 3));
@@ -90,6 +93,18 @@ public class BaseWindow extends javax.swing.JFrame {
         character.getAttributes().add(new Attribute("intelligence", AttributeInterface.AttributeType.MENTAL, 2));
         character.getAttributes().add(new Attribute("perception", AttributeInterface.AttributeType.MENTAL, 3));
         character.getAttributes().add(new Attribute("wits", AttributeInterface.AttributeType.MENTAL, 1));
+
+        character.getAbilities().add(new Ability("alertness", AbilityInterface.AbilityType.TALENT, 3));
+        character.getAbilities().add(new Ability("brawl", AbilityInterface.AbilityType.TALENT, 3));
+        character.getAbilities().add(new Ability("intimidation", AbilityInterface.AbilityType.TALENT, 2));
+        character.getAbilities().add(new Ability("dodge", AbilityInterface.AbilityType.TALENT, 1));
+        character.getAbilities().add(new Ability("melee", AbilityInterface.AbilityType.SKILL, 3));
+        character.getAbilities().add(new Ability("ride", AbilityInterface.AbilityType.SKILL, 3));
+        character.getAbilities().add(new Ability("survival", AbilityInterface.AbilityType.SKILL, 3));
+        character.getAbilities().add(new Ability("archery", AbilityInterface.AbilityType.SKILL, 2));
+        character.getAbilities().add(new Ability("crafts", AbilityInterface.AbilityType.SKILL, 2));
+        character.getAbilities().add(new Ability("investigation", AbilityInterface.AbilityType.KNOWLEDGE, 3));
+        character.getAbilities().add(new Ability("law", AbilityInterface.AbilityType.KNOWLEDGE, 2));
 
         return character;
     }

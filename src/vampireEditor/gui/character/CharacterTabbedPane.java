@@ -68,6 +68,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private void initComponents() {
         this.addLooksPanel();
         this.addAttributesPanel();
+        this.addAbilitiesPanel();
     }
 
     /**
@@ -90,6 +91,17 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         panel.start();
         this.add(panel);
         this.setTitleAt(this.indexOfComponent(panel), this.language.translate("attributes"));
+    }
+
+    /**
+     * Add the abilities panel.
+     */
+    private void addAbilitiesPanel() {
+        AbilitiesPanel panel = new AbilitiesPanel(this.configuration);
+        panel.setCharacter(this.character);
+        panel.start();
+        this.add(panel);
+        this.setTitleAt(this.indexOfComponent(panel), this.language.translate("abilities"));
     }
 
     /**
@@ -127,6 +139,9 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
             } else if (tab.getClass().equals(AttributesPanel.class)) {
                 this.setTitleAt(this.indexOfComponent(tab), this.language.translate("attributes"));
                 ((AttributesPanel) tab).updateTexts();
+            } else if (tab.getClass().equals(AbilitiesPanel.class)) {
+                this.setTitleAt(this.indexOfComponent(tab), this.language.translate("abilities"));
+                ((AbilitiesPanel) tab).updateTexts();
             }
         }
     }
