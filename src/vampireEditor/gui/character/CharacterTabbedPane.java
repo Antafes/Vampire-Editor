@@ -66,10 +66,22 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Initialize the components that should be added.
      */
     private void initComponents() {
-        this.addLooksPanel();
+        this.addGeneralPanel();
         this.addAttributesPanel();
         this.addAbilitiesPanel();
         this.addAdvantagesPanel();
+        this.addLooksPanel();
+    }
+
+    /**
+     * Add the general panel.
+     */
+    private void addGeneralPanel() {
+        GeneralPanel panel = new GeneralPanel(this.configuration);
+        panel.setCharacter(this.character);
+        panel.start();
+        this.add(panel);
+        this.setTitleAt(this.indexOfComponent(panel), this.language.translate("general"));
     }
 
     /**
@@ -78,7 +90,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private void addLooksPanel() {
         LooksPanel panel = new LooksPanel(this.configuration);
         panel.setCharacter(this.character);
-        panel.init();
+        panel.start();
         this.add(panel);
         this.setTitleAt(this.indexOfComponent(panel), this.language.translate("looks"));
     }
@@ -145,7 +157,10 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         for (Component component : this.getComponents()) {
             JComponent tab = (JComponent) component;
 
-            if (tab.getClass().equals(LooksPanel.class)) {
+            if (tab.getClass().equals(GeneralPanel.class)) {
+                this.setTitleAt(this.indexOfComponent(tab), this.language.translate("general"));
+                ((GeneralPanel) tab).updateTexts();
+            } else if (tab.getClass().equals(LooksPanel.class)) {
                 this.setTitleAt(this.indexOfComponent(tab), this.language.translate("looks"));
                 ((LooksPanel) tab).updateTexts();
             } else if (tab.getClass().equals(AttributesPanel.class)) {

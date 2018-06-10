@@ -32,6 +32,7 @@ import vampireEditor.Configuration;
 public class Road implements RoadInterface {
     private final String key;
     private final HashMap<Configuration.Language, String> name;
+    private int value;
 
     /**
      * Create a new road object.
@@ -42,6 +43,15 @@ public class Road implements RoadInterface {
     public Road(String key, HashMap<Configuration.Language, String> name) {
         this.key = key;
         this.name = name;
+    }
+
+    /**
+     * Set the road value.
+     *
+     * @param value
+     */
+    public void setValue(int value) {
+        this.value = value;
     }
 
     /**
@@ -69,6 +79,15 @@ public class Road implements RoadInterface {
         }
 
         return this.name.get(configuration.getLanguage());
+    }
+
+    /**
+     * Get the road value.
+     *
+     * @return
+     */
+    public int getValue() {
+        return this.value;
     }
 
     /**

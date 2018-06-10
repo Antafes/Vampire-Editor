@@ -145,6 +145,10 @@ public class German implements LanguageInterface {
         this.translations.put("humanity", "Menschlichkeit");
         this.translations.put("roadOf", "Pfad der ...");
         this.translations.put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
+        this.translations.put("general", "Allgemein");
+        this.translations.put("meritsAndFlaws", "Vor- und Nachteile");
+        this.translations.put("willpower", "Willenskraft");
+        this.translations.put("bloodStock", "Blutvorrat");
     }
 
     /**
@@ -156,7 +160,7 @@ public class German implements LanguageInterface {
      */
     @Override
     public String translate(String key) {
-        return this.translations.get(key);
+        return this.translations.containsKey(key) ? this.translations.get(key) : key;
     }
 
     /**

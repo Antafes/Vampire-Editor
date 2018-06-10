@@ -145,6 +145,10 @@ public class English implements LanguageInterface {
         this.translations.put("humanity", "Humanity");
         this.translations.put("roadOf", "Road of ...");
         this.translations.put("flawInfoTooMany", "Your selected flaws exceed the maximum of 7 points.");
+        this.translations.put("general", "General");
+        this.translations.put("meritsAndFlaws", "Merits and flaws");
+        this.translations.put("willpower", "Willpower");
+        this.translations.put("bloodStock", "Blood stock");
     }
 
     /**
@@ -156,7 +160,7 @@ public class English implements LanguageInterface {
      */
     @Override
     public String translate(String key) {
-        return this.translations.get(key);
+        return this.translations.containsKey(key) ? this.translations.get(key) : key;
     }
 
     /**

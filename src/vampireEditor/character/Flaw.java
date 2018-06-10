@@ -33,11 +33,12 @@ public class Flaw extends SpecialFeature {
     /**
      * Create a new disadvantage object.
      *
+     * @param key
      * @param name
      * @param cost
      * @param type
      */
-    public Flaw(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
-        super(name, cost, type);
+    public Flaw(String key, HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+        super(key, name, cost, type);
     }
 }

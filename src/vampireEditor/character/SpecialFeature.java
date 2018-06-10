@@ -30,6 +30,7 @@ import vampireEditor.Configuration;
  * @author Marian Pollzien
  */
 public abstract class SpecialFeature implements SpecialFeatureInterface {
+    private final String key;
     private final HashMap<Configuration.Language, String> name;
     private final int cost;
     private final SpecialFeatureType type;
@@ -37,14 +38,25 @@ public abstract class SpecialFeature implements SpecialFeatureInterface {
     /**
      * Create a new special feature object.
      *
+     * @param key
      * @param name
      * @param cost
      * @param type
      */
-    public SpecialFeature(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+    public SpecialFeature(String key, HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+        this.key = key;
         this.name = name;
         this.cost = cost;
         this.type = type;
+    }
+
+    /**
+     * Get the key of the special feature.
+     *
+     * @return
+     */
+    public String getKey() {
+        return key;
     }
 
     /**

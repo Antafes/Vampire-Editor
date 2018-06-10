@@ -132,6 +132,17 @@ public class BaseWindow extends javax.swing.JFrame {
         selfControl.setValue(2);
         character.getAdvantages().add(selfControl);
 
+        character.getFlaws().add(VampireEditor.getFlaws().get("monstrous"));
+        character.getFlaws().add(VampireEditor.getFlaws().get("deepSleeper"));
+        character.getMerits().add(VampireEditor.getMerits().get("commonSense"));
+        character.getMerits().add(VampireEditor.getMerits().get("eideticMemory"));
+
+        character.setRoad(VampireEditor.getRoads().get("roadOfHumanity"));
+        character.getRoad().setValue(5);
+
+        character.setWillpower(5);
+        character.setBloodStock(3);
+
         return character;
     }
 

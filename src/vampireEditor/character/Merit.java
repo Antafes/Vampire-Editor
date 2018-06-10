@@ -33,11 +33,12 @@ public class Merit extends SpecialFeature {
     /**
      * Create a new advantage object.
      *
+     * @param key
      * @param name
      * @param cost
      * @param type
      */
-    public Merit(HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
-        super(name, cost, type);
+    public Merit(String key, HashMap<Configuration.Language, String> name, int cost, SpecialFeatureType type) {
+        super(key, name, cost, type);
     }
 }

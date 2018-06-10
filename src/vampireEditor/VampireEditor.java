@@ -228,6 +228,7 @@ public class VampireEditor {
                 VampireEditor.MERITS.put(
                     element.getAttribute("key"),
                     new Merit(
+                        element.getAttribute("key"),
                         names,
                         XMLParser.getTagValueInt("cost", element),
                         SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))
@@ -258,6 +259,7 @@ public class VampireEditor {
                 VampireEditor.FLAWS.put(
                     element.getAttribute("key"),
                     new Flaw(
+                        element.getAttribute("key"),
                         names,
                         XMLParser.getTagValueInt("cost", element),
                         SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))

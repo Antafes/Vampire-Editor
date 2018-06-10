@@ -100,7 +100,7 @@ public class Character {
      * @return
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -109,7 +109,7 @@ public class Character {
      * @return
      */
     public Clan getClan() {
-        return clan;
+        return this.clan;
     }
 
     /**
@@ -118,7 +118,7 @@ public class Character {
      * @return
      */
     public Generation getGeneration() {
-        return generation;
+        return this.generation;
     }
 
     /**
@@ -127,7 +127,7 @@ public class Character {
      * @return
      */
     public String getChronicle() {
-        return chronicle;
+        return this.chronicle;
     }
 
     /**
@@ -136,7 +136,7 @@ public class Character {
      * @return
      */
     public int getExperience() {
-        return experience;
+        return this.experience;
     }
 
     /**
@@ -145,7 +145,7 @@ public class Character {
      * @return
      */
     public String getNature() {
-        return nature;
+        return this.nature;
     }
 
     /**
@@ -154,7 +154,7 @@ public class Character {
      * @return
      */
     public String getHideout() {
-        return hideout;
+        return this.hideout;
     }
 
     /**
@@ -163,7 +163,7 @@ public class Character {
      * @return
      */
     public String getPlayer() {
-        return player;
+        return this.player;
     }
 
     /**
@@ -172,7 +172,7 @@ public class Character {
      * @return
      */
     public String getBehaviour() {
-        return behaviour;
+        return this.behaviour;
     }
 
     /**
@@ -181,7 +181,7 @@ public class Character {
      * @return
      */
     public String getConcept() {
-        return concept;
+        return this.concept;
     }
 
     /**
@@ -190,7 +190,7 @@ public class Character {
      * @return
      */
     public String getSire() {
-        return sire;
+        return this.sire;
     }
 
     /**
@@ -199,7 +199,7 @@ public class Character {
      * @return
      */
     public String getSect() {
-        return sect;
+        return this.sect;
     }
 
     /**
@@ -208,7 +208,7 @@ public class Character {
      * @return
      */
     public ArrayList<Attribute> getAttributes() {
-        return attributes;
+        return this.attributes;
     }
 
     /**
@@ -217,7 +217,7 @@ public class Character {
      * @return
      */
     public ArrayList<Ability> getAbilities() {
-        return abilities;
+        return this.abilities;
     }
 
     /**
@@ -226,7 +226,7 @@ public class Character {
      * @return
      */
     public ArrayList<Advantage> getAdvantages() {
-        return advantages;
+        return this.advantages;
     }
 
     /**
@@ -235,7 +235,7 @@ public class Character {
      * @return
      */
     public ArrayList<Merit> getMerits() {
-        return merits;
+        return this.merits;
     }
 
     /**
@@ -244,7 +244,7 @@ public class Character {
      * @return
      */
     public ArrayList<Flaw> getFlaws() {
-        return flaws;
+        return this.flaws;
     }
 
     /**
@@ -253,7 +253,7 @@ public class Character {
      * @return
      */
     public ArrayList<Trait> getTraits() {
-        return traits;
+        return this.traits;
     }
 
     /**
@@ -262,7 +262,7 @@ public class Character {
      * @return
      */
     public Road getRoad() {
-        return road;
+        return this.road;
     }
 
     /**
@@ -271,7 +271,7 @@ public class Character {
      * @return
      */
     public int getWillpower() {
-        return willpower;
+        return this.willpower;
     }
 
     /**
@@ -281,7 +281,7 @@ public class Character {
      * @return
      */
     public int getBloodStock() {
-        return bloodStock;
+        return this.bloodStock;
     }
 
     /**
@@ -290,7 +290,7 @@ public class Character {
      * @return
      */
     public int getAge() {
-        return age;
+        return this.age;
     }
 
     /**
@@ -299,7 +299,7 @@ public class Character {
      * @return
      */
     public int getLooksLikeAge() {
-        return looksLikeAge;
+        return this.looksLikeAge;
     }
 
     /**
@@ -308,7 +308,7 @@ public class Character {
      * @return
      */
     public Date getDayOfBirth() {
-        return dayOfBirth;
+        return this.dayOfBirth;
     }
 
     /**
@@ -317,7 +317,7 @@ public class Character {
      * @return
      */
     public Date getDayOfDeath() {
-        return dayOfDeath;
+        return this.dayOfDeath;
     }
 
     /**
@@ -326,7 +326,7 @@ public class Character {
      * @return
      */
     public String getHairColor() {
-        return hairColor;
+        return this.hairColor;
     }
 
     /**
@@ -335,7 +335,7 @@ public class Character {
      * @return
      */
     public String getEyeColor() {
-        return eyeColor;
+        return this.eyeColor;
     }
 
     /**
@@ -344,7 +344,7 @@ public class Character {
      * @return
      */
     public String getSkinColor() {
-        return skinColor;
+        return this.skinColor;
     }
 
     /**
@@ -353,7 +353,7 @@ public class Character {
      * @return
      */
     public String getNationality() {
-        return nationality;
+        return this.nationality;
     }
 
     /**
@@ -362,7 +362,7 @@ public class Character {
      * @return
      */
     public int getSize() {
-        return size;
+        return this.size;
     }
 
     /**
@@ -371,7 +371,7 @@ public class Character {
      * @return
      */
     public int getWeight() {
-        return weight;
+        return this.weight;
     }
 
     /**
@@ -380,7 +380,7 @@ public class Character {
      * @return
      */
     public Sex getSex() {
-        return sex;
+        return this.sex;
     }
 
     /**
@@ -389,7 +389,7 @@ public class Character {
      * @return
      */
     public String getStory() {
-        return story;
+        return this.story;
     }
 
     /**
@@ -398,7 +398,7 @@ public class Character {
      * @return
      */
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
