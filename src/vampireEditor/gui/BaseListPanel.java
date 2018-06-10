@@ -23,7 +23,7 @@ package vampireEditor.gui;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -99,7 +99,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param spinnerMinimum
      */
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
-        HashMap<String, JComponent> elements = new HashMap<>();
+        LinkedHashMap<String, JComponent> elements = new LinkedHashMap<>();
 
         elementList.forEach((string) -> {
             JSpinner spinner = new JSpinner();
