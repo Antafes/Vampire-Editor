@@ -118,15 +118,8 @@ public class LastStepsPanel extends BasePanel {
         this.addFields(headline, new ArrayList<>());
     }
 
-    /**
-     * Add fields by the given list and under the given headline.
-     * This is going to be used to add the road and humanity fields.
-     *
-     * @param headline
-     * @param elementList
-     */
     @Override
-    protected void addFields(String headline, ArrayList<String> elementList) {
+    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
         if (!this.getFields().containsKey(headline)) {
             this.getFields().put(headline, new ArrayList<>());
         }
@@ -267,7 +260,6 @@ public class LastStepsPanel extends BasePanel {
      *
      * @return
      */
-    @Override
     protected HashMap<String, Component> addRow(
         String type,
         ArrayList<Component> fields,

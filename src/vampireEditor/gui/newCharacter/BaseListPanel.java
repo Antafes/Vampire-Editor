@@ -90,10 +90,34 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      *
      * @param headline
+     * @param addHeadline
+     * @param elementList
+     */
+    @Override
+    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+        this.addFields(headline, addHeadline, elementList, 0);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     *
+     * @param headline
      * @param elementList
      * @param spinnerMinimum
      */
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
+        this.addFields(headline, true, elementList, spinnerMinimum);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     *
+     * @param headline
+     * @param addHeadline
+     * @param elementList
+     * @param spinnerMinimum
+     */
+    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
         if (!this.getFields().containsKey(headline)) {
             this.getFields().put(headline, new ArrayList<>());
         }
@@ -163,8 +187,9 @@ abstract public class BaseListPanel extends BasePanel {
      * @param fields
      * @param groups
      * @param layout
+     *
+     * @return
      */
-    @Override
     protected HashMap<String, Component> addRow(
         String element, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
     ) {

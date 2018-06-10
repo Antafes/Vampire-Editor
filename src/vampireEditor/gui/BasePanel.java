@@ -26,8 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.GroupLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.LayoutStyle;
 import vampireEditor.Configuration;
 import vampireEditor.language.LanguageInterface;
 
@@ -307,19 +309,202 @@ abstract public class BasePanel extends JPanel {
      * @param headline
      * @param elementList
      */
-    abstract protected void addFields(String headline, ArrayList<String> elementList);
+    protected void addFields(String headline, ArrayList<String> elementList) {
+        this.addFields(headline, true, elementList);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     * This will use 0 as minimum value for the spinners.
+     *
+     * @param headline
+     * @param addHeadline
+     * @param elementList
+     */
+    abstract protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList);
+
+    /**
+     * Add the given fields and with the given headline.
+     *
+     * @param headline
+     * @param addHeadline
+     * @param elementList
+     */
+    protected void addFields(String headline, boolean addHeadline, HashMap<String, JComponent> elementList) {
+        this.addFields(headline, addHeadline, elementList, true);
+    }
+
+    /**
+     * Add the given fields and with the given headline.
+     *
+     * @param headline
+     * @param addHeadline
+     * @param elementList
+     * @param addFieldLabels
+     */
+    protected void addFields(
+        String headline, boolean addHeadline, HashMap<String, JComponent> elementList, boolean addFieldLabels
+    ) {
+        if (!this.getFields().containsKey(headline)) {
+            this.getFields().put(headline, new ArrayList<>());
+        }
+
+        GroupLayout layout = (GroupLayout) this.getLayout();
+        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup();
+        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup();
+
+        if (addHeadline) {
+            JLabel groupLabel = this.createGroupLabel(headline);
+            groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            listHorizontalGroup
+                .addGap(11, 11, 11)
+                .addComponent(groupLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+            listVerticalGroup
+                .addGap(11, 11, 11)
+                .addComponent(groupLabel);
+        }
+
+        this.getOuterSequentialHorizontalGroup()
+            .addGroup(
+                layout.createSequentialGroup().addGroup(listHorizontalGroup)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+
+        listVerticalGroup
+            .addGap(11, 11, 11);
+        this.getOuterParallelVerticalGroup()
+            .addGroup(listVerticalGroup);
+
+        GroupLayout.SequentialGroup outerElementHorizontalGroup = layout.createSequentialGroup();
+
+        if (addFieldLabels) {
+            outerElementHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        }
+
+        GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        GroupLayout.ParallelGroup elementHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+
+        elementList.forEach((key, element) -> {
+            HashMap<String, GroupLayout.Group> groups = new HashMap<>();
+            groups.put("labelHorizontalGroup", labelHorizontalGroup);
+            groups.put("elementHorizontalGroup", elementHorizontalGroup);
+            groups.put("listVerticalGroup", listVerticalGroup);
+            this.addRow(
+                element,
+                key,
+                this.getFields(headline),
+                addFieldLabels,
+                groups,
+                layout,
+                element.getSize().width,
+                element.getSize().height
+            );
+        });
+
+        if (addFieldLabels) {
+            GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
+            outerLabelHorizontalGroup.addGap(11, 11, 11);
+            outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
+            outerLabelHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE);
+            listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
+        }
+
+        outerElementHorizontalGroup.addGroup(elementHorizontalGroup);
+        listHorizontalGroup.addGroup(outerElementHorizontalGroup);
+    }
 
     /**
      * Add a single row to the current column.
      *
      * @param element
+     * @param label
      * @param fields
      * @param groups
      * @param layout
      *
      * @return
      */
-    abstract protected HashMap<String, Component> addRow(
-        String element, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
-    );
+    protected HashMap<String, Component> addRow(
+        JComponent element,
+        String label,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout
+    ) {
+        return this.addRow(
+            element, label, fields, true, groups, layout, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE
+        );
+    }
+
+    /**
+     * Add a single row to the current column.
+     *
+     * @param element
+     * @param label
+     * @param fields
+     * @param addFieldLabels
+     * @param groups
+     * @param layout
+     *
+     * @return
+     */
+    protected HashMap<String, Component> addRow(
+        JComponent element,
+        String label,
+        ArrayList<Component> fields,
+        boolean addFieldLabels,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout
+    ) {
+        return this.addRow(
+            element, label, fields, addFieldLabels, groups, layout, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE
+        );
+    }
+
+    /**
+     * Add a single row to the current column.
+     *
+     * @param element
+     * @param label
+     * @param fields
+     * @param addFieldLabels
+     * @param groups
+     * @param layout
+     * @param fieldWidth
+     * @param fieldHeight
+     *
+     * @return
+     */
+    protected HashMap<String, Component> addRow(
+        JComponent element,
+        String label,
+        ArrayList<Component> fields,
+        boolean addFieldLabels,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout,
+        int fieldWidth,
+        int fieldHeight
+    ) {
+        this.order.add(element);
+        fields.add(element);
+        GroupLayout.ParallelGroup verticalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        HashMap<String, Component> elements = new HashMap<>();
+
+        if (addFieldLabels) {
+            JLabel elementLabel = this.createLabel(label);
+            elementLabel.setLabelFor(element);
+            groups.get("labelHorizontalGroup").addComponent(elementLabel);
+            verticalGroup.addComponent(elementLabel);
+            elements.put("label", elementLabel);
+        }
+
+        groups.get("elementHorizontalGroup").addComponent(element, GroupLayout.PREFERRED_SIZE, fieldWidth, GroupLayout.PREFERRED_SIZE);
+        verticalGroup.addComponent(element, GroupLayout.PREFERRED_SIZE, fieldHeight, GroupLayout.PREFERRED_SIZE);
+        groups.get("listVerticalGroup").addGroup(verticalGroup)
+            .addGap(6, 6, 6);
+
+        elements.put("element", element);
+
+        return elements;
+    }
 }

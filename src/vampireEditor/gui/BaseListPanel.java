@@ -21,14 +21,11 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.GroupLayout;
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JSpinner;
-import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.DefaultFormatter;
 import vampireEditor.Configuration;
@@ -65,123 +62,57 @@ abstract public class BaseListPanel extends BasePanel {
      */
     @Override
     protected void addFields(String headline, ArrayList<String> elementList) {
-        this.addFields(headline, elementList, 0);
+        this.addFields(headline, true, elementList, 0);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     * This will use 0 as minimum value for the spinners.
+     *
+     * @param headline
+     * @param addHeadline
+     * @param elementList
+     */
+    @Override
+    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+        this.addFields(headline, addHeadline, elementList, 0);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     * This will use 0 as minimum value for the spinners.
+     *
+     * @param headline
+     * @param spinnerMinimum
+     * @param elementList
+     */
+    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
+        this.addFields(headline, true, elementList, spinnerMinimum);
     }
 
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
      * @param headline
+     * @param addHeadline
      * @param elementList
      * @param spinnerMinimum
      */
-    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
-        if (!this.getFields().containsKey(headline)) {
-            this.getFields().put(headline, new ArrayList<>());
-        }
+    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
+        HashMap<String, JComponent> elements = new HashMap<>();
 
-        GroupLayout layout = (GroupLayout) this.getLayout();
-        JLabel groupLabel = this.createGroupLabel(headline);
-        groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-        this.getOuterSequentialHorizontalGroup()
-            .addGroup(
-                layout.createSequentialGroup().addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
+        elementList.forEach((string) -> {
+            JSpinner spinner = new JSpinner();
+            spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
+            Dimension spinnerDimension = new Dimension(36, 20);
+            spinner.setSize(spinnerDimension);
+            spinner.setName(string);
+            this.addChangeListener(spinner);
 
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel)
-            .addGap(11, 11, 11);
-        this.getOuterParallelVerticalGroup()
-            .addGroup(listVerticalGroup);
-
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        outerLabelHorizontalGroup.addGap(11, 11, 11);
-        GroupLayout.SequentialGroup outerElementHorizontalGroup = layout.createSequentialGroup();
-        outerElementHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-        GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        GroupLayout.ParallelGroup elementHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-
-        elementList.forEach((element) -> {
-            HashMap<String, GroupLayout.Group> groups = new HashMap<>();
-            groups.put("labelHorizontalGroup", labelHorizontalGroup);
-            groups.put("elementHorizontalGroup", elementHorizontalGroup);
-            groups.put("listVerticalGroup", listVerticalGroup);
-            this.addRow(element, spinnerMinimum, this.getFields(headline), groups, layout);
+            elements.put(string, spinner);
         });
 
-        outerLabelHorizontalGroup.addGroup(labelHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
-        outerElementHorizontalGroup.addGroup(elementHorizontalGroup);
-        listHorizontalGroup.addGroup(outerElementHorizontalGroup);
-        outerLabelHorizontalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE);
-    }
-
-    /**
-     * Add a single row to the current column.
-     *
-     * @param element
-     * @param fields
-     * @param groups
-     * @param layout
-     *
-     * @return
-     */
-    @Override
-    protected HashMap<String, Component> addRow(
-        String element, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
-    ) {
-        return this.addRow(element, 0, fields, groups, layout);
-    }
-
-    /**
-     * Add a single row to the current column.
-     *
-     * @param element
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
-     *
-     * @return
-     */
-    protected HashMap<String, Component> addRow(
-        String element,
-        int spinnerMinimum,
-        ArrayList<Component> fields,
-        HashMap<String, GroupLayout.Group> groups,
-        GroupLayout layout
-    ) {
-        JLabel elementLabel = this.createLabel(element);
-        JSpinner spinner = new JSpinner();
-        elementLabel.setLabelFor(spinner);
-        spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
-        Dimension spinnerDimension = new Dimension(36, 20);
-        spinner.setPreferredSize(spinnerDimension);
-        spinner.setMinimumSize(spinnerDimension);
-        spinner.setMaximumSize(spinnerDimension);
-        spinner.setName(element);
-        this.addChangeListener(spinner);
-        this.getOrder().add(spinner);
-        fields.add(spinner);
-
-        groups.get("labelHorizontalGroup").addComponent(elementLabel);
-        groups.get("elementHorizontalGroup").addComponent(spinner);
-        GroupLayout.ParallelGroup verticalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        verticalGroup.addComponent(elementLabel)
-            .addComponent(spinner);
-        groups.get("listVerticalGroup").addGroup(verticalGroup)
-            .addGap(6, 6, 6);
-
-        HashMap<String, Component> elements = new HashMap<>();
-        elements.put("label", elementLabel);
-        elements.put("spinner", spinner);
-
-        return elements;
+        this.addFields(headline, addHeadline, elements);
     }
 
     /**

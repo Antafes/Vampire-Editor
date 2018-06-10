@@ -23,6 +23,7 @@ package vampireEditor.gui.newCharacter;
 
 import vampireEditor.gui.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import vampireEditor.Configuration;
 
