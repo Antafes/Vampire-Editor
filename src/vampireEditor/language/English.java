@@ -47,6 +47,12 @@ public class English implements LanguageInterface {
         this.translations.put("helpMnemonic", "H");
         this.translations.put("about", "About");
         this.translations.put("aboutMnemonic", "A");
+        this.translations.put("new", "New");
+        this.translations.put("newMnemonic", "N");
+        this.translations.put("save", "Save");
+        this.translations.put("saveMnemonic", "S");
+        this.translations.put("existingFile", "Existing file");
+        this.translations.put("fileExists", "The selected file already exists, overwrite?");
         this.translations.put("close", "Close");
         this.translations.put("aboutText", "This tool was created by Marian Pollzien.");
         this.translations.put("cancel", "Cancel");
@@ -54,8 +60,6 @@ public class English implements LanguageInterface {
         this.translations.put("ok", "Ok");
         this.translations.put("back", "Back");
         this.translations.put("finish", "Finish");
-        this.translations.put("new", "New");
-        this.translations.put("newMnemonic", "N");
         this.translations.put("newCharacter", "New character");
         this.translations.put("looks", "Looks");
         this.translations.put("name", "Name");

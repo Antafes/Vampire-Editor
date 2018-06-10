@@ -186,7 +186,11 @@ public class Configuration
      */
     public File getSaveDirPath(String filename)
     {
-        return new File(this.properties.getProperty("saveDirPath") + "/" + filename + ".rptok");
+        if (!filename.endsWith(".xml")) {
+            filename += ".xml";
+        }
+
+        return new File(this.properties.getProperty("saveDirPath") + "/" + filename);
     }
 
     /**

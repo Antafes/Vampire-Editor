@@ -26,6 +26,7 @@ import vampireEditor.gui.character.CharacterTabbedPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -33,6 +34,8 @@ import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -45,6 +48,7 @@ import vampireEditor.character.Advantage;
 import vampireEditor.character.Attribute;
 import vampireEditor.character.AttributeInterface;
 import vampireEditor.language.LanguageInterface;
+import vampireEditor.utility.CharacterStorage;
 
 /**
  *
@@ -66,6 +70,8 @@ public class BaseWindow extends javax.swing.JFrame {
         this.initComponents();
         this.init();
         this.setFieldTexts();
+
+        this.addCharacter(this.createTestCharacter());
     }
 
     /**
@@ -159,10 +165,39 @@ public class BaseWindow extends javax.swing.JFrame {
         closeAboutButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         aboutTextPane = new javax.swing.JTextPane();
+        saveFileChooser = new javax.swing.JFileChooser(){
+            @Override
+            public void approveSelection(){
+                File f = getSelectedFile();
+
+                if(f.exists() && getDialogType() == SAVE_DIALOG){
+                    int result = JOptionPane.showConfirmDialog(
+                        this,
+                        language.translate("fileExists"),
+                        language.translate("existingFile"),
+                        JOptionPane.YES_NO_CANCEL_OPTION
+                    );
+                    switch(result){
+                        case JOptionPane.YES_OPTION:
+                        super.approveSelection();
+                        return;
+                        case JOptionPane.NO_OPTION:
+                        return;
+                        case JOptionPane.CLOSED_OPTION:
+                        return;
+                        case JOptionPane.CANCEL_OPTION:
+                        cancelSelection();
+                        return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
         charactersTabPane = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
+        saveMenuItem = new javax.swing.JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -224,6 +259,8 @@ public class BaseWindow extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        saveFileChooser.setCurrentDirectory(null);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fileMenu.setText("File");
@@ -236,6 +273,15 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         });
         fileMenu.add(newMenuItem);
+
+        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveMenuItem);
 
         closeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         closeMenuItem.setText("Quit");
@@ -351,6 +397,22 @@ public class BaseWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_aboutTextPaneKeyPressed
 
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        vampireEditor.Character character = this.getActiveCharacter();
+        this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
+        this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
+        this.saveFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        int result = this.saveFileChooser.showSaveDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
+            this.configuration.saveProperties();
+            CharacterStorage storage = new CharacterStorage();
+
+            storage.save(character, this.saveFileChooser.getSelectedFile().getName());
+        }
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
     /**
      * Action that will be performed on changing the language.
      *
@@ -417,6 +479,8 @@ public class BaseWindow extends javax.swing.JFrame {
         this.aboutTextPane.setText(this.language.translate("aboutText"));
         this.newMenuItem.setText(this.language.translate("new"));
         this.newMenuItem.setMnemonic(this.language.translate("newMnemonic").charAt(0));
+        this.saveMenuItem.setText(this.language.translate("save"));
+        this.saveMenuItem.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
     }
 
     /**
@@ -459,6 +523,15 @@ public class BaseWindow extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Get the character of the currently selected tab.
+     *
+     * @return
+     */
+    private vampireEditor.Character getActiveCharacter() {
+        return ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog aboutDialog;
@@ -477,6 +550,8 @@ public class BaseWindow extends javax.swing.JFrame {
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
+    private javax.swing.JFileChooser saveFileChooser;
+    private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
     // </editor-fold>
 }

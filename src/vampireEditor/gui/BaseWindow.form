@@ -89,6 +89,14 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JFileChooser" name="saveFileChooser">
+      <Properties>
+        <Property name="currentDirectory" type="java.io.File" value="null"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFileChooser(){&#xa;    @Override&#xa;    public void approveSelection(){&#xa;        File f = getSelectedFile();&#xa;&#xa;        if(f.exists() &amp;&amp; getDialogType() == SAVE_DIALOG){&#xa;            int result = JOptionPane.showConfirmDialog(&#xa;                this,&#xa;                language.translate(&quot;fileExists&quot;),&#xa;                language.translate(&quot;existingFile&quot;),&#xa;                JOptionPane.YES_NO_CANCEL_OPTION&#xa;            );&#xa;            switch(result){&#xa;                case JOptionPane.YES_OPTION:&#xa;                super.approveSelection();&#xa;                return;&#xa;                case JOptionPane.NO_OPTION:&#xa;                return;&#xa;                case JOptionPane.CLOSED_OPTION:&#xa;                return;&#xa;                case JOptionPane.CANCEL_OPTION:&#xa;                cancelSelection();&#xa;                return;&#xa;            }&#xa;        }&#xa;        super.approveSelection();&#xa;    }&#xa;}"/>
+      </AuxValues>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="menuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="fileMenu">
@@ -105,6 +113,17 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveMenuItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+S"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Save"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="closeMenuItem">

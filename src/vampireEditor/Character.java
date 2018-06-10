@@ -48,7 +48,6 @@ public class Character {
     private final ArrayList<Advantage> advantages;
     private final ArrayList<Merit> merits;
     private final ArrayList<Flaw> flaws;
-    private final ArrayList<Trait> traits;
     private Road road;
     private int willpower;
     private int bloodStock;
@@ -91,7 +90,6 @@ public class Character {
         this.advantages = new ArrayList<>();
         this.merits = new ArrayList<>();
         this.flaws = new ArrayList<>();
-        this.traits = new ArrayList<>();
     }
 
     /**
@@ -245,15 +243,6 @@ public class Character {
      */
     public ArrayList<Flaw> getFlaws() {
         return this.flaws;
-    }
-
-    /**
-     * Get the list of additional attributes/traits the character has.
-     *
-     * @return
-     */
-    public ArrayList<Trait> getTraits() {
-        return this.traits;
     }
 
     /**
