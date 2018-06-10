@@ -66,8 +66,6 @@ public class BaseWindow extends javax.swing.JFrame {
         this.initComponents();
         this.init();
         this.setFieldTexts();
-
-        this.addCharacter(this.createTestCharacter());
     }
 
     /**
