@@ -372,6 +372,24 @@ public class VampireEditor {
     }
 
     /**
+     * Get a single generation object from the list of generations.
+     * Returns null if no matching generation was found.
+     *
+     * @param generation
+     *
+     * @return
+     */
+    public static Generation getGeneration(int generation) {
+        for (Generation generationObject : VampireEditor.GENERATIONS) {
+            if (generationObject.getGeneration() == generation) {
+                return generationObject;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get the list of ADVANTAGES.
      *
      * @return

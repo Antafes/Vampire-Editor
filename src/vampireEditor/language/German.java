@@ -53,6 +53,8 @@ public class German implements LanguageInterface {
         this.translations.put("saveMnemonic", "S");
         this.translations.put("existingFile", "Existierende Datei");
         this.translations.put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
+        this.translations.put("couldNotLoad", "Laden fehlgeschlagen");
+        this.translations.put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
         this.translations.put("close", "Schließen");
         this.translations.put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
         this.translations.put("cancel", "Abbrechen");

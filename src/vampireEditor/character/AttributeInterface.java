@@ -77,6 +77,31 @@ public interface AttributeInterface {
         public ArrayList<String> getAttributes() {
             return attributes;
         }
+
+        /**
+         * Get the attribute type for a given attribute name.
+         *
+         * @param attributeName
+         *
+         * @return
+         */
+        public static AttributeType getTypeForAttribute(String attributeName) {
+            switch (attributeName) {
+                case "strength":
+                case "dexterity":
+                case "stamina":
+                    return AttributeType.PHYSICAL;
+                case "charisma":
+                case "appearance":
+                case "manipulation":
+                    return AttributeType.SOCIAL;
+                case "intelligence":
+                case "perception":
+                case "wits":
+                default:
+                    return AttributeType.MENTAL;
+            }
+        }
     }
 
     /**

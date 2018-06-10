@@ -29,24 +29,10 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
-import vampireEditor.character.Ability;
-import vampireEditor.character.AbilityInterface;
-import vampireEditor.character.Advantage;
-import vampireEditor.character.Attribute;
-import vampireEditor.character.AttributeInterface;
+import vampireEditor.character.*;
 import vampireEditor.language.LanguageInterface;
 import vampireEditor.utility.CharacterStorage;
 
@@ -70,8 +56,6 @@ public class BaseWindow extends javax.swing.JFrame {
         this.initComponents();
         this.init();
         this.setFieldTexts();
-
-        this.addCharacter(this.createTestCharacter());
     }
 
     /**
@@ -193,10 +177,12 @@ public class BaseWindow extends javax.swing.JFrame {
                 super.approveSelection();
             }
         };
+        openFileChooser = new javax.swing.JFileChooser();
         charactersTabPane = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
+        openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -261,6 +247,8 @@ public class BaseWindow extends javax.swing.JFrame {
 
         saveFileChooser.setCurrentDirectory(null);
 
+        openFileChooser.setCurrentDirectory(null);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fileMenu.setText("File");
@@ -273,6 +261,15 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         });
         fileMenu.add(newMenuItem);
+
+        openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        openMenuItem.setText("Open");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openMenuItem);
 
         saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveMenuItem.setText("Save");
@@ -413,6 +410,31 @@ public class BaseWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        this.openFileChooser.setCurrentDirectory(this.configuration.getOpenDirPath());
+        this.openFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        int result = this.openFileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
+            this.configuration.saveProperties();
+            CharacterStorage storage = new CharacterStorage();
+
+            try {
+                vampireEditor.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+                this.addCharacter(character);
+            } catch (Exception ex) {
+                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(
+                    this,
+                    this.language.translate("couldNotLoadCharacter"),
+                    this.language.translate("couldNotLoad"),
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_openMenuItemActionPerformed
+
     /**
      * Action that will be performed on changing the language.
      *
@@ -550,6 +572,8 @@ public class BaseWindow extends javax.swing.JFrame {
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
+    private javax.swing.JFileChooser openFileChooser;
+    private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JFileChooser saveFileChooser;
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables

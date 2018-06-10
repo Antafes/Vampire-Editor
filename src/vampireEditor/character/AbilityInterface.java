@@ -77,6 +77,52 @@ public interface AbilityInterface {
         public ArrayList<String> getAbilities() {
             return abilities;
         }
+
+        /**
+         * Get the ability type for a given ability name.
+         *
+         * @param abilityName
+         *
+         * @return
+         */
+        public static AbilityType getTypeForAbility(String abilityName) {
+            switch (abilityName) {
+                case "acting":
+                case "alertness":
+                case "athletics":
+                case "brawl":
+                case "burglary":
+                case "dodge":
+                case "empathy":
+                case "intimidation":
+                case "leadership":
+                case "subterfuge":
+                    return AbilityType.TALENT;
+                case "animalKen":
+                case "archery":
+                case "crafts":
+                case "etiquette":
+                case "herbalism":
+                case "melee":
+                case "music":
+                case "ride":
+                case "stealth":
+                case "survival":
+                    return AbilityType.SKILL;
+                case "academicKnowledge":
+                case "administration":
+                case "folklore":
+                case "investigation":
+                case "law":
+                case "linguistics":
+                case "medicine":
+                case "occult":
+                case "politics":
+                case "science":
+                default:
+                    return AbilityType.KNOWLEDGE;
+            }
+        }
     }
 
     /**
