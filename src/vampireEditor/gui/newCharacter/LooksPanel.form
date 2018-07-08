@@ -25,7 +25,7 @@
                   <Component id="natureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="hideoutLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="playerLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="behaviourLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="demeanorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="conceptLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="sireLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="clanLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -35,7 +35,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="hideoutField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="playerField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
-                  <Component id="behaviourField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
+                  <Component id="demeanorField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="conceptField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="sireField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                   <Component id="sectField" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
@@ -179,8 +179,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="behaviourLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="behaviourField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="demeanorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="demeanorField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -452,12 +452,12 @@
         <Property name="name" type="java.lang.String" value="age" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="behaviourLabel">
+    <Component class="javax.swing.JLabel" name="demeanorLabel">
       <Properties>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="behaviourField"/>
+          <ComponentRef name="demeanorField"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Behaviour*"/>
+        <Property name="text" type="java.lang.String" value="Demeanor*"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="ageLabel">
@@ -468,12 +468,12 @@
         <Property name="text" type="java.lang.String" value="Age"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="behaviourField">
+    <Component class="javax.swing.JTextField" name="demeanorField">
       <Properties>
-        <Property name="name" type="java.lang.String" value="behaviour" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="demeanor" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(behaviourField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(behaviourField);&#xa;behaviourField.getDocument().addDocumentListener(this.documentListener);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.enteredFields.put(demeanorField, Boolean.FALSE);&#xa;this.documentListener = this.createDocumentListener();&#xa;this.documentListener.setComponent(demeanorField);&#xa;demeanorField.getDocument().addDocumentListener(this.documentListener);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="conceptField">

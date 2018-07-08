@@ -39,7 +39,7 @@ public class Character {
     private String nature;
     private String hideout;
     private String player;
-    private String behaviour;
+    private String demeanor;
     private String concept;
     private String sire;
     private String sect;
@@ -165,12 +165,12 @@ public class Character {
     }
 
     /**
-     * Get the behaviour of the character.
+     * Get the demeanor of the character.
      *
      * @return
      */
-    public String getBehaviour() {
-        return this.behaviour;
+    public String getDemeanor() {
+        return this.demeanor;
     }
 
     /**
@@ -463,12 +463,12 @@ public class Character {
     }
 
     /**
-     * Set the behaviour of the character.
+     * Set the demeanor of the character.
      *
-     * @param behaviour
+     * @param demeanor
      */
-    public void setBehaviour(String behaviour) {
-        this.behaviour = behaviour;
+    public void setDemeanor(String demeanor) {
+        this.demeanor = demeanor;
     }
 
     /**

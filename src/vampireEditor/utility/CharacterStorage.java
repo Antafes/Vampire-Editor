@@ -105,7 +105,7 @@ public class CharacterStorage {
         this.xw.addChild("nature", Integer.toString(character.getExperience()));
         this.xw.addChild("hideout", character.getHideout());
         this.xw.addChild("player", character.getPlayer());
-        this.xw.addChild("behaviour", character.getBehaviour());
+        this.xw.addChild("demeanor", character.getDemeanor());
         this.xw.addChild("concept", character.getConcept());
         this.xw.addChild("sire", character.getSire());
         this.xw.addChild("sect", character.getSect());
@@ -190,7 +190,7 @@ public class CharacterStorage {
         character.setNature(XMLParser.getTagValue("nature", root));
         character.setHideout(XMLParser.getTagValue("hideout", root));
         character.setPlayer(XMLParser.getTagValue("player", root));
-        character.setBehaviour(XMLParser.getTagValue("behaviour", root));
+        character.setDemeanor(XMLParser.getTagValue("demeanor", root));
         character.setConcept(XMLParser.getTagValue("concept", root));
         character.setSire(XMLParser.getTagValue("sire", root));
         character.setSect(XMLParser.getTagValue("sect", root));

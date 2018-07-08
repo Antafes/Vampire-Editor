@@ -80,7 +80,7 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
         fieldNames.put("nature", this.generateTextField("nature", false));
         fieldNames.put("hideout", this.generateTextField("hideout"));
         fieldNames.put("player", this.generateTextField("player"));
-        fieldNames.put("behaviour", this.generateTextField("behaviour", false));
+        fieldNames.put("demeanor", this.generateTextField("demeanor", false));
         fieldNames.put("concept", this.generateTextField("concept", false));
         fieldNames.put("sire", this.generateTextField("sire"));
         fieldNames.put("clan", this.generateTextField("clan", false));
@@ -221,8 +221,8 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
                 case "player":
                     element.setText(this.character.getPlayer());
                     break;
-                case "behaviour":
-                    element.setText(this.character.getBehaviour());
+                case "demeanor":
+                    element.setText(this.character.getDemeanor());
                     break;
                 case "concept":
                     element.setText(this.character.getConcept());

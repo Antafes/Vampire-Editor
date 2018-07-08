@@ -70,7 +70,7 @@ public class English implements LanguageInterface {
         this.translations.put("nature", "Nature");
         this.translations.put("hideout", "Hideout");
         this.translations.put("player", "Player");
-        this.translations.put("behaviour", "Behaviour");
+        this.translations.put("demeanor", "Demeanor");
         this.translations.put("concept", "Concept");
         this.translations.put("sire", "Sire");
         this.translations.put("clan", "Clan");

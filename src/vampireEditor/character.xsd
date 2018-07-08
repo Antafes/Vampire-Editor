@@ -13,7 +13,7 @@
                 <xsd:element name="nature" type="xsd:string" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="hideout" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="player" type="xsd:string" minOccurs="0" maxOccurs="1" />
-                <xsd:element name="behaviour" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="demeanor" type="xsd:string" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="concept" type="xsd:string" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="sire" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="sect" type="xsd:string" minOccurs="0" maxOccurs="1" />

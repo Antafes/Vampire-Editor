@@ -127,9 +127,9 @@ public class LooksPanel extends javax.swing.JPanel {
         nationalityField = new javax.swing.JTextField();
         playerField = new javax.swing.JTextField();
         ageField = new javax.swing.JTextField();
-        behaviourLabel = new javax.swing.JLabel();
+        demeanorLabel = new javax.swing.JLabel();
         ageLabel = new javax.swing.JLabel();
-        behaviourField = new javax.swing.JTextField();
+        demeanorField = new javax.swing.JTextField();
         conceptField = new javax.swing.JTextField();
         nameField = new javax.swing.JTextField();
         nameLabel = new javax.swing.JLabel();
@@ -251,17 +251,17 @@ public class LooksPanel extends javax.swing.JPanel {
 
         ageField.setName("age"); // NOI18N
 
-        behaviourLabel.setLabelFor(behaviourField);
-        behaviourLabel.setText("Behaviour*");
+        demeanorLabel.setLabelFor(demeanorField);
+        demeanorLabel.setText("Demeanor*");
 
         ageLabel.setLabelFor(ageField);
         ageLabel.setText("Age");
 
-        this.enteredFields.put(behaviourField, Boolean.FALSE);
+        this.enteredFields.put(demeanorField, Boolean.FALSE);
         this.documentListener = this.createDocumentListener();
-        this.documentListener.setComponent(behaviourField);
-        behaviourField.getDocument().addDocumentListener(this.documentListener);
-        behaviourField.setName("behaviour"); // NOI18N
+        this.documentListener.setComponent(demeanorField);
+        demeanorField.getDocument().addDocumentListener(this.documentListener);
+        demeanorField.setName("demeanor"); // NOI18N
 
         this.enteredFields.put(conceptField, Boolean.FALSE);
         this.documentListener = this.createDocumentListener();
@@ -316,7 +316,7 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(natureLabel)
                     .addComponent(hideoutLabel)
                     .addComponent(playerLabel)
-                    .addComponent(behaviourLabel)
+                    .addComponent(demeanorLabel)
                     .addComponent(conceptLabel)
                     .addComponent(sireLabel)
                     .addComponent(clanLabel)
@@ -325,7 +325,7 @@ public class LooksPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(hideoutField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(playerField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(behaviourField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(demeanorField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(conceptField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sireField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -445,8 +445,8 @@ public class LooksPanel extends javax.swing.JPanel {
                             .addComponent(playerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(behaviourLabel)
-                            .addComponent(behaviourField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(demeanorLabel)
+                            .addComponent(demeanorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(conceptLabel)
@@ -512,7 +512,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.natureLabel.setText(this.language.translate("nature") + "*");
         this.hideoutLabel.setText(this.language.translate("hideout"));
         this.playerLabel.setText(this.language.translate("player"));
-        this.behaviourLabel.setText(this.language.translate("behaviour") + "*");
+        this.demeanorLabel.setText(this.language.translate("demeanor") + "*");
         this.conceptLabel.setText(this.language.translate("concept") + "*");
         this.sireLabel.setText(this.language.translate("sire"));
         this.clanLabel.setText(this.language.translate("clan") + "*");
@@ -637,7 +637,7 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.natureField);
         order.add(this.hideoutField);
         order.add(this.playerField);
-        order.add(this.behaviourField);
+        order.add(this.demeanorField);
         order.add(this.conceptField);
         order.add(this.sireField);
         order.add(this.clanComboBox);
@@ -680,7 +680,7 @@ public class LooksPanel extends javax.swing.JPanel {
         character.setNature(this.natureField.getText());
         character.setHideout(this.hideoutField.getText());
         character.setPlayer(this.playerField.getText());
-        character.setBehaviour(this.behaviourField.getText());
+        character.setDemeanor(this.demeanorField.getText());
         character.setConcept(this.conceptField.getText());
         character.setSire(this.sireField.getText());
         character.setClan((Clan) this.clanComboBox.getSelectedItem());
@@ -702,8 +702,6 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JTextField ageField;
     private javax.swing.JLabel ageLabel;
     private javax.swing.JButton backButton;
-    private javax.swing.JTextField behaviourField;
-    private javax.swing.JLabel behaviourLabel;
     private javax.swing.JTextField chronicleField;
     private javax.swing.JLabel chronicleLabel;
     private javax.swing.JComboBox<String> clanComboBox;
@@ -714,6 +712,8 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel dayOfBirthLabel;
     private vampireEditor.gui.PlaceholderFormattedTextField dayOfDeathField;
     private javax.swing.JLabel dayOfDeathLabel;
+    private javax.swing.JTextField demeanorField;
+    private javax.swing.JLabel demeanorLabel;
     private javax.swing.JTextField eyeColorField;
     private javax.swing.JLabel eyeColorLabel;
     private javax.swing.JComboBox<String> generationComboBox;
