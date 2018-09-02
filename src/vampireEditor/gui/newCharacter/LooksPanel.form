@@ -327,7 +327,7 @@
         <Property name="name" type="java.lang.String" value="dayOfBirth" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));&#xa;dayOfBirthField.setPlaceholder(dateFormatter.getFormat().format(date));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(this.dateFormatter));&#xa;dayOfBirthField.setPlaceholder(this.date.format(this.dateTimeFormatter));"/>
       </AuxValues>
     </Component>
     <Component class="vampireEditor.gui.PlaceholderFormattedTextField" name="dayOfDeathField">
@@ -335,7 +335,7 @@
         <Property name="name" type="java.lang.String" value="dayOfDeath" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));&#xa;dayOfDeathField.setPlaceholder(dateFormatter.getFormat().format(date));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));&#xa;dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(this.dateFormatter));&#xa;dayOfDeathField.setPlaceholder(this.date.format(this.dateTimeFormatter));"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="hairColorLabel">

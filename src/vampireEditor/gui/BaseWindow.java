@@ -68,7 +68,7 @@ public class BaseWindow extends javax.swing.JFrame {
         character.setName("Test Character");
         character.setGeneration(VampireEditor.getGenerations().get(4));
         character.setNature("wise");
-        character.setBehaviour("strict");
+        character.setDemeanor("strict");
         character.setConcept("Really no concept!");
         character.setClan(VampireEditor.getClan("brujah"));
         character.setSex(vampireEditor.Character.Sex.MALE);

@@ -22,12 +22,15 @@
 package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.TimeZone;
+import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -56,8 +59,9 @@ public class LooksPanel extends javax.swing.JPanel {
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
     private ComponentDocumentListener documentListener;
+    private final DateTimeFormatter dateTimeFormatter;
     private DateFormatter dateFormatter;
-    private final Date date;
+    private final LocalDate date;
 
     /**
      * Creates new form looksPanel
@@ -72,9 +76,8 @@ public class LooksPanel extends javax.swing.JPanel {
         this.enteredFields = new HashMap<>();
         this.language = this.configuration.getLanguageObject();
 
-        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.set(1200, 0, 1);
-        this.date = calendar.getTime();
+        this.date = LocalDate.of(1200, Month.JANUARY, 1);
+        this.dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.getDefault());
     }
 
     /**
@@ -191,14 +194,14 @@ public class LooksPanel extends javax.swing.JPanel {
         weightLabel.setLabelFor(weightField);
         weightLabel.setText("Weight");
 
-        dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
-        dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));
-        dayOfBirthField.setPlaceholder(dateFormatter.getFormat().format(date));
+        this.dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
+        dayOfBirthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(this.dateFormatter));
+        dayOfBirthField.setPlaceholder(this.date.format(this.dateTimeFormatter));
         dayOfBirthField.setName("dayOfBirth"); // NOI18N
 
-        dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
-        dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(dateFormatter));
-        dayOfDeathField.setPlaceholder(dateFormatter.getFormat().format(date));
+        this.dateFormatter = new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM));
+        dayOfDeathField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(this.dateFormatter));
+        dayOfDeathField.setPlaceholder(this.date.format(this.dateTimeFormatter));
         dayOfDeathField.setName("dayOfDeath"); // NOI18N
 
         hairColorLabel.setLabelFor(hairColorField);
