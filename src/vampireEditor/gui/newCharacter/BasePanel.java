@@ -23,7 +23,6 @@ package vampireEditor.gui.newCharacter;
 
 import vampireEditor.gui.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import vampireEditor.Configuration;
 
@@ -189,7 +188,7 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
-    abstract public void fillCharacter(vampireEditor.Character character);
+    abstract public void fillCharacter(vampireEditor.entity.Character.Builder builder);
 }

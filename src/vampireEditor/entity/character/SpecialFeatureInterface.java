@@ -19,34 +19,42 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Special feature interface.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+public interface SpecialFeatureInterface {
+    /**
+     * List of special feature types.
+     */
+    public static enum SpecialFeatureType {
+        PHYSICAL,
+        MENTAL,
+        SOCIAL,
+        SUPERNATURAL;
+    }
 
     /**
-     * Get the component this listener is registered on.
+     * Get the name of the special feature.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getName();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the type of the special feature.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public SpecialFeatureType getType();
+
+    /**
+     * Get the cost of the special feature.
+     *
+     * @return
+     */
+    public int getCost();
 }

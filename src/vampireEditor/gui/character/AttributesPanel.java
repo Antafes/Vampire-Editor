@@ -24,20 +24,20 @@ package vampireEditor.gui.character;
 import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Character;
+import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
-import vampireEditor.character.AttributeInterface;
+import vampireEditor.entity.character.AttributeInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
-import vampireEditor.utility.TranslatedComparator;
+import vampireEditor.utility.StringComparator;
 
 /**
  *
  * @author Marian Pollzien
  */
 public class AttributesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    private vampireEditor.Character character = null;
+    private vampireEditor.entity.Character character = null;
 
     /**
      * Create a new attributes panel.
@@ -66,27 +66,40 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
      * Add all talent fields sorted by the translated name.
      */
     private void addPhyiscalFields() {
-        ArrayList<String> physical = AttributeInterface.AttributeType.PHYSICAL.getAttributes();
-        physical.sort(new TranslatedComparator());
-        this.addFields("physical", physical, 1);
+        this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSocialFields() {
-        ArrayList<String> social = AttributeInterface.AttributeType.SOCIAL.getAttributes();
-        social.sort(new TranslatedComparator());
-        this.addFields("social", social, 1);
+        this.addAttributeFields("social", AttributeInterface.AttributeType.SOCIAL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addMentalFields() {
-        ArrayList<String> mental = AttributeInterface.AttributeType.MENTAL.getAttributes();
-        mental.sort(new TranslatedComparator());
-        this.addFields("mental", mental, 1);
+        this.addAttributeFields("mental", AttributeInterface.AttributeType.MENTAL);
+    }
+
+    /**
+     * Add attribute fields with the given fieldName and for the given attribute type.
+     *
+     * @param fieldName
+     * @param type
+     */
+    private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
+        ArrayList<String> list = new ArrayList<>();
+
+        this.character.getAttributes().stream()
+            .filter((attribute) -> (attribute.getType().equals(type)))
+            .forEachOrdered((attribute) -> {
+                list.add(attribute.getName());
+            });
+        list.sort(new StringComparator());
+
+        this.addFields(fieldName, list);
     }
 
     /**

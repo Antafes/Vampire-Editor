@@ -19,34 +19,50 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.entity.character;
 
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+import vampireEditor.entity.BaseTranslatedEntity;
+import vampireEditor.entity.EntityException;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
-
+public class Weakness extends BaseTranslatedEntity implements WeaknessInterface {
     /**
-     * Get the component this listener is registered on.
-     *
-     * @return
+     * Builder for Ability objects.
      */
-    public Component getComponent() {
-        return component;
+    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
+        /**
+         * Build a new Ability object.
+         *
+         * @return
+         * @throws EntityException
+         */
+        @Override
+        public Weakness build() throws EntityException {
+            this.checkValues();
+
+            return new Weakness(this);
+        }
+
+        /**
+         * Get an instance of itself.
+         *
+         * @return
+         */
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 
     /**
-     * Set the component this listener is registered on.
+     * Create a new weakness object.
      *
-     * @param component
+     * @param builder
      */
-    public void setComponent(Component component) {
-        this.component = component;
+    public Weakness(Builder builder) {
+        super(builder);
     }
 }

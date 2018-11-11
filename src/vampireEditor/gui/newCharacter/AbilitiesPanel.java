@@ -22,15 +22,20 @@
 package vampireEditor.gui.newCharacter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
-import vampireEditor.character.Ability;
-import vampireEditor.character.AbilityInterface;
+import vampireEditor.VampireEditor;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.Ability;
+import vampireEditor.entity.character.AbilityInterface;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
-import vampireEditor.utility.TranslatedComparator;
+import vampireEditor.utility.StringComparator;
 
 /**
  *
@@ -55,30 +60,78 @@ public class AbilitiesPanel extends BaseListPanel {
     }
 
     /**
+     * Return the translated name of the element.
+     *
+     * @param element
+     *
+     * @return
+     */
+    @Override
+    protected String getElementLabelText(String element) {
+        return VampireEditor.getAbility(element).getName();
+    }
+
+    /**
      * Add all talent fields sorted by the translated name.
      */
     private void addTalentFields() {
-        ArrayList<String> talents = AbilityInterface.AbilityType.TALENT.getAbilities();
-        talents.sort(new TranslatedComparator());
-        this.addFields("talents", talents);
+        this.addAbilityFields("talents", AbilityInterface.AbilityType.TALENT);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSkillFields() {
-        ArrayList<String> skills = AbilityInterface.AbilityType.SKILL.getAbilities();
-        skills.sort(new TranslatedComparator());
-        this.addFields("skills", skills);
+        this.addAbilityFields("skills", AbilityInterface.AbilityType.SKILL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addKnowledgeFields() {
-        ArrayList<String> knowledges = AbilityInterface.AbilityType.KNOWLEDGE.getAbilities();
-        knowledges.sort(new TranslatedComparator());
-        this.addFields("knowledges", knowledges);
+        this.addAbilityFields("knowledges", AbilityInterface.AbilityType.KNOWLEDGE);
+    }
+
+    /**
+     * Add ability fields with the given fieldName and for the given ability type.
+     *
+     * @param fieldName
+     * @param type
+     */
+    private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
+        ArrayList<String> list = new ArrayList<>();
+
+        this.getValues(type.name()).stream()
+            .filter((ability) -> (ability.getType().equals(type)))
+            .forEachOrdered((ability) -> {
+                list.add(ability.getKey());
+            });
+        list.sort(new StringComparator());
+
+        this.addFields(fieldName, list);
+    }
+
+    /**
+     * Get the values for the element combo box.
+     *
+     * @param type
+     *
+     * @return
+     */
+    protected ArrayList<Ability> getValues(String type) {
+        ArrayList<Ability> list = new ArrayList<>();
+        VampireEditor.getAbilities().forEach((String key, Ability ability) -> {
+            if (type != null) {
+                if (AbilityInterface.AbilityType.valueOf(type.toUpperCase()).equals(ability.getType())) {
+                    list.add(ability);
+                }
+            } else {
+                list.add(ability);
+            }
+        });
+        list.sort(new StringComparator());
+
+        return list;
     }
 
     /**
@@ -289,24 +342,28 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
     @Override
-    public void fillCharacter(vampireEditor.Character character) {
-        this.getFields("talents").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAbilities().add(
-                new Ability(spinner.getName(), AbilityInterface.AbilityType.TALENT, (int) spinner.getValue())
-            );
-        });
-        this.getFields("skills").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAbilities().add(
-                new Ability(spinner.getName(), AbilityInterface.AbilityType.SKILL, (int) spinner.getValue())
-            );
-        });
-        this.getFields("knowledges").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAbilities().add(
-                new Ability(spinner.getName(), AbilityInterface.AbilityType.KNOWLEDGE, (int) spinner.getValue())
-            );
+    public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
+        HashMap<String, Ability> abilities = VampireEditor.getAbilities();
+        Ability.Builder abilityBuilder = new Ability.Builder();
+        this.getFields().forEach((key, fields) -> {
+            for (int i = 0; i < fields.size(); i++) {
+                JSpinner spinner = (JSpinner) fields.get(i);
+                Ability ability = abilities.get(spinner.getName());
+
+                try {
+                    builder.addAbility(
+                        abilityBuilder
+                            .fillDataFromObject(ability)
+                            .setValue((int) spinner.getValue())
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(AbilitiesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         });
     }
 }

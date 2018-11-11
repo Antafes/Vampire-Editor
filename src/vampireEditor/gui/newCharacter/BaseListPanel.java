@@ -204,6 +204,8 @@ abstract public class BaseListPanel extends BasePanel {
      * @param fields
      * @param groups
      * @param layout
+     *
+     * @return
      */
     protected HashMap<String, Component> addRow(
         String element,
@@ -212,7 +214,7 @@ abstract public class BaseListPanel extends BasePanel {
         HashMap<String, GroupLayout.Group> groups,
         GroupLayout layout
     ) {
-        JLabel elementLabel = new JLabel(this.getLanguage().translate(element));
+        JLabel elementLabel = new JLabel(this.getElementLabelText(element));
         JSpinner spinner = new JSpinner();
         elementLabel.setLabelFor(spinner);
         spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
@@ -237,6 +239,17 @@ abstract public class BaseListPanel extends BasePanel {
         elements.put("spinner", spinner);
 
         return elements;
+    }
+
+    /**
+     * This will translate the element name.
+     *
+     * @param element
+     *
+     * @return
+     */
+    protected String getElementLabelText(String element) {
+        return this.getLanguage().translate(element);
     }
 
     /**

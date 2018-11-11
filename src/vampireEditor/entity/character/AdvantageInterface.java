@@ -19,34 +19,48 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Advantage interface.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+public interface AdvantageInterface {
+    /**
+     * List of advantage types.
+     */
+    public static enum AdvantageType {
+        BACKGROUND,
+        DISCIPLIN,
+        VIRTUE;
+    }
 
     /**
-     * Get the component this listener is registered on.
+     * Get the key for the advantage.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getKey();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the name of the advantage.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public String getName();
+
+    /**
+     * Get the type of advantage.
+     *
+     * @return
+     */
+    public AdvantageType getType();
+
+    /**
+     * Get the value of the advantage.
+     *
+     * @return
+     */
+    public int getValue();
 }

@@ -19,34 +19,31 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Exceptions thrown for or in Entities.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+public class EntityException extends Exception {
 
-    /**
-     * Get the component this listener is registered on.
-     *
-     * @return
-     */
-    public Component getComponent() {
-        return component;
+    public EntityException() {
     }
 
-    /**
-     * Set the component this listener is registered on.
-     *
-     * @param component
-     */
-    public void setComponent(Component component) {
-        this.component = component;
+    public EntityException(String message) {
+        super(message);
+    }
+
+    public EntityException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public EntityException(Throwable cause) {
+        super(cause);
+    }
+
+    public EntityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -19,34 +19,48 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Ability interface.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+public interface AbilityInterface {
+    /**
+     * List of ability types.
+     */
+    public static enum AbilityType {
+        TALENT,
+        SKILL,
+        KNOWLEDGE
+    }
 
     /**
-     * Get the component this listener is registered on.
+     * Get the key of the ability.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getKey();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the name of the ability.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public String getName();
+
+    /**
+     * Get the type of ability.
+     *
+     * @return
+     */
+    public AbilityType getType();
+
+    /**
+     * Get the value of the ability.
+     *
+     * @return
+     */
+    public int getValue();
 }

@@ -29,11 +29,8 @@ import java.util.logging.Logger;
 import myXML.*;
 import org.w3c.dom.Element;
 import vampireEditor.*;
-import vampireEditor.character.Ability;
-import vampireEditor.character.AbilityInterface;
-import vampireEditor.character.Advantage;
-import vampireEditor.character.Attribute;
-import vampireEditor.character.AttributeInterface;
+import vampireEditor.entity.character.*;
+import vampireEditor.entity.EntityException;
 
 /**
  *
@@ -66,7 +63,7 @@ public class CharacterStorage {
      * @param character
      * @param filename
      */
-    public void save(vampireEditor.Character character, String filename) {
+    public void save(vampireEditor.entity.Character character, String filename) {
         this.addRequiredFields(character);
         this.xw.write(this.configuration.getSaveDirPath(filename));
     }
@@ -79,7 +76,7 @@ public class CharacterStorage {
      * @return
      * @throws java.lang.Exception
      */
-    public vampireEditor.Character load(String filename) throws Exception  {
+    public vampireEditor.entity.Character load(String filename) throws Exception  {
         if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
             return this.fillValues();
         }
@@ -92,7 +89,7 @@ public class CharacterStorage {
      *
      * @param character
      */
-    private void addRequiredFields(vampireEditor.Character character) {
+    private void addRequiredFields(vampireEditor.entity.Character character) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         HashMap<String, String> dateNilAttributes = new HashMap<>();
         dateNilAttributes.put("xsi:nil", "true");
@@ -177,78 +174,112 @@ public class CharacterStorage {
      *
      * @return
      */
-    private vampireEditor.Character fillValues() {
-        vampireEditor.Character character = new vampireEditor.Character();
+    private vampireEditor.entity.Character fillValues() {
+        vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Element root = this.xp.getRootElement();
 
-        character.setName(XMLParser.getTagValue("name", root));
-        character.setClan(VampireEditor.getClan(XMLParser.getTagValue("clan", root)));
-        character.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
-        character.setChronicle(XMLParser.getTagValue("chronicle", root));
-        character.setExperience(XMLParser.getTagValueInt("experience", root));
-        character.setNature(XMLParser.getTagValue("nature", root));
-        character.setHideout(XMLParser.getTagValue("hideout", root));
-        character.setPlayer(XMLParser.getTagValue("player", root));
-        character.setDemeanor(XMLParser.getTagValue("demeanor", root));
-        character.setConcept(XMLParser.getTagValue("concept", root));
-        character.setSire(XMLParser.getTagValue("sire", root));
-        character.setSect(XMLParser.getTagValue("sect", root));
+        builder.setName(XMLParser.getTagValue("name", root));
+        builder.setClan(VampireEditor.getClan(XMLParser.getTagValue("clan", root)));
+        builder.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
+        builder.setChronicle(XMLParser.getTagValue("chronicle", root));
+        builder.setExperience(XMLParser.getTagValueInt("experience", root));
+        builder.setNature(XMLParser.getTagValue("nature", root));
+        builder.setHideout(XMLParser.getTagValue("hideout", root));
+        builder.setPlayer(XMLParser.getTagValue("player", root));
+        builder.setDemeanor(XMLParser.getTagValue("demeanor", root));
+        builder.setConcept(XMLParser.getTagValue("concept", root));
+        builder.setSire(XMLParser.getTagValue("sire", root));
+        builder.setSect(XMLParser.getTagValue("sect", root));
 
         Element attributes = XMLParser.getTagElement("attributes", root);
         XMLParser.getAllChildren(attributes).stream().map((element) -> {
-            String key = element.getAttribute("key");
-            Attribute attribute = new Attribute(
-                key, AttributeInterface.AttributeType.getTypeForAttribute(key), XMLParser.getElementValueInt(element)
-            );
-            return attribute;
+            try {
+                String key = element.getAttribute("key");
+                Attribute attribute = VampireEditor.getAttribute(key);
+                Attribute.Builder attributeBuilder = new Attribute.Builder()
+                    .fillDataFromObject(attribute);
+
+                return attributeBuilder
+                    .setValue(XMLParser.getElementValueInt(element))
+                    .build();
+            } catch (EntityException ex) {
+                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return null;
         }).forEachOrdered((attribute) -> {
-            character.getAttributes().add(attribute);
+            builder.addAttribute(attribute);
         });
 
         Element abilities = XMLParser.getTagElement("abilities", root);
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
-            String key = element.getAttribute("key");
-            Ability attribute = new Ability(
-                key, AbilityInterface.AbilityType.getTypeForAbility(key), XMLParser.getElementValueInt(element)
-            );
-            return attribute;
+            try {
+                String key = element.getAttribute("key");
+                Ability ability = VampireEditor.getAbility(key);
+                Ability.Builder abilityBuilder = new Ability.Builder()
+                    .fillDataFromObject(ability);
+
+                return abilityBuilder
+                    .setValue(XMLParser.getElementValueInt(element))
+                    .build();
+            } catch (EntityException ex) {
+                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return null;
         }).forEachOrdered((ability) -> {
-            character.getAbilities().add(ability);
+            builder.addAbility(ability);
         });
 
         Element advantages = XMLParser.getTagElement("advantages", root);
         XMLParser.getAllChildren(advantages).stream().map((element) -> {
-            String key = element.getAttribute("key");
-            Advantage advantage = VampireEditor.getAdvantage(key);
-            advantage.setValue(XMLParser.getElementValueInt(element));
-            return advantage;
+            try {
+                String key = element.getAttribute("key");
+                Advantage advantage = VampireEditor.getAdvantage(key);
+                Advantage.Builder advantageBuilder = new Advantage.Builder()
+                    .fillDataFromObject(advantage);
+
+                return advantageBuilder
+                    .setValue(XMLParser.getElementValueInt(element))
+                    .build();
+            } catch (EntityException ex) {
+                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return null;
         }).forEachOrdered((advantage) -> {
-            character.getAdvantages().add(advantage);
+            builder.addAdvantage(advantage);
         });
 
         XMLParser.getAllChildren(XMLParser.getTagElement("merits", root)).forEach((element) -> {
-            character.getMerits().add(VampireEditor.getMerits().get(XMLParser.getElementValue(element)));
+            builder.addMerit(VampireEditor.getMerits().get(XMLParser.getElementValue(element)));
         });
 
         XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root)).forEach((element) -> {
-            character.getFlaws().add(VampireEditor.getFlaws().get(XMLParser.getElementValue(element)));
+            builder.addFlaw(VampireEditor.getFlaws().get(XMLParser.getElementValue(element)));
         });
 
         Element road = XMLParser.getTagElement("road", root);
-        character.setRoad(VampireEditor.getRoads().get(road.getAttribute("key")));
-        character.getRoad().setValue(XMLParser.getTagValueInt("road", root));
-        character.setWillpower(XMLParser.getTagValueInt("willpower", root));
-        character.setBloodStock(XMLParser.getTagValueInt("bloodStock", root));
-        character.setAge(XMLParser.getTagValueInt("age", root));
-        character.setLooksLikeAge(XMLParser.getTagValueInt("looksLikeAge", root));
+        Road.Builder roadBuilder = new Road.Builder()
+            .fillDataFromObject(VampireEditor.getRoad(road.getAttribute("key")))
+            .setValue(XMLParser.getTagValueInt("road", root));
+        try {
+            builder.setRoad(roadBuilder.build());
+        } catch (EntityException ex) {
+            Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
+        builder.setBloodStock(XMLParser.getTagValueInt("bloodStock", root));
+        builder.setAge(XMLParser.getTagValueInt("age", root));
+        builder.setLooksLikeAge(XMLParser.getTagValueInt("looksLikeAge", root));
 
         if (XMLParser.tagExists("dayOfBirth", root)
             && XMLParser.getTagValue("dayOfBirth", root) != null
             && !XMLParser.getTagValue("dayOfBirth", root).equals("")
         ) {
             try {
-                character.setDayOfBirth(format.parse(XMLParser.getTagValue("dayOfBirth", root)));
+                builder.setDayOfBirth(format.parse(XMLParser.getTagValue("dayOfBirth", root)));
             } catch (ParseException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -259,22 +290,28 @@ public class CharacterStorage {
             && !XMLParser.getTagValue("dayOfDeath", root).equals("")
         ) {
             try {
-                character.setDayOfDeath(format.parse(XMLParser.getTagValue("dayOfDeath", root)));
+                builder.setDayOfDeath(format.parse(XMLParser.getTagValue("dayOfDeath", root)));
             } catch (ParseException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        character.setHairColor(XMLParser.getTagValue("hairColor", root));
-        character.setEyeColor(XMLParser.getTagValue("eyeColor", root));
-        character.setSkinColor(XMLParser.getTagValue("skinColor", root));
-        character.setNationality(XMLParser.getTagValue("nationality", root));
-        character.setSize(XMLParser.getTagValueInt("size", root));
-        character.setWeight(XMLParser.getTagValueInt("weight", root));
-        character.setSex(vampireEditor.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
-        character.setStory(XMLParser.getTagValue("story", root));
-        character.setDescription(XMLParser.getTagValue("description", root));
+        builder.setHairColor(XMLParser.getTagValue("hairColor", root));
+        builder.setEyeColor(XMLParser.getTagValue("eyeColor", root));
+        builder.setSkinColor(XMLParser.getTagValue("skinColor", root));
+        builder.setNationality(XMLParser.getTagValue("nationality", root));
+        builder.setSize(XMLParser.getTagValueInt("size", root));
+        builder.setWeight(XMLParser.getTagValueInt("weight", root));
+        builder.setSex(vampireEditor.entity.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
+        builder.setStory(XMLParser.getTagValue("story", root));
+        builder.setDescription(XMLParser.getTagValue("description", root));
 
-        return character;
+        try {
+            return builder.build();
+        } catch (EntityException ex) {
+            Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 }

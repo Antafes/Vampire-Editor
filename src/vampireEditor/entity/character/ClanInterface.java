@@ -19,34 +19,48 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.entity.character;
 
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Interface for clan classes.
  *
- * @author Marian Pollzien
+ * @author Marian Pollzien <map@wafriv.de>
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
-
+public interface ClanInterface {
     /**
-     * Get the component this listener is registered on.
+     * Get the key over which the clan can be identified.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getKey();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the clan name.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public String getName();
+
+    /**
+     * Get the clan nickname.
+     *
+     * @return
+     */
+    public String getNickname();
+
+    /**
+     * Get a list of disciplins that every member of the clan has.
+     *
+     * @return
+     */
+    public ArrayList<Advantage> getDisciplins();
+
+    /**
+     * Get a list of weaknesses that every member of the clan has.
+     *
+     * @return
+     */
+    public ArrayList<Weakness> getWeaknesses();
 }

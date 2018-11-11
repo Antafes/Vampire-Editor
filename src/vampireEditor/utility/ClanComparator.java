@@ -22,7 +22,7 @@
 package vampireEditor.utility;
 
 import java.util.Comparator;
-import vampireEditor.character.Clan;
+import vampireEditor.entity.character.Clan;
 
 /**
  *

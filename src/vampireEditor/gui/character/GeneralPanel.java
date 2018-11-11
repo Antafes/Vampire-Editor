@@ -21,7 +21,6 @@
  */
 package vampireEditor.gui.character;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,11 +30,11 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import vampireEditor.Character;
+import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
+import vampireEditor.entity.character.Flaw;
+import vampireEditor.entity.character.Merit;
 import vampireEditor.gui.BasePanel;
-import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
 
@@ -44,7 +43,7 @@ import vampireEditor.utility.StringComparator;
  * @author Marian Pollzien
  */
 public class GeneralPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
-    private vampireEditor.Character character = null;
+    private vampireEditor.entity.Character character = null;
 
     /**
      * Create a new abilities panel.
@@ -74,7 +73,7 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     private void addBaseFields() {
         LinkedHashMap<String, JComponent> fieldNames = new LinkedHashMap<>();
 
-        fieldNames.put("name", this.generateTextField("name"));
+        fieldNames.put("name", this.generateTextField("name", false));
         fieldNames.put("chronicle", this.generateTextField("chronicle", false));
         fieldNames.put("generation", this.generateTextField("generation", false));
         fieldNames.put("nature", this.generateTextField("nature", false));
@@ -139,14 +138,14 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
 
         this.character.getMerits().forEach((merit) -> {
             JLabel label = new JLabel();
-            label.setText(merit.getName() + "(" + merit.getCost() + ")");
+            label.setText(merit.toString());
             label.setSize(167, GroupLayout.DEFAULT_SIZE);
             elementList.put(merit.getKey(), label);
         });
 
         this.character.getFlaws().forEach((flaw) -> {
             JLabel label = new JLabel();
-            label.setText(flaw.getName() + "(" + flaw.getCost() + ")");
+            label.setText(flaw.toString());
             label.setSize(167, GroupLayout.DEFAULT_SIZE);
             elementList.put(flaw.getKey(), label);
         });

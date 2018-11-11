@@ -24,7 +24,7 @@ package vampireEditor.gui.character;
 import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
-import vampireEditor.Character;
+import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.language.LanguageInterface;
@@ -37,7 +37,7 @@ import vampireEditor.language.LanguageInterface;
 public class CharacterTabbedPane extends JTabbedPane implements TranslatableComponent {
     private final Configuration configuration;
     private LanguageInterface language;
-    private vampireEditor.Character character = null;
+    private vampireEditor.entity.Character character = null;
 
     /**
      * Creates new form CharacterFrame

@@ -32,7 +32,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
-import vampireEditor.character.*;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.*;
 import vampireEditor.language.LanguageInterface;
 import vampireEditor.utility.CharacterStorage;
 
@@ -63,75 +64,85 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @return
      */
-    private vampireEditor.Character createTestCharacter() {
-        vampireEditor.Character character = new vampireEditor.Character();
-        character.setName("Test Character");
-        character.setGeneration(VampireEditor.getGenerations().get(4));
-        character.setNature("wise");
-        character.setDemeanor("strict");
-        character.setConcept("Really no concept!");
-        character.setClan(VampireEditor.getClan("brujah"));
-        character.setSex(vampireEditor.Character.Sex.MALE);
+    private vampireEditor.entity.Character createTestCharacter() {
+        try {
+            vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder()
+                .setName("Test Character")
+                .setGeneration(VampireEditor.getGenerations().get(4))
+                .setNature("wise")
+                .setDemeanor("strict")
+                .setConcept("Really no concept!")
+                .setClan(VampireEditor.getClan("brujah"))
+                .setSex(vampireEditor.entity.Character.Sex.MALE)
+                .setRoad(VampireEditor.getRoads().get("roadOfHumanity"))
+                .setWillpower(5)
+                .setBloodStock(3);
 
-        character.getAttributes().add(new Attribute("strength", AttributeInterface.AttributeType.PHYSICAL, 4));
-        character.getAttributes().add(new Attribute("dexterity", AttributeInterface.AttributeType.PHYSICAL, 3));
-        character.getAttributes().add(new Attribute("stamina", AttributeInterface.AttributeType.PHYSICAL, 3));
-        character.getAttributes().add(new Attribute("charisma", AttributeInterface.AttributeType.SOCIAL, 3));
-        character.getAttributes().add(new Attribute("appearance", AttributeInterface.AttributeType.SOCIAL, 3));
-        character.getAttributes().add(new Attribute("manipulation", AttributeInterface.AttributeType.SOCIAL, 2));
-        character.getAttributes().add(new Attribute("intelligence", AttributeInterface.AttributeType.MENTAL, 2));
-        character.getAttributes().add(new Attribute("perception", AttributeInterface.AttributeType.MENTAL, 3));
-        character.getAttributes().add(new Attribute("wits", AttributeInterface.AttributeType.MENTAL, 1));
+            Attribute.Builder attributeBuilder = new Attribute.Builder();
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("strength")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("dexterity")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("stamina")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("charisma")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("appearance")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("manipulation")).setValue(2).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("intelligence")).setValue(2).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("perception")).setValue(3).build());
+            builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("wits")).setValue(1).build());
 
-        character.getAbilities().add(new Ability("alertness", AbilityInterface.AbilityType.TALENT, 3));
-        character.getAbilities().add(new Ability("brawl", AbilityInterface.AbilityType.TALENT, 3));
-        character.getAbilities().add(new Ability("intimidation", AbilityInterface.AbilityType.TALENT, 2));
-        character.getAbilities().add(new Ability("dodge", AbilityInterface.AbilityType.TALENT, 1));
-        character.getAbilities().add(new Ability("melee", AbilityInterface.AbilityType.SKILL, 3));
-        character.getAbilities().add(new Ability("ride", AbilityInterface.AbilityType.SKILL, 3));
-        character.getAbilities().add(new Ability("survival", AbilityInterface.AbilityType.SKILL, 3));
-        character.getAbilities().add(new Ability("archery", AbilityInterface.AbilityType.SKILL, 2));
-        character.getAbilities().add(new Ability("crafts", AbilityInterface.AbilityType.SKILL, 2));
-        character.getAbilities().add(new Ability("investigation", AbilityInterface.AbilityType.KNOWLEDGE, 3));
-        character.getAbilities().add(new Ability("law", AbilityInterface.AbilityType.KNOWLEDGE, 2));
+            Ability.Builder abilityBuilder = new Ability.Builder();
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("alertness")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("brawl")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("intimidation")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("dodge")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("melee")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("ride")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("survival")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("archery")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("crafts")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("investigation")).setValue(3).build());
+            builder.addAbility(abilityBuilder.fillDataFromObject(VampireEditor.getAbility("law")).setValue(3).build());
 
-        Advantage allies = VampireEditor.getAdvantage("allies");
-        allies.setValue(3);
-        character.getAdvantages().add(allies);
-        Advantage influence = VampireEditor.getAdvantage("influence");
-        influence.setValue(2);
-        character.getAdvantages().add(influence);
-        Advantage auspex = VampireEditor.getAdvantage("auspex");
-        auspex.setValue(2);
-        character.getAdvantages().add(auspex);
-        Advantage celerity = VampireEditor.getAdvantage("celerity");
-        celerity.setValue(1);
-        character.getAdvantages().add(celerity);
-        Advantage dominate = VampireEditor.getAdvantage("dominate");
-        dominate.setValue(1);
-        character.getAdvantages().add(dominate);
-        Advantage conscience = VampireEditor.getAdvantage("conscience");
-        conscience.setValue(3);
-        character.getAdvantages().add(conscience);
-        Advantage courage = VampireEditor.getAdvantage("courage");
-        courage.setValue(2);
-        character.getAdvantages().add(courage);
-        Advantage selfControl = VampireEditor.getAdvantage("self-control");
-        selfControl.setValue(2);
-        character.getAdvantages().add(selfControl);
+            Advantage.Builder advantageBuilder = new Advantage.Builder();
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("allies"))
+                .setValue(3);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("influence"))
+                .setValue(2);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("auspex"))
+                .setValue(2);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("celerity"))
+                .setValue(1);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("dominate"))
+                .setValue(1);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("conscience"))
+                .setValue(3);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("courage"))
+                .setValue(2);
+            builder.addAdvantage(advantageBuilder.build());
+            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("self-control"))
+                .setValue(2);
+            builder.addAdvantage(advantageBuilder.build());
 
-        character.getFlaws().add(VampireEditor.getFlaws().get("monstrous"));
-        character.getFlaws().add(VampireEditor.getFlaws().get("deepSleeper"));
-        character.getMerits().add(VampireEditor.getMerits().get("commonSense"));
-        character.getMerits().add(VampireEditor.getMerits().get("eideticMemory"));
+            builder.addFlaw(VampireEditor.getFlaws().get("monstrous"));
+            builder.addFlaw(VampireEditor.getFlaws().get("deepSleeper"));
+            builder.addMerit(VampireEditor.getMerits().get("commonSense"));
+            builder.addMerit(VampireEditor.getMerits().get("eideticMemory"));
+            Road.Builder roadBuilder = new Road.Builder()
+                .fillDataFromObject(VampireEditor.getRoad("humanity"))
+                .setValue(5);
+            builder.setRoad(roadBuilder.build());
 
-        character.setRoad(VampireEditor.getRoads().get("roadOfHumanity"));
-        character.getRoad().setValue(5);
+            return builder.build();
+        } catch (EntityException ex) {
+            Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        character.setWillpower(5);
-        character.setBloodStock(3);
-
-        return character;
+        return null;
     }
 
     /**
@@ -395,7 +406,7 @@ public class BaseWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutTextPaneKeyPressed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-        vampireEditor.Character character = this.getActiveCharacter();
+        vampireEditor.entity.Character character = this.getActiveCharacter();
         this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
         this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
         this.saveFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
@@ -421,7 +432,7 @@ public class BaseWindow extends javax.swing.JFrame {
             CharacterStorage storage = new CharacterStorage();
 
             try {
-                vampireEditor.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+                vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
                 this.addCharacter(character);
             } catch (Exception ex) {
                 Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -533,7 +544,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param character
      */
-    public void addCharacter(vampireEditor.Character character) {
+    public void addCharacter(vampireEditor.entity.Character character) {
         try {
             CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
             characterTabbedPane.setCharacter(character);
@@ -550,7 +561,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @return
      */
-    private vampireEditor.Character getActiveCharacter() {
+    private vampireEditor.entity.Character getActiveCharacter() {
         return ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
     }
 

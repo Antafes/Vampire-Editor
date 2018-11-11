@@ -36,10 +36,10 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
-import vampireEditor.character.Flaw;
-import vampireEditor.character.Merit;
-import vampireEditor.character.Road;
-import vampireEditor.character.SpecialFeature;
+import vampireEditor.entity.character.Flaw;
+import vampireEditor.entity.character.Merit;
+import vampireEditor.entity.character.Road;
+import vampireEditor.entity.character.SpecialFeature;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.WideComboBox;
 import vampireEditor.utility.StringComparator;
@@ -428,16 +428,16 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
     @Override
-    public void fillCharacter(vampireEditor.Character character) {
+    public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
         this.getFields("merit").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
-            character.getMerits().add((Merit) combobox.getSelectedItem());
+            builder.addMerit((Merit) combobox.getSelectedItem());
         });
         this.getFields("flaw").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
-            character.getFlaws().add((Flaw) combobox.getSelectedItem());
+            builder.addFlaw((Flaw) combobox.getSelectedItem());
         });
-        character.setRoad((Road) this.roadComboBox.getSelectedItem());
+        builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }

@@ -32,7 +32,7 @@ public interface CharacterPanelInterface {
      *
      * @param character
      */
-    abstract public void setCharacter(vampireEditor.Character character);
+    abstract public void setCharacter(vampireEditor.entity.Character character);
 
     /**
      * Fill in the character data. If no character is set, nothing will be added.

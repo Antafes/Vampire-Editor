@@ -19,34 +19,25 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Interface for weaknesses.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
-
+public interface WeaknessInterface {
     /**
-     * Get the component this listener is registered on.
+     * Get the key of the weakness.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getKey();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the translated name of the weakness.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public String getName();
 }

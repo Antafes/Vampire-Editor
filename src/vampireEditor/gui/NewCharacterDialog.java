@@ -33,7 +33,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
-import vampireEditor.character.Clan;
+import vampireEditor.entity.character.Clan;
+import vampireEditor.entity.EntityException;
 import vampireEditor.language.LanguageInterface;
 
 /**
@@ -96,10 +97,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         setResizable(false);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
+        cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            this.cancelButtonActionPerformed(evt);
         });
 
         this.looksPanel = new LooksPanel(this, this.configuration);
@@ -593,15 +592,19 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             return;
         }
 
-        vampireEditor.Character character = new vampireEditor.Character();
-        this.looksPanel.fillCharacter(character);
-        this.attributesPanel.fillCharacter(character);
-        this.abilitiesPanel.fillCharacter(character);
-        this.advantagesPanel.fillCharacter(character);
-        this.lastStepsPanel.fillCharacter(character);
+        vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder();
+        this.looksPanel.fillCharacter(builder);
+        this.attributesPanel.fillCharacter(builder);
+        this.abilitiesPanel.fillCharacter(builder);
+        this.advantagesPanel.fillCharacter(builder);
+        this.lastStepsPanel.fillCharacter(builder);
 
-        this.parent.addCharacter(character);
-        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        try {
+            this.parent.addCharacter(builder.build());
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        } catch (EntityException ex) {
+            Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

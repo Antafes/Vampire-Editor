@@ -19,34 +19,20 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Merit object.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
-
-    /**
-     * Get the component this listener is registered on.
-     *
-     * @return
-     */
-    public Component getComponent() {
-        return component;
+public class Merit extends SpecialFeature {
+    public Merit(Builder builder) {
+        super(builder);
     }
 
-    /**
-     * Set the component this listener is registered on.
-     *
-     * @param component
-     */
-    public void setComponent(Component component) {
-        this.component = component;
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

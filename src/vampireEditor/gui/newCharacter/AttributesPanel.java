@@ -23,16 +23,22 @@ package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
-import vampireEditor.character.Attribute;
-import vampireEditor.character.AttributeInterface;
-import vampireEditor.character.Clan;
+import vampireEditor.VampireEditor;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.Attribute;
+import vampireEditor.entity.character.AttributeInterface;
+import vampireEditor.entity.character.Clan;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
+import vampireEditor.utility.StringComparator;
 import vampireEditor.utility.TranslatedComparator;
 
 /**
@@ -58,30 +64,78 @@ public class AttributesPanel extends BaseListPanel {
     }
 
     /**
+     * Return the translated name of the element.
+     *
+     * @param element
+     *
+     * @return
+     */
+    @Override
+    protected String getElementLabelText(String element) {
+        return VampireEditor.getAttribute(element).getName();
+    }
+
+    /**
      * Add all talent fields sorted by the translated name.
      */
     private void addPhyiscalFields() {
-        ArrayList<String> physical = AttributeInterface.AttributeType.PHYSICAL.getAttributes();
-        physical.sort(new TranslatedComparator());
-        this.addFields("physical", physical, 1);
+        this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSocialFields() {
-        ArrayList<String> social = AttributeInterface.AttributeType.SOCIAL.getAttributes();
-        social.sort(new TranslatedComparator());
-        this.addFields("social", social, 1);
+        this.addAttributeFields("social", AttributeInterface.AttributeType.SOCIAL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addMentalFields() {
-        ArrayList<String> mental = AttributeInterface.AttributeType.MENTAL.getAttributes();
-        mental.sort(new TranslatedComparator());
-        this.addFields("mental", mental, 1);
+        this.addAttributeFields("mental", AttributeInterface.AttributeType.MENTAL);
+    }
+
+    /**
+     * Add attribute fields with the given fieldName and for the given attribute type.
+     *
+     * @param fieldName
+     * @param type
+     */
+    private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
+        ArrayList<String> list = new ArrayList<>();
+
+        this.getValues(type.name()).stream()
+            .filter((attribute) -> (attribute.getType().equals(type)))
+            .forEachOrdered((attribute) -> {
+                list.add(attribute.getKey());
+            });
+        list.sort(new StringComparator());
+
+        this.addFields(fieldName, list, 1);
+    }
+
+    /**
+     * Get the values for the element combo box.
+     *
+     * @param type
+     *
+     * @return
+     */
+    protected ArrayList<Attribute> getValues(String type) {
+        ArrayList<Attribute> list = new ArrayList<>();
+        VampireEditor.getAttributes().forEach((String key, Attribute attribute) -> {
+            if (type != null) {
+                if (AttributeInterface.AttributeType.valueOf(type.toUpperCase()).equals(attribute.getType())) {
+                    list.add(attribute);
+                }
+            } else {
+                list.add(attribute);
+            }
+        });
+        list.sort(new StringComparator());
+
+        return list;
     }
 
     /**
@@ -328,24 +382,51 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
     @Override
-    public void fillCharacter(vampireEditor.Character character) {
+    public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAttributes().add(
-                new Attribute(spinner.getName(), AttributeInterface.AttributeType.PHYSICAL, (int) spinner.getValue())
-            );
+            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
+            Attribute.Builder attributeBuilder = new Attribute.Builder();
+
+            try {
+                builder.addAttribute(
+                    attributeBuilder.fillDataFromObject(attribute)
+                        .setValue((int) spinner.getValue())
+                        .build()
+                );
+            } catch (EntityException ex) {
+                Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         this.getFields("social").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAttributes().add(
-                new Attribute(spinner.getName(), AttributeInterface.AttributeType.SOCIAL, (int) spinner.getValue())
-            );
+            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
+            Attribute.Builder attributeBuilder = new Attribute.Builder();
+
+            try {
+                builder.addAttribute(
+                    attributeBuilder.fillDataFromObject(attribute)
+                        .setValue((int) spinner.getValue())
+                        .build()
+                );
+            } catch (EntityException ex) {
+                Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         this.getFields("mental").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            character.getAttributes().add(
-                new Attribute(spinner.getName(), AttributeInterface.AttributeType.MENTAL, (int) spinner.getValue())
-            );
+            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
+            Attribute.Builder attributeBuilder = new Attribute.Builder();
+
+            try {
+                builder.addAttribute(
+                    attributeBuilder.fillDataFromObject(attribute)
+                        .setValue((int) spinner.getValue())
+                        .build()
+                );
+            } catch (EntityException ex) {
+                Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
     }
 }

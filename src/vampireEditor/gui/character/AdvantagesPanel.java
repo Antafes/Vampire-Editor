@@ -24,9 +24,9 @@ package vampireEditor.gui.character;
 import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Character;
+import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
-import vampireEditor.character.AdvantageInterface;
+import vampireEditor.entity.character.AdvantageInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
@@ -37,7 +37,7 @@ import vampireEditor.utility.StringComparator;
  * @author Marian Pollzien
  */
 public class AdvantagesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    private vampireEditor.Character character = null;
+    private vampireEditor.entity.Character character = null;
 
     /**
      * Create a new advantages panel.
@@ -67,48 +67,40 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
      * Add all background fields sorted by the translated name.
      */
     private void addBackgroundFields() {
-        ArrayList<String> backgrounds = new ArrayList<>();
-
-        this.character.getAdvantages().stream()
-            .filter((advantage) -> (advantage.getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)))
-            .forEachOrdered((advantage) -> {
-                backgrounds.add(advantage.getName());
-            });
-        backgrounds.sort(new StringComparator());
-
-        this.addFields("background", backgrounds);
+        this.addAdvantageFields("background", AdvantageInterface.AdvantageType.BACKGROUND);
     }
 
     /**
      * Add all disciplin fields sorted by the translated name.
      */
     private void addDisciplinFields() {
-        ArrayList<String> disciplins = new ArrayList<>();
-
-        this.character.getAdvantages().stream()
-            .filter((advantage) -> (advantage.getType().equals(AdvantageInterface.AdvantageType.DISCIPLIN)))
-            .forEachOrdered((advantage) -> {
-                disciplins.add(advantage.getName());
-            });
-        disciplins.sort(new StringComparator());
-
-        this.addFields("disciplins", disciplins);
+        this.addAdvantageFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLIN);
     }
 
     /**
      * Add all virtue fields sorted by the translated name.
      */
     private void addVirtueFields() {
-        ArrayList<String> virtues = new ArrayList<>();
+        this.addAdvantageFields("virtues", AdvantageInterface.AdvantageType.VIRTUE);
+    }
+
+    /**
+     * Add advantage fields with the given fieldName and for the given advantage type.
+     *
+     * @param fieldName
+     * @param type
+     */
+    private void addAdvantageFields(String fieldName, AdvantageInterface.AdvantageType type) {
+        ArrayList<String> list = new ArrayList<>();
 
         this.character.getAdvantages().stream()
-            .filter((advantage) -> (advantage.getType().equals(AdvantageInterface.AdvantageType.VIRTUE)))
+            .filter((advantage) -> (advantage.getType().equals(type)))
             .forEachOrdered((advantage) -> {
-                virtues.add(advantage.getName());
+                list.add(advantage.getName());
             });
-        virtues.sort(new StringComparator());
+        list.sort(new StringComparator());
 
-        this.addFields("virtues", virtues);
+        this.addFields(fieldName, list);
     }
 
     /**

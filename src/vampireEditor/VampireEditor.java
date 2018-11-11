@@ -27,13 +27,15 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import myXML.XMLParser;
 import org.w3c.dom.Element;
-import vampireEditor.character.*;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.*;
 import vampireEditor.gui.BaseWindow;
 
 /**
@@ -46,6 +48,8 @@ public class VampireEditor {
     private static final HashMap<String, Advantage> ADVANTAGES = new HashMap<>();
     private static final HashMap<String, Weakness> WEAKNESSES = new HashMap<>();
     private static final HashMap<String, Clan> CLANS = new HashMap<>();
+    private static final HashMap<String, Attribute> ATTRIBUTES = new HashMap<>();
+    private static final HashMap<String, Ability> ABILITIES = new HashMap<>();
     private static final HashMap<String, Font> FONTS = new HashMap<>();
     private static final HashMap<String, Merit> MERITS = new HashMap<>();
     private static final HashMap<String, Flaw> FLAWS = new HashMap<>();
@@ -66,6 +70,8 @@ public class VampireEditor {
         this.loadAdvantages();
         this.loadWeaknesses();
         this.loadClans();
+        this.loadAttributes();
+        this.loadAbilities();
         this.loadMerits();
         this.loadFlaws();
         this.loadRoads();
@@ -87,25 +93,38 @@ public class VampireEditor {
     }
 
     /**
+     * Get the path to the data directory.
+     *
+     * @return
+     */
+    private String getDataPath() {
+        return "vampireEditor/data/";
+    }
+
+    /**
      * Load every possible generation.
      */
     private void loadGenerations() {
         Element root;
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/generations.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "generations.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
             root = xp.getRootElement();
             ArrayList<Element> elements = XMLParser.getAllChildren(root);
             elements.forEach((element) -> {
-                VampireEditor.GENERATIONS.add(
-                    new Generation(
-                        Integer.parseInt(element.getAttribute("value")),
-                        XMLParser.getTagValueInt("maximumAttributes", element),
-                        XMLParser.getTagValueInt("maximumBloodStock", element),
-                        XMLParser.getTagValueInt("bloodPerRound", element)
-                    )
-                );
+                try {
+                    VampireEditor.GENERATIONS.add(
+                        new Generation.Builder()
+                            .setGeneration(Integer.parseInt(element.getAttribute("value")))
+                            .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
+                            .setMaximumBloodStock(XMLParser.getTagValueInt("maximumBloodStock", element))
+                            .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -114,7 +133,7 @@ public class VampireEditor {
      * Load all weaknesses of the clans.
      */
     private void loadWeaknesses() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/weaknesses.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "weaknesses.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -128,19 +147,26 @@ public class VampireEditor {
                     );
                 });
 
-                VampireEditor.WEAKNESSES.put(
-                    element.getAttribute("key"),
-                    new Weakness(element.getAttribute("key"), names)
-                );
+                try {
+                    VampireEditor.WEAKNESSES.put(
+                        element.getAttribute("key"),
+                        new Weakness.Builder()
+                            .setKey(element.getAttribute("key"))
+                            .setNames(names)
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
 
     /**
-     * Load all benefits.
+     * Load all attributes
      */
-    private void loadAdvantages() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/advantages.xml");
+    private void loadAttributes() {
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "attributes.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -153,16 +179,57 @@ public class VampireEditor {
                         translatedName.getFirstChild().getNodeValue()
                     );
                 });
-                VampireEditor.ADVANTAGES.put(
-                    element.getAttribute("key"),
-                    new Advantage(
+
+                try {
+                    VampireEditor.ATTRIBUTES.put(
                         element.getAttribute("key"),
-                        names,
-                        AdvantageInterface.AdvantageType.valueOf(
-                            XMLParser.getTagValue("type", element)
-                        )
-                    )
-                );
+                        new Attribute.Builder()
+                            .setKey(element.getAttribute("key"))
+                            .setNames(names)
+                            .setType(AttributeInterface.AttributeType.valueOf(
+                                XMLParser.getTagValue("type", element)
+                            ))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        }
+    }
+
+    /**
+     * Load all benefits.
+     */
+    private void loadAdvantages() {
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "advantages.xml");
+        XMLParser xp = new XMLParser();
+
+        if (xp.parse(is)) {
+            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
+                HashMap<Configuration.Language, String> names = new HashMap<>();
+                Element name = XMLParser.getTagElement("name", element);
+                XMLParser.getAllChildren(name).forEach((translatedName) -> {
+                    names.put(
+                        Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
+                        translatedName.getFirstChild().getNodeValue()
+                    );
+                });
+
+                try {
+                    VampireEditor.ADVANTAGES.put(
+                        element.getAttribute("key"),
+                        new Advantage.Builder()
+                            .setKey(element.getAttribute("key"))
+                            .setNames(names)
+                            .setType(AdvantageInterface.AdvantageType.valueOf(
+                                XMLParser.getTagValue("type", element)
+                            ))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -171,7 +238,7 @@ public class VampireEditor {
      * Load all clans.
      */
     private void loadClans() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/clans.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "clans.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -193,16 +260,59 @@ public class VampireEditor {
                     );
                 });
 
-                VampireEditor.CLANS.put(
-                    element.getAttribute("key"),
-                    new Clan(
+                try {
+                    VampireEditor.CLANS.put(
                         element.getAttribute("key"),
-                        names,
-                        nicknames,
-                        this.getDisciplins(XMLParser.getTagElement("advantages", element)),
-                        this.getWeaknesses(XMLParser.getTagElement("weaknesses", element))
-                    )
-                );
+                        new Clan.Builder()
+                            .setKey(element.getAttribute("key"))
+                            .setNames(names)
+                            .setNicknames(nicknames)
+                            .setDisciplins(this.getDisciplins(XMLParser.getTagElement("advantages", element)))
+                            .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+        }
+    }
+
+    /**
+     * Load all abilities.
+     */
+    private void loadAbilities() {
+        Element root;
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "abilities.xml");
+        XMLParser xp = new XMLParser();
+
+        if (xp.parse(is)) {
+            root = xp.getRootElement();
+            ArrayList<Element> elements = XMLParser.getAllChildren(root);
+            elements.forEach((element) -> {
+                HashMap<Configuration.Language, String> names = new HashMap<>();
+                Element name = XMLParser.getTagElement("name", element);
+                XMLParser.getAllChildren(name).forEach((translatedName) -> {
+                    names.put(
+                        Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
+                        translatedName.getFirstChild().getNodeValue()
+                    );
+                });
+
+                try {
+                    VampireEditor.ABILITIES.put(
+                        element.getAttribute("key"),
+                        new Ability.Builder()
+                            .setKey(element.getAttribute("key"))
+                            .setNames(names)
+                            .setType(
+                                AbilityInterface.AbilityType.valueOf(XMLParser.getTagValue("type", element))
+                            )
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -211,7 +321,7 @@ public class VampireEditor {
      * Load the available merits.
      */
     private void loadMerits() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/merits.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "merits.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -225,15 +335,20 @@ public class VampireEditor {
                     );
                 });
 
-                VampireEditor.MERITS.put(
-                    element.getAttribute("key"),
-                    new Merit(
+                try {
+                    VampireEditor.MERITS.put(
                         element.getAttribute("key"),
-                        names,
-                        XMLParser.getTagValueInt("cost", element),
-                        SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))
-                    )
-                );
+                        (Merit) new SpecialFeature.Builder()
+                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+                            .setNames(names)
+                            .setKey(element.getAttribute("key"))
+                            .setCost(XMLParser.getTagValueInt("cost", element))
+                            .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -242,7 +357,7 @@ public class VampireEditor {
      * Load the available merits.
      */
     private void loadFlaws() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/flaws.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "flaws.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -256,15 +371,20 @@ public class VampireEditor {
                     );
                 });
 
-                VampireEditor.FLAWS.put(
-                    element.getAttribute("key"),
-                    new Flaw(
+                try {
+                    VampireEditor.FLAWS.put(
                         element.getAttribute("key"),
-                        names,
-                        XMLParser.getTagValueInt("cost", element),
-                        SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element))
-                    )
-                );
+                        (Flaw) new SpecialFeature.Builder()
+                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+                            .setNames(names)
+                            .setKey(element.getAttribute("key"))
+                            .setCost(XMLParser.getTagValueInt("cost", element))
+                            .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -273,7 +393,7 @@ public class VampireEditor {
      * Load the available roads.
      */
     private void loadRoads() {
-        InputStream is = VampireEditor.getFileInJar("vampireEditor/data/roads.xml");
+        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "roads.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
@@ -287,13 +407,17 @@ public class VampireEditor {
                     );
                 });
 
-                VampireEditor.ROADS.put(
-                    element.getAttribute("key"),
-                    new Road(
+                try {
+                    VampireEditor.ROADS.put(
                         element.getAttribute("key"),
-                        names
-                    )
-                );
+                        new Road.Builder()
+                            .setNames(names)
+                            .setKey(element.getAttribute("key"))
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
         }
     }
@@ -363,6 +487,17 @@ public class VampireEditor {
     }
 
     /**
+     * Get a resource inside of the generated JAR.
+     *
+     * @param path
+     *
+     * @return
+     */
+    public static URL getResourceInJar(String path) {
+        return VampireEditor.class.getClassLoader().getResource(path);
+    }
+
+    /**
      * Get the list of GENERATIONS.
      *
      * @return
@@ -405,6 +540,46 @@ public class VampireEditor {
      */
     public static HashMap<String, Clan> getClans() {
         return VampireEditor.CLANS;
+    }
+
+    /**
+     * Get the list of attributes.
+     *
+     * @return
+     */
+    public static HashMap<String, Attribute> getAttributes() {
+        return VampireEditor.ATTRIBUTES;
+    }
+
+    /**
+     * Get an attribute by its key.
+     *
+     * @param key
+     *
+     * @return
+     */
+    public static Attribute getAttribute(String key) {
+        return VampireEditor.ATTRIBUTES.get(key);
+    }
+
+    /**
+     * Get the list of abilities.
+     *
+     * @return
+     */
+    public static HashMap<String, Ability> getAbilities() {
+        return VampireEditor.ABILITIES;
+    }
+
+    /**
+     * Get an ability by its key.
+     *
+     * @param key
+     *
+     * @return
+     */
+    public static Ability getAbility(String key) {
+        return VampireEditor.ABILITIES.get(key);
     }
 
     /**
@@ -476,5 +651,16 @@ public class VampireEditor {
      */
     public static HashMap<String, Road> getRoads() {
         return VampireEditor.ROADS;
+    }
+
+    /**
+     * Get the road for the given key.
+     *
+     * @param key
+     *
+     * @return
+     */
+    public static Road getRoad(String key) {
+        return VampireEditor.ROADS.get(key);
     }
 }

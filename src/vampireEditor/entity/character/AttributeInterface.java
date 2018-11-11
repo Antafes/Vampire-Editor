@@ -19,34 +19,41 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Attribute interface.
  *
- * @author Marian Pollzien
+ * @author Marian Pollzien <map@wafriv.de>
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+public interface AttributeInterface {
+    /**
+     * List of possible attribute types.
+     */
+    public static enum AttributeType {
+        PHYSICAL,
+        SOCIAL,
+        MENTAL;
+    }
 
     /**
-     * Get the component this listener is registered on.
+     * Get the name of the attribute.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public String getName();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the type of attribute.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public AttributeType getType();
+
+    /**
+     * Get the current value of the attribute.
+     *
+     * @return
+     */
+    public int getValue();
 }

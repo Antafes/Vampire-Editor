@@ -24,20 +24,20 @@ package vampireEditor.gui.character;
 import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Character;
+import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
-import vampireEditor.character.AbilityInterface;
+import vampireEditor.entity.character.AbilityInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
-import vampireEditor.utility.TranslatedComparator;
+import vampireEditor.utility.StringComparator;
 
 /**
  *
  * @author Marian Pollzien
  */
 public class AbilitiesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    private vampireEditor.Character character = null;
+    private vampireEditor.entity.Character character = null;
 
     /**
      * Create a new abilities panel.
@@ -66,27 +66,40 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      * Add all talent fields sorted by the translated name.
      */
     private void addTalentFields() {
-        ArrayList<String> talents = AbilityInterface.AbilityType.TALENT.getAbilities();
-        talents.sort(new TranslatedComparator());
-        this.addFields("talents", talents);
+        this.addAbilityFields("talents", AbilityInterface.AbilityType.TALENT);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSkillFields() {
-        ArrayList<String> skills = AbilityInterface.AbilityType.SKILL.getAbilities();
-        skills.sort(new TranslatedComparator());
-        this.addFields("skills", skills);
+        this.addAbilityFields("skills", AbilityInterface.AbilityType.SKILL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addKnowledgeFields() {
-        ArrayList<String> knowledges = AbilityInterface.AbilityType.KNOWLEDGE.getAbilities();
-        knowledges.sort(new TranslatedComparator());
-        this.addFields("knowledges", knowledges);
+        this.addAbilityFields("knowledges", AbilityInterface.AbilityType.KNOWLEDGE);
+    }
+
+    /**
+     * Add ability fields with the given fieldName and for the given ability type.
+     *
+     * @param fieldName
+     * @param type
+     */
+    private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
+        ArrayList<String> list = new ArrayList<>();
+
+        this.character.getAbilities().stream()
+            .filter((ability) -> (ability.getType().equals(type)))
+            .forEachOrdered((ability) -> {
+                list.add(ability.getName());
+            });
+        list.sort(new StringComparator());
+
+        this.addFields(fieldName, list);
     }
 
     /**

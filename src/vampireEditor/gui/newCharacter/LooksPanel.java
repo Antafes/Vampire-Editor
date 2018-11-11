@@ -40,8 +40,8 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.JTextComponent;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
-import vampireEditor.character.Clan;
-import vampireEditor.character.Generation;
+import vampireEditor.entity.character.Clan;
+import vampireEditor.entity.character.Generation;
 import vampireEditor.gui.ComponentDocumentListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.NewCharacterFocusTraversalPolicy;
@@ -597,7 +597,7 @@ public class LooksPanel extends javax.swing.JPanel {
      * @return
      */
     public DefaultComboBoxModel getSexes() {
-        return new DefaultComboBoxModel(vampireEditor.Character.Sex.values());
+        return new DefaultComboBoxModel(vampireEditor.entity.Character.Sex.values());
     }
 
     /**
@@ -674,32 +674,33 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
-    public void fillCharacter(vampireEditor.Character character) {
-        character.setName(this.nameField.getText());
-        character.setChronicle(this.chronicleField.getText());
-        character.setGeneration((Generation) this.generationComboBox.getSelectedItem());
-        character.setNature(this.natureField.getText());
-        character.setHideout(this.hideoutField.getText());
-        character.setPlayer(this.playerField.getText());
-        character.setDemeanor(this.demeanorField.getText());
-        character.setConcept(this.conceptField.getText());
-        character.setSire(this.sireField.getText());
-        character.setClan((Clan) this.clanComboBox.getSelectedItem());
-        character.setSect(this.sectField.getText());
-        character.setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0);
-        character.setLooksLikeAge(!"".equals(this.looksLikeAgeField.getText()) ? Integer.parseInt(this.looksLikeAgeField.getText()) : 0);
-        character.setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null);
-        character.setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null);
-        character.setHairColor(this.hairColorField.getText());
-        character.setEyeColor(this.eyeColorField.getText());
-        character.setSkinColor(this.skinColorField.getText());
-        character.setNationality(this.nationalityField.getText());
-        character.setSize(!this.sizeField.getText().equals("") ? Integer.parseInt(this.sizeField.getText()) : 0);
-        character.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
-        character.setSex((vampireEditor.Character.Sex) this.sexField.getSelectedItem());
+    public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
+        builder.setName(this.nameField.getText());
+        builder.setChronicle(this.chronicleField.getText());
+        builder.setGeneration((Generation) this.generationComboBox.getSelectedItem());
+        builder.setNature(this.natureField.getText());
+        builder.setHideout(this.hideoutField.getText());
+        builder.setPlayer(this.playerField.getText());
+        builder.setDemeanor(this.demeanorField.getText());
+        builder.setConcept(this.conceptField.getText());
+        builder.setSire(this.sireField.getText());
+        builder.setClan((Clan) this.clanComboBox.getSelectedItem());
+        builder.setSect(this.sectField.getText());
+        builder.setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0);
+        builder.setLooksLikeAge(!"".equals(this.looksLikeAgeField.getText()) ? Integer.parseInt(this.looksLikeAgeField.getText()) : 0);
+        builder.setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null);
+        builder.setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null);
+        builder.setHairColor(this.hairColorField.getText());
+        builder.setEyeColor(this.eyeColorField.getText());
+        builder.setSkinColor(this.skinColorField.getText());
+        builder.setNationality(this.nationalityField.getText());
+        builder.setSize(!this.sizeField.getText().equals("") ? Integer.parseInt(this.sizeField.getText()) : 0);
+        builder.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
+        builder.setSex((vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
     }
+
 // <editor-fold defaultstate="collapsed" desc="Generated variables">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageField;

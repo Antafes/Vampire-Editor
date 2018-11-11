@@ -19,42 +19,26 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.character;
+package vampireEditor.entity.character;
 
 /**
- * Special feature interface.
  *
  * @author Marian Pollzien
  */
-public interface SpecialFeatureInterface {
-    /**
-     * List of special feature types.
-     */
-    public static enum SpecialFeatureType {
-        PHYSICAL,
-        MENTAL,
-        SOCIAL,
-        SUPERNATURAL;
-    }
+public interface RoadInterface {
 
     /**
-     * Get the name of the special feature.
+     * Get the key of the road.
+     *
+     * @return
+     */
+    public String getKey();
+
+    /**
+     * Get the name of the road.
      *
      * @return
      */
     public String getName();
 
-    /**
-     * Get the type of the special feature.
-     *
-     * @return
-     */
-    public SpecialFeatureType getType();
-
-    /**
-     * Get the cost of the special feature.
-     *
-     * @return
-     */
-    public int getCost();
 }

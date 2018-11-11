@@ -19,34 +19,47 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
-
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
+package vampireEditor.entity.character;
 
 /**
- * ChangeListener with the possibility to store the component it is created on.
+ * Generation interface.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
-
+public interface GenerationInterface {
     /**
-     * Get the component this listener is registered on.
+     * Get the generation number.
      *
      * @return
      */
-    public Component getComponent() {
-        return component;
-    }
+    public int getGeneration();
 
     /**
-     * Set the component this listener is registered on.
+     * Get the maximum for attributes.
      *
-     * @param component
+     * @return
      */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+    public int getMaximumAttributes();
+
+    /**
+     * Get the maximum for the blood stock.
+     *
+     * @return
+     */
+    public int getMaximumBloodStock();
+
+    /**
+     * Get the maximum allowed usage of blood per round.
+     *
+     * @return
+     */
+    public int getBloodPerRound();
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return
+     */
+    @Override
+    public String toString();
 }

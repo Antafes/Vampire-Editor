@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<attributes>
+    <attribute key="strength">
+        <name>
+            <English>Strength</English>
+            <German>Körperkraft</German>
+        </name>
+        <type>PHYSICAL</type>
+    </attribute>
+    <attribute key="dexterity">
+        <name>
+            <English>Dexterity</English>
+            <German>Geschick</German>
+        </name>
+        <type>PHYSICAL</type>
+    </attribute>
+    <attribute key="stamina">
+        <name>
+            <English>Stamina</English>
+            <German>Widerstand</German>
+        </name>
+        <type>PHYSICAL</type>
+    </attribute>
+    <attribute key="charisma">
+        <name>
+            <English>Charisma</English>
+            <German>Charisma</German>
+        </name>
+        <type>SOCIAL</type>
+    </attribute>
+    <attribute key="manipulation">
+        <name>
+            <English>Manipulation</English>
+            <German>Manipulation</German>
+        </name>
+        <type>SOCIAL</type>
+    </attribute>
+    <attribute key="appearance">
+        <name>
+            <English>Appearance</English>
+            <German>Erscheinungsbild</German>
+        </name>
+        <type>SOCIAL</type>
+    </attribute>
+    <attribute key="intelligence">
+        <name>
+            <English>Intelligence</English>
+            <German>Intelligenz</German>
+        </name>
+        <type>MENTAL</type>
+    </attribute>
+    <attribute key="perception">
+        <name>
+            <English>Perception</English>
+            <German>Wahrnehmung</German>
+        </name>
+        <type>MENTAL</type>
+    </attribute>
+    <attribute key="wits">
+        <name>
+            <English>Wits</English>
+            <German>Geistesschärfe</German>
+        </name>
+        <type>MENTAL</type>
+    </attribute>
+</attributes>

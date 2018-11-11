@@ -22,14 +22,17 @@
 package vampireEditor.gui.newCharacter;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
-import vampireEditor.character.Advantage;
-import vampireEditor.character.AdvantageInterface;
-import vampireEditor.character.Clan;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.Advantage;
+import vampireEditor.entity.character.AdvantageInterface;
+import vampireEditor.entity.character.Clan;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
@@ -388,10 +391,10 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param character
+     * @param builder
      */
     @Override
-    public void fillCharacter(vampireEditor.Character character) {
+    public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
         this.getFields().forEach((key, fields) -> {
             for (int i = 0; i < fields.size(); i++) {
                 JSpinner spinner = (JSpinner) fields.get(i);
@@ -401,10 +404,16 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                     continue;
                 }
 
-                Advantage advantage = (Advantage) combobox.getSelectedItem();
-                advantage.setValue((int) spinner.getValue());
-
-                character.getAdvantages().add(advantage);
+                try {
+                    builder.addAdvantage(
+                        new Advantage.Builder()
+                            .fillDataFromObject((Advantage) combobox.getSelectedItem())
+                            .setValue((int) spinner.getValue())
+                            .build()
+                    );
+                } catch (EntityException ex) {
+                    Logger.getLogger(AdvantagesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
