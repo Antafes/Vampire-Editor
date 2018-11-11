@@ -35,7 +35,7 @@ import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.*;
 import vampireEditor.language.LanguageInterface;
-import vampireEditor.utility.CharacterStorage;
+import vampireEditor.entity.storage.CharacterStorage;
 
 /**
  *

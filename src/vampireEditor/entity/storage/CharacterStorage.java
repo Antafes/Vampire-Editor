@@ -19,7 +19,7 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.utility;
+package vampireEditor.entity.storage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
