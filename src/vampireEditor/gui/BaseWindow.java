@@ -27,6 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -413,6 +415,9 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.saveFileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
+            VampireEditor.log(new ArrayList<>(
+                Arrays.asList("Saving character " + character.getName())
+            ));
             this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
             CharacterStorage storage = new CharacterStorage();
@@ -434,6 +439,9 @@ public class BaseWindow extends javax.swing.JFrame {
             try {
                 vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
                 this.addCharacter(character);
+                VampireEditor.log(new ArrayList<>(
+                    Arrays.asList("Loaded character " + character.getName())
+                ));
             } catch (Exception ex) {
                 Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(
@@ -442,6 +450,15 @@ public class BaseWindow extends javax.swing.JFrame {
                     this.language.translate("couldNotLoad"),
                     JOptionPane.ERROR_MESSAGE
                 );
+                ArrayList<String> list = new ArrayList<>(
+                    Arrays.asList(ex.getMessage())
+                );
+
+                for (Throwable throwable : ex.getSuppressed()) {
+                    list.add(throwable.getMessage());
+                }
+
+                VampireEditor.log(list);
             }
         }
     }//GEN-LAST:event_openMenuItemActionPerformed
@@ -452,12 +469,17 @@ public class BaseWindow extends javax.swing.JFrame {
      * @param evt
      */
     private void languageMenuItemActionPerformed(ActionEvent evt) {
+        String message = "Switching language to ";
+
         if (evt.getActionCommand().equals("English")) {
             this.configuration.setLanguage(Configuration.Language.ENGLISH);
+            message += "English";
         } else if (evt.getActionCommand().equals("German")) {
             this.configuration.setLanguage(Configuration.Language.GERMAN);
+            message += "German";
         }
 
+        VampireEditor.log(new ArrayList<>(Arrays.asList(message)));
         this.configuration.saveProperties();
         this.language = this.configuration.getLanguageObject();
         this.languageMenu.setIcon(this.configuration.getLanguage().getIcon());

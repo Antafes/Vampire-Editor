@@ -24,6 +24,8 @@ package vampireEditor.gui;
 import vampireEditor.gui.newCharacter.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
@@ -33,6 +35,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import vampireEditor.Configuration;
+import vampireEditor.VampireEditor;
 import vampireEditor.entity.character.Clan;
 import vampireEditor.entity.EntityException;
 import vampireEditor.language.LanguageInterface;
@@ -592,6 +595,9 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             return;
         }
 
+        VampireEditor.log(new ArrayList<>(
+            Arrays.asList("finishing character")
+        ));
         vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder();
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
@@ -601,6 +607,9 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         try {
             this.parent.addCharacter(builder.build());
+            VampireEditor.log(new ArrayList<>(
+                Arrays.asList("closing window")
+            ));
             this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } catch (EntityException ex) {
             Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -613,6 +622,16 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return Returns true if a duplicate entry has been found.
      */
     private boolean checkAllInputs() {
+        VampireEditor.log(new ArrayList<>(
+                Arrays.asList(
+                    Boolean.toString(this.looksPanel.checkAllFields()),
+                    Boolean.toString(this.attributesPanel.checkAllFields()),
+                    Boolean.toString(this.abilitiesPanel.checkAllFields()),
+                    Boolean.toString(this.advantagesPanel.checkAllFields()),
+                    Boolean.toString(this.lastStepsPanel.checkAllFields())
+                )
+            ));
+
         return this.looksPanel.checkAllFields()
             || this.attributesPanel.checkAllFields()
             || this.abilitiesPanel.checkAllFields()

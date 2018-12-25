@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -356,6 +357,11 @@ public class LastStepsPanel extends BasePanel {
         }
 
         nextButton.addActionListener((ActionEvent e) -> {
+            VampireEditor.log(new ArrayList<>(
+                    Arrays.asList(
+                        "clicked finish"
+                    )
+                ));
             this.getParentComponent().finishCharacter();
         });
     }

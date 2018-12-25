@@ -28,7 +28,15 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +52,7 @@ import vampireEditor.gui.BaseWindow;
  * @author Marian Pollzien <map@wafriv.de>
  */
 public class VampireEditor {
+    private static final boolean DEBUG = false;
     private static final ArrayList<Generation> GENERATIONS = new ArrayList<>();
     private static final HashMap<String, Advantage> ADVANTAGES = new HashMap<>();
     private static final HashMap<String, Weakness> WEAKNESSES = new HashMap<>();
@@ -60,12 +69,19 @@ public class VampireEditor {
      */
     public static void main(String[] args) {
         VampireEditor ve = new VampireEditor();
+        ve.openBaseWindow();
     }
 
     /**
      * Create the Vampire Editor main class.
      */
     public VampireEditor() {
+        VampireEditor.log(new ArrayList<>(
+            Arrays.asList(
+                "start of log (" + (DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(LocalDateTime.now()) + ")"
+            )
+        ));
+
         this.loadGenerations();
         this.loadAdvantages();
         this.loadWeaknesses();
@@ -76,7 +92,38 @@ public class VampireEditor {
         this.loadFlaws();
         this.loadRoads();
         this.loadFonts();
-        this.openBaseWindow();
+    }
+
+    /**
+     * Log something into the log file.
+     * @param lines
+     */
+    public static void log(ArrayList<String> lines) {
+        if (!VampireEditor.DEBUG) {
+            return;
+        }
+
+        Path file = Paths.get(Configuration.PATH + "log.txt");
+
+        if (!file.toFile().exists()) {
+            try {
+                file.toFile().createNewFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    ex.getMessage(),
+                    "Error creating log file",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        try {
+            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

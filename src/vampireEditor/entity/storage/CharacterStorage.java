@@ -81,7 +81,13 @@ public class CharacterStorage {
             return this.fillValues();
         }
 
-        throw new Exception("Could not load character '" + filename + "'!");
+        Exception ex = new Exception("Could not load character '" + filename + "'!");
+
+        this.xp.getExceptionList().forEach((exception) -> {
+            ex.addSuppressed(exception);
+        });
+
+        throw ex;
     }
 
     /**
