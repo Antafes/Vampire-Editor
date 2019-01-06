@@ -23,7 +23,6 @@ package vampireEditor.entity.character;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import vampireEditor.Configuration;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
 

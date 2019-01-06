@@ -31,9 +31,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import vampireEditor.entity.Character;
-import vampireEditor.Configuration;
-import vampireEditor.entity.character.Flaw;
-import vampireEditor.entity.character.Merit;
 import vampireEditor.gui.BasePanel;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
@@ -44,15 +41,6 @@ import vampireEditor.utility.StringComparator;
  */
 public class GeneralPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
     private vampireEditor.entity.Character character = null;
-
-    /**
-     * Create a new abilities panel.
-     *
-     * @param configuration
-     */
-    public GeneralPanel(Configuration configuration) {
-        super(configuration);
-    }
 
     /**
      * Initialize everything.

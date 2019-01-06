@@ -204,8 +204,7 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
      */
     @Override
     public String getNickname() {
-        Configuration configuration = new Configuration();
-        configuration.loadProperties();
+        Configuration configuration = Configuration.getInstance();
 
         String nickname = this.nicknames.get(configuration.getLanguage());
 

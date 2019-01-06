@@ -29,7 +29,6 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import vampireEditor.entity.Character;
-import vampireEditor.Configuration;
 import vampireEditor.gui.BasePanel;
 import vampireEditor.gui.TranslatableComponent;
 
@@ -39,15 +38,6 @@ import vampireEditor.gui.TranslatableComponent;
  */
 public class LooksPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
     private vampireEditor.entity.Character character = null;
-
-    /**
-     * Create a new abilities panel.
-     *
-     * @param configuration
-     */
-    public LooksPanel(Configuration configuration) {
-        super(configuration);
-    }
 
     /**
      * Initialize everything.

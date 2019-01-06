@@ -52,8 +52,7 @@ public class BaseWindow extends javax.swing.JFrame {
      * Creates new form BaseWindow
      */
     public BaseWindow() {
-        this.configuration = new Configuration();
-        this.configuration.loadProperties();
+        this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
 
         this.initComponents();

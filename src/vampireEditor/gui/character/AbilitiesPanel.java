@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import vampireEditor.entity.Character;
-import vampireEditor.Configuration;
 import vampireEditor.entity.character.AbilityInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
@@ -38,15 +37,6 @@ import vampireEditor.utility.StringComparator;
  */
 public class AbilitiesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
     private vampireEditor.entity.Character character = null;
-
-    /**
-     * Create a new abilities panel.
-     *
-     * @param configuration
-     */
-    public AbilitiesPanel(Configuration configuration) {
-        super(configuration);
-    }
 
     /**
      * Initialize everything.

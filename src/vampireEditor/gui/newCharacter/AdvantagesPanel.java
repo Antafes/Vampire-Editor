@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Advantage;
@@ -48,10 +47,9 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * Create a new advantages panel.
      *
      * @param parent
-     * @param configuration
      */
-    public AdvantagesPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public AdvantagesPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     /**

@@ -28,23 +28,12 @@ import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.DefaultFormatter;
-import vampireEditor.Configuration;
 
 /**
  *
  * @author Marian Pollzien
  */
 abstract public class BaseListPanel extends BasePanel {
-
-    /**
-     * Creates new form AbilitiesPanel
-     *
-     * @param configuration
-     */
-    public BaseListPanel(Configuration configuration) {
-        super(configuration);
-    }
-
     /**
      * Initialize everything.
      */

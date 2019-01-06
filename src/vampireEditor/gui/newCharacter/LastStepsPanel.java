@@ -35,7 +35,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle;
-import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.character.Flaw;
 import vampireEditor.entity.character.Merit;
@@ -57,10 +56,9 @@ public class LastStepsPanel extends BasePanel {
      * Create the last steps panel.
      *
      * @param parent
-     * @param configuration
      */
-    public LastStepsPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public LastStepsPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     /**

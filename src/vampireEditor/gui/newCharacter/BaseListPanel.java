@@ -36,7 +36,6 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.DefaultFormatter;
-import vampireEditor.Configuration;
 
 /**
  *
@@ -48,14 +47,8 @@ abstract public class BaseListPanel extends BasePanel {
     private HashMap<String, JComboBox> weightings;
     private int weightingCounter = 0;
 
-    /**
-     * Creates new form AbilitiesPanel
-     *
-     * @param parent
-     * @param configuration
-     */
-    public BaseListPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public BaseListPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     @Override

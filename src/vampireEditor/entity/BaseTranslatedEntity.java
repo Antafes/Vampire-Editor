@@ -193,8 +193,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
      * @return
      */
     public String getName() {
-        Configuration configuration = new Configuration();
-        configuration.loadProperties();
+        Configuration configuration = Configuration.getInstance();
 
         String name = this.names.get(configuration.getLanguage());
 

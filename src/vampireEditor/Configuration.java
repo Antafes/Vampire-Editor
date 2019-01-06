@@ -45,6 +45,7 @@ import vampireEditor.language.LanguageInterface;
  */
 public class Configuration
 {
+    private static Configuration instance;
     public static String PATH = System.getProperty("user.home") + "/.vampire/";
     private final Properties properties;
     private final File propertiesFile;
@@ -108,10 +109,23 @@ public class Configuration
     /**
      * constructor
      */
-    public Configuration()
+    private Configuration()
     {
         this.propertiesFile = new File(PATH + "gui.xml");
         this.properties = new Properties();
+    }
+
+    /**
+     * Create and return a singleton instance of the configuration object.
+     *
+     * @return
+     */
+    public static Configuration getInstance() {
+        if (Configuration.instance == null) {
+            Configuration.instance = new Configuration();
+        }
+
+        return Configuration.instance;
     }
 
     /**

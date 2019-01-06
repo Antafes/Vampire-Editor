@@ -72,8 +72,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     public NewCharacterDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
-        this.configuration = new Configuration();
-        this.configuration.loadProperties();
+        this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
 
         this.initComponents();
@@ -100,22 +99,24 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         setResizable(false);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            this.cancelButtonActionPerformed(evt);
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
         });
 
-        this.looksPanel = new LooksPanel(this, this.configuration);
+        this.looksPanel = new LooksPanel(this);
         this.looksPanel.init();
         characterTabPane.add(this.looksPanel);
-        this.attributesPanel = new AttributesPanel(this, this.configuration);
+        this.attributesPanel = new AttributesPanel(this);
         characterTabPane.add(this.attributesPanel);
-        this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
+        this.abilitiesPanel = new AbilitiesPanel(this);
         characterTabPane.add(this.abilitiesPanel);
-        this.advantagesPanel = new AdvantagesPanel(this, this.configuration);
+        this.advantagesPanel = new AdvantagesPanel(this);
         JScrollPane advantagesScrollPane = new JScrollPane(this.advantagesPanel);
         advantagesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(advantagesScrollPane);
-        this.lastStepsPanel = new LastStepsPanel(this, this.configuration);
+        this.lastStepsPanel = new LastStepsPanel(this);
         JScrollPane lastStepsScrollPane = new JScrollPane(this.lastStepsPanel);
         lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(lastStepsScrollPane);

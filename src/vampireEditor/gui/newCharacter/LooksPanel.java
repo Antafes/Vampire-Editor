@@ -53,7 +53,6 @@ import vampireEditor.utility.ClanComparator;
  * @author Marian Pollzien
  */
 public class LooksPanel extends javax.swing.JPanel {
-
     private final Configuration configuration;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
@@ -67,12 +66,11 @@ public class LooksPanel extends javax.swing.JPanel {
      * Creates new form looksPanel
      *
      * @param parent
-     * @param configuration
      */
-    public LooksPanel(NewCharacterDialog parent, Configuration configuration) {
+    public LooksPanel(NewCharacterDialog parent) {
         super();
         this.parent = parent;
-        this.configuration = configuration;
+        this.configuration = Configuration.getInstance();
         this.enteredFields = new HashMap<>();
         this.language = this.configuration.getLanguageObject();
 

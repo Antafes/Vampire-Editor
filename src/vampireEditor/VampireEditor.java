@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import myXML.XMLParser;
 import org.w3c.dom.Element;
 import vampireEditor.entity.EntityException;
@@ -68,6 +69,8 @@ public class VampireEditor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Configuration configuration = Configuration.getInstance();
+        configuration.loadProperties();
         VampireEditor ve = new VampireEditor();
         ve.openBaseWindow();
     }

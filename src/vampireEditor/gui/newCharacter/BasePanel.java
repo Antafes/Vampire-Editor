@@ -24,7 +24,6 @@ package vampireEditor.gui.newCharacter;
 import vampireEditor.gui.*;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
-import vampireEditor.Configuration;
 
 /**
  * BasePanel object.
@@ -41,10 +40,9 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
      * Creates new form BasePanel
      *
      * @param parent
-     * @param configuration
      */
-    public BasePanel(NewCharacterDialog parent, Configuration configuration) {
-        super(configuration);
+    public BasePanel(NewCharacterDialog parent) {
+        super();
         this.parent = parent;
 
         this.start();

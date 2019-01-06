@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Ability;
@@ -43,8 +42,8 @@ import vampireEditor.utility.StringComparator;
  */
 public class AbilitiesPanel extends BaseListPanel {
 
-    public AbilitiesPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public AbilitiesPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     /**

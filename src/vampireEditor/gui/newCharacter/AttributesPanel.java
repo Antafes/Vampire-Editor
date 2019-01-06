@@ -23,13 +23,11 @@ package vampireEditor.gui.newCharacter;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Attribute;
@@ -39,7 +37,6 @@ import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
 import vampireEditor.utility.StringComparator;
-import vampireEditor.utility.TranslatedComparator;
 
 /**
  *
@@ -47,8 +44,8 @@ import vampireEditor.utility.TranslatedComparator;
  */
 public class AttributesPanel extends BaseListPanel {
 
-    public AttributesPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public AttributesPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     /**

@@ -49,8 +49,7 @@ public enum Weighting {
      */
     @Override
     public String toString() {
-        Configuration configuration = new Configuration();
-        configuration.loadProperties();
+        Configuration configuration = Configuration.getInstance();
 
         return configuration.getLanguageObject().translate(this.name());
     }

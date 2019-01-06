@@ -53,12 +53,10 @@ abstract public class BasePanel extends JPanel {
 
     /**
      * Creates new form AbilitiesPanel
-     *
-     * @param configuration
      */
-    public BasePanel(Configuration configuration) {
+    public BasePanel() {
         super();
-        this.configuration = configuration;
+        this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
         this.order = new Vector<>();
         this.fields = new HashMap<>();

@@ -43,8 +43,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Creates new form CharacterFrame
      */
     public CharacterTabbedPane() {
-        this.configuration = new Configuration();
-        this.configuration.loadProperties();
+        this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
     }
 
@@ -77,7 +76,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the general panel.
      */
     private void addGeneralPanel() {
-        GeneralPanel panel = new GeneralPanel(this.configuration);
+        GeneralPanel panel = new GeneralPanel();
         panel.setCharacter(this.character);
         panel.start();
         this.add(panel);
@@ -88,7 +87,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the looks panel.
      */
     private void addLooksPanel() {
-        LooksPanel panel = new LooksPanel(this.configuration);
+        LooksPanel panel = new LooksPanel();
         panel.setCharacter(this.character);
         panel.start();
         this.add(panel);
@@ -99,7 +98,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the attributes panel.
      */
     private void addAttributesPanel() {
-        AttributesPanel panel = new AttributesPanel(this.configuration);
+        AttributesPanel panel = new AttributesPanel();
         panel.setCharacter(this.character);
         panel.start();
         this.add(panel);
@@ -110,7 +109,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the abilities panel.
      */
     private void addAbilitiesPanel() {
-        AbilitiesPanel panel = new AbilitiesPanel(this.configuration);
+        AbilitiesPanel panel = new AbilitiesPanel();
         panel.setCharacter(this.character);
         panel.start();
         this.add(panel);
@@ -121,7 +120,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the advantages panel.
      */
     private void addAdvantagesPanel() {
-        AdvantagesPanel panel = new AdvantagesPanel(this.configuration);
+        AdvantagesPanel panel = new AdvantagesPanel();
         panel.setCharacter(this.character);
         panel.start();
         this.add(panel);

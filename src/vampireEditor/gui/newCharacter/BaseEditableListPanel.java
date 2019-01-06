@@ -35,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
-import vampireEditor.Configuration;
 
 /**
  *
@@ -52,10 +51,9 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * Creates new form AbilitiesPanel
      *
      * @param parent
-     * @param configuration
      */
-    public BaseEditableListPanel(NewCharacterDialog parent, Configuration configuration) {
-        super(parent, configuration);
+    public BaseEditableListPanel(NewCharacterDialog parent) {
+        super(parent);
     }
 
     /**

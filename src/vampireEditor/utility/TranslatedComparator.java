@@ -40,8 +40,7 @@ public class TranslatedComparator implements Comparator {
      */
     @Override
     public int compare(Object o1, Object o2) {
-        Configuration configuration = new Configuration();
-        configuration.loadProperties();
+        Configuration configuration = Configuration.getInstance();
         String s1 = configuration.getLanguageObject().translate((String) o1);
         String s2 = configuration.getLanguageObject().translate((String) o2);
 
