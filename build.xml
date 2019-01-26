@@ -7,7 +7,7 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="Vampire_Editor" default="compile" basedir=".">
+<project name="Vampire_Editor" default="default" basedir=".">
     <description>Builds, tests, and runs the project Vampire Editor.</description>
 
     <property name="lib.dir"     value="lib"/>
@@ -58,4 +58,6 @@
     <target name="run" depends="jar">
         <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
     </target>
+
+    <target name="default" depends="compile jar" />
 </project>
