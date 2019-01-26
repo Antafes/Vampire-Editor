@@ -4,6 +4,12 @@ resources:
   source:
     uri: https://github.com/Antafes/Vampire-Editor
     branch: concourse-test
+- name: vampire-editor-release
+  type: github-release
+  source:
+    owner: Antafes
+    repository: Vampire_Editor
+    pre_release: true
 - name: myXML-lib
   type: github-release
   source:
@@ -29,10 +35,6 @@ jobs:
       - name: myXML-lib
       outputs:
       - name: dist
-      run:
-        path: bash
-        args: chmod u+x ci/build.sh
-        dir: vampire-editor-repo
       run:
         path: ci/build.sh
         dir: vampire-editor-repo
