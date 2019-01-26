@@ -2,6 +2,6 @@
 
 mkdir lib
 cp -r /myXML-lib/* lib
-ant
+ant -Dfile.encoding=UTF-8
 
 cp -r dist/* /dist
