@@ -45,7 +45,7 @@ jobs:
       outputs:
       - name: dist
       run:
-        path: ci/build.sh
+        path: ci/build-dev.sh
         dir: vampire-editor-repo
   - put: vampire-editor-pre-release
     params:
