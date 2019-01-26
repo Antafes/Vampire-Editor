@@ -1,7 +1,7 @@
 #!/bin/sh
 
 apt-get update
-apt-get install zip date
+apt-get install zip
 
 mkdir lib
 cp -r ../myXML-lib/* lib
