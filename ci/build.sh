@@ -1,7 +1,7 @@
 #!/bin/sh
 
 apt-get update
-apt-get install zip
+apt-get install zip date
 
 mkdir lib
 cp -r ../myXML-lib/* lib
@@ -12,5 +12,4 @@ zip VampireEditor *
 cd ../
 cp dist/VampireEditor.zip ../dist
 
-TAG < ../vampire-editor-release/tag
-"$TAG" > ../dist/tag
+cp ../vampire-editor-release/tag ../dist/tag

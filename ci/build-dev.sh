@@ -1,7 +1,7 @@
 #!/bin/sh
 
 apt-get update
-apt-get install zip
+apt-get install zip date
 
 mkdir lib
 cp -r ../myXML-lib/* lib
@@ -12,6 +12,6 @@ zip VampireEditor *
 cd ../
 cp dist/VampireEditor.zip ../dist
 DATE=date +%d%m%Y
-"build-$DATE" > ../dist/name
-TAG < ../vampire-editor-pre-release/tag
-"$TAG-$DATE" > ../dist/tag
+echo "build-$DATE" >> ../dist/name
+TAG=`cat ../vampire-editor-pre-release/tag`
+echo "$TAG-$DATE" >> ../dist/tag
