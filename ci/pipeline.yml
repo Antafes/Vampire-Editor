@@ -16,6 +16,7 @@ resources:
     owner: Antafes
     repository: Vampire-Editor
     release: true
+    drafts: true
 - name: myXML-lib
   type: github-release
   source:
@@ -55,9 +56,23 @@ jobs:
       - dist/VampireEditor.zip
 - name: vampire-editor
   plan:
-  - get: vampire-editor-release
+  - get: vampire-editor-repo
+  - get: vampire-editor-pre-release
     trigger: true
   - get: myXML-lib
+  - task: check-version
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: frekele/ant
+      inputs:
+      - name: vampire-editor-repo
+      - name: vampire-editor-pre-release
+      run:
+        path: ci/check-version.sh
+        dir: vampire-editor-repo
   - task: build
     config:
       platform: linux
@@ -67,13 +82,13 @@ jobs:
           repository: frekele/ant
           tag: 1.10-jdk8
       inputs:
-      - name: vampire-editor-release
+      - name: vampire-editor-repo
       - name: myXML-lib
       outputs:
       - name: dist
       run:
         path: ci/build.sh
-        dir: vampire-editor-release
+        dir: vampire-editor-repo
   - put: vampire-editor-release
     params:
       name: dist/name

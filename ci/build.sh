@@ -1,5 +1,7 @@
 #!/bin/sh
 
+VERSION=`cat VERSION`
+
 apt-get update
 apt-get install zip
 
@@ -12,4 +14,7 @@ zip -v VampireEditor *
 cd ../
 cp dist/VampireEditor.zip ../dist
 
-cp ../vampire-editor-release/tag ../dist/tag
+DATE=`date +%d%m%Y`
+echo "v$VERSION" >> ../dist/name
+TAG=`cat ../vampire-editor-pre-release/tag`
+echo "v$VERSION" >> ../dist/tag
