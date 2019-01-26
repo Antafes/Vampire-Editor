@@ -6,7 +6,11 @@ image_resource:
     tag: 1.10-jdk8
 inputs:
 - name: vampire-editor-repo
+- name: myXML-lib
+  path: vampire-editor-repo/lib
 outputs:
 - name: dist
+  path: vampire-editor-repo/dist
 run:
   path: vampire-editor-repo/ci/build.sh
+  dir: vampire-editor-repo
