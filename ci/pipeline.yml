@@ -1,0 +1,20 @@
+resources:
+- name: vampire-editor-repo
+  type: git
+  source:
+    uri: https://github.com/Antafes/Vampire-Editor
+    branch: master
+- name: myXML-lib
+  type: github-release
+  source:
+    owner: Antafes
+    repository: MyXML
+    release: true
+jobs:
+- name: vampire-editor-dev
+  plan:
+  - get: vampire-editor-repo
+    trigger: true
+  - get: myXML-lib
+  - task: build
+    file: vampire-editor-repo/ci/build.yml
