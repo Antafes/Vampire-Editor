@@ -13,5 +13,5 @@ cd ../
 cp dist/VampireEditor.zip ../dist
 DATE=date +%d%m%Y
 "build-$DATE" > ../dist/name
-TAG < ../vampire-editor-release/tag
+TAG < ../vampire-editor-pre-release/tag
 "$TAG-$DATE" > ../dist/tag

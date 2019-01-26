@@ -26,7 +26,7 @@ resources:
 jobs:
 - name: vampire-editor-dev
   plan:
-  - get: vampire-editor-release
+  - get: vampire-editor-pre-release
   - get: vampire-editor-repo
     trigger: true
   - get: myXML-lib
@@ -39,7 +39,7 @@ jobs:
           repository: frekele/ant
           tag: 1.10-jdk8
       inputs:
-      - name: vampire-editor-release
+      - name: vampire-editor-pre-release
       - name: vampire-editor-repo
       - name: myXML-lib
       outputs:
