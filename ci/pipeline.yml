@@ -59,6 +59,7 @@ jobs:
   - get: vampire-editor-repo
   - get: vampire-editor-pre-release
     trigger: true
+    passed: [vampire-editor-dev]
   - get: myXML-lib
   - task: check-version
     config:
