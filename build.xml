@@ -32,7 +32,7 @@
     <target name="compile">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"  encoding="utf-8"/>
 		<copy todir="${classes.dir}/fonts">
             <fileset dir="${fonts.dir}" includes="**"/>
         </copy>

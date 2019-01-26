@@ -3,7 +3,7 @@ resources:
   type: git
   source:
     uri: https://github.com/Antafes/Vampire-Editor
-    branch: master
+    branch: concourse-test
 - name: myXML-lib
   type: github-release
   source:
