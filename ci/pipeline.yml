@@ -79,8 +79,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: frekele/ant
-          tag: 1.10-jdk8
+          repository: debian
+          tag: stable-slim
       inputs:
       - name: vampire-editor-repo
       - name: myXML-lib
