@@ -8,13 +8,13 @@ resources:
   type: github-release
   source:
     owner: Antafes
-    repository: Vampire_Editor
+    repository: Vampire-Editor
     pre_release: true
 - name: vampire-editor-release
   type: github-release
   source:
     owner: Antafes
-    repository: Vampire_Editor
+    repository: Vampire-Editor
     release: true
 - name: myXML-lib
   type: github-release
@@ -47,13 +47,12 @@ jobs:
       run:
         path: ci/build.sh
         dir: vampire-editor-repo
-    on_success:
-      - put: vampire-editor-pre-release
-        params:
-          name: dist/name
-          tag: dist/tag
-          globs:
-          - dist/VampireEditor.zip
+  - put: vampire-editor-pre-release
+    params:
+     name: dist/name
+     tag: dist/tag
+     globs:
+      - dist/VampireEditor.zip
 - name: vampire-editor
   plan:
   - get: vampire-editor-release
@@ -75,10 +74,9 @@ jobs:
       run:
         path: ci/build.sh
         dir: vampire-editor-release
-    on_success:
-      - put: vampire-editor-release
-        params:
-          name: dist/name
-          tag: dist/tag
-          globs:
-          - dist/VampireEditor.zip
+  - put: vampire-editor-release
+    params:
+      name: dist/name
+      tag: dist/tag
+      globs:
+      - dist/VampireEditor.zip
