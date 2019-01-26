@@ -4,7 +4,7 @@ resources:
   source:
     uri: https://github.com/Antafes/Vampire-Editor
     branch: concourse-test
-- name: vampire-editor-release
+- name: vampire-editor-pre-release
   type: github-release
   source:
     owner: Antafes
@@ -16,9 +16,11 @@ resources:
     owner: Antafes
     repository: MyXML
     release: true
+
 jobs:
 - name: vampire-editor-dev
   plan:
+  - get: vampire-editor-release
   - get: vampire-editor-repo
     trigger: true
   - get: myXML-lib
@@ -31,6 +33,7 @@ jobs:
           repository: frekele/ant
           tag: 1.10-jdk8
       inputs:
+      - name: vampire-editor-release
       - name: vampire-editor-repo
       - name: myXML-lib
       outputs:
@@ -39,4 +42,9 @@ jobs:
         path: ci/build.sh
         dir: vampire-editor-repo
     on_success:
-      put: vampire-editor-release
+      - put: vampire-editor-pre-release
+        params:
+          name: dist/name
+          tag: dist/tag
+          globs:
+          - dist/VampireEditor.zip
