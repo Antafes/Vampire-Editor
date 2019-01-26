@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apt install zip
+apt-get install zip
 
 mkdir lib
 cp -r ../myXML-lib/* lib
