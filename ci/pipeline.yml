@@ -106,7 +106,7 @@ jobs:
       - name: dist
       run:
         path: ci/build-dev.sh
-        dir: vampire-editor-repo
+        dir: vampire-editor-repo-dev
   - put: vampire-editor-pre-release
     params:
      name: dist/name
