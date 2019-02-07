@@ -53,6 +53,7 @@ jobs:
     - get: vampire-editor-repo-pr
       trigger: true
       version: every
+    - get: myXML-lib
     - put: vampire-editor-repo-pr
       params:
         path: vampire-editor-repo-pr
