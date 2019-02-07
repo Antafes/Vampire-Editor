@@ -123,11 +123,11 @@ public class English implements LanguageInterface {
      *
      * @param key The key to translate.
      *
-     * @return
+     * @return The translated string
      */
     @Override
     public String translate(String key) {
-        return this.translations.containsKey(key) ? this.translations.get(key) : key;
+        return this.translations.getOrDefault(key, key);
     }
 
     /**

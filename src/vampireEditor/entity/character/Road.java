@@ -21,10 +21,11 @@
  */
 package vampireEditor.entity.character;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Road object.
@@ -43,8 +44,9 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
         /**
          * Build a new Ability object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created ability entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Road build() throws EntityException {
@@ -56,7 +58,7 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -86,10 +88,10 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -103,6 +105,13 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
             }
         }
 
+        /**
+         * Set the road value.
+         *
+         * @param value
+         *
+         * @return
+         */
         public Builder setValue(int value) {
             this.value = value;
 
@@ -113,7 +122,7 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
     /**
      * Create a new road object.
      *
-     * @param builder
+     * @param builder The builder object
      */
     public Road(Builder builder) {
         super(builder);
@@ -133,7 +142,7 @@ public class Road extends BaseTranslatedEntity implements RoadInterface {
     /**
      * Get a string representation of the road.
      *
-     * @return
+     * @return A string representation of the road
      */
     @Override
     public String toString() {

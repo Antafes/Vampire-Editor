@@ -21,10 +21,14 @@
  */
 package vampireEditor;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Image;
-import java.awt.Toolkit;
+import myXML.XMLParser;
+import org.w3c.dom.Element;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.*;
+import vampireEditor.gui.BaseWindow;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -36,16 +40,10 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import myXML.XMLParser;
-import org.w3c.dom.Element;
-import vampireEditor.entity.EntityException;
-import vampireEditor.entity.character.*;
-import vampireEditor.gui.BaseWindow;
 
 /**
  * The base class that starts everything.
@@ -60,7 +58,6 @@ public class VampireEditor {
     private static final HashMap<String, Clan> CLANS = new HashMap<>();
     private static final HashMap<String, Attribute> ATTRIBUTES = new HashMap<>();
     private static final HashMap<String, Ability> ABILITIES = new HashMap<>();
-    private static final HashMap<String, Font> FONTS = new HashMap<>();
     private static final HashMap<String, Merit> MERITS = new HashMap<>();
     private static final HashMap<String, Flaw> FLAWS = new HashMap<>();
     private static final HashMap<String, Road> ROADS = new HashMap<>();
@@ -80,7 +77,7 @@ public class VampireEditor {
      */
     public VampireEditor() {
         VampireEditor.log(new ArrayList<>(
-            Arrays.asList(
+            Collections.singletonList(
                 "start of log (" + (DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(LocalDateTime.now()) + ")"
             )
         ));
@@ -94,12 +91,12 @@ public class VampireEditor {
         this.loadMerits();
         this.loadFlaws();
         this.loadRoads();
-        this.loadFonts();
     }
 
     /**
      * Log something into the log file.
-     * @param lines
+     *
+     * @param lines The lines to log
      */
     public static void log(ArrayList<String> lines) {
         if (!VampireEditor.DEBUG) {
@@ -110,7 +107,18 @@ public class VampireEditor {
 
         if (!file.toFile().exists()) {
             try {
-                file.toFile().createNewFile();
+                if (!file.toFile().createNewFile()) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Something went terribly wrong, as the file already exists.",
+                        "Error creating log file",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    Logger.getLogger(VampireEditor.class.getName()).log(
+                        Level.SEVERE,
+                        "File already exists, but check said it doesn't!"
+                    );
+                }
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(
                     null,
@@ -145,7 +153,7 @@ public class VampireEditor {
     /**
      * Get the path to the data directory.
      *
-     * @return
+     * @return Path to the data directory
      */
     private String getDataPath() {
         return "vampireEditor/data/";
@@ -190,12 +198,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
 
-                XMLParser.getAllChildren(element).forEach((name) -> {
-                    names.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(element).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.WEAKNESSES.put(
@@ -223,12 +229,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
                 Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> {
-                    names.put(
-                        Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                        translatedName.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
+                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
+                    translatedName.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.ATTRIBUTES.put(
@@ -259,12 +263,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
                 Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> {
-                    names.put(
-                        Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                        translatedName.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
+                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
+                    translatedName.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.ADVANTAGES.put(
@@ -296,19 +298,15 @@ public class VampireEditor {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
                 HashMap<Configuration.Language, String> nicknames = new HashMap<>();
 
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
-                    names.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
-                XMLParser.getAllChildren(XMLParser.getTagElement("nickname", element)).forEach((name) -> {
-                    nicknames.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(XMLParser.getTagElement("nickname", element)).forEach((name) -> nicknames.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.CLANS.put(
@@ -317,7 +315,7 @@ public class VampireEditor {
                             .setKey(element.getAttribute("key"))
                             .setNames(names)
                             .setNicknames(nicknames)
-                            .setDisciplins(this.getDisciplins(XMLParser.getTagElement("advantages", element)))
+                            .setDisciplines(this.getDisciplines(XMLParser.getTagElement("advantages", element)))
                             .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
                             .build()
                     );
@@ -342,12 +340,10 @@ public class VampireEditor {
             elements.forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
                 Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> {
-                    names.put(
-                        Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                        translatedName.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
+                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
+                    translatedName.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.ABILITIES.put(
@@ -378,12 +374,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
 
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
-                    names.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.MERITS.put(
@@ -414,12 +408,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
 
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
-                    names.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.FLAWS.put(
@@ -450,12 +442,10 @@ public class VampireEditor {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
 
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> {
-                    names.put(
-                        Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                        name.getFirstChild().getNodeValue()
-                    );
-                });
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
+                ));
 
                 try {
                     VampireEditor.ROADS.put(
@@ -473,64 +463,47 @@ public class VampireEditor {
     }
 
     /**
-     * Get the disciplins of the given clan element.
+     * Get the disciplines of the given clan element.
      *
-     * @param element
+     * @param element XML element
      *
-     * @return
+     * @return List of advantage objects
      */
-    private ArrayList<Advantage> getDisciplins(Element element) {
-        ArrayList<Advantage> disciplins = new ArrayList<>();
+    private ArrayList<Advantage> getDisciplines(Element element) {
+        ArrayList<Advantage> disciplines = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
 
-        advantages.forEach((listElement) -> {
-            disciplins.add(VampireEditor.getAdvantage(listElement.getChildNodes().item(0).getNodeValue()));
-        });
+        advantages.forEach(
+            (listElement) -> disciplines.add(
+                VampireEditor.getAdvantage(listElement.getChildNodes().item(0).getNodeValue())
+            )
+        );
 
-        return disciplins;
+        return disciplines;
     }
 
     /**
-     * Get the disciplins of the given clan element.
+     * Get the weaknesses of the given clan element.
      *
-     * @param element
+     * @param element XML element
      *
-     * @return
+     * @return List of weakness objects
      */
     private ArrayList<Weakness> getWeaknesses(Element element) {
         ArrayList<Weakness> weaknesses = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
 
-        advantages.forEach((listElement) -> {
-            weaknesses.add(VampireEditor.getWeakness(listElement.getNodeValue()));
-        });
+        advantages.forEach((listElement) -> weaknesses.add(VampireEditor.getWeakness(listElement.getNodeValue())));
 
         return weaknesses;
     }
 
     /**
-     * Load the fonts used for the character sheet.
-     */
-    private void loadFonts() {
-        try {
-            VampireEditor.FONTS.put(
-                "headlines",
-                Font.createFont(
-                    Font.TRUETYPE_FONT,
-                    VampireEditor.getFileInJar("fonts/GoudyTextMT-LombardicCapitals.ttf")
-                )
-            );
-        } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
      * Get a file inside of the generated JAR.
      *
-     * @param path
+     * @param path Path of the file
      *
-     * @return
+     * @return InputStream of the fetched file
      */
     public static InputStream getFileInJar(String path) {
         return VampireEditor.class.getClassLoader().getResourceAsStream(path);
@@ -539,9 +512,9 @@ public class VampireEditor {
     /**
      * Get a resource inside of the generated JAR.
      *
-     * @param path
+     * @param path Path of the file
      *
-     * @return
+     * @return URL object of the file
      */
     public static URL getResourceInJar(String path) {
         return VampireEditor.class.getClassLoader().getResource(path);
@@ -550,7 +523,7 @@ public class VampireEditor {
     /**
      * Get the list of GENERATIONS.
      *
-     * @return
+     * @return List of generation objects
      */
     public static ArrayList<Generation> getGenerations() {
         return VampireEditor.GENERATIONS;
@@ -560,9 +533,9 @@ public class VampireEditor {
      * Get a single generation object from the list of generations.
      * Returns null if no matching generation was found.
      *
-     * @param generation
+     * @param generation Number representation of a generation
      *
-     * @return
+     * @return Generation object or null for the given number
      */
     public static Generation getGeneration(int generation) {
         for (Generation generationObject : VampireEditor.GENERATIONS) {
@@ -577,7 +550,7 @@ public class VampireEditor {
     /**
      * Get the list of ADVANTAGES.
      *
-     * @return
+     * @return Map of advantage objects with the advantage key as key of the map
      */
     public static HashMap<String, Advantage> getAdvantages() {
         return VampireEditor.ADVANTAGES;
@@ -586,7 +559,7 @@ public class VampireEditor {
     /**
      * Get the list of clans.
      *
-     * @return
+     * @return Map of clan objects with the clan key as key of the map
      */
     public static HashMap<String, Clan> getClans() {
         return VampireEditor.CLANS;
@@ -595,7 +568,7 @@ public class VampireEditor {
     /**
      * Get the list of attributes.
      *
-     * @return
+     * @return Map of attribute objects with the attribute key as key of the map
      */
     public static HashMap<String, Attribute> getAttributes() {
         return VampireEditor.ATTRIBUTES;
@@ -604,9 +577,9 @@ public class VampireEditor {
     /**
      * Get an attribute by its key.
      *
-     * @param key
+     * @param key The attribute to fetch
      *
-     * @return
+     * @return Attribute object for the given key or null if none found
      */
     public static Attribute getAttribute(String key) {
         return VampireEditor.ATTRIBUTES.get(key);
@@ -615,7 +588,7 @@ public class VampireEditor {
     /**
      * Get the list of abilities.
      *
-     * @return
+     * @return Map of ability objects with the ability key as key of the map
      */
     public static HashMap<String, Ability> getAbilities() {
         return VampireEditor.ABILITIES;
@@ -624,31 +597,20 @@ public class VampireEditor {
     /**
      * Get an ability by its key.
      *
-     * @param key
+     * @param key The ability to fetch
      *
-     * @return
+     * @return Ability object for the given key or null if none found
      */
     public static Ability getAbility(String key) {
         return VampireEditor.ABILITIES.get(key);
     }
 
     /**
-     * Get the font for the given type.
-     *
-     * @param type
-     *
-     * @return
-     */
-    public static Font getFont(String type) {
-        return VampireEditor.FONTS.get(type);
-    }
-
-    /**
      * Get an advantage by its key.
      *
-     * @param key
+     * @param key The advantage to fetch
      *
-     * @return
+     * @return Advantage object for the given key or null if none found
      */
     public static Advantage getAdvantage(String key) {
         return VampireEditor.ADVANTAGES.get(key);
@@ -657,9 +619,9 @@ public class VampireEditor {
     /**
      * Get a weakness by its key.
      *
-     * @param key
+     * @param key The weakness to fetch
      *
-     * @return
+     * @return Weakness object for the given key or null if none found
      */
     public static Weakness getWeakness(String key) {
         return VampireEditor.WEAKNESSES.get(key);
@@ -668,9 +630,9 @@ public class VampireEditor {
     /**
      * Get a clan by its key.
      *
-     * @param key
+     * @param key The clan to fetch
      *
-     * @return
+     * @return Clan object for the given key or null if none found
      */
     public static Clan getClan(String key) {
         return VampireEditor.CLANS.get(key);
@@ -679,7 +641,7 @@ public class VampireEditor {
     /**
      * Get every merit that is available.
      *
-     * @return
+     * @return Map of merit objects with the merit key as key of the map
      */
     public static HashMap<String, Merit> getMerits() {
         return VampireEditor.MERITS;
@@ -688,7 +650,7 @@ public class VampireEditor {
     /**
      * Get every flaw that is available.
      *
-     * @return
+     * @return Map of flaw objects with the flaw key as key of the map
      */
     public static HashMap<String, Flaw> getFlaws() {
         return VampireEditor.FLAWS;
@@ -697,7 +659,7 @@ public class VampireEditor {
     /**
      * Get every road that is available.
      *
-     * @return
+     * @return Map of road objects with the road key as key of the map
      */
     public static HashMap<String, Road> getRoads() {
         return VampireEditor.ROADS;
@@ -706,9 +668,9 @@ public class VampireEditor {
     /**
      * Get the road for the given key.
      *
-     * @param key
+     * @param key The road to fetch
      *
-     * @return
+     * @return Road object for the given key or null if none found
      */
     public static Road getRoad(String key) {
         return VampireEditor.ROADS.get(key);

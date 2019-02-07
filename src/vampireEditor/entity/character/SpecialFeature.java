@@ -21,10 +21,11 @@
  */
 package vampireEditor.entity.character;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * SpecialFeature object.
@@ -43,16 +44,16 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
         /**
          * List of special feature types.
          */
-        public static enum SpecialFeatureClass {
+        public enum SpecialFeatureClass {
             MERIT,
-            FLAW;
+            FLAW
         }
 
         /**
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -68,10 +69,11 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
         }
 
         /**
-         * Build a new Ability object.
+         * Build a new special feature object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created special feature entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public SpecialFeature build() throws EntityException {
@@ -87,7 +89,7 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected SpecialFeature.Builder self() {
@@ -117,10 +119,10 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -134,18 +136,39 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
             }
         }
 
+        /**
+         * Set the special feature type.
+         *
+         * @param type
+         *
+         * @return
+         */
         public SpecialFeature.Builder setType(SpecialFeatureType type) {
             this.type = type;
 
             return this.self();
         }
 
+        /**
+         * Set the special feature cost.
+         *
+         * @param cost
+         *
+         * @return
+         */
         public SpecialFeature.Builder setCost(int cost) {
             this.cost = cost;
 
             return this.self();
         }
 
+        /**
+         * Set the special feature class that should be built.
+         *
+         * @param specialFeatureClass
+         *
+         * @return
+         */
         public SpecialFeature.Builder setSpecialFeatureClass(SpecialFeatureClass specialFeatureClass) {
             this.specialFeatureClass = specialFeatureClass;
 
@@ -156,7 +179,7 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
     /**
      * Create a new special feature with type and cost.
      *
-     * @param builder
+     * @param builder The builder object
      */
     public SpecialFeature(Builder builder) {
         super(builder);
@@ -188,7 +211,7 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
     /**
      * Get a string representation of the special feature.
      *
-     * @return
+     * @return A string representation of the special feature
      */
     @Override
     public String toString() {

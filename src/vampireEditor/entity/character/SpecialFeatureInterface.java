@@ -30,11 +30,11 @@ public interface SpecialFeatureInterface {
     /**
      * List of special feature types.
      */
-    public static enum SpecialFeatureType {
+    public enum SpecialFeatureType {
         PHYSICAL,
         MENTAL,
         SOCIAL,
-        SUPERNATURAL;
+        SUPERNATURAL
     }
 
     /**

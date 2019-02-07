@@ -35,8 +35,9 @@ public abstract class BaseEntity {
         /**
          * Build a new base entity.
          *
-         * @return
-         * @throws vampireEditor.entity.EntityException
+         * @return The created entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         public abstract BaseEntity build() throws EntityException;
 
@@ -44,25 +45,25 @@ public abstract class BaseEntity {
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         protected abstract void checkValues() throws EntityException;
 
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         protected abstract T self();
 
         /**
          * Fill every property from the given object into this builder.
          *
-         * @param object
+         * @param object A BaseEntity to fetch values from
          *
-         * @return
+         * @return The builder object
          */
-        public T fillDataFromObject(Object object) {
+        public T fillDataFromObject(BaseEntity object) {
             this.self().getDataMethods().forEach((declaredMethod) -> {
                 try {
                     Method setter = this.getSetter(declaredMethod);
@@ -80,7 +81,7 @@ public abstract class BaseEntity {
          *
          * @param method The method to check.
          *
-         * @return
+         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
          */
         protected boolean checkMethod(Method method) {
             return !method.getName().startsWith("get") || method.getName().equals("getDataMethods");
@@ -89,7 +90,7 @@ public abstract class BaseEntity {
         /**
          * Get the list of methods from which data can be fetched.
          *
-         * @return
+         * @return A list of getter methods
          */
         protected ArrayList<Method> getDataMethods() {
             ArrayList<Method> methodList = new ArrayList<>();
@@ -108,10 +109,10 @@ public abstract class BaseEntity {
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         protected Method getSetter(Method getter) throws NoSuchMethodException {
             Class[] parameterTypes = new Class[1];
@@ -124,7 +125,7 @@ public abstract class BaseEntity {
     /**
      * Create new base entity.
      *
-     * @param builder
+     * @param builder The builder object
      */
     protected BaseEntity(Builder<?> builder) {
     }

@@ -32,7 +32,7 @@ public interface LanguageInterface {
      *
      * @param key The key to translate.
      *
-     * @return
+     * @return The translated string
      */
     public String translate(String key);
 

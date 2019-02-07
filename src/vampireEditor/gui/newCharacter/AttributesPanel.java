@@ -21,13 +21,6 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Attribute;
@@ -37,6 +30,13 @@ import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -63,9 +63,9 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Return the translated name of the element.
      *
-     * @param element
+     * @param element The element name to translate
      *
-     * @return
+     * @return The translated name
      */
     @Override
     protected String getElementLabelText(String element) {
@@ -96,17 +96,15 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Add attribute fields with the given fieldName and for the given attribute type.
      *
-     * @param fieldName
-     * @param type
+     * @param fieldName Name of the field
+     * @param type Attribute type
      */
     private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
         ArrayList<String> list = new ArrayList<>();
 
         this.getValues(type.name()).stream()
             .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> {
-                list.add(attribute.getKey());
-            });
+            .forEachOrdered((attribute) -> list.add(attribute.getKey()));
         list.sort(new StringComparator());
 
         this.addFields(fieldName, list, 1);
@@ -115,9 +113,9 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Get the values for the element combo box.
      *
-     * @param type
+     * @param type The attribute type
      *
-     * @return
+     * @return List of attribute objects
      */
     protected ArrayList<Attribute> getValues(String type) {
         ArrayList<Attribute> list = new ArrayList<>();
@@ -138,7 +136,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -182,7 +180,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Check if the spent points for physical attributes is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkPhyiscalPoints() {
         return this.checkPoints("physical");
@@ -216,7 +214,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Check if the spent points for social attributes is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkSocialPoints() {
         return this.checkPoints("social");
@@ -250,7 +248,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Check if the spent points for mental attributes is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkMentalPoints() {
         return this.checkPoints("mental");
@@ -272,15 +270,12 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("physical").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("social").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("mental").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields("physical").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("social").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("mental").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
 
         this.calculateUsedMentalPoints();
         this.calculateUsedSocialPoints();
@@ -313,9 +308,9 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Get the max points field with the propery weighting values set.
      *
-     * @param weighting
+     * @param weighting Enum to get the weighting value from
      *
-     * @return
+     * @return The maximum weighting
      */
     @Override
     protected int getWeightingMax(Weighting weighting) {
@@ -325,7 +320,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Adjust the attribute spinners to the clans.
      *
-     * @param clan
+     * @param clan Clan object to fetch some values from
      */
     public void adjustAttributesToClan(Clan clan) {
         ArrayList<Component> fields = this.getFields("social");
@@ -379,7 +374,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param builder
+     * @param builder Character builder object
      */
     @Override
     public void fillCharacter(vampireEditor.entity.Character.Builder builder) {

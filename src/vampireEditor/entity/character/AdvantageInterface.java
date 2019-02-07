@@ -32,8 +32,8 @@ public interface AdvantageInterface {
      */
     public static enum AdvantageType {
         BACKGROUND,
-        DISCIPLIN,
-        VIRTUE;
+        DISCIPLINE,
+        VIRTUE
     }
 
     /**

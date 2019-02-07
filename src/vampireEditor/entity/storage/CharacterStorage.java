@@ -21,16 +21,23 @@
  */
 package vampireEditor.entity.storage;
 
+import myXML.XMLParser;
+import myXML.XMLValidator;
+import myXML.XMLWriter;
+import org.w3c.dom.Element;
+import vampireEditor.Configuration;
+import vampireEditor.VampireEditor;
+import vampireEditor.entity.EntityException;
+import vampireEditor.entity.character.Ability;
+import vampireEditor.entity.character.Advantage;
+import vampireEditor.entity.character.Attribute;
+import vampireEditor.entity.character.Road;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import myXML.*;
-import org.w3c.dom.Element;
-import vampireEditor.*;
-import vampireEditor.entity.character.*;
-import vampireEditor.entity.EntityException;
 
 /**
  *
@@ -59,8 +66,8 @@ public class CharacterStorage {
     /**
      * Save the given character.
      *
-     * @param character
-     * @param filename
+     * @param character The character to save
+     * @param filename The filename to use for saving
      */
     public void save(vampireEditor.entity.Character character, String filename) {
         this.addRequiredFields(character);
@@ -70,10 +77,10 @@ public class CharacterStorage {
     /**
      * Load a character from the given file.
      *
-     * @param filename
+     * @param filename The file to load
      *
-     * @return
-     * @throws java.lang.Exception
+     * @return The loaded character
+     * @throws java.lang.Exception Thrown if character couldn't be loaded
      */
     public vampireEditor.entity.Character load(String filename) throws Exception  {
         if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
@@ -82,9 +89,7 @@ public class CharacterStorage {
 
         Exception ex = new Exception("Could not load character '" + filename + "'!");
 
-        this.xp.getExceptionList().forEach((exception) -> {
-            ex.addSuppressed(exception);
-        });
+        this.xp.getExceptionList().forEach(ex::addSuppressed);
 
         throw ex;
     }
@@ -92,7 +97,7 @@ public class CharacterStorage {
     /**
      * Add all fields that are required to generate a new character object out of the stored data.
      *
-     * @param character
+     * @param character The character to get the data from
      */
     private void addRequiredFields(vampireEditor.entity.Character character) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -134,14 +139,10 @@ public class CharacterStorage {
         });
 
         Element merits = this.xw.addChild("merits");
-        character.getMerits().forEach((merit) -> {
-            this.xw.addChild(merits, "merit", merit.getKey());
-        });
+        character.getMerits().forEach((merit) -> this.xw.addChild(merits, "merit", merit.getKey()));
 
         Element flaws = this.xw.addChild("flaws");
-        character.getFlaws().forEach((flaw) -> {
-            this.xw.addChild(flaws, "flaw", flaw.getKey());
-        });
+        character.getFlaws().forEach((flaw) -> this.xw.addChild(flaws, "flaw", flaw.getKey()));
 
         HashMap<String, String> roadAttributes = new HashMap<>();
         roadAttributes.put("key", character.getRoad().getKey());
@@ -177,7 +178,7 @@ public class CharacterStorage {
     /**
      * Create a new character object and fill it with values.
      *
-     * @return
+     * @return The newly created character
      */
     private vampireEditor.entity.Character fillValues() {
         vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder();
@@ -213,9 +214,7 @@ public class CharacterStorage {
             }
 
             return null;
-        }).forEachOrdered((attribute) -> {
-            builder.addAttribute(attribute);
-        });
+        }).forEachOrdered(builder::addAttribute);
 
         Element abilities = XMLParser.getTagElement("abilities", root);
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
@@ -233,9 +232,7 @@ public class CharacterStorage {
             }
 
             return null;
-        }).forEachOrdered((ability) -> {
-            builder.addAbility(ability);
-        });
+        }).forEachOrdered(builder::addAbility);
 
         Element advantages = XMLParser.getTagElement("advantages", root);
         XMLParser.getAllChildren(advantages).stream().map((element) -> {
@@ -253,27 +250,25 @@ public class CharacterStorage {
             }
 
             return null;
-        }).forEachOrdered((advantage) -> {
-            builder.addAdvantage(advantage);
-        });
+        }).forEachOrdered(builder::addAdvantage);
 
-        XMLParser.getAllChildren(XMLParser.getTagElement("merits", root)).forEach((element) -> {
-            builder.addMerit(VampireEditor.getMerits().get(XMLParser.getElementValue(element)));
-        });
+        XMLParser.getAllChildren(XMLParser.getTagElement("merits", root))
+            .forEach((element) -> builder.addMerit(VampireEditor.getMerits().get(XMLParser.getElementValue(element))));
 
-        XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root)).forEach((element) -> {
-            builder.addFlaw(VampireEditor.getFlaws().get(XMLParser.getElementValue(element)));
-        });
+        XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root))
+            .forEach((element) -> builder.addFlaw(VampireEditor.getFlaws().get(XMLParser.getElementValue(element))));
 
         Element road = XMLParser.getTagElement("road", root);
         Road.Builder roadBuilder = new Road.Builder()
             .fillDataFromObject(VampireEditor.getRoad(road.getAttribute("key")))
             .setValue(XMLParser.getTagValueInt("road", root));
+
         try {
             builder.setRoad(roadBuilder.build());
         } catch (EntityException ex) {
             Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
         builder.setBloodStock(XMLParser.getTagValueInt("bloodStock", root));
         builder.setAge(XMLParser.getTagValueInt("age", root));

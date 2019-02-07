@@ -30,7 +30,7 @@ public interface AbilityInterface {
     /**
      * List of ability types.
      */
-    public static enum AbilityType {
+    public enum AbilityType {
         TALENT,
         SKILL,
         KNOWLEDGE

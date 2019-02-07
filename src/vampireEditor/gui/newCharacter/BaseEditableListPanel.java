@@ -21,20 +21,14 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import vampireEditor.gui.*;
-import java.awt.Component;
-import java.awt.Dimension;
+import vampireEditor.gui.NewCharacterDialog;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.LayoutStyle;
-import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -50,7 +44,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Creates new form AbilitiesPanel
      *
-     * @param parent
+     * @param parent Parent element
      */
     public BaseEditableListPanel(NewCharacterDialog parent) {
         super(parent);
@@ -70,9 +64,9 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param elementList
-     * @param spinnerMinimum
+     * @param headline Headline for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param spinnerMinimum Maximum value for the spinners
      */
     @Override
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
@@ -82,10 +76,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param elementList
-     * @param spinnerMinimum
-     * @param maxFields
+     * @param headline Headline for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param spinnerMinimum Maximum value for the spinners
+     * @param maxFields Maximum number of fields to create
      */
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum, int maxFields) {
         this.addFields(headline, null, elementList, spinnerMinimum, maxFields);
@@ -94,9 +88,9 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param type
-     * @param elementList
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
      */
     protected void addFields(String headline, String type, ArrayList<String> elementList) {
         this.addFields(headline, type, elementList, 0, this.UNLIMITEDMAXFIELDS);
@@ -105,10 +99,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param type
-     * @param elementList
-     * @param maxFields
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param maxFields Maximum number of fields to create
      */
     protected void addFields(String headline, String type, ArrayList<String> elementList, int maxFields) {
         this.addFields(headline, type, elementList, 0, maxFields);
@@ -117,8 +111,8 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param type
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
      */
     protected void addFields(String headline, String type) {
         this.addFields(headline, type, new ArrayList<>(), 0, this.UNLIMITEDMAXFIELDS);
@@ -127,9 +121,9 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param type
-     * @param maxFields
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
+     * @param maxFields Maximum number of fields to create
      */
     protected void addFields(String headline, String type, int maxFields) {
         this.addFields(headline, type, new ArrayList<>(), 0, maxFields);
@@ -138,11 +132,11 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param type
-     * @param elementList
-     * @param spinnerMinimum
-     * @param maxFields
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param spinnerMinimum Maximum value for the spinners
+     * @param maxFields Maximum number of fields to create
      */
     protected void addFields(String headline, String type, ArrayList<String> elementList, int spinnerMinimum, int maxFields) {
         if (!this.getFields().containsKey(type)) {
@@ -153,8 +147,8 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             this.getPointFields().put(type, new HashMap<>());
         }
 
-        if (!this.comboBoxes.containsKey(headline)) {
-            this.comboBoxes.put(type, new ArrayList<>());
+        if (!this.getComboBoxes().containsKey(headline)) {
+            this.getComboBoxes().put(type, new ArrayList<>());
         }
 
         GroupLayout layout = (GroupLayout) this.getLayout();
@@ -209,7 +203,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             HashMap<String, Component> newElements = this.addRow(
                 element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
             );
-            this.comboBoxes.get(type).add((JComboBox) newElements.get("comboBox"));
+            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
         });
 
         if (maxFields == this.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
@@ -219,7 +213,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             ((JComboBox) newElements.get("comboBox")).addItemListener(
                 this.getComboBoxItemListener(type, spinnerMinimum, this.getFields(type), groups, layout, maxFields)
             );
-            this.comboBoxes.get(type).add((JComboBox) newElements.get("comboBox"));
+            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
         }
 
         this.addPointFields(type, groups, layout);
@@ -233,13 +227,13 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     @Override
     protected HashMap<String, Component> addRow(String element, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
@@ -249,14 +243,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param selected
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param selected The selected index
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     protected HashMap<String, Component> addRow(String element, Object selected, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
         return this.addRow(element, selected, null, spinnerMinimum, fields, groups, layout);
@@ -265,14 +259,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param selected
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param type Identifier for the fields
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     protected HashMap<String, Component> addRow(String element, String type, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
         return this.addRow(element, null, type, spinnerMinimum, fields, groups, layout);
@@ -281,15 +275,15 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param selected
-     * @param type
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param selected The selected index
+     * @param type Identifier for the field
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     protected HashMap<String, Component> addRow(
         String element,
@@ -307,9 +301,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             model.addElement("");
         }
 
-        this.getValues(type).forEach((value) -> {
-            model.addElement(value);
-        });
+        this.getValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
 
         if (selected != null) {
@@ -317,7 +309,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         }
 
         JSpinner spinner = new JSpinner();
-        spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, this.spinnerMaximumValue, 1));
+        spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, this.getSpinnerMaximumValue(), 1));
         Dimension spinnerDimension = new Dimension(36, 20);
         spinner.setPreferredSize(spinnerDimension);
         spinner.setMinimumSize(spinnerDimension);
@@ -344,14 +336,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Create an item listener for the combobox.
      *
-     * @param type
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
-     * @param maxFields
+     * @param type Identifier for the field
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
+     * @param maxFields Maximum amount of fields
      *
-     * @return
+     * @return Item listener for the combobox
      */
     protected ItemListener getComboBoxItemListener(
         String type,
@@ -371,7 +363,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             HashMap<String, Component> newElements = this.addRow(
                 null, type, spinnerMinimum, fields, groups, layout
             );
-            this.comboBoxes.get(type).add((JComboBox) newElements.get("comboBox"));
+            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
 
             if (maxFields == this.UNLIMITEDMAXFIELDS || fields.size() < maxFields) {
                 ((JComboBox) newElements.get("comboBox")).addItemListener(
@@ -417,9 +409,9 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Get all combo boxes for the given type.
      *
-     * @param type
+     * @param type Identifier for the group
      *
-     * @return
+     * @return List of comboboxes
      */
     public ArrayList<JComboBox> getComboBoxes(String type) {
         return this.comboBoxes.get(type);
@@ -446,17 +438,17 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Get the values for the element combo box.
      *
-     * @param type
+     * @param type Identifier for the group of comboboxes
      *
-     * @return
+     * @return List of values
      */
     abstract protected ArrayList getValues(String type);
 
     /**
      * Get an entity of the given type for the given key.
      *
-     * @param type
-     * @param key
+     * @param type Identifier for the group of comboboxes
+     * @param key Key for the object to get
      *
      * @return Returns an object if found, otherwise null.
      */

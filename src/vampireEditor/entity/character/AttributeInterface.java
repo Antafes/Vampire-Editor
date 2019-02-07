@@ -30,10 +30,10 @@ public interface AttributeInterface {
     /**
      * List of possible attribute types.
      */
-    public static enum AttributeType {
+    public enum AttributeType {
         PHYSICAL,
         SOCIAL,
-        MENTAL;
+        MENTAL
     }
 
     /**

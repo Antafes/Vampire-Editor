@@ -21,10 +21,11 @@
  */
 package vampireEditor.entity;
 
+import vampireEditor.Configuration;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import vampireEditor.Configuration;
 
 /**
  * A base translated entity.
@@ -45,7 +46,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -61,13 +62,20 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected abstract T self();
 
+        /**
+         * Fill every property from the given object into this builder.
+         *
+         * @param object A BaseEntity to fetch values from
+         *
+         * @return The builder object
+         */
         @Override
-        public T fillDataFromObject(Object object) {
+        public T fillDataFromObject(BaseEntity object) {
             super.fillDataFromObject(object);
 
             return this.self();
@@ -76,9 +84,9 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         /**
          * Check whether the given method can be used to fill in data.
          *
-         * @param method
+         * @param method The method to check.
          *
-         * @return
+         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
          */
         @Override
         protected boolean checkMethod(Method method) {
@@ -88,7 +96,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         /**
          * Get the list of methods from which data can be fetched.
          *
-         * @return
+         * @return A list of getter methods
          */
         @Override
         protected ArrayList getDataMethods() {
@@ -108,10 +116,10 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -125,32 +133,69 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
             }
         }
 
+        /**
+         * Set the key of the object.
+         *
+         * @param key The value
+         *
+         * @return The builder object
+         */
         public T setKey(String key) {
             this.key = key;
 
             return this.self();
         }
 
+        /**
+         * Set the map of translated names.
+         *
+         * @param names Map of names
+         *
+         * @return The builder object
+         */
         public T setNames(HashMap<Configuration.Language, String> names) {
             this.names = names;
 
             return this.self();
         }
 
+        /**
+         * Add a single translated name to the map.
+         *
+         * @param language The language for the name
+         * @param name The translated name
+         *
+         * @return The builder object
+         */
         public T addName(Configuration.Language language, String name) {
             this.names.put(language, name);
 
             return this.self();
         }
 
+        /**
+         * Get the key for the entity.
+         *
+         * @return The key value
+         */
         public String getKey() {
             return this.key;
         }
 
+        /**
+         * Get the map of translated names.
+         *
+         * @return Map of names
+         */
         public HashMap<Configuration.Language, String> getNames() {
             return this.names;
         }
 
+        /**
+         * String representation of the builder
+         *
+         * @return The key property
+         */
         @Override
         public String toString() {
             return key;
@@ -160,7 +205,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
     /**
      * Create new base entity.
      *
-     * @param builder
+     * @param builder The builder object to fetch the data from
      */
     protected BaseTranslatedEntity(Builder builder) {
         super(builder);
@@ -188,7 +233,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
     }
 
     /**
-     * Get the name of the entity.
+     * Get the name of the entity according to the currently used language.
      *
      * @return
      */

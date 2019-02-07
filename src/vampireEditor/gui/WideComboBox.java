@@ -21,10 +21,9 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Vector;
-import javax.swing.ComboBoxModel;
-import javax.swing.JComboBox;
 
 /**
  * A combo box with independent size for the popup.

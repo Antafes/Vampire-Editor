@@ -21,9 +21,10 @@
  */
 package vampireEditor.gui;
 
+import vampireEditor.Configuration;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import vampireEditor.Configuration;
 
 /**
  *
@@ -37,7 +38,7 @@ public enum Weighting {
     private final int attributeMax;
     private final int abilitiesMax;
 
-    private Weighting(int attributeMax, int abilitiesMax) {
+    Weighting(int attributeMax, int abilitiesMax) {
         this.attributeMax = attributeMax;
         this.abilitiesMax = abilitiesMax;
     }
@@ -45,7 +46,7 @@ public enum Weighting {
     /**
      * Get a string representation of the weighting.
      *
-     * @return
+     * @return A string representation of the weighting
      */
     @Override
     public String toString() {
@@ -73,13 +74,12 @@ public enum Weighting {
     }
 
     /**
-     * Returns the remaining weighting after removing both given entries from
-     * the list.
+     * Returns the remaining weighting after removing both given entries from the list.
      *
-     * @param first
-     * @param second
+     * @param first First weighting enum to remove
+     * @param second Second weighting enum to remove
      *
-     * @return
+     * @return Remaining weighting enum
      */
     public static Weighting getRemaining(Weighting first, Weighting second) {
         ArrayList<Weighting> weightings = new ArrayList<>(Arrays.asList(Weighting.values()));

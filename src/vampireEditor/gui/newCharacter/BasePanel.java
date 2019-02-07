@@ -21,9 +21,9 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import vampireEditor.gui.*;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
+import vampireEditor.gui.NewCharacterDialog;
+
+import javax.swing.*;
 
 /**
  * BasePanel object.
@@ -39,7 +39,7 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * Creates new form BasePanel
      *
-     * @param parent
+     * @param parent Parent element
      */
     public BasePanel(NewCharacterDialog parent) {
         super();
@@ -51,23 +51,18 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * This method is called to initialize the form.
      */
-    @SuppressWarnings("unchecked")
     @Override
     protected void initComponents() {
 
         this.backButton = new javax.swing.JButton();
         this.nextButton = new javax.swing.JButton();
 
-        this.backButton.setText(this.getLanguage().translate("back"));
-        this.backButton.addActionListener((ActionEvent evt) -> {
-            backButtonActionPerformed(evt);
-        });
+        this.getBackButton().setText(this.getLanguage().translate("back"));
+        this.getBackButton().addActionListener(this::backButtonActionPerformed);
 
-        this.nextButton.setText(this.getLanguage().translate("next"));
-        this.nextButton.setEnabled(false);
-        this.nextButton.addActionListener((ActionEvent evt) -> {
-            nextButtonActionPerformed(evt);
-        });
+        this.getNextButton().setText(this.getLanguage().translate("next"));
+        this.getNextButton().setEnabled(false);
+        this.getNextButton().addActionListener(this::nextButtonActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -78,9 +73,9 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, this.getOuterSequentialHorizontalGroup())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(479, Short.MAX_VALUE)
-                .addComponent(this.backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(this.getBackButton(), javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(this.nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(this.getNextButton(), javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap()
             )
         );
@@ -92,8 +87,8 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(this.nextButton)
-                        .addComponent(this.backButton)
+                        .addComponent(this.getNextButton())
+                        .addComponent(this.getBackButton())
                     )
                     .addContainerGap()
                 )
@@ -104,7 +99,7 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * ActionPerformed listener for the back button.
      *
-     * @param evt
+     * @param evt Action event for the button
      */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.parent.getCharacterTabPane().setSelectedIndex(this.parent.getCharacterTabPane().getSelectedIndex() - 1);
@@ -113,7 +108,7 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * ActionPerformed listener for the next button.
      *
-     * @param evt
+     * @param evt Action event for the button
      */
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.parent.getCharacterTabPane().setSelectedIndex(this.parent.getCharacterTabPane().getSelectedIndex() + 1);
@@ -124,8 +119,8 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
      */
     @Override
     protected void createFocusTraversalPolicy() {
-        this.getOrder().add(this.nextButton);
-        this.getOrder().add(this.backButton);
+        this.getOrder().add(this.getNextButton());
+        this.getOrder().add(this.getBackButton());
 
         super.createFocusTraversalPolicy();
     }
@@ -134,14 +129,14 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
      * Enable the next button.
      */
     protected void enableNextButton() {
-        this.nextButton.setEnabled(true);
+        this.getNextButton().setEnabled(true);
     }
 
     /**
      * Disable the next button.
      */
     protected void disableNextButton() {
-        this.nextButton.setEnabled(false);
+        this.getNextButton().setEnabled(false);
     }
 
     /**
@@ -186,7 +181,7 @@ abstract public class BasePanel extends vampireEditor.gui.BasePanel {
     /**
      * Get a list with all field values.
      *
-     * @param builder
+     * @param builder Character builder object
      */
     abstract public void fillCharacter(vampireEditor.entity.Character.Builder builder);
 }

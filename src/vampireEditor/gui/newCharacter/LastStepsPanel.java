@@ -21,20 +21,6 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.LayoutStyle;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.character.Flaw;
 import vampireEditor.entity.character.Merit;
@@ -43,6 +29,14 @@ import vampireEditor.entity.character.SpecialFeature;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.WideComboBox;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.*;
 
 /**
  *
@@ -55,7 +49,7 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Create the last steps panel.
      *
-     * @param parent
+     * @param parent Parent element
      */
     public LastStepsPanel(NewCharacterDialog parent) {
         super(parent);
@@ -111,12 +105,20 @@ public class LastStepsPanel extends BasePanel {
      * Add fields by the given list and under the given headline.
      * This is going to be used to add the road and humanity fields.
      *
-     * @param headline
+     * @param headline The headline of the element group
      */
     protected void addFields(String headline) {
         this.addFields(headline, new ArrayList<>());
     }
 
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     * This will use 0 as minimum value for the spinners.
+     *
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
+     */
     @Override
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
         if (!this.getFields().containsKey(headline)) {
@@ -160,11 +162,9 @@ public class LastStepsPanel extends BasePanel {
         DefaultComboBoxModel roadModel = new DefaultComboBoxModel();
         roadModel.addElement("");
         this.roadComboBox.setModel(roadModel);
-        this.getRoadValues().forEach((road) -> {
-            roadModel.addElement(road);
-        });
+        this.getRoadValues().forEach(roadModel::addElement);
         this.roadComboBox.addItemListener((ItemEvent e) -> {
-            if (this.roadComboBox.getSelectedItem().equals("")) {
+            if (Objects.equals(this.roadComboBox.getSelectedItem(), "")) {
                 this.disableNextButton();
             } else {
                 this.enableNextButton();
@@ -187,9 +187,7 @@ public class LastStepsPanel extends BasePanel {
      */
     protected ArrayList<Road> getRoadValues() {
         ArrayList<Road> list = new ArrayList<>();
-        VampireEditor.getRoads().forEach((String key, Road road) -> {
-            list.add(road);
-        });
+        VampireEditor.getRoads().forEach((String key, Road road) -> list.add(road));
         list.sort(new StringComparator());
 
         return list;
@@ -198,9 +196,9 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Add the fields for the special features.
      *
-     * @param headline
-     * @param type
-     * @param groups
+     * @param headline The headline of the element group
+     * @param type Identifier for the group of fields
+     * @param groups Groups the element should be added to
      */
     private void addSpecialFeatureFields(String headline, String type, HashMap<String, GroupLayout.Group> groups) {
         HashMap<String, GroupLayout.Group> innerGroups = new HashMap<>(groups);
@@ -239,10 +237,10 @@ public class LastStepsPanel extends BasePanel {
         innerGroups.put("listOuterVerticalGroup", listOuterVerticalGroup);
 
         HashMap<String, Component> newElements = this.addRow(
-            type, this.getFields(type), innerGroups, layout
+            type, this.getFields(type), innerGroups
         );
         ((JComboBox) newElements.get("comboBox")).addItemListener(
-            this.getComboBoxItemListener(type, this.getFields(type), innerGroups, layout)
+            this.getComboBoxItemListener(type, this.getFields(type), innerGroups)
         );
 
         outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
@@ -252,25 +250,21 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Add a single row to the current column.
      *
-     * @param type
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param type Identifier for the field
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
      *
-     * @return
+     * @return Map with the label and component
      */
     protected HashMap<String, Component> addRow(
         String type,
         ArrayList<Component> fields,
-        HashMap<String, GroupLayout.Group> groups,
-        GroupLayout layout
+        HashMap<String, GroupLayout.Group> groups
     ) {
         WideComboBox elementComboBox = new WideComboBox();
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("");
-        this.getSpecialFeatureValues(type).forEach((value) -> {
-            model.addElement(value);
-        });
+        this.getSpecialFeatureValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
         groups.get("comboBoxHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
         groups.get("listOuterVerticalGroup")
@@ -287,16 +281,15 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Get a list of special features.
      *
-     * @param type
+     * @param type Identifier for the special features to get
      *
-     * @return
+     * @return List of special features
      */
     private ArrayList<SpecialFeature> getSpecialFeatureValues(String type) {
-        ArrayList<SpecialFeature> list = new ArrayList<>();
 
-        ("merit".equals(type) ? VampireEditor.getMerits() : VampireEditor.getFlaws()).values().forEach((value) -> {
-            list.add(value);
-        });
+        ArrayList<SpecialFeature> list = new ArrayList<>(
+            ("merit".equals(type) ? VampireEditor.getMerits() : VampireEditor.getFlaws()).values()
+        );
         list.sort(new StringComparator());
 
         return list;
@@ -305,15 +298,14 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Get the combo box item listener for adding new fields.
      *
-     * @param type
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param type Identifier for the field
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
      *
-     * @return
+     * @return Item listener for the combobox
      */
     private ItemListener getComboBoxItemListener(
-        String type, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+        String type, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups
     ) {
         return (ItemEvent e) -> {
             JComboBox element = (JComboBox) e.getSource();
@@ -323,19 +315,17 @@ public class LastStepsPanel extends BasePanel {
             }
 
             HashMap<String, Component> newElements = this.addRow(
-                type, fields, groups, layout
+                type, fields, groups
             );
             this.getFields(type).add(newElements.get("comboBox"));
 
             ((JComboBox) newElements.get("comboBox")).addItemListener(
-                this.getComboBoxItemListener(type, fields, groups, layout)
+                this.getComboBoxItemListener(type, fields, groups)
             );
 
             element.removeItemListener(element.getItemListeners()[0]);
             this.calculateFreeAdditionalPoints();
-            element.addItemListener((ItemEvent e1) -> {
-                this.calculateFreeAdditionalPoints();
-            });
+            element.addItemListener((ItemEvent e1) -> this.calculateFreeAdditionalPoints());
 
             // The below method calls are needed to show the newly added components
             this.revalidate();
@@ -356,10 +346,10 @@ public class LastStepsPanel extends BasePanel {
 
         nextButton.addActionListener((ActionEvent e) -> {
             VampireEditor.log(new ArrayList<>(
-                    Arrays.asList(
-                        "clicked finish"
-                    )
-                ));
+                Collections.singletonList(
+                    "clicked finish"
+                )
+            ));
             this.getParentComponent().finishCharacter();
         });
     }
@@ -379,7 +369,7 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("flaw").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> (!combobox.getSelectedItem().equals("")))
+            .filter((combobox) -> (!Objects.equals(combobox.getSelectedItem(), "")))
             .map((combobox) -> ((Flaw) combobox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
@@ -412,7 +402,7 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("merit").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> (!combobox.getSelectedItem().equals("")))
+            .filter((combobox) -> (!Objects.equals(combobox.getSelectedItem(), "")))
             .map((combobox) -> ((Merit) combobox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
@@ -432,16 +422,16 @@ public class LastStepsPanel extends BasePanel {
     /**
      * Get a list with all field values.
      *
-     * @param builder
+     * @param builder Character builder object
      */
     @Override
     public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
-        this.getFields("merit").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
-            builder.addMerit((Merit) combobox.getSelectedItem());
-        });
-        this.getFields("flaw").stream().map((field) -> (JComboBox) field).filter((combobox) -> !(combobox.getSelectedItem().equals(""))).forEachOrdered((combobox) -> {
-            builder.addFlaw((Flaw) combobox.getSelectedItem());
-        });
+        this.getFields("merit").stream().map((field) -> (JComboBox) field)
+            .filter((combobox) -> !(Objects.equals(combobox.getSelectedItem(), "")))
+            .forEachOrdered((combobox) -> builder.addMerit((Merit) combobox.getSelectedItem()));
+        this.getFields("flaw").stream().map((field) -> (JComboBox) field)
+            .filter((combobox) -> !(Objects.equals(combobox.getSelectedItem(), "")))
+            .forEachOrdered((combobox) -> builder.addFlaw((Flaw) combobox.getSelectedItem()));
         builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }

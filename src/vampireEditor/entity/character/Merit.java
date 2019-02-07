@@ -27,10 +27,20 @@ package vampireEditor.entity.character;
  * @author Marian Pollzien
  */
 public class Merit extends SpecialFeature {
+    /**
+     * Merit constructor.
+     *
+     * @param builder The builder object
+     */
     public Merit(Builder builder) {
         super(builder);
     }
 
+    /**
+     * Returns a string representation of the merit.
+     *
+     * @return A string representation of the merit
+     */
     @Override
     public String toString() {
         return super.toString();

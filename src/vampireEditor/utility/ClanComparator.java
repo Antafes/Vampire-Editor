@@ -21,8 +21,9 @@
  */
 package vampireEditor.utility;
 
-import java.util.Comparator;
 import vampireEditor.entity.character.Clan;
+
+import java.util.Comparator;
 
 /**
  *
@@ -33,10 +34,11 @@ public class ClanComparator implements Comparator {
     /**
      * Compare two clans by name.
      *
-     * @param o1
-     * @param o2
+     * @param o1 First object
+     * @param o2 Second object
      *
-     * @return
+     * @return A negative integer, zero, or a positive integer as the specified String is greater than, equal to, or
+     *         less than this String, ignoring case considerations.
      */
     @Override
     public int compare(Object o1, Object o2) {

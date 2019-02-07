@@ -21,12 +21,13 @@
  */
 package vampireEditor.entity.character;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import vampireEditor.Configuration;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Clan object.
@@ -35,7 +36,7 @@ import vampireEditor.entity.EntityException;
  */
 public class Clan extends BaseTranslatedEntity implements ClanInterface {
     private final HashMap<Configuration.Language, String> nicknames;
-    private final ArrayList<Advantage> disciplins;
+    private final ArrayList<Advantage> disciplines;
     private final ArrayList<Weakness> weaknesses;
 
     /**
@@ -43,12 +44,12 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
      */
     public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
         private HashMap<Configuration.Language, String> nicknames;
-        private ArrayList<Advantage> disciplins;
+        private ArrayList<Advantage> disciplines;
         private ArrayList<Weakness> weaknesses;
 
         public Builder() {
             this.nicknames = new HashMap<>();
-            this.disciplins = new ArrayList<>();
+            this.disciplines = new ArrayList<>();
             this.weaknesses = new ArrayList<>();
         }
 
@@ -56,7 +57,7 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -66,8 +67,8 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
                 throw new EntityException("Missing nicknames for entity: " + this);
             }
 
-            if (this.self().disciplins.isEmpty()) {
-                throw new EntityException("Missing disciplins for entity: " + this);
+            if (this.self().disciplines.isEmpty()) {
+                throw new EntityException("Missing disciplines for entity: " + this);
             }
 
             if (this.self().weaknesses.isEmpty()) {
@@ -78,8 +79,9 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         /**
          * Build a new Ability object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created clan entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Clan build() throws EntityException {
@@ -91,7 +93,7 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -121,10 +123,10 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -138,36 +140,79 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
             }
         }
 
+        /**
+         * Set a map of translated nicknames.
+         *
+         * @param nicknames
+         *
+         * @return
+         */
         public Builder setNicknames(HashMap<Configuration.Language, String> nicknames) {
             this.nicknames = nicknames;
 
             return this.self();
         }
 
+        /**
+         * Add a single translated nickname.
+         *
+         * @param language The language for the nickname
+         * @param nickname The nickname
+         *
+         * @return The builder object
+         */
         public Builder addNickname(Configuration.Language language, String nickname) {
             this.nicknames.put(language, nickname);
 
             return this.self();
         }
 
-        public Builder setDisciplins(ArrayList<Advantage> disciplins) {
-            this.disciplins = disciplins;
+        /**
+         * Set the list of disciplines.
+         *
+         * @param disciplines
+         *
+         * @return The builder object
+         */
+        public Builder setDisciplines(ArrayList<Advantage> disciplines) {
+            this.disciplines = disciplines;
 
             return this.self();
         }
 
-        public Builder addDisciplin(Advantage disciplin) {
-            this.disciplins.add(disciplin);
+        /**
+         * Add a single discipline.
+         *
+         * @param discipline The discipline to add
+         *
+         * @return The builder object
+         */
+        public Builder addDiscipline(Advantage discipline) {
+            this.disciplines.add(discipline);
 
             return this.self();
         }
 
+        /**
+         * Set the list of weaknesses.
+         *
+         * @param weaknesses
+         *
+         * @return
+         */
         public Builder setWeaknesses(ArrayList<Weakness> weaknesses) {
             this.weaknesses = weaknesses;
 
             return this.self();
         }
 
+        /**
+         * Add a single weakness.
+         *
+         * @param weakness The weakness to add
+         *
+         * @return The builder object
+         */
         public Builder addWeakness(Weakness weakness) {
             this.weaknesses.add(weakness);
 
@@ -178,13 +223,13 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     /**
      * Create a new clan object.
      *
-     * @param builder
+     * @param builder The builder object
      */
     public Clan(Builder builder) {
         super(builder);
 
         this.nicknames = builder.nicknames;
-        this.disciplins = builder.disciplins;
+        this.disciplines = builder.disciplines;
         this.weaknesses = builder.weaknesses;
     }
 
@@ -216,13 +261,13 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     }
 
     /**
-     * Get the list of disciplins every clan member has.
+     * Get the list of disciplines every clan member has.
      *
      * @return
      */
     @Override
-    public ArrayList<Advantage> getDisciplins() {
-        return this.disciplins;
+    public ArrayList<Advantage> getDisciplines() {
+        return this.disciplines;
     }
 
     /**
@@ -238,7 +283,7 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     /**
      * Returns a string representation of the clan.
      *
-     * @return
+     * @return A string representation of the clan
      */
     @Override
     public String toString() {

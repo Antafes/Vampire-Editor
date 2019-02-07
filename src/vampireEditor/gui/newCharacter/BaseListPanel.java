@@ -21,21 +21,16 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import vampireEditor.gui.*;
-import java.awt.Component;
-import java.awt.Dimension;
+import vampireEditor.gui.ComponentChangeListener;
+import vampireEditor.gui.NewCharacterDialog;
+import vampireEditor.gui.Weighting;
+
+import javax.swing.*;
+import javax.swing.text.DefaultFormatter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.text.DefaultFormatter;
 
 /**
  *
@@ -71,8 +66,8 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline
-     * @param elementList
+     * @param headline Headline for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
      */
     @Override
     protected void addFields(String headline, ArrayList<String> elementList) {
@@ -82,9 +77,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
+     * @param headline Headline for the group of fields
+     * @param addHeadline Whether to add the group headline
+     * @param elementList List of element names that should be added as JSpinner
      */
     @Override
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
@@ -94,9 +89,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param elementList
-     * @param spinnerMinimum
+     * @param headline Headline for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param spinnerMinimum Maximum value for the spinners
      */
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
         this.addFields(headline, true, elementList, spinnerMinimum);
@@ -105,10 +100,10 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
-     * @param spinnerMinimum
+     * @param headline Headline for the group of fields
+     * @param addHeadline Whether to add the group headline
+     * @param elementList List of element names that should be added as JSpinner
+     * @param spinnerMinimum Maximum value for the spinners
      */
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
         if (!this.getFields().containsKey(headline)) {
@@ -123,9 +118,26 @@ abstract public class BaseListPanel extends BasePanel {
         JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         JComboBox weightingElement = this.addWeighting(headline);
+
         GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(11, 11, 11);
+        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
+            .addGap(11, 11, 11);
+
+        if (addHeadline) {
+            listHorizontalGroup
+                .addComponent(
+                    groupLabel,
+                    GroupLayout.Alignment.LEADING,
+                    GroupLayout.DEFAULT_SIZE,
+                    GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE
+                );
+            listVerticalGroup
+                .addComponent(groupLabel)
+                .addGap(6, 6, 6);
+        }
+        listHorizontalGroup
             .addGroup(layout.createSequentialGroup()
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
                 .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
@@ -137,10 +149,7 @@ abstract public class BaseListPanel extends BasePanel {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
 
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel)
-            .addGap(6, 6, 6)
+        listVerticalGroup
             .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
             .addGap(11, 11, 11);
         this.getOuterParallelVerticalGroup()
@@ -176,15 +185,18 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     protected HashMap<String, Component> addRow(
-        String element, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
+        String element,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout
     ) {
         return this.addRow(element, 0, fields, groups, layout);
     }
@@ -192,13 +204,13 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param spinnerMinimum
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The name of the element to add
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return Map with the label and the element
      */
     protected HashMap<String, Component> addRow(
         String element,
@@ -237,9 +249,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * This will translate the element name.
      *
-     * @param element
+     * @param element The element name to translate
      *
-     * @return
+     * @return The translated name
      */
     protected String getElementLabelText(String element) {
         return this.getLanguage().translate(element);
@@ -248,9 +260,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add a weighting field.
      *
-     * @param headline
+     * @param headline Headline for which to use the weighting
      *
-     * @return
+     * @return The weighting combo box
      */
     protected JComboBox addWeighting(String headline) {
         JComboBox weightingElement = new JComboBox();
@@ -291,9 +303,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add the point fields for the column.
      *
-     * @param type
-     * @param groups
-     * @param layout
+     * @param type Identifier for the field
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
      */
     protected void addPointFields(
         String type, HashMap<String, GroupLayout.Group> groups, GroupLayout layout
@@ -335,9 +347,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Get the maximum available points for setting them in the max points field.
      *
-     * @param type
+     * @param type Identifier for the field
      *
-     * @return
+     * @return Maximum points value
      */
     protected int getMaxPointsForField(String type) {
         return this.getWeightingMax((Weighting) this.weightings.get(type).getSelectedItem());
@@ -348,14 +360,18 @@ abstract public class BaseListPanel extends BasePanel {
      * remaining value.
      * The first combo box will be treated as the one the change was made on.
      *
-     * @param first
-     * @param second
-     * @param third
+     * @param first The first weighting combo box
+     * @param second The second weighting combo box
+     * @param third The third weighting combo box
      */
     protected void switchWeightings(JComboBox first, JComboBox second, JComboBox third) {
         Weighting firstSelection = (Weighting) first.getSelectedItem();
         Weighting secondSelection = (Weighting) second.getSelectedItem();
         Weighting thirdSelection = (Weighting) third.getSelectedItem();
+
+        if (firstSelection == null) {
+            return;
+        }
 
         if (firstSelection.equals(secondSelection)) {
             second.setSelectedItem(Weighting.getRemaining(firstSelection, thirdSelection));
@@ -367,7 +383,7 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add a change listener to the given spinner.
      *
-     * @param field
+     * @param field The field to add a change listener to
      */
     protected void addChangeListener(JSpinner field) {
         ComponentChangeListener attributesListener = this.createChangeListener();
@@ -380,29 +396,29 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Get the points field for the given type.
      *
-     * @param type
+     * @param type Identifier for the field to get
      *
-     * @return
+     * @return Fetched text field
      */
     protected JTextField getPointsField(String type) {
-        return (JTextField) this.pointFields.get(type).get("points");
+        return this.pointFields.get(type).get("points");
     }
 
     /**
      * Get the maximum points field for the given type.
      *
-     * @param type
+     * @param type Identifier for the field to get
      *
-     * @return
+     * @return Fetched text field
      */
     protected JTextField getMaxPointsFields(String type) {
-        return (JTextField) this.pointFields.get(type).get("maxPoints");
+        return this.pointFields.get(type).get("maxPoints");
     }
 
     /**
      * Calculate the used talent points for the given type.
      *
-     * @param type
+     * @param type Identifier
      */
     protected void calculateUsedPoints(String type) {
         int sum = this.getPointsSum(type);
@@ -419,9 +435,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Calculate and return the sum of points spent for the given type.
      *
-     * @param type
+     * @param type Identifier
      *
-     * @return
+     * @return Sum of points
      */
     public int getPointsSum(String type) {
         int sum = 0;
@@ -436,9 +452,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Check if the spent points for talents is above its maximum.
      *
-     * @param type
+     * @param type Identifier
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkPoints(String type) {
         return this.getPointsSum(type) > this.getMaxPoints(type);
@@ -447,9 +463,9 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Get the maximum points available for talents.
      *
-     * @param type
+     * @param type Identifier
      *
-     * @return
+     * @return Maximum points value
      */
     public int getMaxPoints(String type) {
         return Integer.parseInt(this.getMaxPointsFields(type).getText());
@@ -458,8 +474,8 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Set the spinner field maximum value.
      *
-     * @param field
-     * @param maximum
+     * @param field The field to set the value for
+     * @param maximum The maximum value that could be set
      */
     protected void setFieldMaximum(JSpinner field, int maximum) {
         int value = Integer.parseInt(field.getValue().toString());
@@ -479,7 +495,7 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Get the point fields map.
      *
-     * @return
+     * @return Map with the label and textfield
      */
     protected HashMap<String, JTextField> getPointFields(String type) {
         return this.pointFields.get(type);
@@ -522,29 +538,29 @@ abstract public class BaseListPanel extends BasePanel {
     }
 
     /**
-     * Get the max points field with the propery weighting values set.
+     * Get the max points field with the properly weighting values set.
      *
-     * @param type
+     * @param type Identifier
      *
-     * @return
+     * @return Text field for the max points
      */
     protected JTextField getMaxPointsField(String type) {
         return new JTextField(Integer.toString(this.getMaxPointsForField(type)));
     }
 
     /**
-     * Create the attributes document listener.
+     * Create a change listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     abstract protected ComponentChangeListener createChangeListener();
 
     /**
      * Get the proper weighting value.
      *
-     * @param weighting
+     * @param weighting Enum to get the weighting value from
      *
-     * @return
+     * @return The maximum weighting
      */
     abstract protected int getWeightingMax(Weighting weighting);
 

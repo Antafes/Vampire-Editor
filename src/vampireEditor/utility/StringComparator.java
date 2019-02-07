@@ -30,12 +30,14 @@ import java.util.Comparator;
 public class StringComparator implements Comparator {
 
     /**
-     * Compare two clans by name.
+     * Compare two objects by name.
      *
-     * @param o1
-     * @param o2
+     * @param o1 First object
+     * @param o2 Second object
      *
-     * @return
+     * @return The value {@code 0} if the argument string is equal to this string; a value less than {@code 0} if this
+     *         string is lexicographically less than the string argument; and a value greater than {@code 0} if this
+     *         string is lexicographically greater than the string argument.
      */
     @Override
     public int compare(Object o1, Object o2) {

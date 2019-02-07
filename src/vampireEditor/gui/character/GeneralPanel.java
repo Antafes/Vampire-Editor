@@ -21,19 +21,15 @@
  */
 package vampireEditor.gui.character;
 
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import javax.swing.GroupLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 import vampireEditor.entity.Character;
 import vampireEditor.gui.BasePanel;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -79,9 +75,9 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     /**
      * Unused in this panel.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
      */
     @Override
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
@@ -89,11 +85,12 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     }
 
     /**
-     * Generate a JTextField with name and editable set.
+     * Generate a JTextField with name set.
+     * This field will be editable by default.
      *
-     * @param name
+     * @param name Name of the text field
      *
-     * @return
+     * @return The generated text field
      */
     private JTextField generateTextField(String name) {
         return this.generateTextField(name, true);
@@ -102,10 +99,10 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     /**
      * Generate a JTextField with name and editable set.
      *
-     * @param name
-     * @param editable
+     * @param name Name of the text field
+     * @param editable Whether it should be editable or not
      *
-     * @return
+     * @return The generated text field
      */
     private JTextField generateTextField(String name, boolean editable) {
         JTextField textField = new JTextField();

@@ -21,22 +21,14 @@
  */
 package vampireEditor;
 
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.InvalidPropertiesFormatException;
+import vampireEditor.language.LanguageInterface;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import vampireEditor.language.LanguageInterface;
 
 /**
  * Configuration data for the vampire character editor.
@@ -46,14 +38,14 @@ import vampireEditor.language.LanguageInterface;
 public class Configuration
 {
     private static Configuration instance;
-    public static String PATH = System.getProperty("user.home") + "/.vampire/";
+    static String PATH = System.getProperty("user.home") + "/.vampire/";
     private final Properties properties;
     private final File propertiesFile;
 
     /**
      * A list of available languages.
      */
-    public static enum Language {
+    public enum Language {
         ENGLISH ("vampireEditor.language.English", "English", "images/english.png"),
         GERMAN ("vampireEditor.language.German", "German", "images/german.png");
 
@@ -64,9 +56,11 @@ public class Configuration
         /**
          * Create a new language enum.
          *
-         * @param languageString
+         * @param languageString Identifier of the language
+         * @param name Name of the language
+         * @param path Path to the language icon
          */
-        private Language(String languageString, String name, String path) {
+        Language(String languageString, String name, String path) {
             this.languageString = languageString;
             this.name = name;
 
@@ -78,10 +72,9 @@ public class Configuration
         }
 
         /**
-         * Get the language string, which is needed to create the language
-         * object.
+         * Get the language string, which is needed to create the language object.
          *
-         * @return
+         * @return Language identifier
          */
         public String getLanguageString() {
             return languageString;
@@ -90,7 +83,7 @@ public class Configuration
         /**
          * Get the language name.
          *
-         * @return
+         * @return Language name
          */
         public String getName() {
             return name;
@@ -99,7 +92,7 @@ public class Configuration
         /**
          * Get the image icon for the language.
          *
-         * @return
+         * @return Language icon
          */
         public ImageIcon getIcon() {
             return icon;
@@ -118,7 +111,7 @@ public class Configuration
     /**
      * Create and return a singleton instance of the configuration object.
      *
-     * @return
+     * @return Instance of the Configuration object
      */
     public static Configuration getInstance() {
         if (Configuration.instance == null) {
@@ -141,11 +134,7 @@ public class Configuration
                     this.properties.loadFromXML(inputStream);
                 }
             }
-            catch (FileNotFoundException ex)
-            {}
-            catch (InvalidPropertiesFormatException ex)
-            {}
-            catch (IOException ex)
+            catch (IOException ignored)
             {}
         }
         else
@@ -174,18 +163,14 @@ public class Configuration
             outputStream = new BufferedOutputStream(new FileOutputStream(this.propertiesFile));
             this.properties.storeToXML(outputStream, null);
         }
-        catch (FileNotFoundException ex)
-        {}
-        catch (InvalidPropertiesFormatException ex)
-        {}
-        catch (IOException ex)
+        catch (IOException ignored)
         {}
     }
 
     /**
-     * Get the open dir path.
+     * Get the "open" dir path.
      *
-     * @return
+     * @return File object for the "open" dir path
      */
     public File getOpenDirPath()
     {
@@ -195,8 +180,9 @@ public class Configuration
     /**
      * Get the save dir path including the new file.
      *
-     * @param filename
-     * @return
+     * @param filename The file to save
+     *
+     * @return File object for the file that should be saved
      */
     public File getSaveDirPath(String filename)
     {
@@ -240,7 +226,7 @@ public class Configuration
     /**
      * Get the selected language.
      *
-     * @return
+     * @return Language enum of the selected language
      */
     public Language getLanguage()
     {
@@ -250,7 +236,7 @@ public class Configuration
     /**
      * Get a language object from the currently selected language.
      *
-     * @return
+     * @return Language object fetched from the enum of the currently selected language
      */
     public LanguageInterface getLanguageObject()
     {
@@ -268,7 +254,7 @@ public class Configuration
     /**
      * Set the open dir path.
      *
-     * @param path
+     * @param path The path used for opening files
      */
     public void setOpenDirPath(String path)
     {
@@ -281,7 +267,7 @@ public class Configuration
     /**
      * Set the save dir path.
      *
-     * @param path
+     * @param path The path used for saving files
      */
     public void setSaveDirPath(String path)
     {
@@ -294,7 +280,7 @@ public class Configuration
     /**
      * Set the windows position on the screen.
      *
-     * @param point
+     * @param point Position of the window
      */
     public void setWindowLocation(Point point)
     {
@@ -305,7 +291,7 @@ public class Configuration
     /**
      * Set the selected language.
      *
-     * @param language
+     * @param language The language that has been selected
      */
     public void setLanguage(Language language) {
         this.properties.setProperty("language", language.toString());

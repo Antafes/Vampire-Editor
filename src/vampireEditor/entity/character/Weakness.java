@@ -34,10 +34,11 @@ public class Weakness extends BaseTranslatedEntity implements WeaknessInterface 
      */
     public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
         /**
-         * Build a new Ability object.
+         * Build a new weakness object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created weakness entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Weakness build() throws EntityException {
@@ -49,7 +50,7 @@ public class Weakness extends BaseTranslatedEntity implements WeaknessInterface 
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -60,7 +61,7 @@ public class Weakness extends BaseTranslatedEntity implements WeaknessInterface 
     /**
      * Create a new weakness object.
      *
-     * @param builder
+     * @param builder The builder object
      */
     public Weakness(Builder builder) {
         super(builder);

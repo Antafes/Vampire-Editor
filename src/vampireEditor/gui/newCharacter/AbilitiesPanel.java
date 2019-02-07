@@ -21,12 +21,6 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Ability;
@@ -36,12 +30,24 @@ import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
 import vampireEditor.utility.StringComparator;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Marian Pollzien
  */
 public class AbilitiesPanel extends BaseListPanel {
-
+    /**
+     * Constructor
+     *
+     * @param parent Parent element
+     */
     public AbilitiesPanel(NewCharacterDialog parent) {
         super(parent);
     }
@@ -61,9 +67,9 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Return the translated name of the element.
      *
-     * @param element
+     * @param element The element to get the name from
      *
-     * @return
+     * @return The translated name
      */
     @Override
     protected String getElementLabelText(String element) {
@@ -94,17 +100,15 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Add ability fields with the given fieldName and for the given ability type.
      *
-     * @param fieldName
-     * @param type
+     * @param fieldName Name of the field
+     * @param type Ability type to use
      */
     private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
         ArrayList<String> list = new ArrayList<>();
 
         this.getValues(type.name()).stream()
             .filter((ability) -> (ability.getType().equals(type)))
-            .forEachOrdered((ability) -> {
-                list.add(ability.getKey());
-            });
+            .forEachOrdered((ability) -> list.add(ability.getKey()));
         list.sort(new StringComparator());
 
         this.addFields(fieldName, list);
@@ -113,9 +117,9 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Get the values for the element combo box.
      *
-     * @param type
+     * @param type String representation of the ability type
      *
-     * @return
+     * @return List of abilities
      */
     protected ArrayList<Ability> getValues(String type) {
         ArrayList<Ability> list = new ArrayList<>();
@@ -136,7 +140,7 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -180,7 +184,7 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Check if the spent points for talents is above its maximum.
      *
-     * @return
+     * @return True if above maximum
      */
     public boolean checkTalentPoints() {
         return this.checkPoints("talents");
@@ -214,7 +218,7 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Check if the spent points for skills is above its maximum.
      *
-     * @return
+     * @return True if above maximum
      */
     public boolean checkSkillPoints() {
         return this.checkPoints("skills");
@@ -248,7 +252,7 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Check if the spent points for knowledges is above its maximum.
      *
-     * @return
+     * @return True if above maximum
      */
     public boolean checkKnowledgePoints() {
         return this.checkPoints("knowledges");
@@ -270,15 +274,12 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("talents").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("skills").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("knowledges").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields("talents").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("skills").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("knowledges").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
 
         this.calculateUsedKnowledgePoints();
         this.calculateUsedSkillPoints();
@@ -311,9 +312,9 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Get the max points field with the propery weighting values set.
      *
-     * @param weighting
+     * @param weighting Weighting enum
      *
-     * @return
+     * @return Maximum value for abilities
      */
     @Override
     protected int getWeightingMax(Weighting weighting) {
@@ -341,15 +342,15 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param builder
+     * @param builder Character builder
      */
     @Override
     public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
         HashMap<String, Ability> abilities = VampireEditor.getAbilities();
         Ability.Builder abilityBuilder = new Ability.Builder();
         this.getFields().forEach((key, fields) -> {
-            for (int i = 0; i < fields.size(); i++) {
-                JSpinner spinner = (JSpinner) fields.get(i);
+            for (Component field : fields) {
+                JSpinner spinner = (JSpinner) field;
                 Ability ability = abilities.get(spinner.getName());
 
                 try {

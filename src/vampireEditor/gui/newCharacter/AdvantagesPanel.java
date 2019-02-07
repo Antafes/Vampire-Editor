@@ -21,12 +21,6 @@
  */
 package vampireEditor.gui.newCharacter;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Advantage;
@@ -36,6 +30,12 @@ import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
 import vampireEditor.gui.Weighting;
 import vampireEditor.utility.StringComparator;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -46,7 +46,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Create a new advantages panel.
      *
-     * @param parent
+     * @param parent Parent element
      */
     public AdvantagesPanel(NewCharacterDialog parent) {
         super(parent);
@@ -76,7 +76,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * Add all disciplin fields sorted by the translated name.
      */
     private void addDisciplinFields() {
-        this.addFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        this.addFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLINE.name());
     }
 
     /**
@@ -86,9 +86,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
         ArrayList<String> list = new ArrayList<>();
 
-        advantages.forEach((advantage) -> {
-            list.add(advantage.getKey());
-        });
+        advantages.forEach((advantage) -> list.add(advantage.getKey()));
 
         this.addFields(
             "virtues", AdvantageInterface.AdvantageType.VIRTUE.name(), list, 3
@@ -98,7 +96,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -109,7 +107,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                     calculateUsedBackgroundPoints();
                 }
 
-                if (getFields(AdvantageInterface.AdvantageType.DISCIPLIN.name()).contains(this.getComponent())) {
+                if (getFields(AdvantageInterface.AdvantageType.DISCIPLINE.name()).contains(this.getComponent())) {
                     calculateUsedDisciplinPoints();
                 }
 
@@ -142,7 +140,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Check if the spent points for backgrounds is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkBackgroundPoints() {
         return this.checkPoints(AdvantageInterface.AdvantageType.BACKGROUND.name());
@@ -161,7 +159,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * Calculate the used disciplin points.
      */
     private void calculateUsedDisciplinPoints() {
-        this.calculateUsedPoints(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        this.calculateUsedPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
     }
 
     /**
@@ -170,16 +168,16 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * @return
      */
     public int getDisciplinPointsSum() {
-        return this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        return this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLINE.name());
     }
 
     /**
      * Check if the spent points for disciplins is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkDisciplinPoints() {
-        return this.checkPoints(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        return this.checkPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
     }
 
     /**
@@ -188,7 +186,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * @return
      */
     public int getDisciplinMaxPoints() {
-        return this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        return this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
     }
 
     /**
@@ -210,7 +208,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Check if the spent points for virtues is above its maximum.
      *
-     * @return
+     * @return True if spent points are above maximum
      */
     public boolean checkVirtuePoints() {
         return this.checkPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
@@ -233,15 +231,12 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.setSpinnerMaximumValue(maximum);
-        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.name()).stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields(AdvantageInterface.AdvantageType.DISCIPLIN.name()).stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.name()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.name()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
 
         this.calculateUsedVirtuePoints();
         this.calculateUsedDisciplinPoints();
@@ -275,9 +270,9 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * Get the max points field with the propery weighting values set.
      * This isn't used for this kind of panel.
      *
-     * @param weighting
+     * @param weighting Enum to get the weighting value from
      *
-     * @return
+     * @return Returns always 0 as it isn't used here
      */
     @Override
     protected int getWeightingMax(Weighting weighting) {
@@ -287,9 +282,9 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Get the values for the element combo box.
      *
-     * @param type
+     * @param type Identifier for the group of comboboxes
      *
-     * @return
+     * @return List of values
      */
     @Override
     protected ArrayList<Advantage> getValues(String type) {
@@ -311,10 +306,10 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Get an entity for the given type.
      *
-     * @param type
-     * @param key
+     * @param type Identifier for the group of comboboxes
+     * @param key Key for the object to get
      *
-     * @return Will return an advantage object if found, otherwise null.
+     * @return Returns an advantage object if found, otherwise null.
      */
     @Override
     protected Advantage getEntity(String type, String key) {
@@ -333,16 +328,14 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * @param clan
      */
     public void setDisciplins(Clan clan) {
-        ArrayList<JComboBox> comboBoxes = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        ArrayList<JComboBox> comboBoxes = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
 
         if (comboBoxes.size() > 1) {
-            for (int i = 0; i < comboBoxes.size() - 1; i++) {
-                comboBoxes.remove(0);
-            }
+            comboBoxes.subList(0, comboBoxes.size() - 1).clear();
         }
 
-        clan.getDisciplins().forEach((disciplin) -> {
-            ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLIN.name());
+        clan.getDisciplines().forEach((disciplin) -> {
+            ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
             JComboBox comboBox = comboBoxList.get(comboBoxList.size() - 1);
             comboBox.setSelectedItem(disciplin);
         });
@@ -351,15 +344,15 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Get the maximum available points for setting them in the max points field.
      *
-     * @param type
+     * @param type Identifier for the field
      *
-     * @return
+     * @return Maximum points value
      */
     @Override
     protected int getMaxPointsForField(String type) {
         if (type.equals(AdvantageInterface.AdvantageType.BACKGROUND.name())) {
             return 5;
-        } else if (type.equals(AdvantageInterface.AdvantageType.DISCIPLIN.name())) {
+        } else if (type.equals(AdvantageInterface.AdvantageType.DISCIPLINE.name())) {
             return 4;
         } else if (type.equals(AdvantageInterface.AdvantageType.VIRTUE.name())) {
             return 7;
@@ -379,7 +372,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
             return true;
         }
 
-        if (this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLIN.name()) < this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLIN.name())) {
+        if (this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLINE.name()) < this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name())) {
             return true;
         }
 
@@ -389,7 +382,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     /**
      * Get a list with all field values.
      *
-     * @param builder
+     * @param builder Character builder object
      */
     @Override
     public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
@@ -398,7 +391,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                 JSpinner spinner = (JSpinner) fields.get(i);
                 JComboBox combobox = this.getComboBoxes(key).get(i);
 
-                if (combobox.getSelectedItem().equals("")) {
+                if (Objects.equals(combobox.getSelectedItem(), "")) {
                     continue;
                 }
 

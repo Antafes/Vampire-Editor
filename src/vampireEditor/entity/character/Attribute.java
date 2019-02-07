@@ -21,10 +21,11 @@
  */
 package vampireEditor.entity.character;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Attribute object.
@@ -46,7 +47,7 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -60,8 +61,9 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
         /**
          * Build a new Ability object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created attribute entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Attribute build() throws EntityException {
@@ -73,7 +75,7 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -103,10 +105,10 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -136,7 +138,7 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
     /**
      * Create a new attribute with value.
      *
-     * @param builder
+     * @param builder The builder object
      */
     public Attribute(Builder builder) {
         super(builder);
