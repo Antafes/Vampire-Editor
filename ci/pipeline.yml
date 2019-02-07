@@ -10,6 +10,8 @@ resources:
     owner: Antafes
     repository: Vampire-Editor
     pre_release: true
+    release: false
+    access_token: ((acccess_token))
 - name: vampire-editor-release
   type: github-release
   source:
@@ -17,12 +19,14 @@ resources:
     repository: Vampire-Editor
     release: true
     drafts: true
+    access_token: ((acccess_token))
 - name: myXML-lib
   type: github-release
   source:
     owner: Antafes
     repository: MyXML
     release: true
+    access_token: ((acccess_token))
 
 jobs:
 - name: vampire-editor-dev

@@ -24,3 +24,7 @@ hs_err_pid*
 /build
 /dist
 /.idea
+/out
+
+# CI variables file
+ci/variables.yml
