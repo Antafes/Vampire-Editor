@@ -14,7 +14,5 @@ zip -v VampireEditor *
 cd ../
 cp dist/VampireEditor.zip ../dist
 
-DATE=`date +%d%m%Y`
 echo "v$VERSION" >> ../dist/name
-TAG=`cat ../vampire-editor-pre-release/tag`
 echo "v$VERSION" >> ../dist/tag

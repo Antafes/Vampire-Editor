@@ -1,9 +1,28 @@
+resource-types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: teliaoss/github-pr-resource
+
 resources:
 - name: vampire-editor-repo
   type: git
   source:
     uri: https://github.com/Antafes/Vampire-Editor
-    branch: concourse-test
+    branch: master
+    private_key: ((private_key))
+- name: vampire-editor-repo-dev
+  type: git
+  source:
+    uri: https://github.com/Antafes/Vampire-Editor
+    branch: dev
+    private_key: ((private_key))
+- name: vampire-editor-repo-pr
+  type: pull-request
+  check_every: 10m
+  source:
+    repository: Antafes/Vampire-Editor
+    access_token: ((acccess_token))
 - name: vampire-editor-pre-release
   type: github-release
   source:
@@ -29,10 +48,45 @@ resources:
     access_token: ((acccess_token))
 
 jobs:
+- name: vampire-editor-pr
+  plan:
+    - get: vampire-editor-repo-pr
+      trigger: true
+      version: every
+    - put: vampire-editor-repo-pr
+      params:
+        path: vampire-editor-repo-pr
+        status: pending
+    - task: unit-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: frekele/ant
+            tag: 1.10-jdk8
+        inputs:
+          - name: vampire-editor-repo-pr
+          - name: myXML-lib
+        outputs:
+          - name: dist
+        run:
+          path: ci/test.sh
+          dir: vampire-editor-repo-pr
+      on_failure:
+        put: vampire-editor-repo-pr
+        params:
+          path: vampire-editor-repo-pr
+          status: failure
+    - put: vampire-editor-repo-pr
+      params:
+        path: vampire-editor-repo-pr
+        status: success
+
 - name: vampire-editor-dev
   plan:
   - get: vampire-editor-pre-release
-  - get: vampire-editor-repo
+  - get: vampire-editor-repo-dev
     trigger: true
   - get: myXML-lib
   - task: build
@@ -45,7 +99,7 @@ jobs:
           tag: 1.10-jdk8
       inputs:
       - name: vampire-editor-pre-release
-      - name: vampire-editor-repo
+      - name: vampire-editor-repo-dev
       - name: myXML-lib
       outputs:
       - name: dist
@@ -58,12 +112,15 @@ jobs:
      tag: dist/tag
      globs:
       - dist/VampireEditor.zip
+  - put: vampire-editor-repo-dev
+    params:
+      repository: vampire-editor-repo
+
 - name: vampire-editor
   plan:
   - get: vampire-editor-repo
-  - get: vampire-editor-pre-release
     trigger: true
-    passed: [vampire-editor-dev]
+  - get: vampire-editor-pre-release
   - get: myXML-lib
   - task: check-version
     config:
