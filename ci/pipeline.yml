@@ -113,9 +113,6 @@ jobs:
      tag: dist/tag
      globs:
       - dist/VampireEditor.zip
-  - put: vampire-editor-repo-dev
-    params:
-      repository: vampire-editor-repo
 
 - name: vampire-editor
   plan:
