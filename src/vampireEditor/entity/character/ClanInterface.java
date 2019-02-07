@@ -51,11 +51,11 @@ public interface ClanInterface {
     public String getNickname();
 
     /**
-     * Get a list of disciplins that every member of the clan has.
+     * Get a list of disciplines that every member of the clan has.
      *
      * @return
      */
-    public ArrayList<Advantage> getDisciplins();
+    public ArrayList<Advantage> getDisciplines();
 
     /**
      * Get a list of weaknesses that every member of the clan has.

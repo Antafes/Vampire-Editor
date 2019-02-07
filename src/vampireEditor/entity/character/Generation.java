@@ -36,7 +36,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
     private final int bloodPerRound;
 
     /**
-     * Builder for character objects.
+     * Builder for generation objects.
      */
     public static class Builder extends BaseEntity.Builder<Builder> {
         private int generation;
@@ -47,8 +47,9 @@ public class Generation extends BaseEntity implements GenerationInterface {
         /**
          * Build a new character object.
          *
-         * @return
-         * @throws vampireEditor.entity.EntityException
+         * @return The generation created entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Generation build() throws EntityException {
@@ -60,7 +61,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
         /**
          * Check if all necessary values are set.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -84,37 +85,70 @@ public class Generation extends BaseEntity implements GenerationInterface {
         /**
          * Get the current instance.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
             return this;
         }
 
+        /**
+         * Set the generation.
+         *
+         * @param generation
+         *
+         * @return The builder object
+         */
         public Builder setGeneration(int generation) {
             this.generation = generation;
 
             return this.self();
         }
 
+        /**
+         * Set the maximum attribute value.
+         *
+         * @param maximumAttributes
+         *
+         * @return The builder object
+         */
         public Builder setMaximumAttributes(int maximumAttributes) {
             this.maximumAttributes = maximumAttributes;
 
             return this.self();
         }
 
+        /**
+         * Set the maximum blood stock value.
+         *
+         * @param maximumBloodStock
+         *
+         * @return The builder object
+         */
         public Builder setMaximumBloodStock(int maximumBloodStock) {
             this.maximumBloodStock = maximumBloodStock;
 
             return this.self();
         }
 
+        /**
+         * Set the blood per round value.
+         *
+         * @param bloodPerRound
+         *
+         * @return The builder object
+         */
         public Builder setBloodPerRound(int bloodPerRound) {
             this.bloodPerRound = bloodPerRound;
 
             return this.self();
         }
 
+        /**
+         * Returns a string representation of the generation.
+         *
+         * @return A string representation of the generation
+         */
         @Override
         public String toString() {
             return "Generation " + generation;
@@ -124,7 +158,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
     /**
      * Create a new generation object.
      *
-     * @param builder
+     * @param builder The builder object
      */
     protected Generation(Builder builder) {
         super(builder);
@@ -178,7 +212,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
     /**
      * Returns a string representation of the object.
      *
-     * @return
+     * @return A string representation of the object
      */
     @Override
     public String toString() {

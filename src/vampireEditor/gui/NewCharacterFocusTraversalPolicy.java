@@ -21,11 +21,9 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Vector;
-import javax.swing.JSpinner;
 
 /**
  *
@@ -41,7 +39,7 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Create a new focus traversal policy.
      *
-     * @param order
+     * @param order Vector with component order
      */
     public NewCharacterFocusTraversalPolicy(Vector<Component> order) {
         this.order = new Vector<>(order.size());
@@ -51,10 +49,10 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Get the next component after the given one.
      *
-     * @param focusCycleRoot
-     * @param aComponent
+     * @param focusCycleRoot Root element
+     * @param aComponent The component to get the next element from
      *
-     * @return
+     * @return The next component
      */
     @Override
     public Component getComponentAfter(
@@ -91,10 +89,10 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Get the previous component of the given one.
      *
-     * @param focusCycleRoot
-     * @param aComponent
+     * @param focusCycleRoot Root element
+     * @param aComponent The component to get the previous element from
      *
-     * @return
+     * @return The previous component
      */
     @Override
     public Component getComponentBefore(
@@ -136,9 +134,9 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Get the component that will gain focus by default.
      *
-     * @param focusCycleRoot
+     * @param focusCycleRoot Root element
      *
-     * @return
+     * @return First element in the order list
      */
     @Override
     public Component getDefaultComponent(Container focusCycleRoot) {
@@ -148,9 +146,9 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Get the last component in the list.
      *
-     * @param focusCycleRoot
+     * @param focusCycleRoot Root element
      *
-     * @return
+     * @return Last element in the order list
      */
     @Override
     public Component getLastComponent(Container focusCycleRoot) {
@@ -166,9 +164,9 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     /**
      * Get the first component in the list.
      *
-     * @param focusCycleRoot
+     * @param focusCycleRoot Root element
      *
-     * @return
+     * @return First element in the order list
      */
     @Override
     public Component getFirstComponent(Container focusCycleRoot) {

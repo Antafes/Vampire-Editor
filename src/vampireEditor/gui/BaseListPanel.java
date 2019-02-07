@@ -21,13 +21,11 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.text.DefaultFormatter;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import javax.swing.JComponent;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.text.DefaultFormatter;
 
 /**
  *
@@ -46,8 +44,8 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline
-     * @param elementList
+     * @param headline Headline of the field block
+     * @param elementList List of elements to add
      */
     @Override
     protected void addFields(String headline, ArrayList<String> elementList) {
@@ -58,9 +56,9 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
+     * @param headline Headline of the field block
+     * @param addHeadline Whether to add a headline or not
+     * @param elementList List of elements to add
      */
     @Override
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
@@ -71,9 +69,9 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline
-     * @param spinnerMinimum
-     * @param elementList
+     * @param headline Headline of the field block
+     * @param spinnerMinimum Minimum value for the created spinner
+     * @param elementList List of elements to add
      */
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
         this.addFields(headline, true, elementList, spinnerMinimum);
@@ -82,10 +80,10 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add labels and spinners by the given list and under the given headline.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
-     * @param spinnerMinimum
+     * @param headline Headline of the field block
+     * @param addHeadline Whether to add a headline or not
+     * @param elementList List of elements to add
+     * @param spinnerMinimum Minimum value for the created spinner
      */
     protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
         LinkedHashMap<String, JComponent> elements = new LinkedHashMap<>();
@@ -107,7 +105,7 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Add a change listener to the given spinner.
      *
-     * @param field
+     * @param field The field to add the listener to
      */
     protected void addChangeListener(JSpinner field) {
         ComponentChangeListener attributesListener = this.createChangeListener();
@@ -120,8 +118,8 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Set the spinner field maximum value.
      *
-     * @param field
-     * @param maximum
+     * @param field The field to set the maximum for
+     * @param maximum The maximum to set
      */
     protected void setFieldMaximum(JSpinner field, int maximum) {
         int value = Integer.parseInt(field.getValue().toString());
@@ -141,7 +139,7 @@ abstract public class BaseListPanel extends BasePanel {
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return The change listener object
      */
     abstract protected ComponentChangeListener createChangeListener();
 

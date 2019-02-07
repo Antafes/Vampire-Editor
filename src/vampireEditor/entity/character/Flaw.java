@@ -27,10 +27,20 @@ package vampireEditor.entity.character;
  * @author Marian Pollzien
  */
 public class Flaw extends SpecialFeature {
+    /**
+     * Flaw constructor
+     *
+     * @param builder The builder object
+     */
     public Flaw(Builder builder) {
         super(builder);
     }
 
+    /**
+     * Returns a string representation of the flaw.
+     *
+     * @return A string representation of the flaw
+     */
     @Override
     public String toString() {
         return super.toString();

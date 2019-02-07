@@ -21,17 +21,14 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Component;
+import vampireEditor.Configuration;
+import vampireEditor.language.LanguageInterface;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
-import javax.swing.GroupLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.LayoutStyle;
-import vampireEditor.Configuration;
-import vampireEditor.language.LanguageInterface;
 
 /**
  * BasePanel object.
@@ -73,9 +70,7 @@ abstract public class BasePanel extends JPanel {
     /**
      * This method is called to initialize the form.
      */
-    @SuppressWarnings("unchecked")
     protected void initComponents() {
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         this.outerParallelHorizontalGroup = layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
@@ -118,9 +113,9 @@ abstract public class BasePanel extends JPanel {
     /**
      * Get the fields for the given type.
      *
-     * @param type
+     * @param type The type to get the fields for
      *
-     * @return
+     * @return A list of components
      */
     public ArrayList<Component> getFields(String type) {
         return this.fields.get(type);
@@ -265,9 +260,9 @@ abstract public class BasePanel extends JPanel {
      * Create a label element for a field.
      * Depending on whether translateFieldLabels is set to true or not, the label text will be translated.
      *
-     * @param text
+     * @param text The text for the label
      *
-     * @return
+     * @return The label object
      */
     protected JLabel createLabel(String text) {
         JLabel label = new JLabel();
@@ -285,9 +280,9 @@ abstract public class BasePanel extends JPanel {
      * Create a label element for a group of fields.
      * Depending on whether translateFieldLabels is set to true or not, the label text will be translated.
      *
-     * @param text
+     * @param text The text for the group label
      *
-     * @return
+     * @return The label object
      */
     protected JLabel createGroupLabel(String text) {
         JLabel label = new JLabel();
@@ -304,8 +299,8 @@ abstract public class BasePanel extends JPanel {
     /**
      * Add fields by the given list and under the given headline.
      *
-     * @param headline
-     * @param elementList
+     * @param headline The headline of the element group
+     * @param elementList List of elements
      */
     protected void addFields(String headline, ArrayList<String> elementList) {
         this.addFields(headline, true, elementList);
@@ -315,18 +310,18 @@ abstract public class BasePanel extends JPanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
      */
     abstract protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList);
 
     /**
      * Add the given fields and with the given headline.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of components
      */
     protected void addFields(String headline, boolean addHeadline, HashMap<String, JComponent> elementList) {
         this.addFields(headline, addHeadline, elementList, true);
@@ -335,10 +330,10 @@ abstract public class BasePanel extends JPanel {
     /**
      * Add the given fields and with the given headline.
      *
-     * @param headline
-     * @param addHeadline
-     * @param elementList
-     * @param addFieldLabels
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
+     * @param addFieldLabels Whether to add field labels
      */
     protected void addFields(
         String headline, boolean addHeadline, HashMap<String, JComponent> elementList, boolean addFieldLabels
@@ -414,13 +409,13 @@ abstract public class BasePanel extends JPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param label
-     * @param fields
-     * @param groups
-     * @param layout
+     * @param element The element to add
+     * @param label Label of the element
+     * @param fields List of every field added
+     * @param groups List of groups in the layout
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return List of elements that are added
      */
     protected HashMap<String, Component> addRow(
         JComponent element,
@@ -437,14 +432,14 @@ abstract public class BasePanel extends JPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param label
-     * @param fields
-     * @param addFieldLabels
-     * @param groups
-     * @param layout
+     * @param element The element to add
+     * @param label Label of the element
+     * @param fields List of every field added
+     * @param addFieldLabels Whether to add field labels
+     * @param groups List of groups in the layout
+     * @param layout GroupLayout object
      *
-     * @return
+     * @return List of elements that are added
      */
     protected HashMap<String, Component> addRow(
         JComponent element,
@@ -462,16 +457,16 @@ abstract public class BasePanel extends JPanel {
     /**
      * Add a single row to the current column.
      *
-     * @param element
-     * @param label
-     * @param fields
-     * @param addFieldLabels
-     * @param groups
-     * @param layout
-     * @param fieldWidth
-     * @param fieldHeight
+     * @param element The element to add
+     * @param label Label of the element
+     * @param fields List of every field added
+     * @param addFieldLabels Whether to add field labels
+     * @param groups List of groups in the layout
+     * @param layout GroupLayout object
+     * @param fieldWidth Width of the field
+     * @param fieldHeight Height of the field
      *
-     * @return
+     * @return List of elements that are added
      */
     protected HashMap<String, Component> addRow(
         JComponent element,

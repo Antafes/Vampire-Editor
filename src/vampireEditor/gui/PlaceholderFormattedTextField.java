@@ -21,10 +21,8 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import javax.swing.JFormattedTextField;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Extends the JFormattedTextField with the ability to add a placeholder.
@@ -56,7 +54,7 @@ public class PlaceholderFormattedTextField extends JFormattedTextField {
      * Calls the parent paintComponent method and afterwards adds the
      * placeholder text if no text is added to the field.
      *
-     * @param g
+     * @param g Graphics object from the layout
      */
     @Override
     protected void paintComponent(Graphics g) {

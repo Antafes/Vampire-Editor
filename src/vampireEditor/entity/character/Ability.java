@@ -21,10 +21,11 @@
  */
 package vampireEditor.entity.character;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import vampireEditor.entity.BaseTranslatedEntity;
 import vampireEditor.entity.EntityException;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Ability object.
@@ -46,7 +47,7 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
          * Check if all necessary values are set.
          * This has to be called in the build method.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -60,8 +61,9 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
         /**
          * Build a new Ability object.
          *
-         * @return
-         * @throws EntityException
+         * @return The created ability entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Ability build() throws EntityException {
@@ -73,7 +75,7 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
         /**
          * Get an instance of itself.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -103,10 +105,10 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
         /**
          * Get a setter method from the given getter.
          *
-         * @param getter
+         * @param getter The getter to build the setter out of
          *
-         * @return
-         * @throws NoSuchMethodException
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
          */
         @Override
         protected Method getSetter(Method getter) throws NoSuchMethodException {
@@ -120,12 +122,26 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
             }
         }
 
+        /**
+         * Set the ability type.
+         *
+         * @param type
+         *
+         * @return The builder object
+         */
         public Builder setType(AbilityType type) {
             this.type = type;
 
             return this.self();
         }
 
+        /**
+         * Set the abilities value.
+         *
+         * @param value
+         *
+         * @return The builder object
+         */
         public Builder setValue(int value) {
             this.value = value;
 
@@ -136,7 +152,7 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
     /**
      * Create a new ability with type and value.
      *
-     * @param builder
+     * @param builder The builder object
      */
     protected Ability(Builder builder) {
         super(builder);
@@ -168,7 +184,7 @@ public class Ability extends BaseTranslatedEntity implements AbilityInterface {
     /**
      * Returns a string representation of the object.
      *
-     * @return
+     * @return String representation of the object
      */
     @Override
     public String toString() {

@@ -58,7 +58,7 @@ public interface GenerationInterface {
     /**
      * Returns a string representation of the object.
      *
-     * @return
+     * @return A string representation of the object
      */
     @Override
     public String toString();

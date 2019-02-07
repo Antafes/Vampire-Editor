@@ -21,15 +21,16 @@
  */
 package vampireEditor.gui.character;
 
-import java.util.ArrayList;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.character.AdvantageInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.ArrayList;
 
 /**
  *
@@ -64,7 +65,7 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
      * Add all disciplin fields sorted by the translated name.
      */
     private void addDisciplinFields() {
-        this.addAdvantageFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLIN);
+        this.addAdvantageFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLINE);
     }
 
     /**
@@ -77,17 +78,15 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Add advantage fields with the given fieldName and for the given advantage type.
      *
-     * @param fieldName
-     * @param type
+     * @param fieldName Name of the field
+     * @param type Advantage type to use
      */
     private void addAdvantageFields(String fieldName, AdvantageInterface.AdvantageType type) {
         ArrayList<String> list = new ArrayList<>();
 
         this.character.getAdvantages().stream()
             .filter((advantage) -> (advantage.getType().equals(type)))
-            .forEachOrdered((advantage) -> {
-                list.add(advantage.getName());
-            });
+            .forEachOrdered((advantage) -> list.add(advantage.getName()));
         list.sort(new StringComparator());
 
         this.addFields(fieldName, list);
@@ -96,7 +95,7 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -114,15 +113,12 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("background").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("disciplins").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("virtues").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields("background").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("disciplins").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("virtues").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
     /**
@@ -144,19 +140,17 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
             return;
         }
 
-        this.getFields().forEach((type, advantagesList) -> {
-            advantagesList.stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
+        this.getFields().forEach((type, advantagesList) -> advantagesList.stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> {
                 this.character.getAdvantages().stream()
                     .filter((advantage) -> (advantage.getName().equals(spinner.getName())))
-                    .forEachOrdered((advantage) -> {
-                        spinner.setValue(advantage.getValue());
-                    });
-            });
-        });
+                    .forEachOrdered((advantage) -> spinner.setValue(advantage.getValue()));
+            }
+        ));
     }
 
     /**
-     * Update the texts of every component in the component.
+     * Reload the language object and update the texts of every component in the component.
      */
     @Override
     public void updateTexts() {

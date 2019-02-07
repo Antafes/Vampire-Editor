@@ -1,37 +1,31 @@
-/**
- * This file is part of Vampire Editor.
- *
- * Vampire Editor is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Vampire Editor is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Vampire Editor. If not, see <http://www.gnu.org/licenses/>.
- *
- * @package Vampire Editor
+/*
+  This file is part of Vampire Editor.
+
+  Vampire Editor is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  Vampire Editor is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with Vampire Editor. If not, see <http://www.gnu.org/licenses/>.
+
+  @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 package vampireEditor.entity;
 
-import vampireEditor.entity.character.Generation;
-import vampireEditor.entity.character.Attribute;
-import vampireEditor.entity.character.Flaw;
-import vampireEditor.entity.character.Advantage;
-import vampireEditor.entity.character.Clan;
-import vampireEditor.entity.character.Road;
-import vampireEditor.entity.character.Merit;
-import vampireEditor.entity.character.Ability;
+import vampireEditor.Configuration;
+import vampireEditor.entity.character.*;
+
 import java.util.ArrayList;
 import java.util.Date;
-import vampireEditor.Configuration;
 
 /**
  * Character object.
@@ -74,7 +68,7 @@ public class Character extends BaseEntity {
     /**
      * List of sexes for the character.
      */
-    public static enum Sex {
+    public enum Sex {
         MALE,
         FEMALE;
 
@@ -138,8 +132,9 @@ public class Character extends BaseEntity {
         /**
          * Build a new character object.
          *
-         * @return
-         * @throws vampireEditor.entity.EntityException
+         * @return The created character entity
+         * @throws vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
+         *                                              of the entity
          */
         @Override
         public Character build() throws EntityException {
@@ -151,7 +146,7 @@ public class Character extends BaseEntity {
         /**
          * Check if all necessary values are set.
          *
-         * @throws EntityException
+         * @throws EntityException If something is missing but required
          */
         @Override
         protected void checkValues() throws EntityException {
@@ -187,7 +182,7 @@ public class Character extends BaseEntity {
         /**
          * Get the current instance.
          *
-         * @return
+         * @return The object itself
          */
         @Override
         protected Builder self() {
@@ -197,7 +192,7 @@ public class Character extends BaseEntity {
         /**
          * Check if the attributes are set correctly.
          *
-         * @throws EntityException
+         * @throws EntityException Thrown if attributes are empty, some are missing or there are too many
          */
         protected void checkAttributes() throws EntityException {
             if (this.attributes.isEmpty()) {
@@ -216,7 +211,7 @@ public class Character extends BaseEntity {
         /**
          * Check if the abilities are set correctly.
          *
-         * @throws EntityException
+         * @throws EntityException Thrown if abilities are empty, some are missing or there are too many
          */
         protected void checkAbilities() throws EntityException {
             if (this.abilities.isEmpty()) {
@@ -235,7 +230,7 @@ public class Character extends BaseEntity {
         /**
          * Check if the advantages are set correctly.
          *
-         * @throws EntityException
+         * @throws EntityException Thrown if advantages are empty or some are missing
          */
         protected void checkAdvantages() throws EntityException {
             if (this.advantages.isEmpty()) {
@@ -479,7 +474,7 @@ public class Character extends BaseEntity {
     /**
      * Create a new character.
      *
-     * @param builder
+     * @param builder The builder object to fetch data from
      */
     protected Character(Builder builder) {
         super(builder);

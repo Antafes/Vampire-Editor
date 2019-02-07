@@ -21,13 +21,13 @@
  */
 package vampireEditor.gui.character;
 
-import java.awt.Component;
-import javax.swing.JComponent;
-import javax.swing.JTabbedPane;
-import vampireEditor.entity.Character;
 import vampireEditor.Configuration;
+import vampireEditor.entity.Character;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.language.LanguageInterface;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * A tabbed panel for displaying a character.
@@ -50,7 +50,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     /**
      * Initialize the frame.
      *
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception Thrown if no character has been set
      */
     public void init() throws Exception {
         if (this.character == null) {

@@ -86,6 +86,7 @@
                     </xsd:complexType>
                 </xsd:element>
                 <xsd:element name="willpower" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="usedWillpower" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="bloodStock" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="age" type="xsd:integer" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="looksLikeAge" type="xsd:integer" minOccurs="0" maxOccurs="1" />

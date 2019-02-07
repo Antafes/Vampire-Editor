@@ -21,15 +21,16 @@
  */
 package vampireEditor.gui.character;
 
-import java.util.ArrayList;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.character.AbilityInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.ArrayList;
 
 /**
  *
@@ -76,17 +77,15 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
     /**
      * Add ability fields with the given fieldName and for the given ability type.
      *
-     * @param fieldName
-     * @param type
+     * @param fieldName Name of the field
+     * @param type Ability type
      */
     private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
         ArrayList<String> list = new ArrayList<>();
 
         this.character.getAbilities().stream()
             .filter((ability) -> (ability.getType().equals(type)))
-            .forEachOrdered((ability) -> {
-                list.add(ability.getName());
-            });
+            .forEachOrdered((ability) -> list.add(ability.getName()));
         list.sort(new StringComparator());
 
         this.addFields(fieldName, list);
@@ -95,7 +94,7 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -113,15 +112,12 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("talents").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("skills").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("knowledges").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields("talents").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("skills").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("knowledges").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
     /**
@@ -143,17 +139,18 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
             return;
         }
 
-        this.getFields().forEach((type, abilitiesList) -> {
-            abilitiesList.stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
+        this.getFields().forEach((type, abilitiesList) -> abilitiesList.stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> {
                 this.character.getAbilities().stream()
                     .filter((ability) -> (ability.getName().equals(spinner.getName())))
-                    .forEachOrdered((ability) -> {
-                        spinner.setValue(ability.getValue());
-                    });
-            });
-        });
+                    .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
+            }
+        ));
     }
 
+    /**
+     * Reload the language object and update all texts.
+     */
     @Override
     public void updateTexts() {
         this.getConfiguration().loadProperties();

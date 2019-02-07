@@ -21,15 +21,16 @@
  */
 package vampireEditor.gui.character;
 
-import java.util.ArrayList;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.character.AttributeInterface;
 import vampireEditor.gui.BaseListPanel;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.utility.StringComparator;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.ArrayList;
 
 /**
  *
@@ -76,17 +77,15 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Add attribute fields with the given fieldName and for the given attribute type.
      *
-     * @param fieldName
-     * @param type
+     * @param fieldName Name of the field
+     * @param type Attribute type to use
      */
     private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
         ArrayList<String> list = new ArrayList<>();
 
         this.character.getAttributes().stream()
             .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> {
-                list.add(attribute.getName());
-            });
+            .forEachOrdered((attribute) -> list.add(attribute.getName()));
         list.sort(new StringComparator());
 
         this.addFields(fieldName, list);
@@ -95,7 +94,7 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Create the attributes document listener.
      *
-     * @return
+     * @return Change listener for the component
      */
     @Override
     protected ComponentChangeListener createChangeListener() {
@@ -113,15 +112,12 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("physical").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("social").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
-        this.getFields("mental").stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
-            this.setFieldMaximum(spinner, maximum);
-        });
+        this.getFields("physical").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("social").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields("mental").stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
     /**
@@ -143,19 +139,17 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
             return;
         }
 
-        this.getFields().forEach((type, attributeList) -> {
-            attributeList.stream().map((component) -> (JSpinner) component).forEachOrdered((spinner) -> {
+        this.getFields().forEach((type, attributeList) -> attributeList.stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> {
                 this.character.getAttributes().stream()
                     .filter((attribute) -> (attribute.getName().equals(spinner.getName())))
-                    .forEachOrdered((attribute) -> {
-                        spinner.setValue(attribute.getValue());
-                    });
-            });
-        });
+                    .forEachOrdered((attribute) -> spinner.setValue(attribute.getValue()));
+            }
+        ));
     }
 
     /**
-     * Update the texts of every component in the component.
+     * Reload the language object and update the texts of every component in the component.
      */
     @Override
     public void updateTexts() {
