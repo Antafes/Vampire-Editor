@@ -9,68 +9,55 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="Vampire_Editor" default="default" basedir=".">
     <description>Builds, tests, and runs the project Vampire Editor.</description>
-    <import file="nbproject/build-impl.xml"/>
-    <!--
 
-    There exist several targets which are by default empty and which can be
-    used for execution of your tasks. These targets are usually executed
-    before and after some main targets. They are:
+    <property name="lib.dir"     value="lib"/>
+    <property name="src.dir"     value="src"/>
+    <property name="fonts.dir"   value="${src.dir}/fonts"/>
+    <property name="images.dir"  value="${src.dir}/images"/>
 
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir"    value="dist"/>
 
-    (Targets beginning with '-' are not intended to be called on their own.)
+    <property name="main-class"  value="vampireEditor.VampireEditor"/>
 
-    Example of inserting an obfuscator after compilation could look like this:
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
 
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
 
-    For list of available properties check the imported
-    nbproject/build-impl.xml file.
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"  encoding="utf-8"/>
+		<copy todir="${classes.dir}/fonts">
+            <fileset dir="${fonts.dir}" includes="**"/>
+        </copy>
+		<copy todir="${classes.dir}/images">
+            <fileset dir="${images.dir}" includes="**"/>
+        </copy>
+    </target>
 
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are:
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar:                  JAR building
-      run:                      execution of project
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Vampire_Editor-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on
-    the compile target as the regular run target does. Again, for a list of available
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file.
-
-    -->
-	<target name="-post-compile">
+    <target name="jar" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Class-Path" value="${lib.dir}/MyXML.jar"/>
+            </manifest>
+        </jar>
 		<copy file="LICENSE" todir="${dist.dir}" />
-	</target>
+		<copy todir="${dist.dir}/lib">
+            <fileset dir="${lib.dir}" includes="**"/>
+        </copy>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="default" depends="compile,jar" />
 </project>

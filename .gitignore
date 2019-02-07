@@ -23,3 +23,8 @@ hs_err_pid*
 /nbproject
 /build
 /dist
+/.idea
+/out
+
+# CI variables file
+ci/variables.yml
