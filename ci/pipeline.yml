@@ -111,6 +111,7 @@ jobs:
     params:
      name: dist/name
      tag: dist/tag
+     commitish: dist/commit_sha
      globs:
       - dist/VampireEditor.zip
 
