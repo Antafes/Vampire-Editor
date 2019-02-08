@@ -64,6 +64,7 @@ public class English implements LanguageInterface {
         this.translations.put("back", "Back");
         this.translations.put("finish", "Finish");
         this.translations.put("other", "Other");
+        this.translations.put("description", "Description");
     }
 
     /**
@@ -161,6 +162,9 @@ public class English implements LanguageInterface {
         this.translations.put("experience", "Experience");
     }
 
+    /**
+     * Add texts only used on the print and print preview
+     */
     private void print() {
         this.translations.put("merit", "Merit");
         this.translations.put("flaw", "Flaw");
@@ -182,7 +186,6 @@ public class English implements LanguageInterface {
         this.translations.put("class", "Class");
         this.translations.put("rating", "Rating");
         this.translations.put("penalty", "Penalty");
-        this.translations.put("description", "Description");
         this.translations.put("backgrounds", "Backgrounds");
         this.translations.put("possessions", "Possessions");
         this.translations.put("haven", "Haven");
@@ -200,8 +203,17 @@ public class English implements LanguageInterface {
         this.translations.put("feedingGrounds", "Feeding grounds");
         this.translations.put("miscellaneous", "Miscellaneous");
         this.translations.put("location", "Location");
+        this.translations.put("history", "History");
+        this.translations.put("momentsOfTruth", "Moments of truth");
+        this.translations.put("goalsAndPlots", "Goals & plots");
+        this.translations.put("visuals", "Visuals");
+        this.translations.put("coterieChart", "Coterie chart");
+        this.translations.put("characterSketch", "Character sketch");
     }
 
+    /**
+     * Add texts for health
+     */
     private void health() {
         this.translations.put("health", "Health");
         this.translations.put("bruised", "Bruised");

@@ -21,6 +21,7 @@
  */
 package vampireEditor.print;
 
+import org.apache.commons.lang3.StringUtils;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.Character;
@@ -586,6 +587,116 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent 
                 columnWidth
             );
         }
+    }
+
+    /**
+     * Add a two column block with the given headlines.
+     * Will use 3 as the default block height.
+     *
+     * @param headlines Array of headlines
+     */
+    protected void addBlock(String[] headlines) {
+        this.addBlock(headlines, 3);
+    }
+
+    /**
+     * Add a two column block with the given headlines.
+     *
+     * @param headlines Array of headlines
+     * @param blockHeight Height of the block
+     */
+    protected void addBlock(String[] headlines, int blockHeight) {
+        int[] xPositions = {
+            PositionX.LEFT1.getPosition(),
+            PositionX.MIDDLE2.getPosition()
+        };
+        this.addHeadlines(
+            headlines,
+            xPositions
+        );
+        this.setMaxY(this.getMaxY() + 1);
+        for (int i = 0; i < blockHeight; i++) {
+            this.addText(
+                StringUtils.repeat('_', 58),
+                PositionX.LEFT1.getPosition(),
+                this.getMaxY(),
+                3
+            );
+            this.addText(
+                StringUtils.repeat('_', 58),
+                PositionX.MIDDLE2.getPosition(),
+                this.getMaxY(),
+                3
+            );
+            this.setMaxY(this.getMaxY() + 1);
+        }
+    }
+
+    /**
+     * Add a value entry with a row of dots.
+     * This will fetch the maximum dots value from the character.
+     *
+     * @param title   Title of the entry
+     * @param xTitle  X Position in the grid for the title
+     * @param yTitle  Y Position in the grid for the title
+     * @param xDot    X position in the grid for the dot
+     * @param value   Value for the entries dots
+     */
+    protected void addValueEntry(String title, int xTitle, int yTitle, int xDot, int value) {
+        this.addValueEntry(
+            title,
+            xTitle,
+            yTitle,
+            xDot,
+            value,
+            this.getCharacter().getGeneration().getMaximumAttributes()
+        );
+    }
+
+    /**
+     * Add a value entry with a row of dots.
+     *
+     * @param title   Title of the entry
+     * @param xTitle  X Position in the grid for the title
+     * @param yTitle  Y Position in the grid for the title
+     * @param xDot    X position in the grid for the dot
+     * @param value   Value for the entries dots
+     * @param maxDots The maximum amount of dots
+     */
+    protected void addValueEntry(String title, int xTitle, int yTitle, int xDot, int value, int maxDots) {
+        this.addText(
+            this.getLanguage().translate(title),
+            xTitle,
+            yTitle
+        );
+        this.createDots(
+            xDot,
+            yTitle,
+            maxDots,
+            value
+        );
+    }
+
+    /**
+     * Add a value entry with a row of dots.
+     *
+     * @param title  Title of the entry
+     * @param xTitle X Position in the grid for the title
+     * @param row    Y Position in the grid for the title
+     * @param xValue X position in the grid for the value
+     * @param value  Value for the entry to display
+     */
+    protected void addValueEntry(String title, int xTitle, int row, int xValue, String value) {
+        this.addText(
+            this.getLanguage().translate(title),
+            xTitle,
+            row
+        );
+        this.addText(
+            value,
+            xValue,
+            row
+        );
     }
 
     /**

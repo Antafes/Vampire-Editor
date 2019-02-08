@@ -22,7 +22,6 @@
 
 package vampireEditor.print;
 
-import org.apache.commons.lang3.StringUtils;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
@@ -45,6 +44,7 @@ public class Backgrounds extends PrintBase {
         super(character);
 
         this.setPreviousPage(MeritsAndFlaws.class);
+        this.setFollowingPage(Looks.class);
     }
 
     /**
@@ -113,48 +113,5 @@ public class Backgrounds extends PrintBase {
      */
     protected void addHavenInformation() {
         this.addBlock(new String[]{"location", "description"});
-    }
-
-    /**
-     * Add a two column block with the given headlines.
-     * Will use 3 as the default block height.
-     *
-     * @param headlines Array of headlines
-     */
-    protected void addBlock(String[] headlines) {
-        this.addBlock(headlines, 3);
-    }
-
-    /**
-     * Add a two column block with the given headlines.
-     *
-     * @param headlines Array of headlines
-     * @param blockHeight Height of the block
-     */
-    protected void addBlock(String[] headlines, int blockHeight) {
-        int[] xPositions = {
-            PositionX.LEFT1.getPosition(),
-            PositionX.MIDDLE2.getPosition()
-        };
-        this.addHeadlines(
-            headlines,
-            xPositions
-        );
-        this.setMaxY(this.getMaxY() + 1);
-        for (int i = 0; i < blockHeight; i++) {
-            this.addText(
-                StringUtils.repeat('_', 58),
-                PositionX.LEFT1.getPosition(),
-                this.getMaxY(),
-                3
-            );
-            this.addText(
-                StringUtils.repeat('_', 58),
-                PositionX.MIDDLE2.getPosition(),
-                this.getMaxY(),
-                3
-            );
-            this.setMaxY(this.getMaxY() + 1);
-        }
     }
 }

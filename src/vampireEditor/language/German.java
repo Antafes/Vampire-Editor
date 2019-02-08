@@ -64,6 +64,7 @@ public class German implements LanguageInterface {
         this.translations.put("back", "Zurück");
         this.translations.put("finish", "Fertig");
         this.translations.put("other", "Anderes");
+        this.translations.put("description", "Beschreibung");
     }
 
     /**
@@ -161,6 +162,9 @@ public class German implements LanguageInterface {
         this.translations.put("experience", "Erfahrung");
     }
 
+    /**
+     * Add texts only used on the print and print preview
+     */
     private void print() {
         this.translations.put("merit", "Vorzug");
         this.translations.put("flaw", "Schwäche");
@@ -182,7 +186,6 @@ public class German implements LanguageInterface {
         this.translations.put("class", "Klasse");
         this.translations.put("rating", "Einstufung");
         this.translations.put("penalty", "Strafe");
-        this.translations.put("description", "Beschreibung");
         this.translations.put("backgrounds", "Backgrounds");
         this.translations.put("possessions", "Besitztümer");
         this.translations.put("haven", "Zuflucht");
@@ -200,8 +203,17 @@ public class German implements LanguageInterface {
         this.translations.put("feedingGrounds", "Nahrungsgründe");
         this.translations.put("miscellaneous", "Verschiedenes");
         this.translations.put("location", "Ort");
+        this.translations.put("history", "Geschichte");
+        this.translations.put("momentsOfTruth", "Momente der Wahrheit");
+        this.translations.put("goalsAndPlots", "Ziele & Pläne");
+        this.translations.put("visuals", "Aussehen");
+        this.translations.put("coterieChart", "Gesellschaft");
+        this.translations.put("characterSketch", "Charakterskizze");
     }
 
+    /**
+     * Add texts for health
+     */
     private void health() {
         this.translations.put("health", "Gesundheit");
         this.translations.put("bruised", "Zerschrammt");

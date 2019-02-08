@@ -327,49 +327,4 @@ public class General extends PrintBase {
             VampireEditor.log(ex.getMessage());
         }
     }
-
-    /**
-     * Add a value entry with a row of dots.
-     * This will fetch the maximum dots value from the character.
-     *
-     * @param title   Title of the entry
-     * @param xTitle  X Position in the grid for the title
-     * @param yTitle  Y Position in the grid for the title
-     * @param xDot    X position in the grid for the dot
-     * @param value   Value for the entries dots
-     */
-    protected void addValueEntry(String title, int xTitle, int yTitle, int xDot, int value) {
-        this.addValueEntry(
-            title,
-            xTitle,
-            yTitle,
-            xDot,
-            value,
-            this.getCharacter().getGeneration().getMaximumAttributes()
-        );
-    }
-
-    /**
-     * Add a value entry with a row of dots.
-     *
-     * @param title   Title of the entry
-     * @param xTitle  X Position in the grid for the title
-     * @param yTitle  Y Position in the grid for the title
-     * @param xDot    X position in the grid for the dot
-     * @param value   Value for the entries dots
-     * @param maxDots The maximum amount of dots
-     */
-    protected void addValueEntry(String title, int xTitle, int yTitle, int xDot, int value, int maxDots) {
-        this.addText(
-            this.getLanguage().translate(title),
-            xTitle,
-            yTitle
-        );
-        this.createDots(
-            xDot,
-            yTitle,
-            maxDots,
-            value
-        );
-    }
 }
