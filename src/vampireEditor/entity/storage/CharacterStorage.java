@@ -27,6 +27,7 @@ import myXML.XMLWriter;
 import org.w3c.dom.Element;
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
+import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Ability;
 import vampireEditor.entity.character.Advantage;
@@ -36,6 +37,7 @@ import vampireEditor.entity.character.Road;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,7 +86,11 @@ public class CharacterStorage {
      */
     public vampireEditor.entity.Character load(String filename) throws Exception  {
         if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
-            return this.fillValues();
+            Character character = this.fillValues();
+
+            if (character != null) {
+                return character;
+            }
         }
 
         Exception ex = new Exception("Could not load character '" + filename + "'!");
@@ -109,7 +115,7 @@ public class CharacterStorage {
         this.xw.addChild("generation", character.getGeneration().toString());
         this.xw.addChild("chronicle", character.getChronicle());
         this.xw.addChild("experience", Integer.toString(character.getExperience()));
-        this.xw.addChild("nature", Integer.toString(character.getExperience()));
+        this.xw.addChild("nature", character.getNature());
         this.xw.addChild("hideout", character.getHideout());
         this.xw.addChild("player", character.getPlayer());
         this.xw.addChild("demeanor", character.getDemeanor());
@@ -148,6 +154,7 @@ public class CharacterStorage {
         roadAttributes.put("key", character.getRoad().getKey());
         this.xw.addChild("road", Integer.toString(character.getRoad().getValue()), roadAttributes);
         this.xw.addChild("willpower", Integer.toString(character.getWillpower()));
+        this.xw.addChild("usedWillpower", Integer.toString(character.getUsedWillpower()));
         this.xw.addChild("bloodStock", Integer.toString(character.getBloodStock()));
         this.xw.addChild("age", Integer.toString(character.getAge()));
         this.xw.addChild("looksLikeAge", Integer.toString(character.getLooksLikeAge()));
@@ -184,7 +191,13 @@ public class CharacterStorage {
         vampireEditor.entity.Character.Builder builder = new vampireEditor.entity.Character.Builder();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Element root = this.xp.getRootElement();
+        String id = root.getAttribute("id");
 
+        if (id == null || id.equals("")) {
+            return null;
+        }
+
+        builder.setId(UUID.fromString(id));
         builder.setName(XMLParser.getTagValue("name", root));
         builder.setClan(VampireEditor.getClan(XMLParser.getTagValue("clan", root)));
         builder.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
@@ -270,6 +283,11 @@ public class CharacterStorage {
         }
 
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
+
+        if (XMLParser.tagExists("usedWillpower", root) && XMLParser.getTagValue("usedWillpower", root) != null) {
+            builder.setUsedWillpower(XMLParser.getTagValueInt("usedWillpower", root));
+        }
+
         builder.setBloodStock(XMLParser.getTagValueInt("bloodStock", root));
         builder.setAge(XMLParser.getTagValueInt("age", root));
         builder.setLooksLikeAge(XMLParser.getTagValueInt("looksLikeAge", root));

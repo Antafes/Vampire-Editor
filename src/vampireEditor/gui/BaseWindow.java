@@ -23,6 +23,7 @@ package vampireEditor.gui;
 
 import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
+import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Ability;
 import vampireEditor.entity.character.Advantage;
@@ -53,22 +54,23 @@ public class BaseWindow extends javax.swing.JFrame {
     private LanguageInterface language;
 
     // List of components in the window
-    private javax.swing.JDialog aboutDialog;
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JTextPane aboutTextPane;
-    private javax.swing.JTabbedPane charactersTabPane;
-    private javax.swing.JButton closeAboutButton;
-    private javax.swing.JMenuItem closeMenuItem;
-    private javax.swing.JRadioButtonMenuItem englishMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JRadioButtonMenuItem germanMenuItem;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.ButtonGroup languageGroup;
-    private javax.swing.JMenu languageMenu;
-    private javax.swing.JMenuItem newMenuItem;
-    private javax.swing.JFileChooser openFileChooser;
-    private javax.swing.JFileChooser saveFileChooser;
-    private javax.swing.JMenuItem saveMenuItem;
+    private JDialog aboutDialog;
+    private JMenuItem aboutMenuItem;
+    private JTextPane aboutTextPane;
+    private JTabbedPane charactersTabPane;
+    private JButton closeAboutButton;
+    private JMenuItem closeMenuItem;
+    private JRadioButtonMenuItem englishMenuItem;
+    private JMenu fileMenu;
+    private JRadioButtonMenuItem germanMenuItem;
+    private JMenu helpMenu;
+    private ButtonGroup languageGroup;
+    private JMenu languageMenu;
+    private JMenuItem newMenuItem;
+    private JFileChooser openFileChooser;
+    private JFileChooser saveFileChooser;
+    private JMenuItem saveMenuItem;
+    private JMenuItem openMenuItem;
 
     /**
      * Creates new form BaseWindow
@@ -212,7 +214,7 @@ public class BaseWindow extends javax.swing.JFrame {
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
-        JMenuItem openMenuItem = new JMenuItem();
+        openMenuItem = new JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -460,9 +462,7 @@ public class BaseWindow extends javax.swing.JFrame {
             try {
                 vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
                 this.addCharacter(character);
-                VampireEditor.log(new ArrayList<>(
-                    Collections.singletonList("Loaded character " + character.getName())
-                ));
+                VampireEditor.log("Loaded character " + character.getName());
             } catch (Exception ex) {
                 Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(
@@ -556,6 +556,8 @@ public class BaseWindow extends javax.swing.JFrame {
         this.aboutTextPane.setText(this.language.translate("aboutText"));
         this.newMenuItem.setText(this.language.translate("new"));
         this.newMenuItem.setMnemonic(this.language.translate("newMnemonic").charAt(0));
+        this.openMenuItem.setText(this.language.translate("open"));
+        this.openMenuItem.setMnemonic(this.language.translate("openMnemonic").charAt(0));
         this.saveMenuItem.setText(this.language.translate("save"));
         this.saveMenuItem.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
     }

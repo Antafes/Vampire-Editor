@@ -176,7 +176,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public int getGeneration() {
-        return generation;
+        return this.generation;
     }
 
     /**
@@ -186,7 +186,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public int getMaximumAttributes() {
-        return maximumAttributes;
+        return this.maximumAttributes;
     }
 
     /**
@@ -196,7 +196,11 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public int getMaximumBloodStock() {
-        return maximumBloodStock;
+        if (this.maximumBloodStock == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        return this.maximumBloodStock;
     }
 
     /**

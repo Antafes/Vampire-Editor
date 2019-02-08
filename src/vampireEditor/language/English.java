@@ -49,13 +49,14 @@ public class English implements LanguageInterface {
         this.translations.put("aboutMnemonic", "A");
         this.translations.put("new", "New");
         this.translations.put("newMnemonic", "N");
+        this.translations.put("open", "Open");
+        this.translations.put("openMnemonic", "S");
         this.translations.put("save", "Save");
         this.translations.put("saveMnemonic", "S");
         this.translations.put("existingFile", "Existing file");
         this.translations.put("fileExists", "The selected file already exists, overwrite?");
         this.translations.put("couldNotLoad", "Could not load");
         this.translations.put("couldNotLoadCharacter", "Could not load the character.");
-        this.translations.put("close", "Close");
         this.translations.put("aboutText", "This tool was created by Marian Pollzien.");
         this.translations.put("cancel", "Cancel");
         this.translations.put("next", "Next");
