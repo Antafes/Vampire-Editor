@@ -426,6 +426,10 @@ public class BaseWindow extends javax.swing.JFrame {
      * @param evt Event object
      */
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        if (!this.isAnyCharacterLoaded()) {
+            return;
+        }
+
         vampireEditor.entity.Character character = this.getActiveCharacter();
         this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
         this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
@@ -461,6 +465,14 @@ public class BaseWindow extends javax.swing.JFrame {
 
             try {
                 vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+
+                int characterTab = this.isCharacterLoaded(character);
+                if (characterTab != -1) {
+                    this.charactersTabPane.setSelectedIndex(characterTab);
+                    VampireEditor.log("Character was already open, switched to tab.");
+                    return;
+                }
+
                 this.addCharacter(character);
                 VampireEditor.log("Loaded character " + character.getName());
             } catch (Exception ex) {
@@ -597,6 +609,7 @@ public class BaseWindow extends javax.swing.JFrame {
             characterTabbedPane.init();
             this.charactersTabPane.add(characterTabbedPane);
             this.charactersTabPane.setTitleAt(this.charactersTabPane.indexOfComponent(characterTabbedPane), character.getName());
+            this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(characterTabbedPane));
         } catch (Exception ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -609,5 +622,36 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     private vampireEditor.entity.Character getActiveCharacter() {
         return ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
+    }
+
+    /**
+     * Check if a character already has been loaded.
+     *
+     * @return
+     */
+    private boolean isAnyCharacterLoaded() {
+        try {
+            ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
+            return true;
+        } catch (NullPointerException ex) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if a character already has been loaded.
+     *
+     * @return Returns the position of the character tab if found, otherwise -1
+     */
+    private int isCharacterLoaded(Character character) {
+        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
+            CharacterTabbedPane pane = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
+
+            if (character.getId().equals(pane.getCharacter().getId())) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
