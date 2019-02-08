@@ -70,6 +70,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.addAbilitiesPanel();
         this.addAdvantagesPanel();
         this.addLooksPanel();
+        this.addPrintPreviewPanel();
     }
 
     /**
@@ -128,6 +129,17 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     }
 
     /**
+     * Add the print preview panel.
+     */
+    private void addPrintPreviewPanel() {
+        PrintPreviewPanel panel = new PrintPreviewPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+        this.add(panel);
+        this.setTitleAt(this.indexOfComponent(panel), this.language.translate("printPreview"));
+    }
+
+    /**
      * Get the character from which all data is fetched.
      *
      * @return
@@ -171,6 +183,9 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
             } else if (tab.getClass().equals(AdvantagesPanel.class)) {
                 this.setTitleAt(this.indexOfComponent(tab), this.language.translate("advantages"));
                 ((AdvantagesPanel) tab).updateTexts();
+            } else if (tab.getClass().equals(PrintPreviewPanel.class)) {
+                this.setTitleAt(this.indexOfComponent(tab), this.language.translate("printPreview"));
+                ((PrintPreviewPanel) tab).updateTexts();
             }
         }
     }

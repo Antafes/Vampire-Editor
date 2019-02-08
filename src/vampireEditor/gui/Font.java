@@ -1,4 +1,4 @@
-/*
+/**
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -19,27 +19,45 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.language;
+package vampireEditor.gui;
+
+import vampireEditor.VampireEditor;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Language interface
+ * Enum for the fonts used in Vampire Editor.
  *
  * @author Marian Pollzien
  */
-public interface LanguageInterface {
-    /**
-     * Get the translation for the given key.
-     *
-     * @param key The key to translate.
-     *
-     * @return The translated string
-     */
-    public String translate(String key);
+public enum Font {
+    TEXT ("fonts/GoudyMediaevalRegular.ttf"),
+    HEADLINE ("fonts/GoudyTextMT-LombardicCapitals.ttf");
+
+    private final String path;
+
+    Font(String path) {
+        this.path = path;
+    }
 
     /**
-     * Get the language.
+     * Create a java.awt.Font object from the path of this font.
      *
      * @return
      */
-    public String getLanguage();
+    public java.awt.Font getFont() {
+        try {
+            return java.awt.Font.createFont(
+                java.awt.Font.TRUETYPE_FONT,
+                VampireEditor.getFileInJar(this.path)
+            );
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(Font.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
 }

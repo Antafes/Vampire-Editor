@@ -35,10 +35,39 @@ public class German implements LanguageInterface {
      * Create a new english language object.
      */
     public German() {
+        this.languages();
+        this.general();
+        this.menu();
+        this.about();
+        this.character();
+        this.health();
+    }
+
+    /**
+     * List of available languages.
+     */
+    private void languages() {
         this.translations.put("english", "Englisch");
         this.translations.put("german", "Deutsch");
+    }
 
+    /**
+     * General texts like the programs title.
+     */
+    private void general() {
         this.translations.put("title", "Vampire Editor");
+        this.translations.put("darkAgesVampire", "Vampire aus der alten Welt");
+        this.translations.put("cancel", "Abbrechen");
+        this.translations.put("next", "Weiter");
+        this.translations.put("ok", "Ok");
+        this.translations.put("back", "Zurück");
+        this.translations.put("finish", "Fertig");
+    }
+
+    /**
+     * Texts for the menu entries.
+     */
+    private void menu() {
         this.translations.put("file", "Datei");
         this.translations.put("fileMnemonic", "D");
         this.translations.put("quit", "Beenden");
@@ -57,12 +86,20 @@ public class German implements LanguageInterface {
         this.translations.put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
         this.translations.put("couldNotLoad", "Laden fehlgeschlagen");
         this.translations.put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
+        this.translations.put("close", "Schließen");
+    }
+
+    /**
+     * Content of the about dialog.
+     */
+    private void about() {
         this.translations.put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
-        this.translations.put("cancel", "Abbrechen");
-        this.translations.put("next", "Weiter");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Zurück");
-        this.translations.put("finish", "Fertig");
+    }
+
+    /**
+     * Texts for character creation and display.
+     */
+    private void character() {
         this.translations.put("newCharacter", "Neuer Charakter");
         this.translations.put("looks", "Aussehen");
         this.translations.put("name", "Name");
@@ -117,6 +154,20 @@ public class German implements LanguageInterface {
         this.translations.put("meritsAndFlaws", "Vor- und Nachteile");
         this.translations.put("willpower", "Willenskraft");
         this.translations.put("bloodStock", "Blutvorrat");
+        this.translations.put("printPreview", "Druckvorschau");
+        this.translations.put("otherTraits", "Andere Eigenschaften");
+        this.translations.put("experience", "Erfahrung");
+    }
+
+    private void health() {
+        this.translations.put("health", "Gesundheit");
+        this.translations.put("bruised", "Zerschrammt");
+        this.translations.put("hurt", "Versehrt");
+        this.translations.put("injured", "Verletzt");
+        this.translations.put("wounded", "Verwundet");
+        this.translations.put("mauled", "Übel zugerichtet");
+        this.translations.put("crippled", "Verkrüppelt");
+        this.translations.put("incapacitated", "Außer Gefecht");
     }
 
     /**

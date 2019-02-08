@@ -663,6 +663,18 @@ public class Character extends BaseEntity {
     }
 
     /**
+     * Get a list of attributes by type.
+     *
+     * @param type Type of attributes to get
+     *
+     * @return List of attributes
+     */
+    public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
+        return (ArrayList) this.attributes.stream()
+            .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
+    }
+
+    /**
      * Get the list of abilities the character has.
      *
      * @return
@@ -672,12 +684,36 @@ public class Character extends BaseEntity {
     }
 
     /**
+     * Get a list of abilities by type.
+     *
+     * @param type Type of abilities to get
+     *
+     * @return List of abilities
+     */
+    public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
+        return (ArrayList) this.abilities.stream()
+            .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
+    }
+
+    /**
      * Get the list of advantages the character has.
      *
      * @return
      */
     public ArrayList<Advantage> getAdvantages() {
         return this.advantages;
+    }
+
+    /**
+     * Get a list of advantages by type.
+     *
+     * @param type Type of advantages to get
+     *
+     * @return List of advantages
+     */
+    public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
+        return (ArrayList) this.advantages.stream()
+            .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
     }
 
     /**

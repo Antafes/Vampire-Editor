@@ -19,27 +19,32 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.language;
+package vampireEditor.print;
+
+import java.awt.print.Paper;
 
 /**
- * Language interface
  *
  * @author Marian Pollzien
  */
-public interface LanguageInterface {
-    /**
-     * Get the translation for the given key.
-     *
-     * @param key The key to translate.
-     *
-     * @return The translated string
-     */
-    public String translate(String key);
+public class PaperA4 extends Paper {
+    private static final int INCH = 72;
+    private static final double A4_WIDTH = 8.27 * INCH;
+    private static final double A4_HEIGHT = 11.69 * INCH;
 
     /**
-     * Get the language.
-     *
-     * @return
+     * Constructor
      */
-    public String getLanguage();
+    public PaperA4() {
+        super();
+        this.init();
+    }
+
+    /**
+     * Initialize fixed values.
+     */
+    private void init() {
+        this.setSize(A4_WIDTH, A4_HEIGHT);
+        this.setImageableArea(INCH, INCH, A4_WIDTH - 2 * INCH, A4_HEIGHT - 2 * INCH);
+    }
 }

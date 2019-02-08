@@ -35,10 +35,39 @@ public class English implements LanguageInterface {
      * Create a new english language object.
      */
     public English() {
+        this.languages();
+        this.general();
+        this.menu();
+        this.about();
+        this.character();
+        this.health();
+    }
+
+    /**
+     * List of available languages.
+     */
+    private void languages() {
         this.translations.put("english", "English");
         this.translations.put("german", "German");
+    }
 
+    /**
+     * General texts like the programs title.
+     */
+    private void general() {
         this.translations.put("title", "Vampire Editor");
+        this.translations.put("darkAgesVampire", "Dark Ages: Vampire");
+        this.translations.put("cancel", "Cancel");
+        this.translations.put("next", "Next");
+        this.translations.put("ok", "Ok");
+        this.translations.put("back", "Back");
+        this.translations.put("finish", "Finish");
+    }
+
+    /**
+     * Texts for the menu entries.
+     */
+    private void menu() {
         this.translations.put("file", "File");
         this.translations.put("fileMnemonic", "F");
         this.translations.put("quit", "Quit");
@@ -57,12 +86,20 @@ public class English implements LanguageInterface {
         this.translations.put("fileExists", "The selected file already exists, overwrite?");
         this.translations.put("couldNotLoad", "Could not load");
         this.translations.put("couldNotLoadCharacter", "Could not load the character.");
+        this.translations.put("close", "Close");
+    }
+
+    /**
+     * Content of the about dialog.
+     */
+    private void about() {
         this.translations.put("aboutText", "This tool was created by Marian Pollzien.");
-        this.translations.put("cancel", "Cancel");
-        this.translations.put("next", "Next");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Back");
-        this.translations.put("finish", "Finish");
+    }
+
+    /**
+     * Texts for character creation and display.
+     */
+    private void character() {
         this.translations.put("newCharacter", "New character");
         this.translations.put("looks", "Looks");
         this.translations.put("name", "Name");
@@ -116,7 +153,21 @@ public class English implements LanguageInterface {
         this.translations.put("general", "General");
         this.translations.put("meritsAndFlaws", "Merits and flaws");
         this.translations.put("willpower", "Willpower");
-        this.translations.put("bloodStock", "Blood stock");
+        this.translations.put("bloodStock", "Blood pool");
+        this.translations.put("printPreview", "Print preview");
+        this.translations.put("otherTraits", "Other traits");
+        this.translations.put("experience", "Experience");
+    }
+
+    private void health() {
+        this.translations.put("health", "Health");
+        this.translations.put("bruised", "Bruised");
+        this.translations.put("hurt", "Hurt");
+        this.translations.put("injured", "Injured");
+        this.translations.put("wounded", "Wounded");
+        this.translations.put("mauled", "Mauled");
+        this.translations.put("crippled", "Crippled");
+        this.translations.put("incapacitated", "Incapacitated");
     }
 
     /**
