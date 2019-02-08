@@ -43,63 +43,6 @@ public class Configuration
     private final File propertiesFile;
 
     /**
-     * A list of available languages.
-     */
-    public enum Language {
-        ENGLISH ("vampireEditor.language.English", "English", "images/english.png"),
-        GERMAN ("vampireEditor.language.German", "German", "images/german.png");
-
-        private final String languageString;
-        private final String name;
-        private final ImageIcon icon;
-
-        /**
-         * Create a new language enum.
-         *
-         * @param languageString Identifier of the language
-         * @param name Name of the language
-         * @param path Path to the language icon
-         */
-        Language(String languageString, String name, String path) {
-            this.languageString = languageString;
-            this.name = name;
-
-            Toolkit kit = Toolkit.getDefaultToolkit();
-            Image img = kit.createImage(
-                this.getClass().getClassLoader().getResource(path)
-            );
-            this.icon = new ImageIcon(img);
-        }
-
-        /**
-         * Get the language string, which is needed to create the language object.
-         *
-         * @return Language identifier
-         */
-        public String getLanguageString() {
-            return languageString;
-        }
-
-        /**
-         * Get the language name.
-         *
-         * @return Language name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Get the image icon for the language.
-         *
-         * @return Language icon
-         */
-        public ImageIcon getIcon() {
-            return icon;
-        }
-    }
-
-    /**
      * constructor
      */
     private Configuration()
@@ -224,6 +167,21 @@ public class Configuration
     }
 
     /**
+     * Get the extended state of the window. This correlates to the states from JFrame.
+     * If nothing is found in the properties object JFrame.NORMAL is returned.
+     *
+     * @return
+     */
+    public int getExtendedState()
+    {
+        if (this.properties.getProperty("extendedState") == null || this.properties.getProperty("extendedState").equals("")) {
+            return JFrame.NORMAL;
+        }
+
+        return Integer.valueOf(this.properties.getProperty("extendedState"));
+    }
+
+    /**
      * Get the selected language.
      *
      * @return Language enum of the selected language
@@ -289,11 +247,77 @@ public class Configuration
     }
 
     /**
+     * Set the extended state of the window.
+     *
+     * @param extendedState
+     */
+    public void setExtendedState(int extendedState) {
+        this.properties.setProperty("extendedState", Integer.toString(extendedState));
+    }
+
+    /**
      * Set the selected language.
      *
      * @param language The language that has been selected
      */
     public void setLanguage(Language language) {
         this.properties.setProperty("language", language.toString());
+    }
+
+    /**
+     * A list of available languages.
+     */
+    public enum Language {
+        ENGLISH ("vampireEditor.language.English", "English", "images/english.png"),
+        GERMAN ("vampireEditor.language.German", "German", "images/german.png");
+
+        private final String languageString;
+        private final String name;
+        private final ImageIcon icon;
+
+        /**
+         * Create a new language enum.
+         *
+         * @param languageString Identifier of the language
+         * @param name Name of the language
+         * @param path Path to the language icon
+         */
+        Language(String languageString, String name, String path) {
+            this.languageString = languageString;
+            this.name = name;
+
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(
+                this.getClass().getClassLoader().getResource(path)
+            );
+            this.icon = new ImageIcon(img);
+        }
+
+        /**
+         * Get the language string, which is needed to create the language object.
+         *
+         * @return Language identifier
+         */
+        public String getLanguageString() {
+            return languageString;
+        }
+
+        /**
+         * Get the language name.
+         *
+         * @return Language name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Get the image icon for the language.
+         *
+         * @return Language icon
+         */
+        public ImageIcon getIcon() {
+            return icon;
+        }
     }
 }
