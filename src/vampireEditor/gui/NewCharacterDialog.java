@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -241,7 +241,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return True if spent points are above maximum
      */
     private boolean checkPhysicalPoints() {
-        return this.attributesPanel.checkPhyiscalPoints();
+        return this.attributesPanel.checkPhysicalPoints();
     }
 
     /**
@@ -250,7 +250,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return
      */
     private int getPhysicalMaxPoints() {
-        return this.attributesPanel.getPhyiscalMaxPoints();
+        return this.attributesPanel.getPhysicalMaxPoints();
     }
 
     /**
@@ -421,7 +421,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return
      */
     private int getDisciplinPointsSum() {
-        return this.advantagesPanel.getDisciplinPointsSum();
+        return this.advantagesPanel.getDisciplinePointsSum();
     }
 
     /**
@@ -430,7 +430,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return True if spent points are above maximum
      */
     private boolean checkDisciplinPoints() {
-        return this.advantagesPanel.checkDisciplinPoints();
+        return this.advantagesPanel.checkDisciplinePoints();
     }
 
     /**
@@ -439,7 +439,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return
      */
     private int getDisciplinMaxPoints() {
-        return this.advantagesPanel.getDisciplinMaxPoints();
+        return this.advantagesPanel.getDisciplineMaxPoints();
     }
 
     /**
@@ -549,7 +549,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @param clan
      */
     public void setClanDisciplins(Clan clan) {
-        this.advantagesPanel.setDisciplins(clan);
+        this.advantagesPanel.setDisciplines(clan);
     }
 
     /**

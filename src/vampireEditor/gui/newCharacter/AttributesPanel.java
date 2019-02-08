@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected void init() {
-        this.addPhyiscalFields();
+        this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
 
@@ -75,7 +75,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Add all talent fields sorted by the translated name.
      */
-    private void addPhyiscalFields() {
+    private void addPhysicalFields() {
         this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
     }
 
@@ -144,7 +144,7 @@ public class AttributesPanel extends BaseListPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if (getFields("physical").contains(this.getComponent())) {
-                    calculateUsedPhyiscalPoints();
+                    calculateUsedPhysicalPoints();
                 }
 
                 if (getFields("social").contains(this.getComponent())) {
@@ -164,7 +164,7 @@ public class AttributesPanel extends BaseListPanel {
     /**
      * Calculate the used physical attribute points.
      */
-    private void calculateUsedPhyiscalPoints() {
+    private void calculateUsedPhysicalPoints() {
         this.calculateUsedPoints("physical");
     }
 
@@ -182,7 +182,7 @@ public class AttributesPanel extends BaseListPanel {
      *
      * @return True if spent points are above maximum
      */
-    public boolean checkPhyiscalPoints() {
+    public boolean checkPhysicalPoints() {
         return this.checkPoints("physical");
     }
 
@@ -191,7 +191,7 @@ public class AttributesPanel extends BaseListPanel {
      *
      * @return
      */
-    public int getPhyiscalMaxPoints() {
+    public int getPhysicalMaxPoints() {
         return this.getMaxPoints("physical");
     }
 
@@ -279,7 +279,7 @@ public class AttributesPanel extends BaseListPanel {
 
         this.calculateUsedMentalPoints();
         this.calculateUsedSocialPoints();
-        this.calculateUsedPhyiscalPoints();
+        this.calculateUsedPhysicalPoints();
     }
 
     /**
@@ -288,7 +288,7 @@ public class AttributesPanel extends BaseListPanel {
     @Override
     protected void checkFieldsFilled() {
         int physicalSum = this.getPhysicalPointsSum();
-        int physicalMax = this.getPhyiscalMaxPoints();
+        int physicalMax = this.getPhysicalMaxPoints();
         int socialSum = this.getSocialPointsSum();
         int socialMax = this.getSocialMaxPoints();
         int mentalSum = this.getMentalPointsSum();
@@ -306,7 +306,7 @@ public class AttributesPanel extends BaseListPanel {
     }
 
     /**
-     * Get the max points field with the propery weighting values set.
+     * Get the max points field with the properly weighting values set.
      *
      * @param weighting Enum to get the weighting value from
      *

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
     protected void init() {
         this.setTranslateFieldLabels(false);
         this.addBackgroundFields();
-        this.addDisciplinFields();
+        this.addDisciplineFields();
         this.addVirtueFields();
         this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
         this.fillCharacterData();
@@ -62,10 +62,10 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
     }
 
     /**
-     * Add all disciplin fields sorted by the translated name.
+     * Add all discipline fields sorted by the translated name.
      */
-    private void addDisciplinFields() {
-        this.addAdvantageFields("disciplins", AdvantageInterface.AdvantageType.DISCIPLINE);
+    private void addDisciplineFields() {
+        this.addAdvantageFields("disciplines", AdvantageInterface.AdvantageType.DISCIPLINE);
     }
 
     /**
@@ -115,14 +115,14 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
     public void setSpinnerMaximum(int maximum) {
         this.getFields("background").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("disciplins").stream().map((component) -> (JSpinner) component)
+        this.getFields("disciplines").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields("virtues").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
     /**
-     * Set the character used to prefill every field.
+     * Set the character used to pre-fill every field.
      *
      * @param character
      */

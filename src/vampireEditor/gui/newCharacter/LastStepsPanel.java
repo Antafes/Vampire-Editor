@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -95,7 +95,7 @@ public class LastStepsPanel extends BasePanel {
     }
 
     /**
-     * Add all disciplin fields sorted by the translated name.
+     * Add all road fields sorted by the translated name.
      */
     private void addRoadFields() {
         this.addFields("road");
@@ -302,7 +302,7 @@ public class LastStepsPanel extends BasePanel {
      * @param fields List of all fields
      * @param groups Groups the element should be added to
      *
-     * @return Item listener for the combobox
+     * @return Item listener for the combo box
      */
     private ItemListener getComboBoxItemListener(
         String type, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups
@@ -369,8 +369,8 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("flaw").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> (!Objects.equals(combobox.getSelectedItem(), "")))
-            .map((combobox) -> ((Flaw) combobox.getSelectedItem()).getCost())
+            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
+            .map((comboBox) -> ((Flaw) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
         if (sum > 7) {
@@ -402,8 +402,8 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("merit").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> (!Objects.equals(combobox.getSelectedItem(), "")))
-            .map((combobox) -> ((Merit) combobox.getSelectedItem()).getCost())
+            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
+            .map((comboBox) -> ((Merit) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
         return sum;
@@ -427,11 +427,11 @@ public class LastStepsPanel extends BasePanel {
     @Override
     public void fillCharacter(vampireEditor.entity.Character.Builder builder) {
         this.getFields("merit").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> !(Objects.equals(combobox.getSelectedItem(), "")))
-            .forEachOrdered((combobox) -> builder.addMerit((Merit) combobox.getSelectedItem()));
+            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
+            .forEachOrdered((comboBox) -> builder.addMerit((Merit) comboBox.getSelectedItem()));
         this.getFields("flaw").stream().map((field) -> (JComboBox) field)
-            .filter((combobox) -> !(Objects.equals(combobox.getSelectedItem(), "")))
-            .forEachOrdered((combobox) -> builder.addFlaw((Flaw) combobox.getSelectedItem()));
+            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
+            .forEachOrdered((comboBox) -> builder.addFlaw((Flaw) comboBox.getSelectedItem()));
         builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }

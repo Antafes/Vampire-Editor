@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -167,7 +167,7 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     }
 
     /**
-     * Set the character used to prefill every field.
+     * Set the character used to pre-fill every field.
      *
      * @param character
      */

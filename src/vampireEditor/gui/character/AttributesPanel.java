@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
      */
     @Override
     protected void init() {
-        this.addPhyiscalFields();
+        this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
         this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
@@ -56,7 +56,7 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
     /**
      * Add all talent fields sorted by the translated name.
      */
-    private void addPhyiscalFields() {
+    private void addPhysicalFields() {
         this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
     }
 
@@ -121,7 +121,7 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
     }
 
     /**
-     * Set the character used to prefill every field.
+     * Set the character used to pre-fill every field.
      *
      * @param character
      */
