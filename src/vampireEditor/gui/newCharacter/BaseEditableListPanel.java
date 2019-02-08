@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -237,7 +237,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      */
     @Override
     protected HashMap<String, Component> addRow(String element, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
-        return this.addRow(element, null, null, spinnerMinimum, fields, groups, layout);
+        return this.addRow(element, null, spinnerMinimum, fields, groups, layout);
     }
 
     /**

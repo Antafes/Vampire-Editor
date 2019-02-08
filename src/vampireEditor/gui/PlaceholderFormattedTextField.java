@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ public class PlaceholderFormattedTextField extends JFormattedTextField {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (this.placeholder.length() == 0 || this.getText().length() > 0) {
+        if (this.getPlaceholder().length() == 0 || this.getText().length() > 0) {
             return;
         }
 
@@ -69,7 +69,7 @@ public class PlaceholderFormattedTextField extends JFormattedTextField {
             RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(getDisabledTextColor());
-        g2d.drawString(this.placeholder, getInsets().left, g.getFontMetrics()
+        g2d.drawString(this.getPlaceholder(), getInsets().left, g.getFontMetrics()
             .getMaxAscent() + getInsets().top);
     }
 }

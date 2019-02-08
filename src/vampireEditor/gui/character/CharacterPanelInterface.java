@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ package vampireEditor.gui.character;
  */
 public interface CharacterPanelInterface {
     /**
-     * Set the character used to prefill every field.
+     * Set the character used to pre-fill every field.
      *
      * @param character
      */

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of Vampire Editor.
  *
  * Vampire Editor is free software: you can redistribute it and/or modify
@@ -21,8 +21,8 @@
  */
 package vampireEditor.gui;
 
-import java.awt.Component;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 
 /**
  * DocumentListener with the possibility to store the component it is created on.
