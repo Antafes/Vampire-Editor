@@ -94,6 +94,15 @@ public class VampireEditor {
     }
 
     /**
+     * Log a single line into the log file.
+     *
+     * @param line The line to add
+     */
+    public static void log(String line) {
+        VampireEditor.log(new ArrayList<>(Collections.singletonList(line)));
+    }
+
+    /**
      * Log something into the log file.
      *
      * @param lines The lines to log
