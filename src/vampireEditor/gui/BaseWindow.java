@@ -353,6 +353,7 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         this.configuration.setWindowLocation(this.getLocationOnScreen());
+        this.configuration.setExtendedState(this.getExtendedState());
         this.configuration.saveProperties();
         System.exit(0);
     }
@@ -523,6 +524,7 @@ public class BaseWindow extends javax.swing.JFrame {
         }
 
         this.setLocation(this.configuration.getWindowLocation());
+        this.setExtendedState(this.configuration.getExtendedState());
         this.languageMenu.setIcon(this.configuration.getLanguage().getIcon());
 
         if (this.configuration.getLanguage() == Configuration.Language.ENGLISH) {
