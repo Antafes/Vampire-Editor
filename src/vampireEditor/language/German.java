@@ -35,10 +35,42 @@ public class German implements LanguageInterface {
      * Create a new english language object.
      */
     public German() {
+        this.languages();
+        this.general();
+        this.menu();
+        this.about();
+        this.character();
+        this.health();
+        this.print();
+    }
+
+    /**
+     * List of available languages.
+     */
+    private void languages() {
         this.translations.put("english", "Englisch");
         this.translations.put("german", "Deutsch");
+    }
 
+    /**
+     * General texts like the programs title.
+     */
+    private void general() {
         this.translations.put("title", "Vampire Editor");
+        this.translations.put("darkAgesVampire", "Vampire aus der alten Welt");
+        this.translations.put("cancel", "Abbrechen");
+        this.translations.put("next", "Weiter");
+        this.translations.put("ok", "Ok");
+        this.translations.put("back", "Zurück");
+        this.translations.put("finish", "Fertig");
+        this.translations.put("other", "Anderes");
+        this.translations.put("description", "Beschreibung");
+    }
+
+    /**
+     * Texts for the menu entries.
+     */
+    private void menu() {
         this.translations.put("file", "Datei");
         this.translations.put("fileMnemonic", "D");
         this.translations.put("quit", "Beenden");
@@ -49,6 +81,8 @@ public class German implements LanguageInterface {
         this.translations.put("aboutMnemonic", "b");
         this.translations.put("new", "Neu");
         this.translations.put("newMnemonic", "N");
+        this.translations.put("open", "Öffnen");
+        this.translations.put("openMnemonic", "f");
         this.translations.put("save", "Speichern");
         this.translations.put("saveMnemonic", "S");
         this.translations.put("existingFile", "Existierende Datei");
@@ -56,12 +90,19 @@ public class German implements LanguageInterface {
         this.translations.put("couldNotLoad", "Laden fehlgeschlagen");
         this.translations.put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
         this.translations.put("close", "Schließen");
+    }
+
+    /**
+     * Content of the about dialog.
+     */
+    private void about() {
         this.translations.put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
-        this.translations.put("cancel", "Abbrechen");
-        this.translations.put("next", "Weiter");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Zurück");
-        this.translations.put("finish", "Fertig");
+    }
+
+    /**
+     * Texts for character creation and display.
+     */
+    private void character() {
         this.translations.put("newCharacter", "Neuer Charakter");
         this.translations.put("looks", "Aussehen");
         this.translations.put("name", "Name");
@@ -116,6 +157,72 @@ public class German implements LanguageInterface {
         this.translations.put("meritsAndFlaws", "Vor- und Nachteile");
         this.translations.put("willpower", "Willenskraft");
         this.translations.put("bloodStock", "Blutvorrat");
+        this.translations.put("printPreview", "Druckvorschau");
+        this.translations.put("otherTraits", "Andere Eigenschaften");
+        this.translations.put("experience", "Erfahrung");
+    }
+
+    /**
+     * Add texts only used on the print and print preview
+     */
+    private void print() {
+        this.translations.put("merit", "Vorzug");
+        this.translations.put("flaw", "Schwäche");
+        this.translations.put("rituals", "Rituale");
+        this.translations.put("paths", "Pfade");
+        this.translations.put("ritual", "Ritual");
+        this.translations.put("path", "Pfad");
+        this.translations.put("source", "Quelle");
+        this.translations.put("system", "System");
+        this.translations.put("combat", "Kampf");
+        this.translations.put("armor", "Rüstung");
+        this.translations.put("weapon/attack", "Waffe/Attacke");
+        this.translations.put("diff.", "Diff.");
+        this.translations.put("damage", "Schaden");
+        this.translations.put("range", "Reichweite");
+        this.translations.put("rate", "Rate");
+        this.translations.put("ammo", "Munition");
+        this.translations.put("conceal", "Verbergen");
+        this.translations.put("class", "Klasse");
+        this.translations.put("rating", "Einstufung");
+        this.translations.put("penalty", "Strafe");
+        this.translations.put("backgrounds", "Backgrounds");
+        this.translations.put("possessions", "Besitztümer");
+        this.translations.put("haven", "Zuflucht");
+        this.translations.put("allies", "Verbündete");
+        this.translations.put("mentor", "Mentor");
+        this.translations.put("contacts", "Kontakte");
+        this.translations.put("resources", "Ressourcen");
+        this.translations.put("domains", "Domänen");
+        this.translations.put("retainers", "Gefolge");
+        this.translations.put("herd", "Herde");
+        this.translations.put("status", "Status");
+        this.translations.put("influence", "Einfluss");
+        this.translations.put("gear", "Ausrüstung");
+        this.translations.put("equipment", "Ausstattung");
+        this.translations.put("feedingGrounds", "Nahrungsgründe");
+        this.translations.put("miscellaneous", "Verschiedenes");
+        this.translations.put("location", "Ort");
+        this.translations.put("history", "Geschichte");
+        this.translations.put("momentsOfTruth", "Momente der Wahrheit");
+        this.translations.put("goalsAndPlots", "Ziele & Pläne");
+        this.translations.put("visuals", "Aussehen");
+        this.translations.put("coterieChart", "Gesellschaft");
+        this.translations.put("characterSketch", "Charakterskizze");
+    }
+
+    /**
+     * Add texts for health
+     */
+    private void health() {
+        this.translations.put("health", "Gesundheit");
+        this.translations.put("bruised", "Zerschrammt");
+        this.translations.put("hurt", "Versehrt");
+        this.translations.put("injured", "Verletzt");
+        this.translations.put("wounded", "Verwundet");
+        this.translations.put("mauled", "Übel zugerichtet");
+        this.translations.put("crippled", "Verkrüppelt");
+        this.translations.put("incapacitated", "Außer Gefecht");
     }
 
     /**

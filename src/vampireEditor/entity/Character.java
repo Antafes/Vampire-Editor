@@ -26,16 +26,19 @@ import vampireEditor.entity.character.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Character object.
  */
 public class Character extends BaseEntity {
+    private final UUID id;
     private final String name;
     private final Clan clan;
     private final Generation generation;
     private final String chronicle;
-    private int experience = 0;
+    private final int experience;
     private final String nature;
     private final String hideout;
     private final String player;
@@ -50,6 +53,7 @@ public class Character extends BaseEntity {
     private final ArrayList<Flaw> flaws;
     private final Road road;
     private final int willpower;
+    private final int usedWillpower;
     private final int bloodStock;
     private final int age;
     private final int looksLikeAge;
@@ -84,6 +88,7 @@ public class Character extends BaseEntity {
      * Builder for character objects.
      */
     public static class Builder extends BaseEntity.Builder<Builder> {
+        private UUID id;
         private String name;
         private Clan clan;
         private Generation generation;
@@ -103,6 +108,7 @@ public class Character extends BaseEntity {
         private ArrayList<Flaw> flaws;
         private Road road;
         private int willpower;
+        private int usedWillpower;
         private int bloodStock;
         private int age;
         private int looksLikeAge;
@@ -139,6 +145,10 @@ public class Character extends BaseEntity {
         @Override
         public Character build() throws EntityException {
             this.checkValues();
+
+            if (this.id == null) {
+                this.id = UUID.randomUUID();
+            }
 
             return new Character(this);
         }
@@ -240,6 +250,10 @@ public class Character extends BaseEntity {
             if (this.advantages.size() < 6) {
                 throw new EntityException("Missing advantages");
             }
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
         }
 
         public Builder setName(String name) {
@@ -352,6 +366,12 @@ public class Character extends BaseEntity {
 
         public Builder setWillpower(int willpower) {
             this.willpower = willpower;
+
+            return this.self();
+        }
+
+        public Builder setUsedWillpower(int usedWillpower) {
+            this.usedWillpower = usedWillpower;
 
             return this.self();
         }
@@ -479,6 +499,7 @@ public class Character extends BaseEntity {
     protected Character(Builder builder) {
         super(builder);
 
+        this.id = builder.id;
         this.name = builder.name;
         this.clan = builder.clan;
         this.generation = builder.generation;
@@ -498,6 +519,7 @@ public class Character extends BaseEntity {
         this.flaws = builder.flaws;
         this.road = builder.road;
         this.willpower = builder.willpower;
+        this.usedWillpower = builder.usedWillpower;
         this.bloodStock = builder.bloodStock;
         this.age = builder.age;
         this.looksLikeAge = builder.looksLikeAge;
@@ -512,6 +534,15 @@ public class Character extends BaseEntity {
         this.sex = builder.sex;
         this.story = builder.story;
         this.description = builder.description;
+    }
+
+    /**
+     * Unique id of the character.
+     *
+     * @return
+     */
+    public UUID getId() {
+        return id;
     }
 
     /**
@@ -632,6 +663,18 @@ public class Character extends BaseEntity {
     }
 
     /**
+     * Get a list of attributes by type.
+     *
+     * @param type Type of attributes to get
+     *
+     * @return List of attributes
+     */
+    public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
+        return (ArrayList) this.attributes.stream()
+            .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
+    }
+
+    /**
      * Get the list of abilities the character has.
      *
      * @return
@@ -641,12 +684,36 @@ public class Character extends BaseEntity {
     }
 
     /**
+     * Get a list of abilities by type.
+     *
+     * @param type Type of abilities to get
+     *
+     * @return List of abilities
+     */
+    public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
+        return (ArrayList) this.abilities.stream()
+            .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
+    }
+
+    /**
      * Get the list of advantages the character has.
      *
      * @return
      */
     public ArrayList<Advantage> getAdvantages() {
         return this.advantages;
+    }
+
+    /**
+     * Get a list of advantages by type.
+     *
+     * @param type Type of advantages to get
+     *
+     * @return List of advantages
+     */
+    public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
+        return (ArrayList) this.advantages.stream()
+            .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
     }
 
     /**
@@ -683,6 +750,15 @@ public class Character extends BaseEntity {
      */
     public int getWillpower() {
         return this.willpower;
+    }
+
+    /**
+     * Get the amount of used willpower.
+     *
+     * @return
+     */
+    public int getUsedWillpower() {
+        return usedWillpower;
     }
 
     /**

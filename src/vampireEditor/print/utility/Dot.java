@@ -16,30 +16,43 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) $year, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.language;
+package vampireEditor.print.utility;
 
 /**
- * Language interface
+ * Enum for the dot images on the character sheet.
  *
  * @author Marian Pollzien
  */
-public interface LanguageInterface {
-    /**
-     * Get the translation for the given key.
-     *
-     * @param key The key to translate.
-     *
-     * @return The translated string
-     */
-    public String translate(String key);
+public enum Dot {
+    CIRCLE ("images/circleEmpty.png", "images/circleFilled.png"),
+    SQUARE ("images/squareEmpty.png", "images/squareFilled.png");
+
+    private final String empty;
+    private final String filled;
+
+    Dot(String empty, String filled) {
+        this.empty = empty;
+        this.filled = filled;
+    }
 
     /**
-     * Get the language.
+     * Get the empty dot path.
      *
      * @return
      */
-    public String getLanguage();
+    public String getEmpty() {
+        return this.empty;
+    }
+
+    /**
+     * Get the filled dot path.
+     *
+     * @return
+     */
+    public String getFilled() {
+        return this.filled;
+    }
 }

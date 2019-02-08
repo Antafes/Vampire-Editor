@@ -25,6 +25,8 @@ hs_err_pid*
 /dist
 /.idea
 /out
+/resources
+/Vampire Editor.iml
 
 # CI variables file
 ci/variables.yml
