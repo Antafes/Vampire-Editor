@@ -63,6 +63,7 @@ public class German implements LanguageInterface {
         this.translations.put("ok", "Ok");
         this.translations.put("back", "Zurück");
         this.translations.put("finish", "Fertig");
+        this.translations.put("other", "Anderes");
     }
 
     /**
@@ -182,6 +183,23 @@ public class German implements LanguageInterface {
         this.translations.put("rating", "Einstufung");
         this.translations.put("penalty", "Strafe");
         this.translations.put("description", "Beschreibung");
+        this.translations.put("backgrounds", "Backgrounds");
+        this.translations.put("possessions", "Besitztümer");
+        this.translations.put("haven", "Zuflucht");
+        this.translations.put("allies", "Verbündete");
+        this.translations.put("mentor", "Mentor");
+        this.translations.put("contacts", "Kontakte");
+        this.translations.put("resources", "Ressourcen");
+        this.translations.put("domains", "Domänen");
+        this.translations.put("retainers", "Gefolge");
+        this.translations.put("herd", "Herde");
+        this.translations.put("status", "Status");
+        this.translations.put("influence", "Einfluss");
+        this.translations.put("gear", "Ausrüstung");
+        this.translations.put("equipment", "Ausstattung");
+        this.translations.put("feedingGrounds", "Nahrungsgründe");
+        this.translations.put("miscellaneous", "Verschiedenes");
+        this.translations.put("location", "Ort");
     }
 
     private void health() {

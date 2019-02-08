@@ -49,6 +49,7 @@ public class MeritsAndFlaws extends PrintBase {
         super(character);
 
         this.setPreviousPage(General.class);
+        this.setFollowingPage(Backgrounds.class);
     }
 
     /**
