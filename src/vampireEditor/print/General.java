@@ -45,6 +45,8 @@ public class General extends PrintBase {
      */
     public General(Character character) {
         super(character);
+
+        this.setFollowingPage(MeritsAndFlaws.class);
     }
 
     /**

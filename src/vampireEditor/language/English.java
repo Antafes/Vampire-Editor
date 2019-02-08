@@ -41,6 +41,7 @@ public class English implements LanguageInterface {
         this.about();
         this.character();
         this.health();
+        this.print();
     }
 
     /**
@@ -157,6 +158,30 @@ public class English implements LanguageInterface {
         this.translations.put("printPreview", "Print preview");
         this.translations.put("otherTraits", "Other traits");
         this.translations.put("experience", "Experience");
+    }
+
+    private void print() {
+        this.translations.put("merit", "Merit");
+        this.translations.put("flaw", "Flaw");
+        this.translations.put("rituals", "Rituals");
+        this.translations.put("paths", "Paths");
+        this.translations.put("ritual", "Ritual");
+        this.translations.put("path", "Path");
+        this.translations.put("source", "Source");
+        this.translations.put("system", "System");
+        this.translations.put("combat", "Combat");
+        this.translations.put("armor", "Armor");
+        this.translations.put("weapon/attack", "Weapon/Attack");
+        this.translations.put("diff.", "Diff.");
+        this.translations.put("damage", "Damage");
+        this.translations.put("range", "Range");
+        this.translations.put("rate", "Rate");
+        this.translations.put("ammo", "Ammo");
+        this.translations.put("conceal", "Conceal");
+        this.translations.put("class", "Class");
+        this.translations.put("rating", "Rating");
+        this.translations.put("penalty", "Penalty");
+        this.translations.put("description", "Description");
     }
 
     private void health() {

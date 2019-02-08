@@ -41,6 +41,7 @@ public class German implements LanguageInterface {
         this.about();
         this.character();
         this.health();
+        this.print();
     }
 
     /**
@@ -157,6 +158,30 @@ public class German implements LanguageInterface {
         this.translations.put("printPreview", "Druckvorschau");
         this.translations.put("otherTraits", "Andere Eigenschaften");
         this.translations.put("experience", "Erfahrung");
+    }
+
+    private void print() {
+        this.translations.put("merit", "Vorzug");
+        this.translations.put("flaw", "Schwäche");
+        this.translations.put("rituals", "Rituale");
+        this.translations.put("paths", "Pfade");
+        this.translations.put("ritual", "Ritual");
+        this.translations.put("path", "Pfad");
+        this.translations.put("source", "Quelle");
+        this.translations.put("system", "System");
+        this.translations.put("combat", "Kampf");
+        this.translations.put("armor", "Rüstung");
+        this.translations.put("weapon/attack", "Waffe/Attacke");
+        this.translations.put("diff.", "Diff.");
+        this.translations.put("damage", "Schaden");
+        this.translations.put("range", "Reichweite");
+        this.translations.put("rate", "Rate");
+        this.translations.put("ammo", "Munition");
+        this.translations.put("conceal", "Verbergen");
+        this.translations.put("class", "Klasse");
+        this.translations.put("rating", "Einstufung");
+        this.translations.put("penalty", "Strafe");
+        this.translations.put("description", "Beschreibung");
     }
 
     private void health() {
