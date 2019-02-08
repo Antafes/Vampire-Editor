@@ -11,8 +11,8 @@ cd dist/
 zip -v VampireEditor *
 cd ../
 cp dist/VampireEditor.zip ../dist
-DATE=`date +%d%m%Y`
+DATE=`date +%d%m%Y%H%M`
 echo "build-$DATE" >> ../dist/name
 TAG=`cat ../vampire-editor-pre-release/tag`
 echo "$TAG-$DATE" >> ../dist/tag
-cp ../vampire-editor-pre-release/commit_sha dist/
+cp ../vampire-editor-pre-release/commit_sha ../dist/
