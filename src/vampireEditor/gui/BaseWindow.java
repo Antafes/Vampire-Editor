@@ -31,6 +31,7 @@ import vampireEditor.entity.character.Attribute;
 import vampireEditor.entity.character.Road;
 import vampireEditor.entity.storage.CharacterStorage;
 import vampireEditor.gui.character.CharacterTabbedPane;
+import vampireEditor.gui.element.CloseableTabbedPane;
 import vampireEditor.language.LanguageInterface;
 
 import javax.swing.*;
@@ -58,7 +59,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private JDialog aboutDialog;
     private JMenuItem aboutMenuItem;
     private JTextPane aboutTextPane;
-    private JTabbedPane charactersTabPane;
+    private CloseableTabbedPane charactersTabPane;
     private JButton closeAboutButton;
     private JMenuItem closeMenuItem;
     private JRadioButtonMenuItem englishMenuItem;
@@ -211,7 +212,7 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         };
         openFileChooser = new javax.swing.JFileChooser();
-        charactersTabPane = new javax.swing.JTabbedPane();
+        charactersTabPane = new CloseableTabbedPane();
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -608,8 +609,7 @@ public class BaseWindow extends javax.swing.JFrame {
             CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
             characterTabbedPane.setCharacter(character);
             characterTabbedPane.init();
-            this.charactersTabPane.add(characterTabbedPane);
-            this.charactersTabPane.setTitleAt(this.charactersTabPane.indexOfComponent(characterTabbedPane), character.getName());
+            this.charactersTabPane.add(character.getName(), characterTabbedPane);
             this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(characterTabbedPane));
         } catch (Exception ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
