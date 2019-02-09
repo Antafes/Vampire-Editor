@@ -28,7 +28,7 @@ import vampireEditor.entity.character.AdvantageInterface;
 import vampireEditor.entity.character.Clan;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
-import vampireEditor.gui.Weighting;
+import vampireEditor.gui.utility.Weighting;
 import vampireEditor.utility.StringComparator;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

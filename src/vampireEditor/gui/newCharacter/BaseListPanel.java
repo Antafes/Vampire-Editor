@@ -23,7 +23,7 @@ package vampireEditor.gui.newCharacter;
 
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
-import vampireEditor.gui.Weighting;
+import vampireEditor.gui.utility.Weighting;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;

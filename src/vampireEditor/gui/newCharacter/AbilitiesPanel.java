@@ -27,7 +27,7 @@ import vampireEditor.entity.character.Ability;
 import vampireEditor.entity.character.AbilityInterface;
 import vampireEditor.gui.ComponentChangeListener;
 import vampireEditor.gui.NewCharacterDialog;
-import vampireEditor.gui.Weighting;
+import vampireEditor.gui.utility.Weighting;
 import vampireEditor.utility.StringComparator;
 
 import javax.swing.*;

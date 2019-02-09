@@ -23,7 +23,7 @@ package vampireEditor.print.utility;
 
 import vampireEditor.entity.BaseEntity;
 import vampireEditor.entity.EntityException;
-import vampireEditor.gui.Font;
+import vampireEditor.gui.utility.Font;
 
 import javax.swing.*;
 import java.awt.*;

@@ -31,9 +31,11 @@ import vampireEditor.entity.character.Attribute;
 import vampireEditor.entity.character.Road;
 import vampireEditor.entity.storage.CharacterStorage;
 import vampireEditor.gui.character.CharacterTabbedPane;
+import vampireEditor.gui.element.CloseableTabbedPane;
 import vampireEditor.language.LanguageInterface;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -57,7 +59,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private JDialog aboutDialog;
     private JMenuItem aboutMenuItem;
     private JTextPane aboutTextPane;
-    private JTabbedPane charactersTabPane;
+    private CloseableTabbedPane charactersTabPane;
     private JButton closeAboutButton;
     private JMenuItem closeMenuItem;
     private JRadioButtonMenuItem englishMenuItem;
@@ -210,7 +212,7 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         };
         openFileChooser = new javax.swing.JFileChooser();
-        charactersTabPane = new javax.swing.JTabbedPane();
+        charactersTabPane = new CloseableTabbedPane();
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -433,7 +435,7 @@ public class BaseWindow extends javax.swing.JFrame {
         vampireEditor.entity.Character character = this.getActiveCharacter();
         this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
         this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
-        this.saveFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        this.saveFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.saveFileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -455,7 +457,7 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         this.openFileChooser.setCurrentDirectory(this.configuration.getOpenDirPath());
-        this.openFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        this.openFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -607,8 +609,7 @@ public class BaseWindow extends javax.swing.JFrame {
             CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
             characterTabbedPane.setCharacter(character);
             characterTabbedPane.init();
-            this.charactersTabPane.add(characterTabbedPane);
-            this.charactersTabPane.setTitleAt(this.charactersTabPane.indexOfComponent(characterTabbedPane), character.getName());
+            this.charactersTabPane.add(character.getName(), characterTabbedPane);
             this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(characterTabbedPane));
         } catch (Exception ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);

@@ -27,7 +27,7 @@ import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.Flaw;
 import vampireEditor.entity.character.Merit;
-import vampireEditor.gui.Font;
+import vampireEditor.gui.utility.Font;
 import vampireEditor.print.model.WeaponTableModel;
 import vampireEditor.print.utility.StringProperties;
 

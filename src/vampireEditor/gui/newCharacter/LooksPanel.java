@@ -27,7 +27,8 @@ import vampireEditor.entity.character.Clan;
 import vampireEditor.entity.character.Generation;
 import vampireEditor.gui.ComponentDocumentListener;
 import vampireEditor.gui.NewCharacterDialog;
-import vampireEditor.gui.NewCharacterFocusTraversalPolicy;
+import vampireEditor.gui.element.PlaceholderFormattedTextField;
+import vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import vampireEditor.language.LanguageInterface;
 import vampireEditor.utility.ClanComparator;
 
@@ -96,8 +97,8 @@ public class LooksPanel extends javax.swing.JPanel {
         requiredLabel = new javax.swing.JLabel();
         sizeField = new javax.swing.JTextField();
         weightLabel = new javax.swing.JLabel();
-        dayOfBirthField = new vampireEditor.gui.PlaceholderFormattedTextField();
-        dayOfDeathField = new vampireEditor.gui.PlaceholderFormattedTextField();
+        dayOfBirthField = new PlaceholderFormattedTextField();
+        dayOfDeathField = new PlaceholderFormattedTextField();
         hairColorLabel = new javax.swing.JLabel();
         hairColorField = new javax.swing.JTextField();
         generationComboBox = new javax.swing.JComboBox<>();
@@ -695,9 +696,9 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel clanLabel;
     private javax.swing.JTextField conceptField;
     private javax.swing.JLabel conceptLabel;
-    private vampireEditor.gui.PlaceholderFormattedTextField dayOfBirthField;
+    private PlaceholderFormattedTextField dayOfBirthField;
     private javax.swing.JLabel dayOfBirthLabel;
-    private vampireEditor.gui.PlaceholderFormattedTextField dayOfDeathField;
+    private PlaceholderFormattedTextField dayOfDeathField;
     private javax.swing.JLabel dayOfDeathLabel;
     private javax.swing.JTextField demeanorField;
     private javax.swing.JLabel demeanorLabel;
