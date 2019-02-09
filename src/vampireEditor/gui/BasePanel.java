@@ -22,6 +22,7 @@
 package vampireEditor.gui;
 
 import vampireEditor.Configuration;
+import vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import vampireEditor.language.LanguageInterface;
 
 import javax.swing.*;

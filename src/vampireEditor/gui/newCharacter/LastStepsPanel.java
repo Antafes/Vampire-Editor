@@ -27,7 +27,7 @@ import vampireEditor.entity.character.Merit;
 import vampireEditor.entity.character.Road;
 import vampireEditor.entity.character.SpecialFeature;
 import vampireEditor.gui.NewCharacterDialog;
-import vampireEditor.gui.WideComboBox;
+import vampireEditor.gui.element.WideComboBox;
 import vampireEditor.utility.StringComparator;
 
 import javax.swing.*;

@@ -16,10 +16,10 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) $year, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package vampireEditor.gui;
+package vampireEditor.gui.utility;
 
 import javax.swing.*;
 import java.awt.*;

@@ -34,6 +34,7 @@ import vampireEditor.gui.character.CharacterTabbedPane;
 import vampireEditor.language.LanguageInterface;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -433,7 +434,7 @@ public class BaseWindow extends javax.swing.JFrame {
         vampireEditor.entity.Character character = this.getActiveCharacter();
         this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
         this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
-        this.saveFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        this.saveFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.saveFileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -455,7 +456,7 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         this.openFileChooser.setCurrentDirectory(this.configuration.getOpenDirPath());
-        this.openFileChooser.setFileFilter(new ExtensionFileFilter("XML", "xml"));
+        this.openFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {

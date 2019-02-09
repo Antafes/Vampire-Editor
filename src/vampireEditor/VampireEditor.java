@@ -153,7 +153,7 @@ public class VampireEditor {
         BaseWindow baseWindow = new BaseWindow();
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image img = kit.createImage(
-            this.getClass().getClassLoader().getResource("images/logo16.png")
+            VampireEditor.getResourceInJar("images/logo16.png")
         );
         baseWindow.setIconImage(img);
         baseWindow.setVisible(true);

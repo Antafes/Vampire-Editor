@@ -26,7 +26,7 @@ import vampireEditor.VampireEditor;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
 import vampireEditor.entity.character.*;
-import vampireEditor.gui.Font;
+import vampireEditor.gui.utility.Font;
 import vampireEditor.print.utility.Dot;
 import vampireEditor.print.utility.StringProperties;
 

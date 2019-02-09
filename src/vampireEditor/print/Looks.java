@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
-import vampireEditor.gui.Font;
+import vampireEditor.gui.utility.Font;
 import vampireEditor.print.utility.StringProperties;
 
 import java.text.DateFormat;

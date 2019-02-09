@@ -26,7 +26,7 @@ import vampireEditor.Configuration;
 import vampireEditor.VampireEditor;
 import vampireEditor.entity.Character;
 import vampireEditor.entity.EntityException;
-import vampireEditor.gui.Font;
+import vampireEditor.gui.utility.Font;
 import vampireEditor.gui.TranslatableComponent;
 import vampireEditor.language.LanguageInterface;
 import vampireEditor.print.element.BarLabel;
