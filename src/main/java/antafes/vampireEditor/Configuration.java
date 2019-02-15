@@ -216,8 +216,9 @@ public class Configuration
      */
     public void setOpenDirPath(String path)
     {
-        if (new File(path).isFile())
+        if (new File(path).isFile()) {
             path = new File(path).getParent();
+        }
 
         this.properties.setProperty("openDirPath", path);
     }

@@ -58,7 +58,7 @@ public class CharacterStorage {
         HashMap<String, String> rootAttributes = new HashMap<>();
         rootAttributes.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         this.configuration = Configuration.getInstance();
-        String characterSchemaPath = "vampireEditor/character.xsd";
+        String characterSchemaPath = "character.xsd";
         this.xw = new XMLWriter("character");
         this.xw.addRootNodeAttributes(rootAttributes);
         this.xp = new XMLParser(VampireEditor.getFileInJar(characterSchemaPath));

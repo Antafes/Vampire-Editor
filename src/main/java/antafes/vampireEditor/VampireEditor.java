@@ -165,7 +165,7 @@ public class VampireEditor {
      * @return Path to the data directory
      */
     private String getDataPath() {
-        return "vampireEditor/data/";
+        return "data/";
     }
 
     /**
@@ -181,14 +181,16 @@ public class VampireEditor {
             ArrayList<Element> elements = XMLParser.getAllChildren(root);
             elements.forEach((element) -> {
                 try {
-                    VampireEditor.GENERATIONS.add(
-                        new Generation.Builder()
-                            .setGeneration(Integer.parseInt(element.getAttribute("value")))
-                            .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
-                            .setMaximumBloodStock(XMLParser.getTagValueInt("maximumBloodStock", element))
-                            .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
-                            .build()
-                    );
+                    Generation generation = new Generation.Builder()
+                        .setGeneration(Integer.parseInt(element.getAttribute("value")))
+                        .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
+                        .setMaximumBloodStock(XMLParser.getTagValueInt("maximumBloodStock", element))
+                        .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
+                        .build();
+
+                    if (VampireEditor.getGeneration(generation.getGeneration()) == null) {
+                        VampireEditor.GENERATIONS.add(generation);
+                    }
                 } catch (EntityException ex) {
                     Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -324,7 +326,7 @@ public class VampireEditor {
                             .setKey(element.getAttribute("key"))
                             .setNames(names)
                             .setNicknames(nicknames)
-                            .setDisciplines(this.getDisciplines(XMLParser.getTagElement("advantages", element)))
+                            .setAdvantages(this.getAdvantages(XMLParser.getTagElement("advantages", element)))
                             .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
                             .build()
                     );
@@ -478,17 +480,17 @@ public class VampireEditor {
      *
      * @return List of advantage objects
      */
-    private ArrayList<Advantage> getDisciplines(Element element) {
-        ArrayList<Advantage> disciplines = new ArrayList<>();
+    private ArrayList<Advantage> getAdvantages(Element element) {
+        ArrayList<Advantage> advantagesList = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
 
         advantages.forEach(
-            (listElement) -> disciplines.add(
+            (listElement) -> advantagesList.add(
                 VampireEditor.getAdvantage(listElement.getChildNodes().item(0).getNodeValue())
             )
         );
 
-        return disciplines;
+        return advantagesList;
     }
 
     /**
@@ -499,12 +501,16 @@ public class VampireEditor {
      * @return List of weakness objects
      */
     private ArrayList<Weakness> getWeaknesses(Element element) {
-        ArrayList<Weakness> weaknesses = new ArrayList<>();
-        ArrayList<Element> advantages = XMLParser.getAllChildren(element);
+        ArrayList<Weakness> weaknessesList = new ArrayList<>();
+        ArrayList<Element> weaknesses = XMLParser.getAllChildren(element);
 
-        advantages.forEach((listElement) -> weaknesses.add(VampireEditor.getWeakness(listElement.getNodeValue())));
+        weaknesses.forEach(
+            (listElement) -> weaknessesList.add(
+                VampireEditor.getWeakness(listElement.getChildNodes().item(0).getNodeValue())
+            )
+        );
 
-        return weaknesses;
+        return weaknessesList;
     }
 
     /**

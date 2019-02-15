@@ -26,6 +26,7 @@ import antafes.vampireEditor.Configuration;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * A base translated entity.
@@ -247,5 +248,42 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         }
 
         return name;
+    }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        BaseTranslatedEntity entity = (BaseTranslatedEntity) obj;
+
+        return key.equals(entity.key) &&
+            Objects.equals(names, entity.names);
+    }
+
+    /**
+     * Generate a hash code.
+     *
+     * @return Hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, names);
     }
 }

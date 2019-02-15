@@ -24,6 +24,7 @@ package antafes.vampireEditor.entity;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -160,7 +161,7 @@ public class Character extends BaseEntity {
          */
         @Override
         protected void checkValues() throws EntityException {
-            if (this.name.isEmpty()) {
+            if (this.name == null || this.name.isEmpty()) {
                 throw new EntityException("Missing name");
             }
 
@@ -172,15 +173,15 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing generation");
             }
 
-            if (this.nature.isEmpty()) {
+            if (this.nature == null || this.nature.isEmpty()) {
                 throw new EntityException("Missing nature");
             }
 
-            if (this.demeanor.isEmpty()) {
+            if (this.demeanor == null || this.demeanor.isEmpty()) {
                 throw new EntityException("Missing demeanor");
             }
 
-            if (this.concept.isEmpty()) {
+            if (this.concept == null || this.concept.isEmpty()) {
                 throw new EntityException("Missing concept");
             }
 
@@ -200,12 +201,70 @@ public class Character extends BaseEntity {
         }
 
         /**
+         * Get the list of methods from which data can be fetched.
+         *
+         * @return A list of getter methods
+         */
+        @Override
+        protected ArrayList<Method> getDataMethods() {
+            ArrayList<Method> methodList = super.getDataMethods();
+
+            for (Method declaredMethod : Character.class.getDeclaredMethods()) {
+                if (this.checkMethod(declaredMethod)) {
+                    continue;
+                }
+
+                methodList.add(declaredMethod);
+            }
+
+            return methodList;
+        }
+
+        /**
+         * Check whether the given method can be used to fill in data.
+         *
+         * @param method The method to check.
+         *
+         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
+         */
+        @Override
+        protected boolean checkMethod(Method method) {
+            return super.checkMethod(method)
+                || method.getName().equals("getAttributesByType")
+                || method.getName().equals("getAbilitiesByType")
+                || method.getName().equals("getAdvantagesByType");
+        }
+
+        /**
+         * Get a setter method from the given getter.
+         *
+         * @param getter The getter to build the setter out of
+         *
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
+         */
+        @Override
+        protected Method getSetter(Method getter) throws NoSuchMethodException {
+            try {
+                return super.getSetter(getter);
+            } catch (NoSuchMethodException ex) {
+                Class[] parameterTypes = new Class[1];
+                parameterTypes[0] = getter.getReturnType();
+
+                return Character.Builder.class.getDeclaredMethod(
+                    "set" + getter.getName().substring(3),
+                    parameterTypes
+                );
+            }
+        }
+
+        /**
          * Check if the attributes are set correctly.
          *
          * @throws EntityException Thrown if attributes are empty, some are missing or there are too many
          */
         protected void checkAttributes() throws EntityException {
-            if (this.attributes.isEmpty()) {
+            if (this.attributes == null || this.attributes.isEmpty()) {
                 throw new EntityException("Attributes are empty");
             }
 
@@ -224,7 +283,7 @@ public class Character extends BaseEntity {
          * @throws EntityException Thrown if abilities are empty, some are missing or there are too many
          */
         protected void checkAbilities() throws EntityException {
-            if (this.abilities.isEmpty()) {
+            if (this.abilities == null || this.abilities.isEmpty()) {
                 throw new EntityException("Abilities are empty");
             }
 
@@ -243,7 +302,7 @@ public class Character extends BaseEntity {
          * @throws EntityException Thrown if advantages are empty or some are missing
          */
         protected void checkAdvantages() throws EntityException {
-            if (this.advantages.isEmpty()) {
+            if (this.advantages == null || this.advantages.isEmpty()) {
                 throw new EntityException("Advantages are empty");
             }
 
@@ -252,8 +311,10 @@ public class Character extends BaseEntity {
             }
         }
 
-        public void setId(UUID id) {
+        public Builder setId(UUID id) {
             this.id = id;
+
+            return this.self();
         }
 
         public Builder setName(String name) {

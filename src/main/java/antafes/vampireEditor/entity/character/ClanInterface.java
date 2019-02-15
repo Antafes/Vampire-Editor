@@ -55,7 +55,7 @@ public interface ClanInterface {
      *
      * @return
      */
-    public ArrayList<Advantage> getDisciplines();
+    public ArrayList<Advantage> getAdvantages();
 
     /**
      * Get a list of weaknesses that every member of the clan has.

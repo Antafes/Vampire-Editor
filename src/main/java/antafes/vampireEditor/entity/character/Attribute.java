@@ -26,6 +26,7 @@ import antafes.vampireEditor.entity.EntityException;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Attribute object.
@@ -165,5 +166,42 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
     @Override
     public int getValue() {
         return value;
+    }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        Attribute attribute = (Attribute) obj;
+
+        return value == attribute.value &&
+            type == attribute.type;
+    }
+
+    /**
+     * Generate a hash code.
+     *
+     * @return Hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, value);
     }
 }

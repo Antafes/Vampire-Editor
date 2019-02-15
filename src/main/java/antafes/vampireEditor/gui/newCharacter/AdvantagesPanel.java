@@ -334,7 +334,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
             comboBoxes.subList(0, comboBoxes.size() - 1).clear();
         }
 
-        clan.getDisciplines().forEach((discipline) -> {
+        clan.getAdvantages().forEach((discipline) -> {
             ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
             JComboBox comboBox = comboBoxList.get(comboBoxList.size() - 1);
             comboBox.setSelectedItem(discipline);

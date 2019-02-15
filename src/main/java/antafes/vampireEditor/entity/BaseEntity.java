@@ -129,4 +129,20 @@ public abstract class BaseEntity {
      */
     protected BaseEntity(Builder<?> builder) {
     }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        return (obj != null && this.getClass() == obj.getClass());
+    }
 }

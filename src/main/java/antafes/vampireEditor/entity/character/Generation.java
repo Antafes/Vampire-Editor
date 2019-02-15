@@ -24,6 +24,8 @@ package antafes.vampireEditor.entity.character;
 import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.EntityException;
 
+import java.util.Objects;
+
 /**
  * Generation object.
  *
@@ -221,5 +223,41 @@ public class Generation extends BaseEntity implements GenerationInterface {
     @Override
     public String toString() {
         return Integer.toString(generation);
+    }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        Generation entity = (Generation) obj;
+
+        if (this.generation != entity.generation
+            || this.maximumAttributes != entity.maximumAttributes
+            || this.maximumBloodStock != entity.maximumBloodStock
+            || this.bloodPerRound != entity.bloodPerRound) {
+            return false;
+        }
+
+        return super.equals(obj);
+    }
+
+    /**
+     * Generate a hash code.
+     *
+     * @return Hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            generation,
+            maximumAttributes,
+            maximumBloodStock,
+            bloodPerRound
+        );
     }
 }

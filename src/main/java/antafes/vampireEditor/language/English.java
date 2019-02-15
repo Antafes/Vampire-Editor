@@ -21,16 +21,12 @@
  */
 package antafes.vampireEditor.language;
 
-import java.util.HashMap;
-
 /**
  * Language class for english.
  *
  * @author Marian Pollzien
  */
-public class English implements LanguageInterface {
-    private final HashMap<String, String> translations = new HashMap<>();
-
+public class English extends Language {
     /**
      * Create a new english language object.
      */
@@ -48,193 +44,181 @@ public class English implements LanguageInterface {
      * List of available languages.
      */
     private void languages() {
-        this.translations.put("english", "English");
-        this.translations.put("german", "German");
+        this.getTranslations().put("english", "English");
+        this.getTranslations().put("german", "German");
     }
 
     /**
      * General texts like the programs title.
      */
     private void general() {
-        this.translations.put("title", "Vampire Editor");
-        this.translations.put("darkAgesVampire", "Dark Ages: Vampire");
-        this.translations.put("cancel", "Cancel");
-        this.translations.put("next", "Next");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Back");
-        this.translations.put("finish", "Finish");
-        this.translations.put("other", "Other");
-        this.translations.put("description", "Description");
+        this.getTranslations().put("title", "Vampire Editor");
+        this.getTranslations().put("darkAgesVampire", "Dark Ages: Vampire");
+        this.getTranslations().put("cancel", "Cancel");
+        this.getTranslations().put("next", "Next");
+        this.getTranslations().put("ok", "Ok");
+        this.getTranslations().put("back", "Back");
+        this.getTranslations().put("finish", "Finish");
+        this.getTranslations().put("other", "Other");
+        this.getTranslations().put("description", "Description");
     }
 
     /**
      * Texts for the menu entries.
      */
     private void menu() {
-        this.translations.put("file", "File");
-        this.translations.put("fileMnemonic", "F");
-        this.translations.put("quit", "Quit");
-        this.translations.put("quitMnemonic", "Q");
-        this.translations.put("help", "Help");
-        this.translations.put("helpMnemonic", "H");
-        this.translations.put("about", "About");
-        this.translations.put("aboutMnemonic", "A");
-        this.translations.put("new", "New");
-        this.translations.put("newMnemonic", "N");
-        this.translations.put("open", "Open");
-        this.translations.put("openMnemonic", "S");
-        this.translations.put("save", "Save");
-        this.translations.put("saveMnemonic", "S");
-        this.translations.put("existingFile", "Existing file");
-        this.translations.put("fileExists", "The selected file already exists, overwrite?");
-        this.translations.put("couldNotLoad", "Could not load");
-        this.translations.put("couldNotLoadCharacter", "Could not load the character.");
-        this.translations.put("close", "Close");
+        this.getTranslations().put("file", "File");
+        this.getTranslations().put("fileMnemonic", "F");
+        this.getTranslations().put("quit", "Quit");
+        this.getTranslations().put("quitMnemonic", "Q");
+        this.getTranslations().put("help", "Help");
+        this.getTranslations().put("helpMnemonic", "H");
+        this.getTranslations().put("about", "About");
+        this.getTranslations().put("aboutMnemonic", "A");
+        this.getTranslations().put("new", "New");
+        this.getTranslations().put("newMnemonic", "N");
+        this.getTranslations().put("open", "Open");
+        this.getTranslations().put("openMnemonic", "S");
+        this.getTranslations().put("save", "Save");
+        this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("existingFile", "Existing file");
+        this.getTranslations().put("fileExists", "The selected file already exists, overwrite?");
+        this.getTranslations().put("couldNotLoad", "Could not load");
+        this.getTranslations().put("couldNotLoadCharacter", "Could not load the character.");
+        this.getTranslations().put("close", "Close");
     }
 
     /**
      * Content of the about dialog.
      */
     private void about() {
-        this.translations.put("aboutText", "This tool was created by Marian Pollzien.");
+        this.getTranslations().put("aboutText", "This tool was created by Marian Pollzien.");
     }
 
     /**
      * Texts for character creation and display.
      */
     private void character() {
-        this.translations.put("newCharacter", "New character");
-        this.translations.put("looks", "Looks");
-        this.translations.put("name", "Name");
-        this.translations.put("chronicle", "Chronicle");
-        this.translations.put("generation", "Generation");
-        this.translations.put("nature", "Nature");
-        this.translations.put("hideout", "Hideout");
-        this.translations.put("player", "Player");
-        this.translations.put("demeanor", "Demeanor");
-        this.translations.put("concept", "Concept");
-        this.translations.put("sire", "Sire");
-        this.translations.put("clan", "Clan");
-        this.translations.put("sect", "Sect");
-        this.translations.put("age", "Age");
-        this.translations.put("looksLikeAge", "Looks like age");
-        this.translations.put("dayOfBirth", "Day of birth");
-        this.translations.put("dayOfDeath", "Day of death");
-        this.translations.put("hairColor", "Hair color");
-        this.translations.put("eyeColor", "Eye color");
-        this.translations.put("skinColor", "Skin color");
-        this.translations.put("nationality", "Nationality");
-        this.translations.put("size", "Size");
-        this.translations.put("weight", "Weight");
-        this.translations.put("sex", "Sex");
-        this.translations.put("MALE", "male");
-        this.translations.put("FEMALE", "female");
-        this.translations.put("required", "Fields marked with * are required.");
-        this.translations.put("PRIMARY", "Primary");
-        this.translations.put("SECONDARY", "Secondary");
-        this.translations.put("TERTIARY", "Tertiary");
-        this.translations.put("freeAdditionalPoints", "Free additional points");
-        this.translations.put("attributes", "Attributes");
-        this.translations.put("physical", "Physical");
-        this.translations.put("social", "Social");
-        this.translations.put("mental", "Mental");
-        this.translations.put("abilities", "Abilities");
-        this.translations.put("talents", "Talents");
-        this.translations.put("skills", "Skills");
-        this.translations.put("knowledges", "Knowledges");
-        this.translations.put("advantages", "Advantages");
-        this.translations.put("background", "Background");
-        this.translations.put("disciplins", "Disciplins");
-        this.translations.put("virtues", "Virtues");
-        this.translations.put("lastSteps", "Last steps");
-        this.translations.put("merits", "Merits");
-        this.translations.put("flaws", "Flaws");
-        this.translations.put("road", "Road");
-        this.translations.put("humanity", "Humanity");
-        this.translations.put("roadOf", "Road of ...");
-        this.translations.put("flawInfoTooMany", "Your selected flaws exceed the maximum of 7 points.");
-        this.translations.put("general", "General");
-        this.translations.put("meritsAndFlaws", "Merits and flaws");
-        this.translations.put("willpower", "Willpower");
-        this.translations.put("bloodStock", "Blood pool");
-        this.translations.put("printPreview", "Print preview");
-        this.translations.put("otherTraits", "Other traits");
-        this.translations.put("experience", "Experience");
+        this.getTranslations().put("newCharacter", "New character");
+        this.getTranslations().put("looks", "Looks");
+        this.getTranslations().put("name", "Name");
+        this.getTranslations().put("chronicle", "Chronicle");
+        this.getTranslations().put("generation", "Generation");
+        this.getTranslations().put("nature", "Nature");
+        this.getTranslations().put("hideout", "Hideout");
+        this.getTranslations().put("player", "Player");
+        this.getTranslations().put("demeanor", "Demeanor");
+        this.getTranslations().put("concept", "Concept");
+        this.getTranslations().put("sire", "Sire");
+        this.getTranslations().put("clan", "Clan");
+        this.getTranslations().put("sect", "Sect");
+        this.getTranslations().put("age", "Age");
+        this.getTranslations().put("looksLikeAge", "Looks like age");
+        this.getTranslations().put("dayOfBirth", "Day of birth");
+        this.getTranslations().put("dayOfDeath", "Day of death");
+        this.getTranslations().put("hairColor", "Hair color");
+        this.getTranslations().put("eyeColor", "Eye color");
+        this.getTranslations().put("skinColor", "Skin color");
+        this.getTranslations().put("nationality", "Nationality");
+        this.getTranslations().put("size", "Size");
+        this.getTranslations().put("weight", "Weight");
+        this.getTranslations().put("sex", "Sex");
+        this.getTranslations().put("MALE", "male");
+        this.getTranslations().put("FEMALE", "female");
+        this.getTranslations().put("required", "Fields marked with * are required.");
+        this.getTranslations().put("PRIMARY", "Primary");
+        this.getTranslations().put("SECONDARY", "Secondary");
+        this.getTranslations().put("TERTIARY", "Tertiary");
+        this.getTranslations().put("freeAdditionalPoints", "Free additional points");
+        this.getTranslations().put("attributes", "Attributes");
+        this.getTranslations().put("physical", "Physical");
+        this.getTranslations().put("social", "Social");
+        this.getTranslations().put("mental", "Mental");
+        this.getTranslations().put("abilities", "Abilities");
+        this.getTranslations().put("talents", "Talents");
+        this.getTranslations().put("skills", "Skills");
+        this.getTranslations().put("knowledges", "Knowledges");
+        this.getTranslations().put("advantages", "Advantages");
+        this.getTranslations().put("background", "Background");
+        this.getTranslations().put("disciplins", "Disciplins");
+        this.getTranslations().put("virtues", "Virtues");
+        this.getTranslations().put("lastSteps", "Last steps");
+        this.getTranslations().put("merits", "Merits");
+        this.getTranslations().put("flaws", "Flaws");
+        this.getTranslations().put("road", "Road");
+        this.getTranslations().put("humanity", "Humanity");
+        this.getTranslations().put("roadOf", "Road of ...");
+        this.getTranslations().put("flawInfoTooMany", "Your selected flaws exceed the maximum of 7 points.");
+        this.getTranslations().put("general", "General");
+        this.getTranslations().put("meritsAndFlaws", "Merits and flaws");
+        this.getTranslations().put("willpower", "Willpower");
+        this.getTranslations().put("bloodStock", "Blood pool");
+        this.getTranslations().put("printPreview", "Print preview");
+        this.getTranslations().put("otherTraits", "Other traits");
+        this.getTranslations().put("experience", "Experience");
     }
 
     /**
      * Add texts only used on the print and print preview
      */
     private void print() {
-        this.translations.put("merit", "Merit");
-        this.translations.put("flaw", "Flaw");
-        this.translations.put("rituals", "Rituals");
-        this.translations.put("paths", "Paths");
-        this.translations.put("ritual", "Ritual");
-        this.translations.put("path", "Path");
-        this.translations.put("source", "Source");
-        this.translations.put("system", "System");
-        this.translations.put("combat", "Combat");
-        this.translations.put("armor", "Armor");
-        this.translations.put("weapon/attack", "Weapon/Attack");
-        this.translations.put("diff.", "Diff.");
-        this.translations.put("damage", "Damage");
-        this.translations.put("range", "Range");
-        this.translations.put("rate", "Rate");
-        this.translations.put("ammo", "Ammo");
-        this.translations.put("conceal", "Conceal");
-        this.translations.put("class", "Class");
-        this.translations.put("rating", "Rating");
-        this.translations.put("penalty", "Penalty");
-        this.translations.put("backgrounds", "Backgrounds");
-        this.translations.put("possessions", "Possessions");
-        this.translations.put("haven", "Haven");
-        this.translations.put("allies", "Allies");
-        this.translations.put("mentor", "Mentor");
-        this.translations.put("contacts", "Contacts");
-        this.translations.put("resources", "Resources");
-        this.translations.put("domains", "Domains");
-        this.translations.put("retainers", "Retainers");
-        this.translations.put("herd", "Herd");
-        this.translations.put("status", "Status");
-        this.translations.put("influence", "Influence");
-        this.translations.put("gear", "Gear");
-        this.translations.put("equipment", "Equipment");
-        this.translations.put("feedingGrounds", "Feeding grounds");
-        this.translations.put("miscellaneous", "Miscellaneous");
-        this.translations.put("location", "Location");
-        this.translations.put("history", "History");
-        this.translations.put("momentsOfTruth", "Moments of truth");
-        this.translations.put("goalsAndPlots", "Goals & plots");
-        this.translations.put("visuals", "Visuals");
-        this.translations.put("coterieChart", "Coterie chart");
-        this.translations.put("characterSketch", "Character sketch");
+        this.getTranslations().put("merit", "Merit");
+        this.getTranslations().put("flaw", "Flaw");
+        this.getTranslations().put("rituals", "Rituals");
+        this.getTranslations().put("paths", "Paths");
+        this.getTranslations().put("ritual", "Ritual");
+        this.getTranslations().put("path", "Path");
+        this.getTranslations().put("source", "Source");
+        this.getTranslations().put("system", "System");
+        this.getTranslations().put("combat", "Combat");
+        this.getTranslations().put("armor", "Armor");
+        this.getTranslations().put("weapon/attack", "Weapon/Attack");
+        this.getTranslations().put("diff.", "Diff.");
+        this.getTranslations().put("damage", "Damage");
+        this.getTranslations().put("range", "Range");
+        this.getTranslations().put("rate", "Rate");
+        this.getTranslations().put("ammo", "Ammo");
+        this.getTranslations().put("conceal", "Conceal");
+        this.getTranslations().put("class", "Class");
+        this.getTranslations().put("rating", "Rating");
+        this.getTranslations().put("penalty", "Penalty");
+        this.getTranslations().put("backgrounds", "Backgrounds");
+        this.getTranslations().put("possessions", "Possessions");
+        this.getTranslations().put("haven", "Haven");
+        this.getTranslations().put("allies", "Allies");
+        this.getTranslations().put("mentor", "Mentor");
+        this.getTranslations().put("contacts", "Contacts");
+        this.getTranslations().put("resources", "Resources");
+        this.getTranslations().put("domains", "Domains");
+        this.getTranslations().put("retainers", "Retainers");
+        this.getTranslations().put("herd", "Herd");
+        this.getTranslations().put("status", "Status");
+        this.getTranslations().put("influence", "Influence");
+        this.getTranslations().put("gear", "Gear");
+        this.getTranslations().put("equipment", "Equipment");
+        this.getTranslations().put("feedingGrounds", "Feeding grounds");
+        this.getTranslations().put("miscellaneous", "Miscellaneous");
+        this.getTranslations().put("location", "Location");
+        this.getTranslations().put("history", "History");
+        this.getTranslations().put("momentsOfTruth", "Moments of truth");
+        this.getTranslations().put("goalsAndPlots", "Goals & plots");
+        this.getTranslations().put("visuals", "Visuals");
+        this.getTranslations().put("coterieChart", "Coterie chart");
+        this.getTranslations().put("characterSketch", "Character sketch");
     }
 
     /**
      * Add texts for health
      */
     private void health() {
-        this.translations.put("health", "Health");
-        this.translations.put("bruised", "Bruised");
-        this.translations.put("hurt", "Hurt");
-        this.translations.put("injured", "Injured");
-        this.translations.put("wounded", "Wounded");
-        this.translations.put("mauled", "Mauled");
-        this.translations.put("crippled", "Crippled");
-        this.translations.put("incapacitated", "Incapacitated");
-    }
-
-    /**
-     * Get the translation for the given key.
-     *
-     * @param key The key to translate.
-     *
-     * @return The translated string
-     */
-    @Override
-    public String translate(String key) {
-        return this.translations.getOrDefault(key, key);
+        this.getTranslations().put("health", "Health");
+        this.getTranslations().put("bruised", "Bruised");
+        this.getTranslations().put("hurt", "Hurt");
+        this.getTranslations().put("injured", "Injured");
+        this.getTranslations().put("wounded", "Wounded");
+        this.getTranslations().put("mauled", "Mauled");
+        this.getTranslations().put("crippled", "Crippled");
+        this.getTranslations().put("incapacitated", "Incapacitated");
     }
 
     /**

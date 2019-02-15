@@ -26,6 +26,7 @@ import antafes.vampireEditor.entity.EntityException;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * SpecialFeature object.
@@ -216,5 +217,42 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
     @Override
     public String toString() {
         return this.getName() + " (" + this.getCost() + ")";
+    }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        SpecialFeature that = (SpecialFeature) obj;
+
+        return cost == that.cost &&
+            type == that.type;
+    }
+
+    /**
+     * Generate a hash code.
+     *
+     * @return Hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), cost, type);
     }
 }

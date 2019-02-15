@@ -21,16 +21,12 @@
  */
 package antafes.vampireEditor.language;
 
-import java.util.HashMap;
-
 /**
  * Language class for english.
  *
  * @author Marian Pollzien
  */
-public class German implements LanguageInterface {
-    private final HashMap<String, String> translations = new HashMap<>();
-
+public class German extends Language {
     /**
      * Create a new english language object.
      */
@@ -48,193 +44,181 @@ public class German implements LanguageInterface {
      * List of available languages.
      */
     private void languages() {
-        this.translations.put("english", "Englisch");
-        this.translations.put("german", "Deutsch");
+        this.getTranslations().put("english", "Englisch");
+        this.getTranslations().put("german", "Deutsch");
     }
 
     /**
      * General texts like the programs title.
      */
     private void general() {
-        this.translations.put("title", "Vampire Editor");
-        this.translations.put("darkAgesVampire", "Vampire aus der alten Welt");
-        this.translations.put("cancel", "Abbrechen");
-        this.translations.put("next", "Weiter");
-        this.translations.put("ok", "Ok");
-        this.translations.put("back", "Zurück");
-        this.translations.put("finish", "Fertig");
-        this.translations.put("other", "Anderes");
-        this.translations.put("description", "Beschreibung");
+        this.getTranslations().put("title", "Vampire Editor");
+        this.getTranslations().put("darkAgesVampire", "Vampire aus der alten Welt");
+        this.getTranslations().put("cancel", "Abbrechen");
+        this.getTranslations().put("next", "Weiter");
+        this.getTranslations().put("ok", "Ok");
+        this.getTranslations().put("back", "Zurück");
+        this.getTranslations().put("finish", "Fertig");
+        this.getTranslations().put("other", "Anderes");
+        this.getTranslations().put("description", "Beschreibung");
     }
 
     /**
      * Texts for the menu entries.
      */
     private void menu() {
-        this.translations.put("file", "Datei");
-        this.translations.put("fileMnemonic", "D");
-        this.translations.put("quit", "Beenden");
-        this.translations.put("quitMnemonic", "B");
-        this.translations.put("help", "Hilfe");
-        this.translations.put("helpMnemonic", "H");
-        this.translations.put("about", "Über");
-        this.translations.put("aboutMnemonic", "b");
-        this.translations.put("new", "Neu");
-        this.translations.put("newMnemonic", "N");
-        this.translations.put("open", "Öffnen");
-        this.translations.put("openMnemonic", "f");
-        this.translations.put("save", "Speichern");
-        this.translations.put("saveMnemonic", "S");
-        this.translations.put("existingFile", "Existierende Datei");
-        this.translations.put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
-        this.translations.put("couldNotLoad", "Laden fehlgeschlagen");
-        this.translations.put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
-        this.translations.put("close", "Schließen");
+        this.getTranslations().put("file", "Datei");
+        this.getTranslations().put("fileMnemonic", "D");
+        this.getTranslations().put("quit", "Beenden");
+        this.getTranslations().put("quitMnemonic", "B");
+        this.getTranslations().put("help", "Hilfe");
+        this.getTranslations().put("helpMnemonic", "H");
+        this.getTranslations().put("about", "Über");
+        this.getTranslations().put("aboutMnemonic", "b");
+        this.getTranslations().put("new", "Neu");
+        this.getTranslations().put("newMnemonic", "N");
+        this.getTranslations().put("open", "Öffnen");
+        this.getTranslations().put("openMnemonic", "f");
+        this.getTranslations().put("save", "Speichern");
+        this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("existingFile", "Existierende Datei");
+        this.getTranslations().put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
+        this.getTranslations().put("couldNotLoad", "Laden fehlgeschlagen");
+        this.getTranslations().put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
+        this.getTranslations().put("close", "Schließen");
     }
 
     /**
      * Content of the about dialog.
      */
     private void about() {
-        this.translations.put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
+        this.getTranslations().put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
     }
 
     /**
      * Texts for character creation and display.
      */
     private void character() {
-        this.translations.put("newCharacter", "Neuer Charakter");
-        this.translations.put("looks", "Aussehen");
-        this.translations.put("name", "Name");
-        this.translations.put("chronicle", "Chronik");
-        this.translations.put("generation", "Generation");
-        this.translations.put("nature", "Wesen");
-        this.translations.put("hideout", "Zuflucht");
-        this.translations.put("player", "Spieler");
-        this.translations.put("demeanor", "Verhalten");
-        this.translations.put("concept", "Konzept");
-        this.translations.put("sire", "Erzeuger");
-        this.translations.put("clan", "Clan");
-        this.translations.put("sect", "Sekte");
-        this.translations.put("age", "Alter");
-        this.translations.put("looksLikeAge", "Sieht aus wie");
-        this.translations.put("dayOfBirth", "Geburtstag");
-        this.translations.put("dayOfDeath", "Todestag");
-        this.translations.put("hairColor", "Haarfarbe");
-        this.translations.put("eyeColor", "Augenfarbe");
-        this.translations.put("skinColor", "Hautfarbe");
-        this.translations.put("nationality", "Nationalität");
-        this.translations.put("size", "Größe");
-        this.translations.put("weight", "Gewicht");
-        this.translations.put("sex", "Geschlecht");
-        this.translations.put("MALE", "männlich");
-        this.translations.put("FEMALE", "weiblich");
-        this.translations.put("required", "Felder mit * sind Pflichtfelder.");
-        this.translations.put("PRIMARY", "Primär");
-        this.translations.put("SECONDARY", "Sekundär");
-        this.translations.put("TERTIARY", "Tertiär");
-        this.translations.put("freeAdditionalPoints", "Freie Zusatzpunkte");
-        this.translations.put("attributes", "Attribute");
-        this.translations.put("physical", "Körperlich");
-        this.translations.put("social", "Gesellschaftlich");
-        this.translations.put("mental", "Geistig");
-        this.translations.put("abilities", "Fähigkeiten");
-        this.translations.put("talents", "Talente");
-        this.translations.put("skills", "Fertigkeiten");
-        this.translations.put("knowledges", "Kenntnisse");
-        this.translations.put("advantages", "Vorteile");
-        this.translations.put("background", "Hintergrund");
-        this.translations.put("disciplins", "Disziplinen");
-        this.translations.put("virtues", "Tugenden");
-        this.translations.put("lastSteps", "Letzte Schritte");
-        this.translations.put("merits", "Vorzüge");
-        this.translations.put("flaws", "Schwächen");
-        this.translations.put("road", "Pfad");
-        this.translations.put("humanity", "Menschlichkeit");
-        this.translations.put("roadOf", "Pfad der ...");
-        this.translations.put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
-        this.translations.put("general", "Allgemein");
-        this.translations.put("meritsAndFlaws", "Vor- und Nachteile");
-        this.translations.put("willpower", "Willenskraft");
-        this.translations.put("bloodStock", "Blutvorrat");
-        this.translations.put("printPreview", "Druckvorschau");
-        this.translations.put("otherTraits", "Andere Eigenschaften");
-        this.translations.put("experience", "Erfahrung");
+        this.getTranslations().put("newCharacter", "Neuer Charakter");
+        this.getTranslations().put("looks", "Aussehen");
+        this.getTranslations().put("name", "Name");
+        this.getTranslations().put("chronicle", "Chronik");
+        this.getTranslations().put("generation", "Generation");
+        this.getTranslations().put("nature", "Wesen");
+        this.getTranslations().put("hideout", "Zuflucht");
+        this.getTranslations().put("player", "Spieler");
+        this.getTranslations().put("demeanor", "Verhalten");
+        this.getTranslations().put("concept", "Konzept");
+        this.getTranslations().put("sire", "Erzeuger");
+        this.getTranslations().put("clan", "Clan");
+        this.getTranslations().put("sect", "Sekte");
+        this.getTranslations().put("age", "Alter");
+        this.getTranslations().put("looksLikeAge", "Sieht aus wie");
+        this.getTranslations().put("dayOfBirth", "Geburtstag");
+        this.getTranslations().put("dayOfDeath", "Todestag");
+        this.getTranslations().put("hairColor", "Haarfarbe");
+        this.getTranslations().put("eyeColor", "Augenfarbe");
+        this.getTranslations().put("skinColor", "Hautfarbe");
+        this.getTranslations().put("nationality", "Nationalität");
+        this.getTranslations().put("size", "Größe");
+        this.getTranslations().put("weight", "Gewicht");
+        this.getTranslations().put("sex", "Geschlecht");
+        this.getTranslations().put("MALE", "männlich");
+        this.getTranslations().put("FEMALE", "weiblich");
+        this.getTranslations().put("required", "Felder mit * sind Pflichtfelder.");
+        this.getTranslations().put("PRIMARY", "Primär");
+        this.getTranslations().put("SECONDARY", "Sekundär");
+        this.getTranslations().put("TERTIARY", "Tertiär");
+        this.getTranslations().put("freeAdditionalPoints", "Freie Zusatzpunkte");
+        this.getTranslations().put("attributes", "Attribute");
+        this.getTranslations().put("physical", "Körperlich");
+        this.getTranslations().put("social", "Gesellschaftlich");
+        this.getTranslations().put("mental", "Geistig");
+        this.getTranslations().put("abilities", "Fähigkeiten");
+        this.getTranslations().put("talents", "Talente");
+        this.getTranslations().put("skills", "Fertigkeiten");
+        this.getTranslations().put("knowledges", "Kenntnisse");
+        this.getTranslations().put("advantages", "Vorteile");
+        this.getTranslations().put("background", "Hintergrund");
+        this.getTranslations().put("disciplins", "Disziplinen");
+        this.getTranslations().put("virtues", "Tugenden");
+        this.getTranslations().put("lastSteps", "Letzte Schritte");
+        this.getTranslations().put("merits", "Vorzüge");
+        this.getTranslations().put("flaws", "Schwächen");
+        this.getTranslations().put("road", "Pfad");
+        this.getTranslations().put("humanity", "Menschlichkeit");
+        this.getTranslations().put("roadOf", "Pfad der ...");
+        this.getTranslations().put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
+        this.getTranslations().put("general", "Allgemein");
+        this.getTranslations().put("meritsAndFlaws", "Vor- und Nachteile");
+        this.getTranslations().put("willpower", "Willenskraft");
+        this.getTranslations().put("bloodStock", "Blutvorrat");
+        this.getTranslations().put("printPreview", "Druckvorschau");
+        this.getTranslations().put("otherTraits", "Andere Eigenschaften");
+        this.getTranslations().put("experience", "Erfahrung");
     }
 
     /**
      * Add texts only used on the print and print preview
      */
     private void print() {
-        this.translations.put("merit", "Vorzug");
-        this.translations.put("flaw", "Schwäche");
-        this.translations.put("rituals", "Rituale");
-        this.translations.put("paths", "Pfade");
-        this.translations.put("ritual", "Ritual");
-        this.translations.put("path", "Pfad");
-        this.translations.put("source", "Quelle");
-        this.translations.put("system", "System");
-        this.translations.put("combat", "Kampf");
-        this.translations.put("armor", "Rüstung");
-        this.translations.put("weapon/attack", "Waffe/Attacke");
-        this.translations.put("diff.", "Diff.");
-        this.translations.put("damage", "Schaden");
-        this.translations.put("range", "Reichweite");
-        this.translations.put("rate", "Rate");
-        this.translations.put("ammo", "Munition");
-        this.translations.put("conceal", "Verbergen");
-        this.translations.put("class", "Klasse");
-        this.translations.put("rating", "Einstufung");
-        this.translations.put("penalty", "Strafe");
-        this.translations.put("backgrounds", "Backgrounds");
-        this.translations.put("possessions", "Besitztümer");
-        this.translations.put("haven", "Zuflucht");
-        this.translations.put("allies", "Verbündete");
-        this.translations.put("mentor", "Mentor");
-        this.translations.put("contacts", "Kontakte");
-        this.translations.put("resources", "Ressourcen");
-        this.translations.put("domains", "Domänen");
-        this.translations.put("retainers", "Gefolge");
-        this.translations.put("herd", "Herde");
-        this.translations.put("status", "Status");
-        this.translations.put("influence", "Einfluss");
-        this.translations.put("gear", "Ausrüstung");
-        this.translations.put("equipment", "Ausstattung");
-        this.translations.put("feedingGrounds", "Nahrungsgründe");
-        this.translations.put("miscellaneous", "Verschiedenes");
-        this.translations.put("location", "Ort");
-        this.translations.put("history", "Geschichte");
-        this.translations.put("momentsOfTruth", "Momente der Wahrheit");
-        this.translations.put("goalsAndPlots", "Ziele & Pläne");
-        this.translations.put("visuals", "Aussehen");
-        this.translations.put("coterieChart", "Gesellschaft");
-        this.translations.put("characterSketch", "Charakterskizze");
+        this.getTranslations().put("merit", "Vorzug");
+        this.getTranslations().put("flaw", "Schwäche");
+        this.getTranslations().put("rituals", "Rituale");
+        this.getTranslations().put("paths", "Pfade");
+        this.getTranslations().put("ritual", "Ritual");
+        this.getTranslations().put("path", "Pfad");
+        this.getTranslations().put("source", "Quelle");
+        this.getTranslations().put("system", "System");
+        this.getTranslations().put("combat", "Kampf");
+        this.getTranslations().put("armor", "Rüstung");
+        this.getTranslations().put("weapon/attack", "Waffe/Attacke");
+        this.getTranslations().put("diff.", "Diff.");
+        this.getTranslations().put("damage", "Schaden");
+        this.getTranslations().put("range", "Reichweite");
+        this.getTranslations().put("rate", "Rate");
+        this.getTranslations().put("ammo", "Munition");
+        this.getTranslations().put("conceal", "Verbergen");
+        this.getTranslations().put("class", "Klasse");
+        this.getTranslations().put("rating", "Einstufung");
+        this.getTranslations().put("penalty", "Strafe");
+        this.getTranslations().put("backgrounds", "Backgrounds");
+        this.getTranslations().put("possessions", "Besitztümer");
+        this.getTranslations().put("haven", "Zuflucht");
+        this.getTranslations().put("allies", "Verbündete");
+        this.getTranslations().put("mentor", "Mentor");
+        this.getTranslations().put("contacts", "Kontakte");
+        this.getTranslations().put("resources", "Ressourcen");
+        this.getTranslations().put("domains", "Domänen");
+        this.getTranslations().put("retainers", "Gefolge");
+        this.getTranslations().put("herd", "Herde");
+        this.getTranslations().put("status", "Status");
+        this.getTranslations().put("influence", "Einfluss");
+        this.getTranslations().put("gear", "Ausrüstung");
+        this.getTranslations().put("equipment", "Ausstattung");
+        this.getTranslations().put("feedingGrounds", "Nahrungsgründe");
+        this.getTranslations().put("miscellaneous", "Verschiedenes");
+        this.getTranslations().put("location", "Ort");
+        this.getTranslations().put("history", "Geschichte");
+        this.getTranslations().put("momentsOfTruth", "Momente der Wahrheit");
+        this.getTranslations().put("goalsAndPlots", "Ziele & Pläne");
+        this.getTranslations().put("visuals", "Aussehen");
+        this.getTranslations().put("coterieChart", "Gesellschaft");
+        this.getTranslations().put("characterSketch", "Charakterskizze");
     }
 
     /**
      * Add texts for health
      */
     private void health() {
-        this.translations.put("health", "Gesundheit");
-        this.translations.put("bruised", "Zerschrammt");
-        this.translations.put("hurt", "Versehrt");
-        this.translations.put("injured", "Verletzt");
-        this.translations.put("wounded", "Verwundet");
-        this.translations.put("mauled", "Übel zugerichtet");
-        this.translations.put("crippled", "Verkrüppelt");
-        this.translations.put("incapacitated", "Außer Gefecht");
-    }
-
-    /**
-     * Get the translation for the given key.
-     *
-     * @param key The key to translate.
-     *
-     * @return The translated string
-     */
-    @Override
-    public String translate(String key) {
-        return this.translations.getOrDefault(key, key);
+        this.getTranslations().put("health", "Gesundheit");
+        this.getTranslations().put("bruised", "Zerschrammt");
+        this.getTranslations().put("hurt", "Versehrt");
+        this.getTranslations().put("injured", "Verletzt");
+        this.getTranslations().put("wounded", "Verwundet");
+        this.getTranslations().put("mauled", "Übel zugerichtet");
+        this.getTranslations().put("crippled", "Verkrüppelt");
+        this.getTranslations().put("incapacitated", "Außer Gefecht");
     }
 
     /**

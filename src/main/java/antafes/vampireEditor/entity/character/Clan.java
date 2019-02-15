@@ -28,6 +28,7 @@ import antafes.vampireEditor.entity.EntityException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Clan object.
@@ -36,7 +37,7 @@ import java.util.HashMap;
  */
 public class Clan extends BaseTranslatedEntity implements ClanInterface {
     private final HashMap<Configuration.Language, String> nicknames;
-    private final ArrayList<Advantage> disciplines;
+    private final ArrayList<Advantage> advantages;
     private final ArrayList<Weakness> weaknesses;
 
     /**
@@ -44,12 +45,12 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
      */
     public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
         private HashMap<Configuration.Language, String> nicknames;
-        private ArrayList<Advantage> disciplines;
+        private ArrayList<Advantage> advantages;
         private ArrayList<Weakness> weaknesses;
 
         public Builder() {
             this.nicknames = new HashMap<>();
-            this.disciplines = new ArrayList<>();
+            this.advantages = new ArrayList<>();
             this.weaknesses = new ArrayList<>();
         }
 
@@ -67,8 +68,8 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
                 throw new EntityException("Missing nicknames for entity: " + this);
             }
 
-            if (this.self().disciplines.isEmpty()) {
-                throw new EntityException("Missing disciplines for entity: " + this);
+            if (this.self().advantages.isEmpty()) {
+                throw new EntityException("Missing advantages for entity: " + this);
             }
 
             if (this.self().weaknesses.isEmpty()) {
@@ -168,14 +169,14 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         }
 
         /**
-         * Set the list of disciplines.
+         * Set the list of advantages.
          *
-         * @param disciplines
+         * @param advantages
          *
          * @return The builder object
          */
-        public Builder setDisciplines(ArrayList<Advantage> disciplines) {
-            this.disciplines = disciplines;
+        public Builder setAdvantages(ArrayList<Advantage> advantages) {
+            this.advantages = advantages;
 
             return this.self();
         }
@@ -187,8 +188,8 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
          *
          * @return The builder object
          */
-        public Builder addDiscipline(Advantage discipline) {
-            this.disciplines.add(discipline);
+        public Builder addAdvantage(Advantage discipline) {
+            this.advantages.add(discipline);
 
             return this.self();
         }
@@ -229,7 +230,7 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         super(builder);
 
         this.nicknames = builder.nicknames;
-        this.disciplines = builder.disciplines;
+        this.advantages = builder.advantages;
         this.weaknesses = builder.weaknesses;
     }
 
@@ -261,13 +262,13 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     }
 
     /**
-     * Get the list of disciplines every clan member has.
+     * Get the list of advantages every clan member has.
      *
      * @return
      */
     @Override
-    public ArrayList<Advantage> getDisciplines() {
-        return this.disciplines;
+    public ArrayList<Advantage> getAdvantages() {
+        return this.advantages;
     }
 
     /**
@@ -288,5 +289,43 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     @Override
     public String toString() {
         return this.getName();
+    }
+
+    /**
+     * Check if the given object equals this object.
+     *
+     * @param obj The object to check
+     *
+     * @return True if both are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        Clan clan = (Clan) obj;
+
+        return Objects.equals(nicknames, clan.nicknames) &&
+            Objects.equals(advantages, clan.advantages) &&
+            Objects.equals(weaknesses, clan.weaknesses);
+    }
+
+    /**
+     * Generate a hash code.
+     *
+     * @return Hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nicknames, advantages, weaknesses);
     }
 }
