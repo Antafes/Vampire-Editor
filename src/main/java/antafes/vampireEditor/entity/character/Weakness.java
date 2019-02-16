@@ -66,4 +66,14 @@ public class Weakness extends BaseTranslatedEntity implements WeaknessInterface 
     public Weakness(Builder builder) {
         super(builder);
     }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return String representation of the object
+     */
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

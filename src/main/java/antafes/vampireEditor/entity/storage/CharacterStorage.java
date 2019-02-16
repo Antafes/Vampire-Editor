@@ -109,7 +109,10 @@ public class CharacterStorage {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         HashMap<String, String> dateNilAttributes = new HashMap<>();
         dateNilAttributes.put("xsi:nil", "true");
+        HashMap<String, String> rootAttributes = new HashMap<>();
+        rootAttributes.put("id", character.getId().toString());
 
+        this.xw.addRootNodeAttributes(rootAttributes);
         this.xw.addChild("name", character.getName());
         this.xw.addChild("clan", character.getClan().getKey());
         this.xw.addChild("generation", character.getGeneration().toString());
@@ -126,14 +129,14 @@ public class CharacterStorage {
         Element attributes = this.xw.addChild("attributes");
         character.getAttributes().forEach((attribute) -> {
             HashMap<String, String> attributeList = new HashMap<>();
-            attributeList.put("key", attribute.getName());
+            attributeList.put("key", attribute.getKey());
             this.xw.addChild(attributes, "attribute", Integer.toString(attribute.getValue()), attributeList);
         });
 
         Element abilities = this.xw.addChild("abilities");
         character.getAbilities().forEach((ability) -> {
             HashMap<String, String> abilitiesList = new HashMap<>();
-            abilitiesList.put("key", ability.getName());
+            abilitiesList.put("key", ability.getKey());
             this.xw.addChild(abilities, "ability", Integer.toString(ability.getValue()), abilitiesList);
         });
 

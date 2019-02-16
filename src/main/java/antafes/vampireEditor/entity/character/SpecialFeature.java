@@ -65,7 +65,7 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
             }
 
             if (this.specialFeatureClass == null) {
-                throw new EntityException("Missing special feature classe");
+                throw new EntityException("Missing special feature class");
             }
         }
 
@@ -133,7 +133,7 @@ public abstract class SpecialFeature extends BaseTranslatedEntity implements Spe
                 Class[] parameterTypes = new Class[1];
                 parameterTypes[0] = getter.getReturnType();
 
-                return Ability.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
+                return SpecialFeature.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
             }
         }
 

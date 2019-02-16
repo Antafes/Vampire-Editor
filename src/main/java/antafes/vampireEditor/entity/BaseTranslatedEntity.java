@@ -55,7 +55,7 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
                 throw new EntityException("Missing key for entity: " + this);
             }
 
-            if (this.self().getNames().isEmpty()) {
+            if (this.self().getNames() == null || this.self().getNames().isEmpty()) {
                 throw new EntityException("Missing names for entity: " + this);
             }
         }

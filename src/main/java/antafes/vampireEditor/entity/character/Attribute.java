@@ -169,6 +169,16 @@ public class Attribute extends BaseTranslatedEntity implements AttributeInterfac
     }
 
     /**
+     * Returns a string representation of the object.
+     *
+     * @return A string representation of the object
+     */
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
+    /**
      * Check if the given object equals this object.
      *
      * @param obj The object to check

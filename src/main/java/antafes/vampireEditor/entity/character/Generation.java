@@ -24,6 +24,8 @@ package antafes.vampireEditor.entity.character;
 import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.EntityException;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -67,19 +69,19 @@ public class Generation extends BaseEntity implements GenerationInterface {
          */
         @Override
         protected void checkValues() throws EntityException {
-            if (this.generation == 0) {
+            if (this.generation <= 0) {
                 throw new EntityException("Missing generation");
             }
 
-            if (this.maximumAttributes == 0) {
+            if (this.maximumAttributes <= 0) {
                 throw new EntityException("Missing maximum attributes");
             }
 
-            if (this.maximumBloodStock == 0) {
+            if (this.maximumBloodStock == 0 || this.maximumBloodStock < -1) {
                 throw new EntityException("Missing maximum blood stock");
             }
 
-            if (this.bloodPerRound == 0) {
+            if (this.bloodPerRound == 0 || this.bloodPerRound < -1) {
                 throw new EntityException("Missing blood per round");
             }
         }
@@ -92,6 +94,49 @@ public class Generation extends BaseEntity implements GenerationInterface {
         @Override
         protected Builder self() {
             return this;
+        }
+
+        /**
+         * Get the list of methods from which data can be fetched.
+         *
+         * @return A list of getter methods
+         */
+        @Override
+        protected ArrayList<Method> getDataMethods() {
+            ArrayList<Method> methodList = super.getDataMethods();
+
+            for (Method declaredMethod : Generation.class.getDeclaredMethods()) {
+                if (this.checkMethod(declaredMethod)) {
+                    continue;
+                }
+
+                methodList.add(declaredMethod);
+            }
+
+            return methodList;
+        }
+
+        /**
+         * Get a setter method from the given getter.
+         *
+         * @param getter The getter to build the setter out of
+         *
+         * @return Setter method object
+         * @throws NoSuchMethodException Exception thrown if no method of that name exists
+         */
+        @Override
+        protected Method getSetter(Method getter) throws NoSuchMethodException {
+            try {
+                return super.getSetter(getter);
+            } catch (NoSuchMethodException ex) {
+                Class[] parameterTypes = new Class[1];
+                parameterTypes[0] = getter.getReturnType();
+
+                return Generation.Builder.class.getDeclaredMethod(
+                    "set" + getter.getName().substring(3),
+                    parameterTypes
+                );
+            }
         }
 
         /**
@@ -144,16 +189,6 @@ public class Generation extends BaseEntity implements GenerationInterface {
             this.bloodPerRound = bloodPerRound;
 
             return this.self();
-        }
-
-        /**
-         * Returns a string representation of the generation.
-         *
-         * @return A string representation of the generation
-         */
-        @Override
-        public String toString() {
-            return "Generation " + generation;
         }
     }
 
@@ -212,7 +247,11 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public int getBloodPerRound() {
-        return bloodPerRound;
+        if (this.bloodPerRound == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        return this.bloodPerRound;
     }
 
     /**
@@ -222,8 +261,10 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public String toString() {
-        return Integer.toString(generation);
+        return Integer.toString(this.generation);
     }
+
+
 
     /**
      * Check if the given object equals this object.
@@ -234,16 +275,24 @@ public class Generation extends BaseEntity implements GenerationInterface {
      */
     @Override
     public boolean equals(Object obj) {
-        Generation entity = (Generation) obj;
+        if (this == obj) {
+            return true;
+        }
 
-        if (this.generation != entity.generation
-            || this.maximumAttributes != entity.maximumAttributes
-            || this.maximumBloodStock != entity.maximumBloodStock
-            || this.bloodPerRound != entity.bloodPerRound) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
-        return super.equals(obj);
+        if (!super.equals(obj)) {
+            return false;
+        }
+
+        Generation that = (Generation) obj;
+
+        return generation == that.generation &&
+            maximumAttributes == that.maximumAttributes &&
+            maximumBloodStock == that.maximumBloodStock &&
+            bloodPerRound == that.bloodPerRound;
     }
 
     /**

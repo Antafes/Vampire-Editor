@@ -64,15 +64,15 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         protected void checkValues() throws EntityException {
             super.checkValues();
 
-            if (this.self().nicknames.isEmpty()) {
+            if (this.self().nicknames == null || this.self().nicknames.isEmpty()) {
                 throw new EntityException("Missing nicknames for entity: " + this);
             }
 
-            if (this.self().advantages.isEmpty()) {
+            if (this.self().advantages == null || this.self().advantages.isEmpty()) {
                 throw new EntityException("Missing advantages for entity: " + this);
             }
 
-            if (this.self().weaknesses.isEmpty()) {
+            if (this.self().weaknesses == null || this.self().weaknesses.isEmpty()) {
                 throw new EntityException("Missing weaknesses for entity: " + this);
             }
         }
@@ -119,6 +119,18 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
             }
 
             return methodList;
+        }
+
+        /**
+         * Check whether the given method can be used to fill in data.
+         *
+         * @param method The method to check.
+         *
+         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
+         */
+        @Override
+        protected boolean checkMethod(Method method) {
+            return super.checkMethod(method) || method.getName().equals("getNickname");
         }
 
         /**
