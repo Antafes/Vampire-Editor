@@ -40,6 +40,7 @@ public class ClanTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
+        Configuration.getInstance().loadProperties();
         this.clan = TestClanUtility.createTestClan();
     }
 
