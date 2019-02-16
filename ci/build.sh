@@ -13,8 +13,8 @@ fi
 
 VERSION=`cat VERSION`
 
-# Start build
-mvn clean package
+# Start build without tests
+mvn -Dmaven.test.skip=true clean package
 
 cp target/*.zip ../dist
 
