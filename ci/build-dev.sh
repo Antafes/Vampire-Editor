@@ -11,8 +11,8 @@ then
     ln -s "${M2_CACHE}" "${M2_HOME}"
 fi
 
-# Start build
-mvn clean package
+# Start build without tests
+mvn -Dmaven.test.skip=true clean package
 
 cp target/*.zip ../dist
 DATE=`date +%d%m%Y%H%M`
