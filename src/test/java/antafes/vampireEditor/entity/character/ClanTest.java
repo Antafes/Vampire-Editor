@@ -27,6 +27,7 @@ import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -40,6 +41,11 @@ public class ClanTest {
     @BeforeMethod
     public void setUp() throws EntityException {
         this.clan = TestClanUtility.createTestClan();
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        this.clan = null;
     }
 
     public void testGetKey() {

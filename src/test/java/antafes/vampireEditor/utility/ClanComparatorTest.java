@@ -27,12 +27,18 @@ import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.character.Clan;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
 @Test
 public class ClanComparatorTest {
+    @BeforeMethod
+    public void setUp() {
+        Configuration.getInstance().loadProperties();
+    }
+
     public void testCompare() throws EntityException {
         ClanComparator comparator = new ClanComparator();
         Clan clan1 = TestClanUtility.createTestClan();

@@ -27,6 +27,7 @@ import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,11 @@ public class CharacterTest {
         configuration.loadProperties();
         configuration.setLanguage(Configuration.Language.ENGLISH);
         this.character = TestCharacterUtility.createTestCharacter();
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        this.character = null;
     }
 
     public void testSexEnum() {

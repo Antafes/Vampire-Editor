@@ -24,6 +24,7 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -39,6 +40,11 @@ public class GenerationTest {
             .setMaximumBloodStock(15)
             .setBloodPerRound(2)
             .build();
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        this.generation = null;
     }
 
     public void testGetGeneration() {

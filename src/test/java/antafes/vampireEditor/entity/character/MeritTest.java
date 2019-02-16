@@ -25,6 +25,7 @@ package antafes.vampireEditor.entity.character;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -43,6 +44,11 @@ public class MeritTest {
             .setType(SpecialFeatureInterface.SpecialFeatureType.PHYSICAL)
             .setCost(2)
             .build();
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        this.merit = null;
     }
 
     public void testGetKey() {
