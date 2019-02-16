@@ -39,13 +39,6 @@ resources:
     release: true
     drafts: true
     access_token: ((acccess_token))
-- name: myXML-lib
-  type: github-release
-  source:
-    owner: Antafes
-    repository: MyXML
-    release: true
-    access_token: ((acccess_token))
 
 jobs:
 - name: vampire-editor-pr
@@ -53,7 +46,6 @@ jobs:
     - get: vampire-editor-repo-pr
       trigger: true
       version: every
-    - get: myXML-lib
     - put: vampire-editor-repo-pr
       params:
         path: vampire-editor-repo-pr
@@ -64,16 +56,15 @@ jobs:
         image_resource:
           type: docker-image
           source:
-            repository: frekele/ant
-            tag: 1.10-jdk8
+            repository: maven
+            tag: 3-jdk-8
         inputs:
           - name: vampire-editor-repo-pr
-          - name: myXML-lib
-        outputs:
-          - name: dist
         run:
           path: ci/test.sh
           dir: vampire-editor-repo-pr
+        caches:
+          - path: maven
       on_failure:
         put: vampire-editor-repo-pr
         params:
@@ -89,38 +80,37 @@ jobs:
   - get: vampire-editor-pre-release
   - get: vampire-editor-repo-dev
     trigger: true
-  - get: myXML-lib
   - task: build
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: frekele/ant
-          tag: 1.10-jdk8
+          repository: maven
+          tag: 3-jdk-8
       inputs:
       - name: vampire-editor-pre-release
       - name: vampire-editor-repo-dev
-      - name: myXML-lib
       outputs:
       - name: dist
       run:
         path: ci/build-dev.sh
         dir: vampire-editor-repo-dev
+      caches:
+        - path: maven
   - put: vampire-editor-pre-release
     params:
      name: dist/name
      tag: dist/tag
      commitish: dist/commit_sha
      globs:
-      - dist/VampireEditor.zip
+      - dist/*.zip
 
 - name: vampire-editor
   plan:
   - get: vampire-editor-repo
     trigger: true
   - get: vampire-editor-pre-release
-  - get: myXML-lib
   - task: check-version
     config:
       platform: linux
@@ -141,19 +131,20 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: frekele/ant
-          tag: 1.10-jdk8
+          repository: maven
+          tag: 3-jdk-8
       inputs:
       - name: vampire-editor-repo
-      - name: myXML-lib
       outputs:
       - name: dist
       run:
         path: ci/build.sh
         dir: vampire-editor-repo
+      caches:
+        - path: maven
   - put: vampire-editor-release
     params:
       name: dist/name
       tag: dist/tag
       globs:
-      - dist/VampireEditor.zip
+      - dist/*.zip
