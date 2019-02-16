@@ -23,6 +23,7 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
@@ -38,13 +39,7 @@ public class ClanTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.clan = new Clan.Builder()
-            .setKey("testClan")
-            .addName(Configuration.Language.ENGLISH, "Test clan")
-            .addNickname(Configuration.Language.ENGLISH, "Test nickname")
-            .addAdvantage(VampireEditor.getAdvantage("allies"))
-            .addWeakness(VampireEditor.getWeakness("bloodTithe"))
-            .build();
+        this.clan = TestClanUtility.createTestClan();
     }
 
     public void testGetKey() {

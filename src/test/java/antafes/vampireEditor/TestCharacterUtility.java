@@ -36,6 +36,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Test character utility class.
+ */
 public class TestCharacterUtility {
     /**
      * This method will create a test character, that can be used for tests and to check the gui.
