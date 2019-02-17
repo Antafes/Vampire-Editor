@@ -138,7 +138,34 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param spinnerMinimum Maximum value for the spinners
      * @param maxFields Maximum number of fields to create
      */
-    protected void addFields(String headline, String type, ArrayList<String> elementList, int spinnerMinimum, int maxFields) {
+    protected void addFields(
+        String headline,
+        String type,
+        ArrayList<String> elementList,
+        int spinnerMinimum,
+        int maxFields
+    ) {
+        this.addFields(headline, type, elementList, false, spinnerMinimum, maxFields);
+    }
+
+    /**
+     * Add labels and spinners by the given list and under the given headline.
+     *
+     * @param headline Headline for the group of fields
+     * @param type Identifier for the group of fields
+     * @param elementList List of element names that should be added as JSpinner
+     * @param nonEditable Whether the fields should be editable or not
+     * @param spinnerMinimum Maximum value for the spinners
+     * @param maxFields Maximum number of fields to create
+     */
+    protected void addFields(
+        String headline,
+        String type,
+        ArrayList<String> elementList,
+        boolean nonEditable,
+        int spinnerMinimum,
+        int maxFields
+    ) {
         if (!this.getFields().containsKey(type)) {
             this.getFields().put(type, new ArrayList<>());
         }
@@ -200,10 +227,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         groups.put("listHorizontalGroup", listHorizontalGroup);
 
         elementList.forEach((element) -> {
-            HashMap<String, Component> newElements = this.addRow(
-                element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
-            );
-            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+            if (nonEditable) {
+                super.addRow(element, spinnerMinimum, this.getFields(type), groups, layout);
+            } else {
+                HashMap<String, Component> newElements = this.addRow(
+                    element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
+                );
+                this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+            }
         });
 
         if (maxFields == this.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
