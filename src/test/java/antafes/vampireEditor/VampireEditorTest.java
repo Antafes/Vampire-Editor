@@ -129,12 +129,12 @@ public class VampireEditorTest {
     public void testGetAbility() throws EntityException {
         new VampireEditor();
         final Ability expected = new Ability.Builder()
-            .setKey("acting")
+            .setKey("expression")
             .setType(AbilityInterface.AbilityType.TALENT)
-            .addName(Configuration.Language.ENGLISH, "Acting")
+            .addName(Configuration.Language.ENGLISH, "Expression")
             .addName(Configuration.Language.GERMAN, "Schauspielerei")
             .build();
-        final Ability actual = VampireEditor.getAbility("acting");
+        final Ability actual = VampireEditor.getAbility("expression");
 
         Assert.assertEquals(actual, expected);
     }
