@@ -89,8 +89,33 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         advantages.forEach((advantage) -> list.add(advantage.getKey()));
 
         this.addFields(
-            "virtues", AdvantageInterface.AdvantageType.VIRTUE.name(), list, 3
+            "virtues",
+            AdvantageInterface.AdvantageType.VIRTUE.name(),
+            list,
+            true,
+            0,
+            3
         );
+    }
+
+    /**
+     * This will translate the element name.
+     *
+     * @param element The element name to translate
+     *
+     * @return The translated name
+     */
+    @Override
+    protected String getElementLabelText(String element) {
+        ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+
+        for (Advantage advantage : advantages) {
+            if (advantage.getKey().equals(element)) {
+                return advantage.getName();
+            }
+        }
+
+        return super.getElementLabelText(element);
     }
 
     /**
