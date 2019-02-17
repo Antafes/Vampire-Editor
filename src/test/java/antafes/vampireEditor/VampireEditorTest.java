@@ -66,7 +66,7 @@ public class VampireEditorTest {
             .setGeneration(9)
             .setBloodPerRound(2)
             .setMaximumAttributes(5)
-            .setMaximumBloodStock(14)
+            .setMaximumBloodPool(14)
             .build();
         final Generation actual = VampireEditor.getGeneration(9);
 

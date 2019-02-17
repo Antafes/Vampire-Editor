@@ -55,16 +55,16 @@ public class Character extends BaseEntity {
     private final Road road;
     private final int willpower;
     private final int usedWillpower;
-    private final int bloodStock;
+    private final int bloodPool;
     private final int age;
-    private final int looksLikeAge;
+    private final int apparentAge;
     private final Date dayOfBirth;
     private final Date dayOfDeath;
     private final String hairColor;
     private final String eyeColor;
     private final String skinColor;
     private final String nationality;
-    private final int size;
+    private final int height;
     private final int weight;
     private final Sex sex;
     private final String story;
@@ -110,16 +110,16 @@ public class Character extends BaseEntity {
         private Road road;
         private int willpower;
         private int usedWillpower;
-        private int bloodStock;
+        private int bloodPool;
         private int age;
-        private int looksLikeAge;
+        private int apparentAge;
         private Date dayOfBirth;
         private Date dayOfDeath;
         private String hairColor;
         private String eyeColor;
         private String skinColor;
         private String nationality;
-        private int size;
+        private int height;
         private int weight;
         private Sex sex;
         private String story;
@@ -437,8 +437,8 @@ public class Character extends BaseEntity {
             return this.self();
         }
 
-        public Builder setBloodStock(int bloodStock) {
-            this.bloodStock = bloodStock;
+        public Builder setBloodPool(int bloodPool) {
+            this.bloodPool = bloodPool;
 
             return this.self();
         }
@@ -449,8 +449,8 @@ public class Character extends BaseEntity {
             return this.self();
         }
 
-        public Builder setLooksLikeAge(int looksLikeAge) {
-            this.looksLikeAge = looksLikeAge;
+        public Builder setApparentAge(int apparentAge) {
+            this.apparentAge = apparentAge;
 
             return this.self();
         }
@@ -491,8 +491,8 @@ public class Character extends BaseEntity {
             return this.self();
         }
 
-        public Builder setSize(int size) {
-            this.size = size;
+        public Builder setHeight(int height) {
+            this.height = height;
 
             return this.self();
         }
@@ -581,16 +581,16 @@ public class Character extends BaseEntity {
         this.road = builder.road;
         this.willpower = builder.willpower;
         this.usedWillpower = builder.usedWillpower;
-        this.bloodStock = builder.bloodStock;
+        this.bloodPool = builder.bloodPool;
         this.age = builder.age;
-        this.looksLikeAge = builder.looksLikeAge;
+        this.apparentAge = builder.apparentAge;
         this.dayOfBirth = builder.dayOfBirth;
         this.dayOfDeath = builder.dayOfDeath;
         this.hairColor = builder.hairColor;
         this.eyeColor = builder.eyeColor;
         this.skinColor = builder.skinColor;
         this.nationality = builder.nationality;
-        this.size = builder.size;
+        this.height = builder.height;
         this.weight = builder.weight;
         this.sex = builder.sex;
         this.story = builder.story;
@@ -828,8 +828,8 @@ public class Character extends BaseEntity {
      *
      * @return
      */
-    public int getBloodStock() {
-        return this.bloodStock;
+    public int getBloodPool() {
+        return this.bloodPool;
     }
 
     /**
@@ -846,8 +846,8 @@ public class Character extends BaseEntity {
      *
      * @return
      */
-    public int getLooksLikeAge() {
-        return this.looksLikeAge;
+    public int getApparentAge() {
+        return this.apparentAge;
     }
 
     /**
@@ -905,12 +905,12 @@ public class Character extends BaseEntity {
     }
 
     /**
-     * Get the size of the character in cm.
+     * Get the height of the character in cm.
      *
      * @return
      */
-    public int getSize() {
-        return this.size;
+    public int getHeight() {
+        return this.height;
     }
 
     /**

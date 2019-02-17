@@ -184,7 +184,7 @@ public class VampireEditor {
                     Generation generation = new Generation.Builder()
                         .setGeneration(Integer.parseInt(element.getAttribute("value")))
                         .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
-                        .setMaximumBloodStock(XMLParser.getTagValueInt("maximumBloodStock", element))
+                        .setMaximumBloodPool(XMLParser.getTagValueInt("maximumBloodPool", element))
                         .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
                         .build();
 

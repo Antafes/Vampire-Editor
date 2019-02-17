@@ -158,9 +158,9 @@ public class CharacterStorage {
         this.xw.addChild("road", Integer.toString(character.getRoad().getValue()), roadAttributes);
         this.xw.addChild("willpower", Integer.toString(character.getWillpower()));
         this.xw.addChild("usedWillpower", Integer.toString(character.getUsedWillpower()));
-        this.xw.addChild("bloodStock", Integer.toString(character.getBloodStock()));
+        this.xw.addChild("bloodPool", Integer.toString(character.getBloodPool()));
         this.xw.addChild("age", Integer.toString(character.getAge()));
-        this.xw.addChild("looksLikeAge", Integer.toString(character.getLooksLikeAge()));
+        this.xw.addChild("apparentAge", Integer.toString(character.getApparentAge()));
 
         if (character.getDayOfBirth() != null) {
             this.xw.addChild("dayOfBirth",format.format(character.getDayOfBirth()));
@@ -178,7 +178,7 @@ public class CharacterStorage {
         this.xw.addChild("eyeColor", character.getEyeColor());
         this.xw.addChild("skinColor", character.getSkinColor());
         this.xw.addChild("nationality", character.getNationality());
-        this.xw.addChild("size", Integer.toString(character.getSize()));
+        this.xw.addChild("height", Integer.toString(character.getHeight()));
         this.xw.addChild("weight", Integer.toString(character.getWeight()));
         this.xw.addChild("sex", character.getSex().name());
         this.xw.addChild("story", character.getStory());
@@ -291,9 +291,9 @@ public class CharacterStorage {
             builder.setUsedWillpower(XMLParser.getTagValueInt("usedWillpower", root));
         }
 
-        builder.setBloodStock(XMLParser.getTagValueInt("bloodStock", root));
+        builder.setBloodPool(XMLParser.getTagValueInt("bloodPool", root));
         builder.setAge(XMLParser.getTagValueInt("age", root));
-        builder.setLooksLikeAge(XMLParser.getTagValueInt("looksLikeAge", root));
+        builder.setApparentAge(XMLParser.getTagValueInt("apparentAge", root));
 
         if (XMLParser.tagExists("dayOfBirth", root)
             && XMLParser.getTagValue("dayOfBirth", root) != null
@@ -321,7 +321,7 @@ public class CharacterStorage {
         builder.setEyeColor(XMLParser.getTagValue("eyeColor", root));
         builder.setSkinColor(XMLParser.getTagValue("skinColor", root));
         builder.setNationality(XMLParser.getTagValue("nationality", root));
-        builder.setSize(XMLParser.getTagValueInt("size", root));
+        builder.setHeight(XMLParser.getTagValueInt("height", root));
         builder.setWeight(XMLParser.getTagValueInt("weight", root));
         builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
         builder.setStory(XMLParser.getTagValue("story", root));

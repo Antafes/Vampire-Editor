@@ -113,14 +113,14 @@ public class German extends Language {
         this.getTranslations().put("clan", "Clan");
         this.getTranslations().put("sect", "Sekte");
         this.getTranslations().put("age", "Alter");
-        this.getTranslations().put("looksLikeAge", "Sieht aus wie");
+        this.getTranslations().put("apparentAge", "Sieht aus wie");
         this.getTranslations().put("dayOfBirth", "Geburtstag");
         this.getTranslations().put("dayOfDeath", "Todestag");
         this.getTranslations().put("hairColor", "Haarfarbe");
         this.getTranslations().put("eyeColor", "Augenfarbe");
         this.getTranslations().put("skinColor", "Hautfarbe");
         this.getTranslations().put("nationality", "Nationalität");
-        this.getTranslations().put("size", "Größe");
+        this.getTranslations().put("height", "Größe");
         this.getTranslations().put("weight", "Gewicht");
         this.getTranslations().put("sex", "Geschlecht");
         this.getTranslations().put("MALE", "männlich");
@@ -152,7 +152,7 @@ public class German extends Language {
         this.getTranslations().put("general", "Allgemein");
         this.getTranslations().put("meritsAndFlaws", "Vor- und Nachteile");
         this.getTranslations().put("willpower", "Willenskraft");
-        this.getTranslations().put("bloodStock", "Blutvorrat");
+        this.getTranslations().put("bloodPool", "Blutvorrat");
         this.getTranslations().put("printPreview", "Druckvorschau");
         this.getTranslations().put("otherTraits", "Andere Eigenschaften");
         this.getTranslations().put("experience", "Erfahrung");

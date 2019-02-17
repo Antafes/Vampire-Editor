@@ -69,14 +69,14 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
         LinkedHashMap<String, JComponent> fieldNames = new LinkedHashMap<>();
 
         fieldNames.put("age", this.generateTextField("age", false));
-        fieldNames.put("looksLikeAge", this.generateTextField("looksLikeAge", false));
+        fieldNames.put("apparentAge", this.generateTextField("apparentAge", false));
         fieldNames.put("dayOfBirth", this.generateDateFormattedTextField("dayOfBirth", false));
         fieldNames.put("dayOfDeath", this.generateDateFormattedTextField("dayOfDeath", false));
         fieldNames.put("hairColor", this.generateTextField("hairColor", false));
         fieldNames.put("eyeColor", this.generateTextField("eyeColor", false));
         fieldNames.put("skinColor", this.generateTextField("skinColor", false));
         fieldNames.put("nationality", this.generateTextField("nationality", false));
-        fieldNames.put("size", this.generateTextField("size", false));
+        fieldNames.put("height", this.generateTextField("height", false));
         fieldNames.put("weight", this.generateTextField("weight", false));
         fieldNames.put("sex", this.generateTextField("sex", false));
 
@@ -150,8 +150,8 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
 
                     break;
                 case "looksLikeAge":
-                    if (this.character.getLooksLikeAge() > 0) {
-                        element.setText(Integer.toString(this.character.getLooksLikeAge()));
+                    if (this.character.getApparentAge() > 0) {
+                        element.setText(Integer.toString(this.character.getApparentAge()));
                     }
 
                     break;
@@ -180,8 +180,8 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
                     element.setText(this.character.getNationality());
                     break;
                 case "size":
-                    if (this.character.getSize() > 0) {
-                        element.setText(Integer.toString(this.character.getSize()));
+                    if (this.character.getHeight() > 0) {
+                        element.setText(Integer.toString(this.character.getHeight()));
                     }
 
                     break;

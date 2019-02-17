@@ -36,7 +36,7 @@ import java.util.Objects;
 public class Generation extends BaseEntity implements GenerationInterface {
     private final int generation;
     private final int maximumAttributes;
-    private final int maximumBloodStock;
+    private final int maximumBloodPool;
     private final int bloodPerRound;
 
     /**
@@ -45,7 +45,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
     public static class Builder extends BaseEntity.Builder<Builder> {
         private int generation;
         private int maximumAttributes;
-        private int maximumBloodStock;
+        private int maximumBloodPool;
         private int bloodPerRound;
 
         /**
@@ -77,8 +77,8 @@ public class Generation extends BaseEntity implements GenerationInterface {
                 throw new EntityException("Missing maximum attributes");
             }
 
-            if (this.maximumBloodStock == 0 || this.maximumBloodStock < -1) {
-                throw new EntityException("Missing maximum blood stock");
+            if (this.maximumBloodPool == 0 || this.maximumBloodPool < -1) {
+                throw new EntityException("Missing maximum blood pool");
             }
 
             if (this.bloodPerRound == 0 || this.bloodPerRound < -1) {
@@ -166,14 +166,14 @@ public class Generation extends BaseEntity implements GenerationInterface {
         }
 
         /**
-         * Set the maximum blood stock value.
+         * Set the maximum blood pool value.
          *
-         * @param maximumBloodStock
+         * @param maximumBloodPool
          *
          * @return The builder object
          */
-        public Builder setMaximumBloodStock(int maximumBloodStock) {
-            this.maximumBloodStock = maximumBloodStock;
+        public Builder setMaximumBloodPool(int maximumBloodPool) {
+            this.maximumBloodPool = maximumBloodPool;
 
             return this.self();
         }
@@ -202,7 +202,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
 
         this.generation = builder.generation;
         this.maximumAttributes = builder.maximumAttributes;
-        this.maximumBloodStock = builder.maximumBloodStock;
+        this.maximumBloodPool = builder.maximumBloodPool;
         this.bloodPerRound = builder.bloodPerRound;
     }
 
@@ -227,17 +227,17 @@ public class Generation extends BaseEntity implements GenerationInterface {
     }
 
     /**
-     * Get the maximum for the blood stock.
+     * Get the maximum for the blood pool.
      *
      * @return
      */
     @Override
-    public int getMaximumBloodStock() {
-        if (this.maximumBloodStock == -1) {
+    public int getMaximumBloodPool() {
+        if (this.maximumBloodPool == -1) {
             return Integer.MAX_VALUE;
         }
 
-        return this.maximumBloodStock;
+        return this.maximumBloodPool;
     }
 
     /**
@@ -291,7 +291,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
 
         return generation == that.generation &&
             maximumAttributes == that.maximumAttributes &&
-            maximumBloodStock == that.maximumBloodStock &&
+            maximumBloodPool == that.maximumBloodPool &&
             bloodPerRound == that.bloodPerRound;
     }
 
@@ -305,7 +305,7 @@ public class Generation extends BaseEntity implements GenerationInterface {
         return Objects.hash(
             generation,
             maximumAttributes,
-            maximumBloodStock,
+            maximumBloodPool,
             bloodPerRound
         );
     }

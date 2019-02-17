@@ -46,7 +46,7 @@ public interface GenerationInterface {
      *
      * @return
      */
-    public int getMaximumBloodStock();
+    public int getMaximumBloodPool();
 
     /**
      * Get the maximum allowed usage of blood per round.
