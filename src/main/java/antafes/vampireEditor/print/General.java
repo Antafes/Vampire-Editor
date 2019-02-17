@@ -189,10 +189,10 @@ public class General extends PrintBase {
      * Add the characters abilities.
      */
     protected void addAbilityInformation() {
-        String[] headlines = {"talents", "skills", "knowledges"};
+        String[] headlines = {"talents", "skills", "knowledge"};
         this.addHeadlines(headlines);
         this.setMaxY(this.getMaxY() + 1);
-        int yTalents = this.getMaxY(), ySkills = this.getMaxY(), yKnowledges = this.getMaxY();
+        int yTalents = this.getMaxY(), ySkills = this.getMaxY(), yKnowledge = this.getMaxY();
 
         for (Ability ability : this.getCharacter().getAbilitiesByType(AbilityInterface.AbilityType.TALENT)) {
             this.addValueEntry(
@@ -219,7 +219,7 @@ public class General extends PrintBase {
             this.addValueEntry(
                 ability.getName(),
                 PositionX.RIGHT1.getPosition(),
-                yKnowledges++,
+                yKnowledge++,
                 PositionX.RIGHT2.getPosition(),
                 ability.getValue()
             );

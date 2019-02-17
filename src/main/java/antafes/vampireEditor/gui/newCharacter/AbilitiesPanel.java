@@ -94,7 +94,7 @@ public class AbilitiesPanel extends BaseListPanel {
      * Add all knowledge fields sorted by the translated name.
      */
     private void addKnowledgeFields() {
-        this.addAbilityFields("knowledges", AbilityInterface.AbilityType.KNOWLEDGE);
+        this.addAbilityFields("knowledge", AbilityInterface.AbilityType.KNOWLEDGE);
     }
 
     /**
@@ -155,7 +155,7 @@ public class AbilitiesPanel extends BaseListPanel {
                     calculateUsedSkillPoints();
                 }
 
-                if (getFields("knowledges").contains(this.getComponent())) {
+                if (getFields("knowledge").contains(this.getComponent())) {
                     calculateUsedKnowledgePoints();
                 }
 
@@ -237,34 +237,34 @@ public class AbilitiesPanel extends BaseListPanel {
      * Calculate the used knowledge points.
      */
     private void calculateUsedKnowledgePoints() {
-        this.calculateUsedPoints("knowledges");
+        this.calculateUsedPoints("knowledge");
     }
 
     /**
-     * Calculate and return the sum of points spent for knowledges.
+     * Calculate and return the sum of points spent for knowledge.
      *
      * @return
      */
     public int getKnowledgePointsSum() {
-        return this.getPointsSum("knowledges");
+        return this.getPointsSum("knowledge");
     }
 
     /**
-     * Check if the spent points for knowledges is above its maximum.
+     * Check if the spent points for knowledge is above its maximum.
      *
      * @return True if above maximum
      */
     public boolean checkKnowledgePoints() {
-        return this.checkPoints("knowledges");
+        return this.checkPoints("knowledge");
     }
 
     /**
-     * Get the maximum points available for knowledges.
+     * Get the maximum points available for knowledge.
      *
      * @return
      */
     public int getKnowledgeMaxPoints() {
-        return this.getMaxPoints("knowledges");
+        return this.getMaxPoints("knowledge");
     }
 
     /**
@@ -278,7 +278,7 @@ public class AbilitiesPanel extends BaseListPanel {
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields("skills").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("knowledges").stream().map((component) -> (JSpinner) component)
+        this.getFields("knowledge").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
 
         this.calculateUsedKnowledgePoints();
@@ -328,7 +328,7 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     public boolean checkAllFields() {
-        if (this.getPointsSum("knowledges") < this.getMaxPoints("knowledges")) {
+        if (this.getPointsSum("knowledge") < this.getMaxPoints("knowledge")) {
             return true;
         }
 

@@ -71,7 +71,7 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      * Add all knowledge fields sorted by the translated name.
      */
     private void addKnowledgeFields() {
-        this.addAbilityFields("knowledges", AbilityInterface.AbilityType.KNOWLEDGE);
+        this.addAbilityFields("knowledge", AbilityInterface.AbilityType.KNOWLEDGE);
     }
 
     /**
@@ -116,7 +116,7 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields("skills").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("knowledges").stream().map((component) -> (JSpinner) component)
+        this.getFields("knowledge").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
