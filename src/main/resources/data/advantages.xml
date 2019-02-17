@@ -7,12 +7,30 @@
             <German>Verbündete</German>
         </name>
 	</advantage>
+	<advantage key="alternateIdentity">
+		<type>BACKGROUND</type>
+		<name>
+			<English>Alternate identity</English>
+		</name>
+	</advantage>
 	<advantage key="contacts">
 		<type>BACKGROUND</type>
 		<name>
             <English>Contacts</English>
             <German>Kontakte</German>
         </name>
+	</advantage>
+	<advantage key="domain">
+		<type>BACKGROUND</type>
+		<name>
+			<English>Domain</English>
+		</name>
+	</advantage>
+	<advantage key="fame">
+		<type>BACKGROUND</type>
+		<name>
+			<English>Fame</English>
+		</name>
 	</advantage>
 	<advantage key="generation">
 		<type>BACKGROUND</type>
@@ -63,6 +81,12 @@
             <German>Status</German>
         </name>
 	</advantage>
+	<advantage key="abombwe">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Abombwe</English>
+		</name>
+	</advantage>
 	<advantage key="animalism">
 		<type>DISCIPLINE</type>
 		<name>
@@ -76,6 +100,12 @@
             <English>Auspex</English>
             <German>Auspex</German>
         </name>
+	</advantage>
+	<advantage key="bardo">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Bardo</English>
+		</name>
 	</advantage>
 	<advantage key="celerity">
 		<type>DISCIPLINE</type>
@@ -91,6 +121,12 @@
             <German>Schimären</German>
         </name>
 	</advantage>
+	<advantage key="daimonion">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Daimonion</English>
+		</name>
+	</advantage>
 	<advantage key="dementation">
 		<type>DISCIPLINE</type>
 		<name>
@@ -105,6 +141,12 @@
             <German>Beherrschung</German>
         </name>
 	</advantage>
+	<advantage key="flight">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>FLight</English>
+		</name>
+	</advantage>
 	<advantage key="fortitude">
 		<type>DISCIPLINE</type>
 		<name>
@@ -112,12 +154,11 @@
             <German>Seelenstärke</German>
         </name>
 	</advantage>
-	<advantage key="mortis">
+	<advantage key="mytherceria">
 		<type>DISCIPLINE</type>
 		<name>
-            <English>Mortis</English>
-            <German>Mortis</German>
-        </name>
+			<English>Mytherceria</English>
+		</name>
 	</advantage>
 	<advantage key="obfuscate">
 		<type>DISCIPLINE</type>
@@ -125,6 +166,18 @@
             <English>Obfuscate</English>
             <German>Verdunkelung</German>
         </name>
+	</advantage>
+	<advantage key="obtenebration">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Obtenebration</English>
+		</name>
+	</advantage>
+	<advantage key="ogham">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Ogham</English>
+		</name>
 	</advantage>
 	<advantage key="potence">
 		<type>DISCIPLINE</type>
@@ -161,12 +214,30 @@
             <German>Serpentis</German>
         </name>
 	</advantage>
+	<advantage key="spiritus">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Spiritus</English>
+		</name>
+	</advantage>
+	<advantage key="temporis">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Temporis</English>
+		</name>
+	</advantage>
 	<advantage key="thaumaturgy">
 		<type>DISCIPLINE</type>
 		<name>
             <English>Thaumaturgy</English>
             <German>Thaumaturgie</German>
         </name>
+	</advantage>
+	<advantage key="valeren">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Valeren</English>
+		</name>
 	</advantage>
 	<advantage key="vicissitude">
 		<type>DISCIPLINE</type>

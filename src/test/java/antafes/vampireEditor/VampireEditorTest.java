@@ -56,7 +56,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 11);
         Assert.assertEquals(actual.get(0).getClass(), Generation.class);
     }
 
@@ -79,7 +78,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 28);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Advantage.class);
     }
 
@@ -89,7 +87,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 13);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Clan.class);
     }
 
@@ -99,7 +96,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 9);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Attribute.class);
     }
 
@@ -122,7 +118,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 30);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Ability.class);
     }
 
@@ -172,9 +167,9 @@ public class VampireEditorTest {
             .addName(Configuration.Language.GERMAN, "Assamiten")
             .addNickname(Configuration.Language.ENGLISH, "Saracens")
             .addNickname(Configuration.Language.GERMAN, "Sarazenen")
-            .addAdvantage(VampireEditor.getAdvantage("celerity"))
+            .addAdvantage(VampireEditor.getAdvantage("auspex"))
+            .addAdvantage(VampireEditor.getAdvantage("presence"))
             .addAdvantage(VampireEditor.getAdvantage("quietus"))
-            .addAdvantage(VampireEditor.getAdvantage("obfuscate"))
             .addWeakness(VampireEditor.getWeakness("bloodTithe"))
             .addWeakness(VampireEditor.getWeakness("diableryTraces"))
             .build();
@@ -189,7 +184,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 38);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Merit.class);
     }
 
@@ -199,7 +193,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 81);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Flaw.class);
     }
 
@@ -209,7 +202,6 @@ public class VampireEditorTest {
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.size(), 9);
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Road.class);
     }
 

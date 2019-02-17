@@ -10,9 +10,9 @@
             <German>Sarazenen</German>
         </nickname>
 		<advantages>
-			<advantage>celerity</advantage>
+			<advantage>auspex</advantage>
+			<advantage>presence</advantage>
 			<advantage>quietus</advantage>
-			<advantage>obfuscate</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>bloodTithe</weakness>
@@ -30,11 +30,29 @@
         </nickname>
 		<advantages>
 			<advantage>celerity</advantage>
-			<advantage>presence</advantage>
 			<advantage>potence</advantage>
+			<advantage>presence</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>easierFrenzy</weakness>
+		</weaknesses>
+	</clan>
+	<clan key="cappadocian">
+		<name>
+			<English>Cappadocian</English>
+			<German>Kappadozianer</German>
+		</name>
+		<nickname>
+			<English>Graverobber</English>
+			<German>Grabräuber</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>mortis</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>corpse-like</weakness>
 		</weaknesses>
 	</clan>
 	<clan key="gangrel">
@@ -47,59 +65,23 @@
             <German>Tiere</German>
         </nickname>
 		<advantages>
-			<advantage>protean</advantage>
-			<advantage>fortitude</advantage>
 			<advantage>animalism</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>protean</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>frenzyTraits</weakness>
 		</weaknesses>
 	</clan>
-	<clan key="followersOfSet">
-		<name>
-            <English>Followers of Set</English>
-            <German>Jünger des Seth</German>
-        </name>
-		<nickname>
-            <English>Serpents</English>
-            <German>Schlangen</German>
-        </nickname>
-		<advantages>
-			<advantage>presence</advantage>
-			<advantage>serpentis</advantage>
-			<advantage>obfuscate</advantage>
-		</advantages>
-		<weaknesses>
-			<weakness>sunlightAllergy</weakness>
-		</weaknesses>
-	</clan>
-	<clan key="cappadocian">
-		<name>
-            <English>Cappadocian</English>
-            <German>Kappadozianer</German>
-        </name>
-		<nickname>
-            <English>Graverobber</English>
-            <German>Grabräuber</German>
-        </nickname>
-		<advantages>
-			<advantage>auspex</advantage>
-			<advantage>mortis</advantage>
-			<advantage>fortitude</advantage>
-		</advantages>
-		<weaknesses>
-			<weakness>corpse-like</weakness>
-		</weaknesses>
-	</clan>
 	<clan key="lasombra">
 		<name>
-            <English>Lasombra</English>
-            <German>Lasombra</German>
-        </name>
+			<English>Lasombra</English>
+			<German>Lasombra</German>
+		</name>
 		<nickname>
-            <English>Magisters</English>
-            <German>Magister</German>
-        </nickname>
+			<English>Magisters</English>
+			<German>Magister</German>
+		</nickname>
 		<advantages>
 			<advantage>dominate</advantage>
 			<advantage>obtenebration</advantage>
@@ -111,13 +93,13 @@
 	</clan>
 	<clan key="malkavian">
 		<name>
-            <English>Malkavian</English>
-            <German>Malkavianer</German>
-        </name>
+			<English>Malkavian</English>
+			<German>Malkavianer</German>
+		</name>
 		<nickname>
-            <English>Lunatics</English>
-            <German>Wahnsinnige</German>
-        </nickname>
+			<English>Lunatics</English>
+			<German>Wahnsinnige</German>
+		</nickname>
 		<advantages>
 			<advantage>auspex</advantage>
 			<advantage>dementation</advantage>
@@ -129,17 +111,17 @@
 	</clan>
 	<clan key="nosferatu">
 		<name>
-            <English>Nosferatu</English>
-            <German>Nosferatu</German>
-        </name>
+			<English>Nosferatu</English>
+			<German>Nosferatu</German>
+		</name>
 		<nickname>
-            <English>Lepers</English>
-            <German>Leprakranke</German>
-        </nickname>
+			<English>Lepers</English>
+			<German>Leprakranke</German>
+		</nickname>
 		<advantages>
-			<advantage>potence</advantage>
 			<advantage>animalism</advantage>
 			<advantage>obfuscate</advantage>
+			<advantage>potence</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>monstrousAppearance</weakness>
@@ -147,20 +129,38 @@
 	</clan>
 	<clan key="ravnos">
 		<name>
-            <English>Ravnos</English>
-            <German>Ravnos</German>
-        </name>
+			<English>Ravnos</English>
+			<German>Ravnos</German>
+		</name>
 		<nickname>
-            <English>Deceivers</English>
-            <German>Scharlatane</German>
-        </nickname>
+			<English>Deceivers</English>
+			<German>Scharlatane</German>
+		</nickname>
 		<advantages>
+			<advantage>animalism</advantage>
 			<advantage>chimerstry</advantage>
 			<advantage>fortitude</advantage>
-			<advantage>animalism</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>favoriteCrimes</weakness>
+		</weaknesses>
+	</clan>
+	<clan key="setites">
+		<name>
+            <English>Setites</English>
+            <German>Jünger des Seth</German>
+        </name>
+		<nickname>
+            <English>Serpents</English>
+            <German>Schlangen</German>
+        </nickname>
+		<advantages>
+			<advantage>obfuscate</advantage>
+			<advantage>presence</advantage>
+			<advantage>serpentis</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>sunlightAllergy</weakness>
 		</weaknesses>
 	</clan>
 	<clan key="toreador">
@@ -209,9 +209,9 @@
             <German>Unholde</German>
         </nickname>
 		<advantages>
+			<advantage>animalism</advantage>
 			<advantage>auspex</advantage>
 			<advantage>vicissitude</advantage>
-			<advantage>animalism</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>soilBound</weakness>
@@ -228,8 +228,8 @@
         </nickname>
 		<advantages>
 			<advantage>dominate</advantage>
-			<advantage>presence</advantage>
 			<advantage>fortitude</advantage>
+			<advantage>presence</advantage>
 		</advantages>
 		<weaknesses>
 			<weakness>preyRestriction</weakness>
