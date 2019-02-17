@@ -189,10 +189,10 @@ public class General extends PrintBase {
      * Add the characters abilities.
      */
     protected void addAbilityInformation() {
-        String[] headlines = {"talents", "skills", "knowledges"};
+        String[] headlines = {"talents", "skills", "knowledge"};
         this.addHeadlines(headlines);
         this.setMaxY(this.getMaxY() + 1);
-        int yTalents = this.getMaxY(), ySkills = this.getMaxY(), yKnowledges = this.getMaxY();
+        int yTalents = this.getMaxY(), ySkills = this.getMaxY(), yKnowledge = this.getMaxY();
 
         for (Ability ability : this.getCharacter().getAbilitiesByType(AbilityInterface.AbilityType.TALENT)) {
             this.addValueEntry(
@@ -219,7 +219,7 @@ public class General extends PrintBase {
             this.addValueEntry(
                 ability.getName(),
                 PositionX.RIGHT1.getPosition(),
-                yKnowledges++,
+                yKnowledge++,
                 PositionX.RIGHT2.getPosition(),
                 ability.getValue()
             );
@@ -286,15 +286,15 @@ public class General extends PrintBase {
         this.addHeadline(this.getLanguage().translate("willpower"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getWillpower(), 2);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getUsedWillpower(), 2, Dot.SQUARE);
-        this.addHeadline(this.getLanguage().translate("bloodStock"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
+        this.addHeadline(this.getLanguage().translate("bloodPool"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
 
-        int bloodStock = this.getCharacter().getBloodStock();
+        int bloodPool = this.getCharacter().getBloodPool();
         for (int i = 0; i < 3; i++) {
-            this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, bloodStock, 2, Dot.SQUARE);
-            bloodStock -= 10;
+            this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, bloodPool, 2, Dot.SQUARE);
+            bloodPool -= 10;
 
-            if (bloodStock < 0) {
-                bloodStock = 0;
+            if (bloodPool < 0) {
+                bloodPool = 0;
             }
         }
 

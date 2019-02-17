@@ -119,7 +119,7 @@ public class Looks extends PrintBase {
             PositionX.LEFT1.getPosition(),
             yLeft++,
             PositionX.LEFT2.getPosition(),
-            Integer.toString(this.getCharacter().getLooksLikeAge())
+            Integer.toString(this.getCharacter().getApparentAge())
         );
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
         this.addValueEntry(
@@ -165,11 +165,11 @@ public class Looks extends PrintBase {
             this.getCharacter().getNationality()
         );
         this.addValueEntry(
-            "size",
+            "height",
             PositionX.LEFT1.getPosition(),
             yLeft++,
             PositionX.LEFT2.getPosition(),
-            Integer.toString(this.getCharacter().getSize())
+            Integer.toString(this.getCharacter().getHeight())
         );
         this.addValueEntry(
             "weight",

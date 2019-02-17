@@ -265,16 +265,16 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getUsedWillpower(), 1);
     }
 
-    public void testGetBloodStock() {
-        Assert.assertEquals(this.character.getBloodStock(), 3);
+    public void testGetBloodPool() {
+        Assert.assertEquals(this.character.getBloodPool(), 3);
     }
 
     public void testGetAge() {
         Assert.assertEquals(this.character.getAge(), 34);
     }
 
-    public void testGetLooksLikeAge() {
-        Assert.assertEquals(this.character.getLooksLikeAge(), 22);
+    public void testGetApparentAge() {
+        Assert.assertEquals(this.character.getApparentAge(), 22);
     }
 
     public void testGetDayOfBirth() {
@@ -307,8 +307,8 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getNationality(), "German");
     }
 
-    public void testGetSize() {
-        Assert.assertEquals(this.character.getSize(), 177);
+    public void testGetHeight() {
+        Assert.assertEquals(this.character.getHeight(), 177);
     }
 
     public void testGetWeight() {

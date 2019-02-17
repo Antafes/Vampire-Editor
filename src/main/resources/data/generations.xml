@@ -2,57 +2,57 @@
 <generations>
 	<generation value="3">
 		<maximumAttributes>10</maximumAttributes>
-		<maximumBloodStock>-1</maximumBloodStock>
+		<maximumBloodPool>-1</maximumBloodPool>
 		<bloodPerRound>-1</bloodPerRound>
 	</generation>
 	<generation value="4">
 		<maximumAttributes>9</maximumAttributes>
-		<maximumBloodStock>50</maximumBloodStock>
+		<maximumBloodPool>50</maximumBloodPool>
 		<bloodPerRound>10</bloodPerRound>
 	</generation>
 	<generation value="5">
 		<maximumAttributes>8</maximumAttributes>
-		<maximumBloodStock>40</maximumBloodStock>
+		<maximumBloodPool>40</maximumBloodPool>
 		<bloodPerRound>8</bloodPerRound>
 	</generation>
 	<generation value="6">
 		<maximumAttributes>7</maximumAttributes>
-		<maximumBloodStock>30</maximumBloodStock>
+		<maximumBloodPool>30</maximumBloodPool>
 		<bloodPerRound>6</bloodPerRound>
 	</generation>
 	<generation value="7">
 		<maximumAttributes>6</maximumAttributes>
-		<maximumBloodStock>20</maximumBloodStock>
+		<maximumBloodPool>20</maximumBloodPool>
 		<bloodPerRound>5</bloodPerRound>
 	</generation>
 	<generation value="8">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>15</maximumBloodStock>
+		<maximumBloodPool>15</maximumBloodPool>
 		<bloodPerRound>3</bloodPerRound>
 	</generation>
 	<generation value="9">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>14</maximumBloodStock>
+		<maximumBloodPool>14</maximumBloodPool>
 		<bloodPerRound>2</bloodPerRound>
 	</generation>
 	<generation value="10">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>13</maximumBloodStock>
+		<maximumBloodPool>13</maximumBloodPool>
 		<bloodPerRound>1</bloodPerRound>
 	</generation>
 	<generation value="11">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>12</maximumBloodStock>
+		<maximumBloodPool>12</maximumBloodPool>
 		<bloodPerRound>1</bloodPerRound>
 	</generation>
 	<generation value="12">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>11</maximumBloodStock>
+		<maximumBloodPool>11</maximumBloodPool>
 		<bloodPerRound>1</bloodPerRound>
 	</generation>
 	<generation value="13">
 		<maximumAttributes>5</maximumAttributes>
-		<maximumBloodStock>10</maximumBloodStock>
+		<maximumBloodPool>10</maximumBloodPool>
 		<bloodPerRound>1</bloodPerRound>
 	</generation>
 </generations>

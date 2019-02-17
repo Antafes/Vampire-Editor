@@ -157,11 +157,11 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
         willpower.setName("willpower");
         elementList.put("willpower", willpower);
 
-        JSpinner bloodStock = new JSpinner();
-        bloodStock.setModel(new SpinnerNumberModel(0, 0, this.character.getGeneration().getMaximumBloodStock(), 1));
-        bloodStock.setSize(spinnerDimension);
-        bloodStock.setName("bloodStock");
-        elementList.put("bloodStock", bloodStock);
+        JSpinner bloodPool = new JSpinner();
+        bloodPool.setModel(new SpinnerNumberModel(0, 0, this.character.getGeneration().getMaximumBloodPool(), 1));
+        bloodPool.setSize(spinnerDimension);
+        bloodPool.setName("bloodPool");
+        elementList.put("bloodPool", bloodPool);
 
         this.addFields("other", false, elementList);
     }
@@ -232,7 +232,7 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
                         element.setValue(this.character.getWillpower());
                         break;
                     case "bloodStock":
-                        element.setValue(this.character.getBloodStock());
+                        element.setValue(this.character.getBloodPool());
                         break;
                     default:
                         element.setValue(this.character.getRoad().getValue());

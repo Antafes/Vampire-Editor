@@ -87,16 +87,16 @@
                 </xsd:element>
                 <xsd:element name="willpower" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="usedWillpower" type="xsd:integer" minOccurs="0" maxOccurs="1" />
-                <xsd:element name="bloodStock" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="bloodPool" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="age" type="xsd:integer" minOccurs="0" maxOccurs="1" />
-                <xsd:element name="looksLikeAge" type="xsd:integer" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="apparentAge" type="xsd:integer" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="dayOfBirth" type="xsd:date" minOccurs="0" maxOccurs="1" nillable="1" />
                 <xsd:element name="dayOfDeath" type="xsd:date" minOccurs="0" maxOccurs="1" nillable="1" />
                 <xsd:element name="hairColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="eyeColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="skinColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="nationality" type="xsd:string" minOccurs="0" maxOccurs="1" />
-                <xsd:element name="size" type="xsd:decimal" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="height" type="xsd:decimal" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="weight" type="xsd:decimal" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="sex" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="story" type="xsd:string" minOccurs="0" maxOccurs="1" />

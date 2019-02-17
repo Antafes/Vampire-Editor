@@ -362,7 +362,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Calculate and return the sum of points spent for knowledges.
+     * Calculate and return the sum of points spent for knowledge.
      *
      * @return
      */
@@ -371,7 +371,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Check if the spent points for knowledges is above its maximum.
+     * Check if the spent points for knowledge is above its maximum.
      *
      * @return True if spent points are above maximum
      */
@@ -380,7 +380,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Get the maximum points available for knowledges.
+     * Get the maximum points available for knowledge.
      *
      * @return
      */

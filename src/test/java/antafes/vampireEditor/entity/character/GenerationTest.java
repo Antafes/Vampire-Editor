@@ -37,7 +37,7 @@ public class GenerationTest {
         this.generation = new Generation.Builder()
             .setGeneration(5)
             .setMaximumAttributes(10)
-            .setMaximumBloodStock(15)
+            .setMaximumBloodPool(15)
             .setBloodPerRound(2)
             .build();
     }
@@ -63,18 +63,18 @@ public class GenerationTest {
 
     public void testGetMaximumBloodStock() {
         final int expected = 15;
-        final int actual = this.generation.getMaximumBloodStock();
+        final int actual = this.generation.getMaximumBloodPool();
 
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetMaximumBloodStockIndefinite() throws EntityException {
+    public void testGetMaximumBloodPoolIndefinite() throws EntityException {
         final int expected = Integer.MAX_VALUE;
         final int actual = new Generation.Builder()
             .fillDataFromObject(this.generation)
-            .setMaximumBloodStock(-1)
+            .setMaximumBloodPool(-1)
             .build()
-            .getMaximumBloodStock();
+            .getMaximumBloodPool();
 
         Assert.assertEquals(actual, expected);
     }
@@ -120,7 +120,7 @@ public class GenerationTest {
         final Generation object = new Generation.Builder()
             .setGeneration(8)
             .setMaximumAttributes(8)
-            .setMaximumBloodStock(12)
+            .setMaximumBloodPool(12)
             .setBloodPerRound(1)
             .build();
 
@@ -169,19 +169,19 @@ public class GenerationTest {
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood stock")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood pool")
     public void testBuilderMissingMaximumBloodStockool() throws EntityException {
         new Generation.Builder()
             .fillDataFromObject(this.generation)
-            .setMaximumBloodStock(0)
+            .setMaximumBloodPool(0)
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood stock")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood pool")
     public void testBuilderMissingMaximumBloodStockoolBelowZero() throws EntityException {
         new Generation.Builder()
             .fillDataFromObject(this.generation)
-            .setMaximumBloodStock(-10)
+            .setMaximumBloodPool(-10)
             .build();
     }
 

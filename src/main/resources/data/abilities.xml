@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <abilities>
-    <ability key="acting">
-        <name>
-            <English>Acting</English>
-            <German>Schauspielerei</German>
-        </name>
-        <type>TALENT</type>
-    </ability>
     <ability key="alertness">
         <name>
             <English>Alertness</English>
-            <German>Aufmerksamkeit</German>
+            <German>Ausweichen</German>
         </name>
         <type>TALENT</type>
     </ability>
@@ -21,6 +14,13 @@
         </name>
         <type>TALENT</type>
     </ability>
+    <ability key="awareness">
+        <name>
+            <English>Awareness</English>
+            <German>Aufmerksamkeit</German>
+        </name>
+        <type>TALENT</type>
+    </ability>
     <ability key="brawl">
         <name>
             <English>Brawl</English>
@@ -28,24 +28,17 @@
         </name>
         <type>TALENT</type>
     </ability>
-    <ability key="burglary">
-        <name>
-            <English>Burglary</English>
-            <German>Diebstahl</German>
-        </name>
-        <type>TALENT</type>
-    </ability>
-    <ability key="dodge">
-        <name>
-            <English>Dodge</English>
-            <German>Ausweichen</German>
-        </name>
-        <type>TALENT</type>
-    </ability>
     <ability key="empathy">
         <name>
             <English>Empathy</English>
             <German>Empathie</German>
+        </name>
+        <type>TALENT</type>
+    </ability>
+    <ability key="expression">
+        <name>
+            <English>Expression</English>
+            <German>Schauspielerei</German>
         </name>
         <type>TALENT</type>
     </ability>
@@ -60,6 +53,13 @@
         <name>
             <English>Leadership</English>
             <German>Führungsqualitäten</German>
+        </name>
+        <type>TALENT</type>
+    </ability>
+    <ability key="legerdemain">
+        <name>
+            <English>Legerdemain</English>
+            <German>Diebstahl</German>
         </name>
         <type>TALENT</type>
     </ability>
@@ -84,6 +84,13 @@
         </name>
         <type>SKILL</type>
     </ability>
+    <ability key="commerce">
+        <name>
+            <English>Commerce</English>
+            <German>Handel</German>
+        </name>
+        <type>SKILL</type>
+    </ability>
     <ability key="crafts">
         <name>
             <English>Crafts</English>
@@ -98,13 +105,6 @@
         </name>
         <type>SKILL</type>
     </ability>
-    <ability key="herbalism">
-        <name>
-            <English>Herbalism</English>
-            <German>Kräuterkunde</German>
-        </name>
-        <type>SKILL</type>
-    </ability>
     <ability key="melee">
         <name>
             <English>Melee</English>
@@ -112,9 +112,9 @@
         </name>
         <type>SKILL</type>
     </ability>
-    <ability key="music">
+    <ability key="performance">
         <name>
-            <English>Music</English>
+            <English>Performance</English>
             <German>Musik</German>
         </name>
         <type>SKILL</type>
@@ -142,21 +142,21 @@
     </ability>
     <ability key="academicKnowledge">
         <name>
-            <English>Academic knowledge</English>
+            <English>Academics</English>
             <German>Akademisches Wissen</German>
         </name>
         <type>KNOWLEDGE</type>
     </ability>
-    <ability key="administration">
+    <ability key="enigmas">
         <name>
-            <English>Administration</English>
-            <German>Verwaltung</German>
+            <English>Enigmas</English>
+            <German>Mysterien</German>
         </name>
         <type>KNOWLEDGE</type>
     </ability>
-    <ability key="folklore">
+    <ability key="hearthWisdom">
         <name>
-            <English>Folklore</English>
+            <English>Hearth wisdom</English>
             <German>Folklore</German>
         </name>
         <type>KNOWLEDGE</type>
@@ -172,13 +172,6 @@
         <name>
             <English>law</English>
             <German>Gesetzeskenntnis</German>
-        </name>
-        <type>KNOWLEDGE</type>
-    </ability>
-    <ability key="linguistics">
-        <name>
-            <English>Linguistics</English>
-            <German>Linguistik</German>
         </name>
         <type>KNOWLEDGE</type>
     </ability>
@@ -203,10 +196,17 @@
         </name>
         <type>KNOWLEDGE</type>
     </ability>
-    <ability key="science">
+    <ability key="seneschal">
         <name>
-            <English>Science</English>
-            <German>Naturwissenschaft</German>
+            <English>Seneschal</English>
+            <German>Seneschall</German>
+        </name>
+        <type>KNOWLEDGE</type>
+    </ability>
+    <ability key="theology">
+        <name>
+            <English>Theology</English>
+            <German>Theologie</German>
         </name>
         <type>KNOWLEDGE</type>
     </ability>
