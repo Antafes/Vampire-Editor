@@ -305,7 +305,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
         chronicleField.setName("chronicle"); // NOI18N
 
-        generationLabel.setText("Generation*");
+        generationLabel.setText("Generation");
 
         apparentAgeLabel.setLabelFor(apparentAgeField);
         apparentAgeLabel.setText("Apparent age");
@@ -526,7 +526,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private void setFieldTexts() {
         this.nameLabel.setText(this.language.translate("name") + "*");
         this.chronicleLabel.setText(this.language.translate("chronicle"));
-        this.generationLabel.setText(this.language.translate("generation") + "*");
+        this.generationLabel.setText(this.language.translate("generation"));
         this.natureLabel.setText(this.language.translate("nature") + "*");
         this.hideoutLabel.setText(this.language.translate("hideout"));
         this.playerLabel.setText(this.language.translate("player"));
@@ -695,5 +695,20 @@ public class LooksPanel extends javax.swing.JPanel {
         builder.setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0);
         builder.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
         builder.setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
+    }
+
+    /**
+     * Adjust the generation by subtracting the given adjustment value.
+     *
+     * @param adjustment Generation adjustment
+     */
+    public void adjustGeneration(int adjustment) {
+        int generation = LooksPanel.DEFAULT_GENERATION;
+        generation -= adjustment;
+
+        this.generationContentLabel.setText(Integer.toString(generation));
+        this.parent.setAttributeMaximum(
+            Objects.requireNonNull(VampireEditor.getGeneration(generation)).getMaximumAttributes()
+        );
     }
 }

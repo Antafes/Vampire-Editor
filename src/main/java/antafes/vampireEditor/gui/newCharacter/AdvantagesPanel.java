@@ -33,8 +33,11 @@ import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -264,7 +267,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.name()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, 5));
 
         this.calculateUsedVirtuePoints();
         this.calculateUsedDisciplinePoints();
@@ -468,5 +471,68 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                 }
             }
         });
+    }
+
+    /**
+     * Add an item listener for the combobox.
+     *
+     * @param elements Map with the combobox and the spinner
+     * @param type Identifier for the field
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
+     * @param maxFields Maximum amount of fields
+     */
+    @Override
+    protected void addComboBoxItemListener(
+        HashMap<String, Component> elements,
+        String type,
+        int spinnerMinimum,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout,
+        int maxFields
+    ) {
+        super.addComboBoxItemListener(elements, type, spinnerMinimum, fields, groups, layout, maxFields);
+
+        JComboBox comboBox = (JComboBox) elements.get("comboBox");
+        JSpinner spinner = (JSpinner) elements.get("spinner");
+
+        // Fetching the second element, as the first is only an empty string.
+        if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
+            comboBox.addItemListener((ItemEvent e) -> {
+                JComboBox element = (JComboBox) e.getSource();
+
+                if (VampireEditor.getAdvantage("generation").equals(element.getSelectedItem())) {
+                    this.addGenerationSpinnerItemListener(spinner);
+                } else {
+                    // Remove the generation bonus
+                    if (spinner.getChangeListeners().length > 1) {
+                        for (ChangeListener listener : spinner.getChangeListeners()) {
+                            if (listener.toString().contains(AdvantagesPanel.class.toString())) {
+                                spinner.removeChangeListener(listener);
+                                break;
+                            }
+                        }
+                        ((LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0))
+                            .adjustGeneration(0);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Add a change listener to the generation spinner element.
+     *
+     * @param spinner The generation spinner
+     */
+    protected void addGenerationSpinnerItemListener(JSpinner spinner) {
+        LooksPanel panel = (LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0);
+        spinner.addChangeListener(
+            (ChangeEvent e) -> panel.adjustGeneration((int) ((JSpinner) e.getSource()).getValue())
+        );
+        panel.adjustGeneration((int) spinner.getValue());
     }
 }
