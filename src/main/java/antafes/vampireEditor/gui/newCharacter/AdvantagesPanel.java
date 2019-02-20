@@ -286,9 +286,11 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         if (backgroundSum >= backgroundMax
             && disciplinesSum >= disciplinesMax
             && virtuesSum >= virtuesMax
-            && this.getParentComponent().getMaxActiveTab() < 4
         ) {
-            this.getParentComponent().increaseMaxActiveTab();
+            if (this.getParentComponent().getMaxActiveTab() < 4) {
+                this.getParentComponent().increaseMaxActiveTab();
+            }
+
             this.getParentComponent().getCharacterTabPane().setEnabledAt(this.getParentComponent().getMaxActiveTab(), true);
             this.enableNextButton();
         }
