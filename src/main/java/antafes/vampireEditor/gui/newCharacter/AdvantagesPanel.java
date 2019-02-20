@@ -442,16 +442,24 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         this.getFields().forEach((key, fields) -> {
             for (int i = 0; i < fields.size(); i++) {
                 JSpinner spinner = (JSpinner) fields.get(i);
-                JComboBox comboBox = this.getComboBoxes(key).get(i);
+                Advantage advantage;
 
-                if (Objects.equals(comboBox.getSelectedItem(), "")) {
-                    continue;
+                if (this.getComboBoxes(key).size() > 0) {
+                    JComboBox comboBox = this.getComboBoxes(key).get(i);
+
+                    if (Objects.equals(comboBox.getSelectedItem(), "")) {
+                        continue;
+                    }
+
+                    advantage = (Advantage) comboBox.getSelectedItem();
+                } else {
+                    advantage = VampireEditor.getAdvantage(spinner.getName());
                 }
 
                 try {
                     builder.addAdvantage(
                         new Advantage.Builder()
-                            .fillDataFromObject((Advantage) comboBox.getSelectedItem())
+                            .fillDataFromObject(advantage)
                             .setValue((int) spinner.getValue())
                             .build()
                     );
