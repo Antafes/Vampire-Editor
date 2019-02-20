@@ -297,9 +297,11 @@ public class AttributesPanel extends BaseListPanel {
         if (physicalSum >= physicalMax
             && socialSum >= socialMax
             && mentalSum >= mentalMax
-            && this.getParentComponent().getMaxActiveTab() < 3
         ) {
-            this.getParentComponent().increaseMaxActiveTab();
+            if (this.getParentComponent().getMaxActiveTab() < 2) {
+                this.getParentComponent().increaseMaxActiveTab();
+            }
+
             this.getParentComponent().getCharacterTabPane().setEnabledAt(this.getParentComponent().getMaxActiveTab(), true);
             this.enableNextButton();
         }

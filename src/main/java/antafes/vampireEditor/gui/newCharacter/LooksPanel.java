@@ -458,7 +458,7 @@ public class LooksPanel extends javax.swing.JPanel {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
-            this.checkEnteredFields();
+            this.checkFieldsFilled();
             Clan clan = (Clan) ((JComboBox) evt.getSource()).getSelectedItem();
             this.parent.setClanDisciplins(clan);
             this.parent.adjustAttributesToClan(clan);
@@ -485,7 +485,7 @@ public class LooksPanel extends javax.swing.JPanel {
             this.enteredFields.replace(this.generationComboBox, Boolean.FALSE);
         } else {
             this.enteredFields.replace(this.generationComboBox, Boolean.TRUE);
-            this.checkEnteredFields();
+            this.checkFieldsFilled();
         }
 
         int maximumAttributes = ((Generation) this.generationComboBox.getSelectedItem()).getMaximumAttributes();
@@ -557,7 +557,7 @@ public class LooksPanel extends javax.swing.JPanel {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
                 } else {
                     enteredFields.replace(this.getComponent(), Boolean.TRUE);
-                    checkEnteredFields();
+                    checkFieldsFilled();
                 }
             }
         };
@@ -605,7 +605,7 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Check if the next tab can be activated.
      */
-    private void checkEnteredFields() {
+    private void checkFieldsFilled() {
             if (!this.enteredFields.containsValue(Boolean.FALSE) && this.parent.getMaxActiveTab() < 1) {
             this.parent.increaseMaxActiveTab();
             this.parent.getCharacterTabPane().setEnabledAt(this.parent.getMaxActiveTab(), true);
@@ -647,7 +647,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
     /**
      * This method checks every input made by the user for duplicate entries.
-     * This method is only implemented to achive consistency for every panel.
+     * This method is only implemented to achieve consistency for every panel.
      *
      * @return Returns true if a duplicate entry has been found.
      */

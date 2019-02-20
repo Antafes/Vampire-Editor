@@ -301,9 +301,11 @@ public class AbilitiesPanel extends BaseListPanel {
         if (talentsSum >= talentsMax
             && skillsSum >= skillsMax
             && knowledgeSum >= knowledgeMax
-            && this.getParentComponent().getMaxActiveTab() < 3
         ) {
-            this.getParentComponent().increaseMaxActiveTab();
+            if (this.getParentComponent().getMaxActiveTab() < 3) {
+                this.getParentComponent().increaseMaxActiveTab();
+            }
+
             this.getParentComponent().getCharacterTabPane().setEnabledAt(this.getParentComponent().getMaxActiveTab(), true);
             this.enableNextButton();
         }
