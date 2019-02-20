@@ -30,10 +30,13 @@ import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
 import antafes.vampireEditor.utility.StringComparator;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -353,17 +356,40 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * @param clan
      */
     public void setDisciplines(Clan clan) {
-        ArrayList<JComboBox> comboBoxes = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
+        if (this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name()).size() == 1) {
+            clan.getAdvantages().forEach((discipline) -> {
+                ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
 
-        if (comboBoxes.size() > 1) {
-            comboBoxes.subList(0, comboBoxes.size() - 1).clear();
+                JComboBox comboBox = comboBoxList.get(comboBoxList.size() - 1);
+                comboBox.setSelectedItem(discipline);
+                comboBox.setEditable(false);
+                comboBox.setEnabled(false);
+                comboBox.setRenderer(new DefaultListCellRenderer() {
+                    @Override
+                    public void paint(Graphics g) {
+                        setForeground(Color.BLACK);
+                        super.paint(g);
+                    }
+                });
+            });
+        } else {
+            AtomicInteger counter = new AtomicInteger();
+            clan.getAdvantages().forEach((discipline) -> {
+                ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
+                int boxCounter = 0;
+                for (JComboBox comboBox : comboBoxList) {
+                    if (!comboBox.isEnabled() && !comboBox.isEditable()) {
+                        if (counter.get() == boxCounter) {
+                            comboBox.setSelectedItem(discipline);
+                            counter.getAndIncrement();
+                            break;
+                        }
+
+                        boxCounter++;
+                    }
+                }
+            });
         }
-
-        clan.getAdvantages().forEach((discipline) -> {
-            ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-            JComboBox comboBox = comboBoxList.get(comboBoxList.size() - 1);
-            comboBox.setSelectedItem(discipline);
-        });
     }
 
     /**
