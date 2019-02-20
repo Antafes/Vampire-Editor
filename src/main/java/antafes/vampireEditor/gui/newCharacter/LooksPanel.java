@@ -24,7 +24,6 @@ package antafes.vampireEditor.gui.newCharacter;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.gui.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
@@ -48,11 +47,60 @@ import java.util.*;
  * @author Marian Pollzien
  */
 public class LooksPanel extends javax.swing.JPanel {
+    static int DEFAULT_GENERATION = 12;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
     private final DateTimeFormatter dateTimeFormatter;
     private final LocalDate date;
+
+    private javax.swing.JTextField ageField;
+    private javax.swing.JLabel ageLabel;
+    private javax.swing.JButton backButton;
+    private javax.swing.JTextField chronicleField;
+    private javax.swing.JLabel chronicleLabel;
+    private javax.swing.JComboBox<String> clanComboBox;
+    private javax.swing.JLabel clanLabel;
+    private javax.swing.JTextField conceptField;
+    private javax.swing.JLabel conceptLabel;
+    private PlaceholderFormattedTextField dayOfBirthField;
+    private javax.swing.JLabel dayOfBirthLabel;
+    private PlaceholderFormattedTextField dayOfDeathField;
+    private javax.swing.JLabel dayOfDeathLabel;
+    private javax.swing.JTextField demeanorField;
+    private javax.swing.JLabel demeanorLabel;
+    private javax.swing.JTextField eyeColorField;
+    private javax.swing.JLabel eyeColorLabel;
+    private JLabel generationContentLabel;
+    private javax.swing.JLabel generationLabel;
+    private javax.swing.JTextField hairColorField;
+    private javax.swing.JLabel hairColorLabel;
+    private javax.swing.JTextField hideoutField;
+    private javax.swing.JLabel hideoutLabel;
+    private javax.swing.JTextField apparentAgeField;
+    private javax.swing.JLabel apparentAgeLabel;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nationalityField;
+    private javax.swing.JLabel nationalityLabel;
+    private javax.swing.JTextField natureField;
+    private javax.swing.JLabel natureLabel;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JTextField playerField;
+    private javax.swing.JLabel playerLabel;
+    private javax.swing.JLabel requiredLabel;
+    private javax.swing.JTextField sectField;
+    private javax.swing.JLabel sectLabel;
+    private javax.swing.JComboBox<String> sexField;
+    private javax.swing.JLabel sexLabel;
+    private javax.swing.JTextField sireField;
+    private javax.swing.JLabel sireLabel;
+    private javax.swing.JTextField heightField;
+    private javax.swing.JLabel heightLabel;
+    private javax.swing.JTextField skinColorField;
+    private javax.swing.JLabel skinColorLabel;
+    private javax.swing.JTextField weightField;
+    private javax.swing.JLabel weightLabel;
 
     /**
      * Creates new form looksPanel
@@ -102,7 +150,7 @@ public class LooksPanel extends javax.swing.JPanel {
         demeanorLabel = new javax.swing.JLabel();
         eyeColorField = new javax.swing.JTextField();
         eyeColorLabel = new javax.swing.JLabel();
-        generationComboBox = new javax.swing.JComboBox<>();
+        generationContentLabel = new JLabel();
         generationLabel = new javax.swing.JLabel();
         hairColorField = new javax.swing.JTextField();
         hairColorLabel = new javax.swing.JLabel();
@@ -186,10 +234,8 @@ public class LooksPanel extends javax.swing.JPanel {
 
         hairColorField.setName("hairColor"); // NOI18N
 
-        this.enteredFields.put(generationComboBox, Boolean.FALSE);
-        generationComboBox.setModel(this.getGenerations());
-        generationComboBox.setName("generation"); // NOI18N
-        generationComboBox.addActionListener(this::generationComboBoxActionPerformed);
+        this.generationContentLabel.setName("generation");
+        this.generationContentLabel.setText(Integer.toString(LooksPanel.DEFAULT_GENERATION));
 
         sexLabel.setLabelFor(sexField);
         sexLabel.setText("Sex");
@@ -259,7 +305,6 @@ public class LooksPanel extends javax.swing.JPanel {
 
         chronicleField.setName("chronicle"); // NOI18N
 
-        generationLabel.setLabelFor(generationComboBox);
         generationLabel.setText("Generation*");
 
         apparentAgeLabel.setLabelFor(apparentAgeField);
@@ -309,7 +354,7 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(natureField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chronicleField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(apparentAgeLabel)
@@ -406,7 +451,7 @@ public class LooksPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(generationLabel)
-                            .addComponent(generationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(natureLabel)
@@ -473,24 +518,6 @@ public class LooksPanel extends javax.swing.JPanel {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
         JTabbedPane pane = this.parent.getCharacterTabPane();
         pane.setSelectedIndex(pane.getSelectedIndex() + 1);
-    }
-
-    /**
-     * Action performed event for the generation combo box.
-     *
-     * @param evt Event object
-     */
-    private void generationComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        if (Objects.equals(this.generationComboBox.getSelectedItem(), "")) {
-            this.enteredFields.replace(this.generationComboBox, Boolean.FALSE);
-        } else {
-            this.enteredFields.replace(this.generationComboBox, Boolean.TRUE);
-            this.checkFieldsFilled();
-        }
-
-        int maximumAttributes = ((Generation) this.generationComboBox.getSelectedItem()).getMaximumAttributes();
-        this.parent.setAttributeMaximum(maximumAttributes);
-        this.parent.calculateUsedFreeAdditionalPoints();
     }
 
     /**
@@ -564,20 +591,6 @@ public class LooksPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Get the generations for showing them in the form.
-     *
-     * @return
-     */
-    public DefaultComboBoxModel getGenerations() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
-
-        VampireEditor.getGenerations().forEach(model::addElement);
-
-        return model;
-    }
-
-    /**
      * Get the sexes for showing them in the form.
      *
      * @return
@@ -606,7 +619,7 @@ public class LooksPanel extends javax.swing.JPanel {
      * Check if the next tab can be activated.
      */
     private void checkFieldsFilled() {
-            if (!this.enteredFields.containsValue(Boolean.FALSE) && this.parent.getMaxActiveTab() < 1) {
+        if (!this.enteredFields.containsValue(Boolean.FALSE) && this.parent.getMaxActiveTab() < 1) {
             this.parent.increaseMaxActiveTab();
             this.parent.getCharacterTabPane().setEnabledAt(this.parent.getMaxActiveTab(), true);
             this.nextButton.setEnabled(true);
@@ -620,7 +633,6 @@ public class LooksPanel extends javax.swing.JPanel {
         Vector<Component> order = new Vector<>();
         order.add(this.nameField);
         order.add(this.chronicleField);
-        order.add(this.generationComboBox);
         order.add(this.natureField);
         order.add(this.hideoutField);
         order.add(this.playerField);
@@ -663,7 +675,7 @@ public class LooksPanel extends javax.swing.JPanel {
     public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
         builder.setName(this.nameField.getText());
         builder.setChronicle(this.chronicleField.getText());
-        builder.setGeneration((Generation) this.generationComboBox.getSelectedItem());
+        builder.setGeneration(VampireEditor.getGeneration(Integer.parseInt(this.generationContentLabel.getText())));
         builder.setNature(this.natureField.getText());
         builder.setHideout(this.hideoutField.getText());
         builder.setPlayer(this.playerField.getText());
@@ -684,56 +696,4 @@ public class LooksPanel extends javax.swing.JPanel {
         builder.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
         builder.setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
     }
-
-// <editor-fold defaultstate="collapsed" desc="Generated variables">
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField ageField;
-    private javax.swing.JLabel ageLabel;
-    private javax.swing.JButton backButton;
-    private javax.swing.JTextField chronicleField;
-    private javax.swing.JLabel chronicleLabel;
-    private javax.swing.JComboBox<String> clanComboBox;
-    private javax.swing.JLabel clanLabel;
-    private javax.swing.JTextField conceptField;
-    private javax.swing.JLabel conceptLabel;
-    private PlaceholderFormattedTextField dayOfBirthField;
-    private javax.swing.JLabel dayOfBirthLabel;
-    private PlaceholderFormattedTextField dayOfDeathField;
-    private javax.swing.JLabel dayOfDeathLabel;
-    private javax.swing.JTextField demeanorField;
-    private javax.swing.JLabel demeanorLabel;
-    private javax.swing.JTextField eyeColorField;
-    private javax.swing.JLabel eyeColorLabel;
-    private javax.swing.JComboBox<String> generationComboBox;
-    private javax.swing.JLabel generationLabel;
-    private javax.swing.JTextField hairColorField;
-    private javax.swing.JLabel hairColorLabel;
-    private javax.swing.JTextField hideoutField;
-    private javax.swing.JLabel hideoutLabel;
-    private javax.swing.JTextField apparentAgeField;
-    private javax.swing.JLabel apparentAgeLabel;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JTextField nationalityField;
-    private javax.swing.JLabel nationalityLabel;
-    private javax.swing.JTextField natureField;
-    private javax.swing.JLabel natureLabel;
-    private javax.swing.JButton nextButton;
-    private javax.swing.JTextField playerField;
-    private javax.swing.JLabel playerLabel;
-    private javax.swing.JLabel requiredLabel;
-    private javax.swing.JTextField sectField;
-    private javax.swing.JLabel sectLabel;
-    private javax.swing.JComboBox<String> sexField;
-    private javax.swing.JLabel sexLabel;
-    private javax.swing.JTextField sireField;
-    private javax.swing.JLabel sireLabel;
-    private javax.swing.JTextField heightField;
-    private javax.swing.JLabel heightLabel;
-    private javax.swing.JTextField skinColorField;
-    private javax.swing.JLabel skinColorLabel;
-    private javax.swing.JTextField weightField;
-    private javax.swing.JLabel weightLabel;
-    // End of variables declaration//GEN-END:variables
-    // </editor-fold>
 }
