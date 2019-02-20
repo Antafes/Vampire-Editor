@@ -87,7 +87,7 @@ public class WideComboBox extends JComboBox {
     public void doLayout(){
         try{
             layingOut = true;
-                super.doLayout();
+            super.doLayout();
         }finally{
             layingOut = false;
         }
