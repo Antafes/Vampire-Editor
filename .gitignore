@@ -23,3 +23,11 @@ hs_err_pid*
 /nbproject
 /build
 /dist
+/.idea
+/out
+/resources
+/target
+/Vampire Editor.iml
+
+# CI variables file
+ci/variables.yml
