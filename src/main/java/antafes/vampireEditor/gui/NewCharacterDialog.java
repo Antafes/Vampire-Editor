@@ -34,6 +34,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -107,6 +108,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(lastStepsScrollPane);
 
+        this.setAttributeMaximum(Objects.requireNonNull(VampireEditor.getGeneration(12)).getMaximumAttributes());
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
         characterTabPane.setEnabledAt(3, false);

@@ -35,7 +35,7 @@ import java.util.HashMap;
  * @author Marian Pollzien
  */
 abstract public class BaseEditableListPanel extends BaseListPanel {
-    public final int UNLIMITEDMAXFIELDS = -1;
+    public static final int UNLIMITEDMAXFIELDS = -1;
 
     private boolean useWeightings = true;
     private HashMap<String, ArrayList<JComboBox>> comboBoxes;
@@ -70,7 +70,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      */
     @Override
     protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
-        this.addFields(headline, null, elementList, spinnerMinimum, this.UNLIMITEDMAXFIELDS);
+        this.addFields(headline, null, elementList, spinnerMinimum, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
     /**
@@ -93,7 +93,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param elementList List of element names that should be added as JSpinner
      */
     protected void addFields(String headline, String type, ArrayList<String> elementList) {
-        this.addFields(headline, type, elementList, 0, this.UNLIMITEDMAXFIELDS);
+        this.addFields(headline, type, elementList, 0, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
     /**
@@ -115,7 +115,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param type Identifier for the group of fields
      */
     protected void addFields(String headline, String type) {
-        this.addFields(headline, type, new ArrayList<>(), 0, this.UNLIMITEDMAXFIELDS);
+        this.addFields(headline, type, new ArrayList<>(), 0, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
     /**
@@ -237,12 +237,18 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             }
         });
 
-        if (maxFields == this.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
+        if (maxFields == BaseEditableListPanel.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
             HashMap<String, Component> newElements = this.addRow(
                 null, type, spinnerMinimum, this.getFields(type), groups, layout
             );
-            ((JComboBox) newElements.get("comboBox")).addItemListener(
-                this.getComboBoxItemListener(type, spinnerMinimum, this.getFields(type), groups, layout, maxFields)
+            this.addComboBoxItemListener(
+                newElements,
+                type,
+                spinnerMinimum,
+                this.getFields(type),
+                groups,
+                layout,
+                maxFields
             );
             this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
         }
@@ -365,18 +371,18 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     }
 
     /**
-     * Create an item listener for the combobox.
+     * Add an item listener for the combobox.
      *
+     * @param elements Map with the combobox and the spinner
      * @param type Identifier for the field
      * @param spinnerMinimum Minimum value for the spinner
      * @param fields List of all fields
      * @param groups Groups the element should be added to
      * @param layout GroupLayout object
      * @param maxFields Maximum amount of fields
-     *
-     * @return Item listener for the combobox
      */
-    protected ItemListener getComboBoxItemListener(
+    protected void addComboBoxItemListener(
+        HashMap<String, Component> elements,
         String type,
         int spinnerMinimum,
         ArrayList<Component> fields,
@@ -384,30 +390,36 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         GroupLayout layout,
         int maxFields
     ) {
-        return (ItemEvent e) -> {
-            JComboBox element = (JComboBox) e.getSource();
+        ItemListener listener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                JComboBox element = (JComboBox) e.getSource();
+                BaseEditableListPanel panel = (BaseEditableListPanel) element.getParent();
 
-            if (element.getSelectedItem() == null || element.getSelectedItem().equals("")) {
-                return;
-            }
+                if (e.getStateChange() != ItemEvent.SELECTED
+                    || element.getSelectedItem() == null
+                    || element.getSelectedItem().equals("")
+                ) {
+                    return;
+                }
 
-            HashMap<String, Component> newElements = this.addRow(
-                null, type, spinnerMinimum, fields, groups, layout
-            );
-            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
-
-            if (maxFields == this.UNLIMITEDMAXFIELDS || fields.size() < maxFields) {
-                ((JComboBox) newElements.get("comboBox")).addItemListener(
-                    this.getComboBoxItemListener(type, spinnerMinimum, fields, groups, layout, maxFields)
+                HashMap<String, Component> newElements = panel.addRow(
+                    null, type, spinnerMinimum, fields, groups, layout
                 );
+                panel.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+
+                if (maxFields == BaseEditableListPanel.UNLIMITEDMAXFIELDS || fields.size() < maxFields) {
+                    panel.addComboBoxItemListener(newElements, type, spinnerMinimum, fields, groups, layout, maxFields);
+                }
+
+                element.removeItemListener(this);
+
+                // The below method calls are needed to show the newly added components
+                panel.revalidate();
+                panel.repaint();
             }
-
-            element.removeItemListener(element.getItemListeners()[0]);
-
-            // The below method calls are needed to show the newly added components
-            this.revalidate();
-            this.repaint();
         };
+        ((JComboBox) elements.get("comboBox")).addItemListener(listener);
     }
 
     /**
