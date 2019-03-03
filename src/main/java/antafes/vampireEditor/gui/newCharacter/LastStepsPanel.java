@@ -317,7 +317,6 @@ public class LastStepsPanel extends BasePanel {
             HashMap<String, Component> newElements = this.addRow(
                 type, fields, groups
             );
-            this.getFields(type).add(newElements.get("comboBox"));
 
             ((JComboBox) newElements.get("comboBox")).addItemListener(
                 this.getComboBoxItemListener(type, fields, groups)
