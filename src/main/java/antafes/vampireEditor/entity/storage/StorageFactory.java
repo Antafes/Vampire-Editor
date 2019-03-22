@@ -33,6 +33,7 @@ public class StorageFactory {
     public enum StorageType {
         ABILITY,
         ADVANTAGE,
+        ATTRIBUTE,
         CHARACTER;
     }
 
@@ -49,6 +50,9 @@ public class StorageFactory {
                     break;
                 case ADVANTAGE:
                     storage = new AdvantageStorage();
+                    break;
+                case ATTRIBUTE:
+                    storage = new AttributeStorage();
                     break;
                 case CHARACTER:
                 default:

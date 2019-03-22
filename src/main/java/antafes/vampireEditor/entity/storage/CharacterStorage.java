@@ -242,17 +242,18 @@ public class CharacterStorage extends BaseStorage {
         builder.setSect(XMLParser.getTagValue("sect", root));
 
         Element attributes = XMLParser.getTagElement("attributes", root);
+        AttributeStorage attributeStorage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         XMLParser.getAllChildren(attributes).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Attribute attribute = VampireEditor.getAttribute(key);
+                Attribute attribute = attributeStorage.getEntity(key);
                 Attribute.Builder attributeBuilder = new Attribute.Builder()
                     .fillDataFromObject(attribute);
 
                 return attributeBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 

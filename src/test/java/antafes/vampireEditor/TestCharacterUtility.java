@@ -31,6 +31,7 @@ import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.AbilityStorage;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.AttributeStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import test.methodselectors.NoTest;
@@ -133,17 +134,18 @@ public class TestCharacterUtility {
         return null;
     }
 
-    private static void addAttributes(Character.Builder builder) throws EntityException {
+    private static void addAttributes(Character.Builder builder) throws EntityException, EntityStorageException {
         Attribute.Builder attributeBuilder = new Attribute.Builder();
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("strength")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("dexterity")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("stamina")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("charisma")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("appearance")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("manipulation")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("intelligence")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("perception")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("wits")).setValue(1).build());
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("strength")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("dexterity")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("stamina")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("charisma")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("appearance")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("manipulation")).setValue(2).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("intelligence")).setValue(2).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("perception")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("wits")).setValue(1).build());
     }
 
     private static void addAbilities(Character.Builder builder) {

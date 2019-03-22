@@ -88,7 +88,6 @@ public class VampireEditor {
         this.loadGenerations();
         this.loadWeaknesses();
         this.loadClans();
-        this.loadAttributes();
         this.loadMerits();
         this.loadFlaws();
         this.loadRoads();
@@ -221,40 +220,6 @@ public class VampireEditor {
                         new Weakness.Builder()
                             .setKey(element.getAttribute("key"))
                             .setNames(names)
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
-     * Load all attributes
-     */
-    private void loadAttributes() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "attributes.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.ATTRIBUTES.put(
-                        element.getAttribute("key"),
-                        new Attribute.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setType(AttributeInterface.AttributeType.valueOf(
-                                XMLParser.getTagValue("type", element)
-                            ))
                             .build()
                     );
                 } catch (EntityException ex) {
@@ -506,26 +471,6 @@ public class VampireEditor {
      */
     public static HashMap<String, Clan> getClans() {
         return VampireEditor.CLANS;
-    }
-
-    /**
-     * Get the list of attributes.
-     *
-     * @return Map of attribute objects with the attribute key as key of the map
-     */
-    public static HashMap<String, Attribute> getAttributes() {
-        return VampireEditor.ATTRIBUTES;
-    }
-
-    /**
-     * Get an attribute by its key.
-     *
-     * @param key The attribute to fetch
-     *
-     * @return Attribute object for the given key or null if none found
-     */
-    public static Attribute getAttribute(String key) {
-        return VampireEditor.ATTRIBUTES.get(key);
     }
 
     /**

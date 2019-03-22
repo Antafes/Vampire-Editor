@@ -84,28 +84,6 @@ public class VampireEditorTest {
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Clan.class);
     }
 
-    public void testGetAttributes() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getAttributes();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Attribute.class);
-    }
-
-    public void testGetAttribute() throws EntityException {
-        new VampireEditor();
-        final Attribute expected = new Attribute.Builder()
-            .setKey("strength")
-            .setType(AttributeInterface.AttributeType.PHYSICAL)
-            .addName(Configuration.Language.ENGLISH, "Strength")
-            .addName(Configuration.Language.GERMAN, "Körperkraft")
-            .build();
-        final Attribute actual = VampireEditor.getAttribute("strength");
-
-        Assert.assertEquals(actual, expected);
-    }
-
     public void testGetWeakness() throws EntityException {
         new VampireEditor();
         final Weakness expected = new Weakness.Builder()

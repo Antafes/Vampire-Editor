@@ -21,11 +21,13 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.AttributeStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
@@ -69,7 +71,14 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        return VampireEditor.getAttribute(element).getName();
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+
+        try {
+            return storage.getEntity(element).getName();
+        } catch (EntityStorageException ignored) {
+        }
+
+        return element;
     }
 
     /**
@@ -118,16 +127,8 @@ public class AttributesPanel extends BaseListPanel {
      * @return List of attribute objects
      */
     protected ArrayList<Attribute> getValues(String type) {
-        ArrayList<Attribute> list = new ArrayList<>();
-        VampireEditor.getAttributes().forEach((String key, Attribute attribute) -> {
-            if (type != null) {
-                if (AttributeInterface.AttributeType.valueOf(type.toUpperCase()).equals(attribute.getType())) {
-                    list.add(attribute);
-                }
-            } else {
-                list.add(attribute);
-            }
-        });
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        ArrayList<Attribute> list = storage.getEntityListByType(AttributeInterface.AttributeType.valueOf(type.toUpperCase()));
         list.sort(new StringComparator());
 
         return list;
@@ -380,45 +381,45 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
-            Attribute.Builder attributeBuilder = new Attribute.Builder();
-
             try {
+                Attribute attribute = storage.getEntity(spinner.getName());
+                Attribute.Builder attributeBuilder = new Attribute.Builder();
                 builder.addAttribute(
                     attributeBuilder.fillDataFromObject(attribute)
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.getFields("social").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
-            Attribute.Builder attributeBuilder = new Attribute.Builder();
-
             try {
+                Attribute attribute = storage.getEntity(spinner.getName());
+                Attribute.Builder attributeBuilder = new Attribute.Builder();
+
                 builder.addAttribute(
                     attributeBuilder.fillDataFromObject(attribute)
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.getFields("mental").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
-            Attribute attribute = VampireEditor.getAttribute(spinner.getName());
-            Attribute.Builder attributeBuilder = new Attribute.Builder();
-
             try {
+                Attribute attribute = storage.getEntity(spinner.getName());
+                Attribute.Builder attributeBuilder = new Attribute.Builder();
+
                 builder.addAttribute(
                     attributeBuilder.fillDataFromObject(attribute)
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
