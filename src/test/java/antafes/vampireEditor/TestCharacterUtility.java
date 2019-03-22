@@ -28,6 +28,8 @@ import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import test.methodselectors.NoTest;
 
@@ -143,8 +145,9 @@ public class TestCharacterUtility {
 
     private static void addAbilities(Character.Builder builder) {
         Ability.Builder abilityBuilder = new Ability.Builder();
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
 
-        VampireEditor.getAbilities().forEach(((s, ability) -> {
+        storage.getList().forEach(((s, ability) -> {
             try {
                 builder.addAbility(abilityBuilder.fillDataFromObject(ability).setValue(3).build());
             } catch (EntityException e) {

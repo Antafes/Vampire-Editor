@@ -23,8 +23,11 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
+import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
@@ -34,7 +37,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,7 +75,15 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        return VampireEditor.getAbility(element).getName();
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+
+        try {
+            return storage.getEntity(element).getName();
+        } catch (EntityStorageException e) {
+            VampireEditor.log(e.getMessage());
+        }
+
+        return element;
     }
 
     /**
@@ -122,16 +132,8 @@ public class AbilitiesPanel extends BaseListPanel {
      * @return List of abilities
      */
     protected ArrayList<Ability> getValues(String type) {
-        ArrayList<Ability> list = new ArrayList<>();
-        VampireEditor.getAbilities().forEach((String key, Ability ability) -> {
-            if (type != null) {
-                if (AbilityInterface.AbilityType.valueOf(type.toUpperCase()).equals(ability.getType())) {
-                    list.add(ability);
-                }
-            } else {
-                list.add(ability);
-            }
-        });
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        ArrayList<Ability> list = storage.getEntityListByType(AbilityInterface.AbilityType.valueOf(type.toUpperCase()));
         list.sort(new StringComparator());
 
         return list;
@@ -312,7 +314,7 @@ public class AbilitiesPanel extends BaseListPanel {
     }
 
     /**
-     * Get the max points field with the propery weighting values set.
+     * Get the max points field with the properly weighting values set.
      *
      * @param weighting Weighting enum
      *
@@ -348,21 +350,21 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
-        HashMap<String, Ability> abilities = VampireEditor.getAbilities();
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         Ability.Builder abilityBuilder = new Ability.Builder();
         this.getFields().forEach((key, fields) -> {
             for (Component field : fields) {
                 JSpinner spinner = (JSpinner) field;
-                Ability ability = abilities.get(spinner.getName());
 
                 try {
+                    Ability ability = storage.getEntity(spinner.getName());
                     builder.addAbility(
                         abilityBuilder
                             .fillDataFromObject(ability)
                             .setValue((int) spinner.getValue())
                             .build()
                     );
-                } catch (EntityException ex) {
+                } catch (EntityException | EntityStorageException ex) {
                     Logger.getLogger(AbilitiesPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

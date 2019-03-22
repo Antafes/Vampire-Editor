@@ -26,8 +26,8 @@ import antafes.myXML.XMLValidator;
 import antafes.myXML.XMLWriter;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Attribute;
@@ -42,10 +42,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Storage for characters
  *
  * @author Marian Pollzien
  */
-public class CharacterStorage {
+public class CharacterStorage extends BaseStorage {
     private final Configuration configuration;
     private final XMLWriter xw;
     private final XMLParser xp;
@@ -54,7 +55,9 @@ public class CharacterStorage {
     /**
      * Create a new character storage.
      */
-    public CharacterStorage() {
+    CharacterStorage() {
+        super();
+
         HashMap<String, String> rootAttributes = new HashMap<>();
         rootAttributes.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         this.configuration = Configuration.getInstance();
@@ -66,6 +69,27 @@ public class CharacterStorage {
     }
 
     /**
+     * Initializes the storage and pre-loads available data.
+     *
+     * @TODO This might be used in the future to preload previously opened characters.
+     */
+    @Override
+    public void init() {
+    }
+
+    /**
+     * Fetch a single ability for a given key.
+     *
+     * @param key The key under which to find the entity
+     *
+     * @return The entity
+     */
+    @Override
+    public Character getEntity(String key) throws EntityStorageException {
+        return (Character) super.getEntity(key);
+    }
+
+    /**
      * Save the given character.
      *
      * @param character The character to save
@@ -74,6 +98,7 @@ public class CharacterStorage {
     public void save(antafes.vampireEditor.entity.Character character, String filename) {
         this.addRequiredFields(character);
         this.xw.write(this.configuration.getSaveDirPath(filename));
+        this.getList().put(character.getId().toString(), character);
     }
 
     /**
@@ -82,18 +107,20 @@ public class CharacterStorage {
      * @param filename The file to load
      *
      * @return The loaded character
-     * @throws java.lang.Exception Thrown if character couldn't be loaded
+     * @throws EntityStorageException Thrown if character couldn't be loaded
      */
-    public antafes.vampireEditor.entity.Character load(String filename) throws Exception  {
+    public antafes.vampireEditor.entity.Character load(String filename) throws EntityStorageException  {
         if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
             Character character = this.fillValues();
 
             if (character != null) {
+                this.getList().put(character.getId().toString(), character);
+
                 return character;
             }
         }
 
-        Exception ex = new Exception("Could not load character '" + filename + "'!");
+        EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
 
         this.xp.getExceptionList().forEach(ex::addSuppressed);
 
@@ -236,14 +263,15 @@ public class CharacterStorage {
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Ability ability = VampireEditor.getAbility(key);
+                AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+                Ability ability = storage.getEntity(key);
                 Ability.Builder abilityBuilder = new Ability.Builder()
                     .fillDataFromObject(ability);
 
                 return abilityBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 

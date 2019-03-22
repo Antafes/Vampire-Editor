@@ -24,6 +24,7 @@ package antafes.vampireEditor;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import org.w3c.dom.Element;
 
@@ -57,7 +58,6 @@ public class VampireEditor {
     private static final HashMap<String, Weakness> WEAKNESSES = new HashMap<>();
     private static final HashMap<String, Clan> CLANS = new HashMap<>();
     private static final HashMap<String, Attribute> ATTRIBUTES = new HashMap<>();
-    private static final HashMap<String, Ability> ABILITIES = new HashMap<>();
     private static final HashMap<String, Merit> MERITS = new HashMap<>();
     private static final HashMap<String, Flaw> FLAWS = new HashMap<>();
     private static final HashMap<String, Road> ROADS = new HashMap<>();
@@ -82,12 +82,12 @@ public class VampireEditor {
             )
         ));
 
+        StorageFactory.storageWarmUp();
         this.loadGenerations();
         this.loadAdvantages();
         this.loadWeaknesses();
         this.loadClans();
         this.loadAttributes();
-        this.loadAbilities();
         this.loadMerits();
         this.loadFlaws();
         this.loadRoads();
@@ -164,7 +164,7 @@ public class VampireEditor {
      *
      * @return Path to the data directory
      */
-    private String getDataPath() {
+    public static String getDataPath() {
         return "data/";
     }
 
@@ -328,43 +328,6 @@ public class VampireEditor {
                             .setNicknames(nicknames)
                             .setAdvantages(this.getAdvantages(XMLParser.getTagElement("advantages", element)))
                             .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
-     * Load all abilities.
-     */
-    private void loadAbilities() {
-        Element root;
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "abilities.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            root = xp.getRootElement();
-            ArrayList<Element> elements = XMLParser.getAllChildren(root);
-            elements.forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.ABILITIES.put(
-                        element.getAttribute("key"),
-                        new Ability.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setType(
-                                AbilityInterface.AbilityType.valueOf(XMLParser.getTagValue("type", element))
-                            )
                             .build()
                     );
                 } catch (EntityException ex) {
@@ -598,26 +561,6 @@ public class VampireEditor {
      */
     public static Attribute getAttribute(String key) {
         return VampireEditor.ATTRIBUTES.get(key);
-    }
-
-    /**
-     * Get the list of abilities.
-     *
-     * @return Map of ability objects with the ability key as key of the map
-     */
-    public static HashMap<String, Ability> getAbilities() {
-        return VampireEditor.ABILITIES;
-    }
-
-    /**
-     * Get an ability by its key.
-     *
-     * @param key The ability to fetch
-     *
-     * @return Ability object for the given key or null if none found
-     */
-    public static Ability getAbility(String key) {
-        return VampireEditor.ABILITIES.get(key);
     }
 
     /**

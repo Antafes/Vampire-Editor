@@ -16,51 +16,34 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2019, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
+package antafes.vampireEditor.entity;
 
 /**
- * Ability interface.
+ * Exceptions thrown for or in entity storages.
  *
  * @author Marian Pollzien
  */
-public interface AbilityInterface {
-    /**
-     * List of ability types.
-     */
-    public enum AbilityType implements EntityTypeInterface {
-        TALENT,
-        SKILL,
-        KNOWLEDGE
+public class EntityStorageException extends Exception {
+
+    public EntityStorageException() {
     }
 
-    /**
-     * Get the key of the ability.
-     *
-     * @return
-     */
-    public String getKey();
+    public EntityStorageException(String message) {
+        super(message);
+    }
 
-    /**
-     * Get the name of the ability.
-     *
-     * @return
-     */
-    public String getName();
+    public EntityStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    /**
-     * Get the type of ability.
-     *
-     * @return
-     */
-    public EntityTypeInterface getType();
+    public EntityStorageException(Throwable cause) {
+        super(cause);
+    }
 
-    /**
-     * Get the value of the ability.
-     *
-     * @return
-     */
-    public int getValue();
+    public EntityStorageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

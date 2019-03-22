@@ -23,7 +23,9 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -112,16 +114,7 @@ public class VampireEditorTest {
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetAbilities() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getAbilities();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Ability.class);
-    }
-
-    public void testGetAbility() throws EntityException {
+    public void testGetAbility() throws EntityException, EntityStorageException {
         new VampireEditor();
         final Ability expected = new Ability.Builder()
             .setKey("expression")
@@ -129,7 +122,8 @@ public class VampireEditorTest {
             .addName(Configuration.Language.ENGLISH, "Expression")
             .addName(Configuration.Language.GERMAN, "Schauspielerei")
             .build();
-        final Ability actual = VampireEditor.getAbility("expression");
+        final Ability actual = (Ability) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY)
+            .getEntity("expression");
 
         Assert.assertEquals(actual, expected);
     }

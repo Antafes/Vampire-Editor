@@ -25,6 +25,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -353,7 +354,7 @@ public class BaseWindow extends javax.swing.JFrame {
             ));
             this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
-            CharacterStorage storage = new CharacterStorage();
+            CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
             storage.save(character, this.saveFileChooser.getSelectedFile().getName());
         }
@@ -372,7 +373,7 @@ public class BaseWindow extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
-            CharacterStorage storage = new CharacterStorage();
+            CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
             try {
                 antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());

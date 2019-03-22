@@ -26,6 +26,8 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -473,9 +475,10 @@ public class CharacterTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many abilities")
-    public void testBuilderTooManyAbilities() throws EntityException {
+    public void testBuilderTooManyAbilities() throws EntityException, EntityStorageException {
         ArrayList list = this.character.getAbilities();
-        list.add(VampireEditor.getAbility("acting"));
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        list.add(storage.getEntity("alertness"));
         new Character.Builder()
             .fillDataFromObject(this.character)
             .setAbilities(list)
