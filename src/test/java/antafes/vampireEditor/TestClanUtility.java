@@ -23,7 +23,10 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 
 /**
  * Test clan utility class.
@@ -35,12 +38,13 @@ public class TestClanUtility {
      * @return A clan object
      * @throws EntityException Thrown if something happened while building
      */
-    public static Clan createTestClan() throws EntityException {
+    public static Clan createTestClan() throws EntityException, EntityStorageException {
+        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         return new Clan.Builder()
             .setKey("testClan")
             .addName(Configuration.Language.ENGLISH, "Test clan")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname")
-            .addAdvantage(VampireEditor.getAdvantage("allies"))
+            .addAdvantage(advantageStorage.getEntity("allies"))
             .addWeakness(VampireEditor.getWeakness("bloodTithe"))
             .build();
     }

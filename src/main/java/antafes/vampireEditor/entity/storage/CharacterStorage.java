@@ -260,11 +260,11 @@ public class CharacterStorage extends BaseStorage {
         }).forEachOrdered(builder::addAttribute);
 
         Element abilities = XMLParser.getTagElement("abilities", root);
+        AbilityStorage abilityStorage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
-                Ability ability = storage.getEntity(key);
+                Ability ability = abilityStorage.getEntity(key);
                 Ability.Builder abilityBuilder = new Ability.Builder()
                     .fillDataFromObject(ability);
 
@@ -279,17 +279,18 @@ public class CharacterStorage extends BaseStorage {
         }).forEachOrdered(builder::addAbility);
 
         Element advantages = XMLParser.getTagElement("advantages", root);
+        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         XMLParser.getAllChildren(advantages).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Advantage advantage = VampireEditor.getAdvantage(key);
+                Advantage advantage = advantageStorage.getEntity(key);
                 Advantage.Builder advantageBuilder = new Advantage.Builder()
                     .fillDataFromObject(advantage);
 
                 return advantageBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 

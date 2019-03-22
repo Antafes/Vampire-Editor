@@ -31,8 +31,9 @@ public class StorageFactory {
     private static final HashMap<StorageType, BaseStorage> storages = new HashMap<>();
 
     public enum StorageType {
-        CHARACTER,
-        ABILITY;
+        ABILITY,
+        ADVANTAGE,
+        CHARACTER;
     }
 
     /**
@@ -43,12 +44,15 @@ public class StorageFactory {
             BaseStorage storage;
 
             switch (type) {
+                case ABILITY:
+                    storage = new AbilityStorage();
+                    break;
+                case ADVANTAGE:
+                    storage = new AdvantageStorage();
+                    break;
                 case CHARACTER:
                 default:
                     storage = new CharacterStorage();
-                    break;
-                case ABILITY:
-                    storage = new AbilityStorage();
                     break;
             }
 

@@ -25,6 +25,7 @@ package antafes.vampireEditor;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -74,15 +75,6 @@ public class VampireEditorTest {
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetAdvantages() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getAdvantages();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Advantage.class);
-    }
-
     public void testGetClans() {
         new VampireEditor();
         final HashMap actual = VampireEditor.getClans();
@@ -114,33 +106,6 @@ public class VampireEditorTest {
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetAbility() throws EntityException, EntityStorageException {
-        new VampireEditor();
-        final Ability expected = new Ability.Builder()
-            .setKey("expression")
-            .setType(AbilityInterface.AbilityType.TALENT)
-            .addName(Configuration.Language.ENGLISH, "Expression")
-            .addName(Configuration.Language.GERMAN, "Schauspielerei")
-            .build();
-        final Ability actual = (Ability) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY)
-            .getEntity("expression");
-
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetAdvantage() throws EntityException {
-        new VampireEditor();
-        final Advantage expected = new Advantage.Builder()
-            .setKey("allies")
-            .setType(AdvantageInterface.AdvantageType.BACKGROUND)
-            .addName(Configuration.Language.ENGLISH, "Allies")
-            .addName(Configuration.Language.GERMAN, "Verbündete")
-            .build();
-        final Advantage actual = VampireEditor.getAdvantage("allies");
-
-        Assert.assertEquals(actual, expected);
-    }
-
     public void testGetWeakness() throws EntityException {
         new VampireEditor();
         final Weakness expected = new Weakness.Builder()
@@ -153,17 +118,18 @@ public class VampireEditorTest {
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetClan() throws EntityException {
+    public void testGetClan() throws EntityException, EntityStorageException {
         new VampireEditor();
+        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         final Clan expected = new Clan.Builder()
             .setKey("assamites")
             .addName(Configuration.Language.ENGLISH, "Assamites")
             .addName(Configuration.Language.GERMAN, "Assamiten")
             .addNickname(Configuration.Language.ENGLISH, "Saracens")
             .addNickname(Configuration.Language.GERMAN, "Sarazenen")
-            .addAdvantage(VampireEditor.getAdvantage("auspex"))
-            .addAdvantage(VampireEditor.getAdvantage("presence"))
-            .addAdvantage(VampireEditor.getAdvantage("quietus"))
+            .addAdvantage(storage.getEntity("auspex"))
+            .addAdvantage(storage.getEntity("presence"))
+            .addAdvantage(storage.getEntity("quietus"))
             .addWeakness(VampireEditor.getWeakness("bloodTithe"))
             .addWeakness(VampireEditor.getWeakness("diableryTraces"))
             .build();

@@ -23,7 +23,9 @@ package antafes.vampireEditor;
 
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import org.w3c.dom.Element;
@@ -84,7 +86,6 @@ public class VampireEditor {
 
         StorageFactory.storageWarmUp();
         this.loadGenerations();
-        this.loadAdvantages();
         this.loadWeaknesses();
         this.loadClans();
         this.loadAttributes();
@@ -264,40 +265,6 @@ public class VampireEditor {
     }
 
     /**
-     * Load all benefits.
-     */
-    private void loadAdvantages() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "advantages.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.ADVANTAGES.put(
-                        element.getAttribute("key"),
-                        new Advantage.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setType(AdvantageInterface.AdvantageType.valueOf(
-                                XMLParser.getTagValue("type", element)
-                            ))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
      * Load all clans.
      */
     private void loadClans() {
@@ -326,7 +293,7 @@ public class VampireEditor {
                             .setKey(element.getAttribute("key"))
                             .setNames(names)
                             .setNicknames(nicknames)
-                            .setAdvantages(this.getAdvantages(XMLParser.getTagElement("advantages", element)))
+                            .setAdvantages(this.getClanDisciplins(XMLParser.getTagElement("advantages", element)))
                             .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
                             .build()
                     );
@@ -443,14 +410,21 @@ public class VampireEditor {
      *
      * @return List of advantage objects
      */
-    private ArrayList<Advantage> getAdvantages(Element element) {
+    private ArrayList<Advantage> getClanDisciplins(Element element) {
         ArrayList<Advantage> advantagesList = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
+        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
 
         advantages.forEach(
-            (listElement) -> advantagesList.add(
-                VampireEditor.getAdvantage(listElement.getChildNodes().item(0).getNodeValue())
-            )
+            (listElement) -> {
+                try {
+                    advantagesList.add(
+                        storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
+                    );
+                } catch (EntityStorageException e) {
+                    e.printStackTrace();
+                }
+            }
         );
 
         return advantagesList;
@@ -526,15 +500,6 @@ public class VampireEditor {
     }
 
     /**
-     * Get the list of ADVANTAGES.
-     *
-     * @return Map of advantage objects with the advantage key as key of the map
-     */
-    public static HashMap<String, Advantage> getAdvantages() {
-        return VampireEditor.ADVANTAGES;
-    }
-
-    /**
      * Get the list of clans.
      *
      * @return Map of clan objects with the clan key as key of the map
@@ -561,17 +526,6 @@ public class VampireEditor {
      */
     public static Attribute getAttribute(String key) {
         return VampireEditor.ATTRIBUTES.get(key);
-    }
-
-    /**
-     * Get an advantage by its key.
-     *
-     * @param key The advantage to fetch
-     *
-     * @return Advantage object for the given key or null if none found
-     */
-    public static Advantage getAdvantage(String key) {
-        return VampireEditor.ADVANTAGES.get(key);
     }
 
     /**

@@ -158,7 +158,7 @@ public class AdvantageTest {
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
         new Advantage.Builder()
             .fillDataFromObject(this.advantage)

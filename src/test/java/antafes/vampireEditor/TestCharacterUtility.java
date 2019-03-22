@@ -24,11 +24,13 @@ package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import test.methodselectors.NoTest;
@@ -88,28 +90,29 @@ public class TestCharacterUtility {
             TestCharacterUtility.addAbilities(builder);
 
             Advantage.Builder advantageBuilder = new Advantage.Builder();
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("allies"))
+            AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("allies"))
                 .setValue(3);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("influence"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("influence"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("auspex"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("auspex"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("celerity"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("celerity"))
                 .setValue(1);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("dominate"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("dominate"))
                 .setValue(1);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("conscience"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("conscience"))
                 .setValue(3);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("courage"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("courage"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("self-control"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("self-control"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
 
@@ -123,7 +126,7 @@ public class TestCharacterUtility {
             builder.setRoad(roadBuilder.build());
 
             return builder.build();
-        } catch (EntityException ex) {
+        } catch (EntityException | EntityStorageException ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
