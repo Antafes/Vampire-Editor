@@ -87,6 +87,12 @@
 			<English>Abombwe</English>
 		</name>
 	</advantage>
+	<advantage key="abyssMysticism">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Abyss Mysticism</English>
+		</name>
+	</advantage>
 	<advantage key="animalism">
 		<type>DISCIPLINE</type>
 		<name>
@@ -100,6 +106,12 @@
             <English>Auspex</English>
             <German>Auspex</German>
         </name>
+	</advantage>
+	<advantage key="bloodSorcery">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Blood Sorcery</English>
+		</name>
 	</advantage>
 	<advantage key="bardo">
 		<type>DISCIPLINE</type>
@@ -154,10 +166,22 @@
             <German>Seelenstärke</German>
         </name>
 	</advantage>
+	<advantage key="koldunicSorcery">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Koldunic Sorcery</English>
+		</name>
+	</advantage>
 	<advantage key="mytherceria">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Mytherceria</English>
+		</name>
+	</advantage>
+	<advantage key="necromancy">
+		<type>DISCIPLINE</type>
+		<name>
+			<English>Necromancy</English>
 		</name>
 	</advantage>
 	<advantage key="obfuscate">
