@@ -230,16 +230,16 @@ public class General extends PrintBase {
      * Add the characters advantages.
      */
     protected void addAdvantageInformation() {
-        String[] headlines = {"disciplins", "background", "virtues"};
+        String[] headlines = {"disciplines", "background", "virtues"};
         this.addHeadlines(headlines);
         this.setMaxY(this.getMaxY() + 1);
-        int yDisciplins = this.getMaxY(), yBackground = this.getMaxY(), yVirtues = this.getMaxY();
+        int yDisciplines = this.getMaxY(), yBackground = this.getMaxY(), yVirtues = this.getMaxY();
 
         for (Advantage advantage : this.getCharacter().getAdvantagesByType(AdvantageInterface.AdvantageType.DISCIPLINE)) {
             this.addValueEntry(
                 advantage.getName(),
                 PositionX.LEFT1.getPosition(),
-                yDisciplins++,
+                yDisciplines++,
                 PositionX.LEFT2.getPosition(),
                 advantage.getValue()
             );

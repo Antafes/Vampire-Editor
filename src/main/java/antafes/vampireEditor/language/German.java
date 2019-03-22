@@ -182,7 +182,7 @@ public class German extends Language {
         this.getTranslations().put("class", "Klasse");
         this.getTranslations().put("rating", "Einstufung");
         this.getTranslations().put("penalty", "Strafe");
-        this.getTranslations().put("backgrounds", "Backgrounds");
+        this.getTranslations().put("backgrounds", "Hintergründe");
         this.getTranslations().put("possessions", "Besitztümer");
         this.getTranslations().put("haven", "Zuflucht");
         this.getTranslations().put("allies", "Verbündete");
