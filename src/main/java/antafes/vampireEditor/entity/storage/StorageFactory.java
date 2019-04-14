@@ -22,7 +22,11 @@
 
 package antafes.vampireEditor.entity.storage;
 
+import antafes.vampireEditor.Configuration;
+
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Factory for fetching certain storages.
@@ -31,10 +35,30 @@ public class StorageFactory {
     private static final HashMap<StorageType, BaseStorage> storages = new HashMap<>();
 
     public enum StorageType {
-        ABILITY,
-        ADVANTAGE,
-        ATTRIBUTE,
-        CHARACTER;
+        ABILITY ("AbilityStorage"),
+        ADVANTAGE ("AdvantageStorage"),
+        ATTRIBUTE ("AttributeStorage"),
+        CHARACTER ("CharacterStorage");
+
+        private final String storageClass;
+
+        /**
+         * Constructor
+         *
+         * @param storageClass The storage class name
+         */
+        StorageType(String storageClass) {
+            this.storageClass = storageClass;
+        }
+
+        /**
+         * Get the storage class name.
+         *
+         * @return
+         */
+        public String getStorageClass() {
+            return storageClass;
+        }
     }
 
     /**
@@ -42,26 +66,13 @@ public class StorageFactory {
      */
     public static void storageWarmUp() {
         for (StorageType type : StorageType.values()) {
-            BaseStorage storage;
-
-            switch (type) {
-                case ABILITY:
-                    storage = new AbilityStorage();
-                    break;
-                case ADVANTAGE:
-                    storage = new AdvantageStorage();
-                    break;
-                case ATTRIBUTE:
-                    storage = new AttributeStorage();
-                    break;
-                case CHARACTER:
-                default:
-                    storage = new CharacterStorage();
-                    break;
+            try {
+                BaseStorage storage = (BaseStorage) Class.forName(type.getStorageClass()).newInstance();
+                storage.init();
+                StorageFactory.storages.put(type, storage);
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, e);
             }
-
-            storage.init();
-            StorageFactory.storages.put(type, storage);
         }
     }
 
