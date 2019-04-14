@@ -302,11 +302,25 @@ public class CharacterStorage extends BaseStorage {
             return null;
         }).forEachOrdered(builder::addAdvantage);
 
+        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
         XMLParser.getAllChildren(XMLParser.getTagElement("merits", root))
-            .forEach((element) -> builder.addMerit(VampireEditor.getMerits().get(XMLParser.getElementValue(element))));
+            .forEach((element) -> {
+                try {
+                    builder.addMerit(meritStorage.getEntity(XMLParser.getElementValue(element)));
+                } catch (EntityStorageException e) {
+                    e.printStackTrace();
+                }
+            });
 
+        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
         XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root))
-            .forEach((element) -> builder.addFlaw(VampireEditor.getFlaws().get(XMLParser.getElementValue(element))));
+            .forEach((element) -> {
+                try {
+                    builder.addFlaw(flawStorage.getEntity(XMLParser.getElementValue(element)));
+                } catch (EntityStorageException e) {
+                    e.printStackTrace();
+                }
+            });
 
         Element road = XMLParser.getTagElement("road", root);
         Road.Builder roadBuilder = new Road.Builder()

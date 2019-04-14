@@ -84,24 +84,6 @@ public class VampireEditorTest {
         Assert.assertEquals(actual.values().toArray()[0].getClass(), Clan.class);
     }
 
-    public void testGetMerits() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getMerits();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Merit.class);
-    }
-
-    public void testGetFlaws() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getFlaws();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Flaw.class);
-    }
-
     public void testGetRoads() {
         new VampireEditor();
         final HashMap actual = VampireEditor.getRoads();

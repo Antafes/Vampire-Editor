@@ -26,6 +26,9 @@ import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.character.SpecialFeature;
+import antafes.vampireEditor.entity.storage.FlawStorage;
+import antafes.vampireEditor.entity.storage.MeritStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
 import antafes.vampireEditor.utility.StringComparator;
@@ -286,9 +289,11 @@ public class LastStepsPanel extends BasePanel {
      * @return List of special features
      */
     private ArrayList<SpecialFeature> getSpecialFeatureValues(String type) {
+        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
 
         ArrayList<SpecialFeature> list = new ArrayList<>(
-            ("merit".equals(type) ? VampireEditor.getMerits() : VampireEditor.getFlaws()).values()
+            (Collection<SpecialFeature>)(Collection<?>)("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
         list.sort(new StringComparator());
 

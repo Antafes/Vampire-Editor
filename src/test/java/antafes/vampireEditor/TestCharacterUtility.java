@@ -112,10 +112,12 @@ public class TestCharacterUtility {
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
 
-            builder.addFlaw(VampireEditor.getFlaws().get("monstrous"));
-            builder.addFlaw(VampireEditor.getFlaws().get("deepSleeper"));
-            builder.addMerit(VampireEditor.getMerits().get("commonSense"));
-            builder.addMerit(VampireEditor.getMerits().get("eideticMemory"));
+            MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+            FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+            builder.addFlaw(flawStorage.getEntity("monstrous"));
+            builder.addFlaw(flawStorage.getEntity("deepSleeper"));
+            builder.addMerit(meritStorage.getEntity("commonSense"));
+            builder.addMerit(meritStorage.getEntity("eideticMemory"));
             Road.Builder roadBuilder = new Road.Builder()
                 .fillDataFromObject(VampireEditor.getRoad("roadOfHumanity"))
                 .setValue(5);

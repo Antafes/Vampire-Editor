@@ -25,24 +25,21 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
-import antafes.vampireEditor.entity.character.Advantage;
-import antafes.vampireEditor.entity.character.AdvantageInterface;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.entity.character.Flaw;
+import antafes.vampireEditor.entity.character.SpecialFeature;
+import antafes.vampireEditor.entity.character.SpecialFeatureInterface;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Storage for advantages
+ * Storage for flaws.
  */
-public class AdvantageStorage extends BaseStorage {
+public class FlawStorage extends BaseStorage {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -55,27 +52,27 @@ public class AdvantageStorage extends BaseStorage {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "advantages.xml");
+        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "flaws.xml");
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
+
+                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
+                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
+                    name.getFirstChild().getNodeValue()
                 ));
 
                 try {
                     this.getList().put(
                         element.getAttribute("key"),
-                        new Advantage.Builder()
-                            .setKey(element.getAttribute("key"))
+                        new SpecialFeature.Builder()
+                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
                             .setNames(names)
-                            .setType(AdvantageInterface.AdvantageType.valueOf(
-                                XMLParser.getTagValue("type", element)
-                            ))
+                            .setKey(element.getAttribute("key"))
+                            .setCost(XMLParser.getTagValueInt("cost", element))
+                            .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
                             .build()
                     );
                 } catch (EntityException ex) {
@@ -86,46 +83,14 @@ public class AdvantageStorage extends BaseStorage {
     }
 
     /**
-     * Fetch a single advantage for a given key.
+     * Fetch a single flaw for a given key.
      *
      * @param key The key under which to find the entity
      *
      * @return The entity
      */
     @Override
-    public Advantage getEntity(String key) throws EntityStorageException {
-        return (Advantage) super.getEntity(key);
-    }
-
-    /**
-     * Fetch a subset of advantages from the storage.
-     *
-     * @param type The type of advantages to fetch
-     *
-     * @return Map of abilities
-     */
-    public HashMap<String, Advantage> getEntityMapByType(AdvantageInterface.AdvantageType type) {
-        HashMap<String, Advantage> list = new HashMap<>();
-
-        this.getList().forEach((String key, BaseEntity entity) -> {
-            Advantage advantage = (Advantage) entity;
-
-            if (Objects.equals(type, advantage.getType())) {
-                list.put(key, advantage);
-            }
-        });
-
-        return list;
-    }
-
-    /**
-     * Fetch a subset of advantages from the storage.
-     *
-     * @param type The type of advantages to fetch
-     *
-     * @return List of abilities
-     */
-    public ArrayList<Advantage> getEntityListByType(AdvantageInterface.AdvantageType type) {
-        return new ArrayList<>(this.getEntityMapByType(type).values());
+    public Flaw getEntity(String key) throws EntityStorageException {
+        return (Flaw) super.getEntity(key);
     }
 }

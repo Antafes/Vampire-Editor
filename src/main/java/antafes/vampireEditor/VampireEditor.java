@@ -84,8 +84,6 @@ public class VampireEditor {
 
         StorageFactory.storageWarmUp();
         this.loadGenerations();
-        this.loadMerits();
-        this.loadFlaws();
         this.loadRoads();
     }
 
@@ -195,74 +193,6 @@ public class VampireEditor {
     }
 
     /**
-     * Load the available merits.
-     */
-    private void loadMerits() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "merits.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.MERITS.put(
-                        element.getAttribute("key"),
-                        (Merit) new SpecialFeature.Builder()
-                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
-                            .setNames(names)
-                            .setKey(element.getAttribute("key"))
-                            .setCost(XMLParser.getTagValueInt("cost", element))
-                            .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
-     * Load the available merits.
-     */
-    private void loadFlaws() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "flaws.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.FLAWS.put(
-                        element.getAttribute("key"),
-                        (Flaw) new SpecialFeature.Builder()
-                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
-                            .setNames(names)
-                            .setKey(element.getAttribute("key"))
-                            .setCost(XMLParser.getTagValueInt("cost", element))
-                            .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
      * Load the available roads.
      */
     private void loadRoads() {
@@ -340,24 +270,6 @@ public class VampireEditor {
         }
 
         return null;
-    }
-
-    /**
-     * Get every merit that is available.
-     *
-     * @return Map of merit objects with the merit key as key of the map
-     */
-    public static HashMap<String, Merit> getMerits() {
-        return VampireEditor.MERITS;
-    }
-
-    /**
-     * Get every flaw that is available.
-     *
-     * @return Map of flaw objects with the flaw key as key of the map
-     */
-    public static HashMap<String, Flaw> getFlaws() {
-        return VampireEditor.FLAWS;
     }
 
     /**

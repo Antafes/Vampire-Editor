@@ -39,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Storage for abilities.
+ * Storage for clans.
  */
 public class ClanStorage extends BaseStorage {
     /**

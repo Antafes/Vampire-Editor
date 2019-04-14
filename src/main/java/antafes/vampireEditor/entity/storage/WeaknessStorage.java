@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Storage for abilities.
+ * Storage for weaknesses.
  */
 public class WeaknessStorage extends BaseStorage {
     /**
