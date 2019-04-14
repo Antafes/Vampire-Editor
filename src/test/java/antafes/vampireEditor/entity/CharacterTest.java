@@ -251,8 +251,9 @@ public class CharacterTest {
         }
     }
 
-    public void testGetRoad() throws EntityException {
-        final Road expected = new Road.Builder().fillDataFromObject(VampireEditor.getRoad("roadOfHumanity"))
+    public void testGetRoad() throws EntityException, EntityStorageException {
+        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        final Road expected = new Road.Builder().fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
             .setValue(5)
             .build();
         final Road actual = this.character.getRoad();

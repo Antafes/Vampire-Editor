@@ -21,8 +21,6 @@
  */
 package antafes.vampireEditor;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
@@ -82,7 +80,6 @@ public class VampireEditor {
         ));
 
         StorageFactory.storageWarmUp();
-        this.loadRoads();
     }
 
     /**
@@ -161,37 +158,6 @@ public class VampireEditor {
     }
 
     /**
-     * Load the available roads.
-     */
-    private void loadRoads() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "roads.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.ROADS.put(
-                        element.getAttribute("key"),
-                        new Road.Builder()
-                            .setNames(names)
-                            .setKey(element.getAttribute("key"))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
      * Get a file inside of the generated JAR.
      *
      * @param path Path of the file
@@ -211,25 +177,5 @@ public class VampireEditor {
      */
     public static URL getResourceInJar(String path) {
         return VampireEditor.class.getClassLoader().getResource(path);
-    }
-
-    /**
-     * Get every road that is available.
-     *
-     * @return Map of road objects with the road key as key of the map
-     */
-    public static HashMap<String, Road> getRoads() {
-        return VampireEditor.ROADS;
-    }
-
-    /**
-     * Get the road for the given key.
-     *
-     * @param key The road to fetch
-     *
-     * @return Road object for the given key or null if none found
-     */
-    public static Road getRoad(String key) {
-        return VampireEditor.ROADS.get(key);
     }
 }

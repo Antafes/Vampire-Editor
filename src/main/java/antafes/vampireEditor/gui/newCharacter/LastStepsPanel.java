@@ -22,12 +22,14 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.character.SpecialFeature;
 import antafes.vampireEditor.entity.storage.FlawStorage;
 import antafes.vampireEditor.entity.storage.MeritStorage;
+import antafes.vampireEditor.entity.storage.RoadStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
@@ -189,8 +191,9 @@ public class LastStepsPanel extends BasePanel {
      * @return
      */
     protected ArrayList<Road> getRoadValues() {
+        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         ArrayList<Road> list = new ArrayList<>();
-        VampireEditor.getRoads().forEach((String key, Road road) -> list.add(road));
+        roadStorage.getList().forEach((String key, BaseEntity road) -> list.add((Road) road));
         list.sort(new StringComparator());
 
         return list;

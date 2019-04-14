@@ -22,17 +22,11 @@
 
 package antafes.vampireEditor;
 
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.character.Road;
-import antafes.vampireEditor.entity.storage.ClanStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 
 @Test
 public class VampireEditorTest {
@@ -48,36 +42,6 @@ public class VampireEditorTest {
         String path = "antafes/vampireEditor/VampireEditor.java";
         final URL expected = VampireEditorTest.class.getResource(path);
         final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetClans() {
-        new VampireEditor();
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-        final HashMap actual = clanStorage.getList();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Clan.class);
-    }
-
-    public void testGetRoads() {
-        new VampireEditor();
-        final HashMap actual = VampireEditor.getRoads();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.values().toArray()[0].getClass(), Road.class);
-    }
-
-    public void testGetRoad() throws EntityException {
-        new VampireEditor();
-        final Road expected = new Road.Builder()
-            .setKey("roadOfBeast")
-            .addName(Configuration.Language.ENGLISH, "Road of Beast")
-            .build();
-        final Road actual = VampireEditor.getRoad("roadOfBeast");
 
         Assert.assertEquals(actual, expected);
     }

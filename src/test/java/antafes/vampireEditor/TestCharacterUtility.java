@@ -50,6 +50,7 @@ public class TestCharacterUtility {
             ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
             GenerationStorage generationStorage = (GenerationStorage) StorageFactory
                 .getStorage(StorageFactory.StorageType.GENERATION);
+            RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
             antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder()
@@ -66,7 +67,7 @@ public class TestCharacterUtility {
                 .setPlayer("Test player")
                 .setClan(clanStorage.getEntity("brujah"))
                 .setSex(antafes.vampireEditor.entity.Character.Sex.MALE)
-                .setRoad(VampireEditor.getRoads().get("roadOfHumanity"))
+                .setRoad(roadStorage.getEntity("roadOfHumanity"))
                 .setWillpower(5)
                 .setUsedWillpower(1)
                 .setBloodPool(3)
@@ -121,7 +122,7 @@ public class TestCharacterUtility {
             builder.addMerit(meritStorage.getEntity("commonSense"));
             builder.addMerit(meritStorage.getEntity("eideticMemory"));
             Road.Builder roadBuilder = new Road.Builder()
-                .fillDataFromObject(VampireEditor.getRoad("roadOfHumanity"))
+                .fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
                 .setValue(5);
             builder.setRoad(roadBuilder.build());
 

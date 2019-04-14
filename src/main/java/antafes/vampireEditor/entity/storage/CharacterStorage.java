@@ -327,15 +327,16 @@ public class CharacterStorage extends BaseStorage {
                 }
             });
 
+        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         Element road = XMLParser.getTagElement("road", root);
-        Road.Builder roadBuilder = new Road.Builder()
-            .fillDataFromObject(VampireEditor.getRoad(road.getAttribute("key")))
-            .setValue(XMLParser.getTagValueInt("road", root));
-
+        Road.Builder roadBuilder = null;
         try {
+            roadBuilder = new Road.Builder()
+                .fillDataFromObject(roadStorage.getEntity(road.getAttribute("key")))
+                .setValue(XMLParser.getTagValueInt("road", root));
             builder.setRoad(roadBuilder.build());
-        } catch (EntityException ex) {
-            Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EntityStorageException | EntityException e) {
+            e.printStackTrace();
         }
 
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
