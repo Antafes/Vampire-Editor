@@ -48,12 +48,14 @@ public class TestCharacterUtility {
     public static antafes.vampireEditor.entity.Character createTestCharacter() {
         try {
             ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+            GenerationStorage generationStorage = (GenerationStorage) StorageFactory
+                .getStorage(StorageFactory.StorageType.GENERATION);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
             antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder()
                 .setId(UUID.fromString("8ddb1360-316b-11e9-b210-d663bd873d93"))
                 .setName("Test Character")
-                .setGeneration(VampireEditor.getGeneration(4))
+                .setGeneration(generationStorage.getEntity(4))
                 .setChronicle("Test chronicle")
                 .setNature("wise")
                 .setDemeanor("strict")

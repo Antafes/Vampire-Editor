@@ -234,7 +234,12 @@ public class CharacterStorage extends BaseStorage {
             e.printStackTrace();
         }
 
-        builder.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            builder.setGeneration(generationStorage.getEntity(XMLParser.getTagValueInt("generation", root)));
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
         builder.setChronicle(XMLParser.getTagValue("chronicle", root));
         builder.setExperience(XMLParser.getTagValueInt("experience", root));
         builder.setNature(XMLParser.getTagValue("nature", root));

@@ -23,7 +23,8 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.ClanStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
@@ -31,7 +32,6 @@ import org.testng.annotations.Test;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Test
@@ -48,28 +48,6 @@ public class VampireEditorTest {
         String path = "antafes/vampireEditor/VampireEditor.java";
         final URL expected = VampireEditorTest.class.getResource(path);
         final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetGenerations() {
-        new VampireEditor();
-        final ArrayList actual = VampireEditor.getGenerations();
-
-        Assert.assertNotNull(actual);
-        Assert.assertFalse(actual.isEmpty());
-        Assert.assertEquals(actual.get(0).getClass(), Generation.class);
-    }
-
-    public void testGetGeneration() throws EntityException {
-        new VampireEditor();
-        final Generation expected = new Generation.Builder()
-            .setGeneration(9)
-            .setBloodPerRound(2)
-            .setMaximumAttributes(5)
-            .setMaximumBloodPool(14)
-            .build();
-        final Generation actual = VampireEditor.getGeneration(9);
 
         Assert.assertEquals(actual, expected);
     }

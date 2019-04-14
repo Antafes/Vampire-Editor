@@ -42,6 +42,7 @@ public class StorageFactory {
         CLAN ("antafes.vampireEditor.entity.storage.ClanStorage"),
         MERIT ("antafes.vampireEditor.entity.storage.MeritStorage"),
         FLAW ("antafes.vampireEditor.entity.storage.FlawStorage"),
+        GENERATION ("antafes.vampireEditor.entity.storage.GenerationStorage"),
         CHARACTER ("antafes.vampireEditor.entity.storage.CharacterStorage");
 
         private final String storageClass;

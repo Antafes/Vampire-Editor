@@ -26,7 +26,6 @@ import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
-import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +82,6 @@ public class VampireEditor {
         ));
 
         StorageFactory.storageWarmUp();
-        this.loadGenerations();
         this.loadRoads();
     }
 
@@ -163,36 +161,6 @@ public class VampireEditor {
     }
 
     /**
-     * Load every possible generation.
-     */
-    private void loadGenerations() {
-        Element root;
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "generations.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            root = xp.getRootElement();
-            ArrayList<Element> elements = XMLParser.getAllChildren(root);
-            elements.forEach((element) -> {
-                try {
-                    Generation generation = new Generation.Builder()
-                        .setGeneration(Integer.parseInt(element.getAttribute("value")))
-                        .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
-                        .setMaximumBloodPool(XMLParser.getTagValueInt("maximumBloodPool", element))
-                        .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
-                        .build();
-
-                    if (VampireEditor.getGeneration(generation.getGeneration()) == null) {
-                        VampireEditor.GENERATIONS.add(generation);
-                    }
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
      * Load the available roads.
      */
     private void loadRoads() {
@@ -243,33 +211,6 @@ public class VampireEditor {
      */
     public static URL getResourceInJar(String path) {
         return VampireEditor.class.getClassLoader().getResource(path);
-    }
-
-    /**
-     * Get the list of GENERATIONS.
-     *
-     * @return List of generation objects
-     */
-    public static ArrayList<Generation> getGenerations() {
-        return VampireEditor.GENERATIONS;
-    }
-
-    /**
-     * Get a single generation object from the list of generations.
-     * Returns null if no matching generation was found.
-     *
-     * @param generation Number representation of a generation
-     *
-     * @return Generation object or null for the given number
-     */
-    public static Generation getGeneration(int generation) {
-        for (Generation generationObject : VampireEditor.GENERATIONS) {
-            if (generationObject.getGeneration() == generation) {
-                return generationObject;
-            }
-        }
-
-        return null;
     }
 
     /**

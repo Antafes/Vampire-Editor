@@ -26,10 +26,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
-import antafes.vampireEditor.entity.storage.AbilityStorage;
-import antafes.vampireEditor.entity.storage.AttributeStorage;
-import antafes.vampireEditor.entity.storage.ClanStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.storage.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -91,8 +88,9 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getClan(), clanStorage.getEntity("brujah"));
     }
 
-    public void testGetGeneration() {
-        Assert.assertEquals(this.character.getGeneration(), VampireEditor.getGeneration(4));
+    public void testGetGeneration() throws EntityStorageException {
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        Assert.assertEquals(this.character.getGeneration(), generationStorage.getEntity(4));
     }
 
     public void testGetChronicle() {
