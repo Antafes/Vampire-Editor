@@ -28,10 +28,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.character.Ability;
-import antafes.vampireEditor.entity.character.Advantage;
-import antafes.vampireEditor.entity.character.Attribute;
-import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.character.*;
 import org.w3c.dom.Element;
 
 import java.text.ParseException;
@@ -227,9 +224,16 @@ public class CharacterStorage extends BaseStorage {
             return null;
         }
 
+        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         builder.setId(UUID.fromString(id));
         builder.setName(XMLParser.getTagValue("name", root));
-        builder.setClan(VampireEditor.getClan(XMLParser.getTagValue("clan", root)));
+
+        try {
+            builder.setClan(clanStorage.getEntity(XMLParser.getTagValue("clan", root)));
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
+
         builder.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
         builder.setChronicle(XMLParser.getTagValue("chronicle", root));
         builder.setExperience(XMLParser.getTagValueInt("experience", root));

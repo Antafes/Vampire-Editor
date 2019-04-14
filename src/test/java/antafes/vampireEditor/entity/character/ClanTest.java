@@ -29,6 +29,7 @@ import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.storage.WeaknessStorage;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -132,12 +133,13 @@ public class ClanTest {
 
     public void testDifferentClan() throws EntityException, EntityStorageException {
         AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
         final Clan object = new Clan.Builder()
             .setKey("testClan2")
             .addName(Configuration.Language.ENGLISH, "Test clan 2")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname 2")
             .addAdvantage(storage.getEntity("contacts"))
-            .addWeakness(VampireEditor.getWeakness("diableryTraces"))
+            .addWeakness(weaknessStorage.getEntity("diableryTraces"))
             .build();
 
         Assert.assertNotEquals(this.clan, object);

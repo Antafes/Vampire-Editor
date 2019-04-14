@@ -23,9 +23,7 @@ package antafes.vampireEditor;
 
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.*;
-import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import org.w3c.dom.Element;
@@ -86,8 +84,6 @@ public class VampireEditor {
 
         StorageFactory.storageWarmUp();
         this.loadGenerations();
-        this.loadWeaknesses();
-        this.loadClans();
         this.loadMerits();
         this.loadFlaws();
         this.loadRoads();
@@ -199,77 +195,6 @@ public class VampireEditor {
     }
 
     /**
-     * Load all weaknesses of the clans.
-     */
-    private void loadWeaknesses() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "weaknesses.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(element).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.WEAKNESSES.put(
-                        element.getAttribute("key"),
-                        new Weakness.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
-     * Load all clans.
-     */
-    private void loadClans() {
-        InputStream is = VampireEditor.getFileInJar(this.getDataPath() + "clans.xml");
-        XMLParser xp = new XMLParser();
-
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                HashMap<Configuration.Language, String> nicknames = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("nickname", element)).forEach((name) -> nicknames.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                try {
-                    VampireEditor.CLANS.put(
-                        element.getAttribute("key"),
-                        new Clan.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setNicknames(nicknames)
-                            .setAdvantages(this.getClanDisciplins(XMLParser.getTagElement("advantages", element)))
-                            .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-    }
-
-    /**
      * Load the available merits.
      */
     private void loadMerits() {
@@ -369,53 +294,6 @@ public class VampireEditor {
     }
 
     /**
-     * Get the disciplines of the given clan element.
-     *
-     * @param element XML element
-     *
-     * @return List of advantage objects
-     */
-    private ArrayList<Advantage> getClanDisciplins(Element element) {
-        ArrayList<Advantage> advantagesList = new ArrayList<>();
-        ArrayList<Element> advantages = XMLParser.getAllChildren(element);
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-
-        advantages.forEach(
-            (listElement) -> {
-                try {
-                    advantagesList.add(
-                        storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
-                    );
-                } catch (EntityStorageException e) {
-                    e.printStackTrace();
-                }
-            }
-        );
-
-        return advantagesList;
-    }
-
-    /**
-     * Get the weaknesses of the given clan element.
-     *
-     * @param element XML element
-     *
-     * @return List of weakness objects
-     */
-    private ArrayList<Weakness> getWeaknesses(Element element) {
-        ArrayList<Weakness> weaknessesList = new ArrayList<>();
-        ArrayList<Element> weaknesses = XMLParser.getAllChildren(element);
-
-        weaknesses.forEach(
-            (listElement) -> weaknessesList.add(
-                VampireEditor.getWeakness(listElement.getChildNodes().item(0).getNodeValue())
-            )
-        );
-
-        return weaknessesList;
-    }
-
-    /**
      * Get a file inside of the generated JAR.
      *
      * @param path Path of the file
@@ -462,37 +340,6 @@ public class VampireEditor {
         }
 
         return null;
-    }
-
-    /**
-     * Get the list of clans.
-     *
-     * @return Map of clan objects with the clan key as key of the map
-     */
-    public static HashMap<String, Clan> getClans() {
-        return VampireEditor.CLANS;
-    }
-
-    /**
-     * Get a weakness by its key.
-     *
-     * @param key The weakness to fetch
-     *
-     * @return Weakness object for the given key or null if none found
-     */
-    public static Weakness getWeakness(String key) {
-        return VampireEditor.WEAKNESSES.get(key);
-    }
-
-    /**
-     * Get a clan by its key.
-     *
-     * @param key The clan to fetch
-     *
-     * @return Clan object for the given key or null if none found
-     */
-    public static Clan getClan(String key) {
-        return VampireEditor.CLANS.get(key);
     }
 
     /**

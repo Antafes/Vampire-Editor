@@ -35,10 +35,12 @@ public class StorageFactory {
     private static final HashMap<StorageType, BaseStorage> storages = new HashMap<>();
 
     public enum StorageType {
-        ABILITY ("AbilityStorage"),
-        ADVANTAGE ("AdvantageStorage"),
-        ATTRIBUTE ("AttributeStorage"),
-        CHARACTER ("CharacterStorage");
+        ABILITY ("antafes.vampireEditor.entity.storage.AbilityStorage"),
+        ADVANTAGE ("antafes.vampireEditor.entity.storage.AdvantageStorage"),
+        ATTRIBUTE ("antafes.vampireEditor.entity.storage.AttributeStorage"),
+        WEAKNESS ("antafes.vampireEditor.entity.storage.WeaknessStorage"),
+        CLAN ("antafes.vampireEditor.entity.storage.ClanStorage"),
+        CHARACTER ("antafes.vampireEditor.entity.storage.CharacterStorage");
 
         private final String storageClass;
 

@@ -23,7 +23,10 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.ClanStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
@@ -605,9 +608,10 @@ public class LooksPanel extends javax.swing.JPanel {
      * @return
      */
     public DefaultComboBoxModel getClans() {
+        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("");
-        ArrayList<Clan> sortedClans = new ArrayList<>(VampireEditor.getClans().values());
+        ArrayList<BaseEntity> sortedClans = new ArrayList<>(clanStorage.getList().values());
         sortedClans.sort(new ClanComparator());
 
         sortedClans.forEach(model::addElement);

@@ -25,14 +25,8 @@ package antafes.vampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
-import antafes.vampireEditor.entity.character.Ability;
-import antafes.vampireEditor.entity.character.Advantage;
-import antafes.vampireEditor.entity.character.Attribute;
-import antafes.vampireEditor.entity.character.Road;
-import antafes.vampireEditor.entity.storage.AbilityStorage;
-import antafes.vampireEditor.entity.storage.AdvantageStorage;
-import antafes.vampireEditor.entity.storage.AttributeStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.BaseWindow;
 import test.methodselectors.NoTest;
 
@@ -53,6 +47,7 @@ public class TestCharacterUtility {
     @NoTest
     public static antafes.vampireEditor.entity.Character createTestCharacter() {
         try {
+            ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
             antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder()
@@ -67,7 +62,7 @@ public class TestCharacterUtility {
                 .setSire("Sir Testing")
                 .setSect("Test sect")
                 .setPlayer("Test player")
-                .setClan(VampireEditor.getClan("brujah"))
+                .setClan(clanStorage.getEntity("brujah"))
                 .setSex(antafes.vampireEditor.entity.Character.Sex.MALE)
                 .setRoad(VampireEditor.getRoads().get("roadOfHumanity"))
                 .setWillpower(5)
