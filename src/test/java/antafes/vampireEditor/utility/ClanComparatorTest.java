@@ -25,7 +25,9 @@ package antafes.vampireEditor.utility;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -37,9 +39,10 @@ public class ClanComparatorTest {
     @BeforeMethod
     public void setUp() {
         Configuration.getInstance().loadProperties();
+        StorageFactory.storageWarmUp();
     }
 
-    public void testCompare() throws EntityException {
+    public void testCompare() throws EntityException, EntityStorageException {
         ClanComparator comparator = new ClanComparator();
         Clan clan1 = TestClanUtility.createTestClan();
         Clan clan2 = TestClanUtility.createTestClan();
@@ -50,7 +53,7 @@ public class ClanComparatorTest {
         Assert.assertEquals(actual, expected);
     }
 
-    public void testCompareFirstGreater() throws EntityException {
+    public void testCompareFirstGreater() throws EntityException, EntityStorageException {
         ClanComparator comparator = new ClanComparator();
         Clan clan1 = new Clan.Builder()
             .fillDataFromObject(TestClanUtility.createTestClan())

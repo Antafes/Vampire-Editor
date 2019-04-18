@@ -23,25 +23,37 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.storage.WeaknessStorage;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Test clan utility class.
  */
 public class TestClanUtility {
+    @BeforeMethod
+    public void setUp() {
+        StorageFactory.storageWarmUp();
+    }
+
     /**
      * Create a test clan.
      *
      * @return A clan object
      * @throws EntityException Thrown if something happened while building
      */
-    public static Clan createTestClan() throws EntityException {
+    public static Clan createTestClan() throws EntityException, EntityStorageException {
+        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
         return new Clan.Builder()
             .setKey("testClan")
             .addName(Configuration.Language.ENGLISH, "Test clan")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname")
-            .addAdvantage(VampireEditor.getAdvantage("allies"))
-            .addWeakness(VampireEditor.getWeakness("bloodTithe"))
+            .addAdvantage(advantageStorage.getEntity("allies"))
+            .addWeakness(weaknessStorage.getEntity("bloodTithe"))
             .build();
     }
 }

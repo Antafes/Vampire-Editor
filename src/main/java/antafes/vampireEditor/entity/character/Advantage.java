@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.EntityException;
 
 import java.lang.reflect.Method;
@@ -33,38 +33,20 @@ import java.util.Objects;
  *
  * @author Marian Pollzien
  */
-public class Advantage extends BaseTranslatedEntity implements AdvantageInterface {
-    private final AdvantageType type;
+public class Advantage extends BaseTypedTranslatedEntity implements AdvantageInterface {
     private final int value;
 
     /**
      * Builder for Advantage objects.
      */
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        private AdvantageType type;
+    public static class Builder extends BaseTypedTranslatedEntity.Builder<Builder> {
         private int value = 0;
-
-        /**
-         * Check if all necessary values are set.
-         * This has to be called in the build method.
-         *
-         * @throws EntityException If something is missing but required
-         */
-        @Override
-        protected void checkValues() throws EntityException {
-            super.checkValues();
-
-            if (this.type == null) {
-                throw new EntityException("Missing type");
-            }
-        }
 
         /**
          * Build a new base entity.
          *
          * @return The created advantage entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
+         * @throws EntityException Throws an EntityException if something went wrong during build of the entity
          */
         @Override
         public Advantage build() throws EntityException {
@@ -81,6 +63,21 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
         @Override
         protected Builder self() {
             return this;
+        }
+
+        /**
+         * Check whether the given method can be used to fill in data.
+         *
+         * @param method The method to check.
+         *
+         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
+         */
+        @Override
+        protected boolean checkMethod(Method method) {
+            return super.checkMethod(method)
+                || (
+                method.getName().equals("getType") && method.getDeclaringClass().equals(Advantage.class)
+            );
         }
 
         /**
@@ -124,19 +121,6 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
         }
 
         /**
-         * Set the advantage type.
-         *
-         * @param type
-         *
-         * @return The builder object
-         */
-        public Builder setType(AdvantageType type) {
-            this.type = type;
-
-            return this.self();
-        }
-
-        /**
          * Set the advantages value.
          *
          * @param value
@@ -158,7 +142,6 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
     protected Advantage(Builder builder) {
         super(builder);
 
-        this.type = builder.type;
         this.value = builder.value;
     }
 
@@ -169,7 +152,7 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
      */
     @Override
     public AdvantageType getType() {
-        return type;
+        return (AdvantageType) super.getType();
     }
 
     /**
@@ -215,8 +198,7 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
 
         Advantage advantage = (Advantage) obj;
 
-        return value == advantage.value &&
-            type == advantage.type;
+        return this.value == advantage.value;
     }
 
     /**
@@ -226,6 +208,6 @@ public class Advantage extends BaseTranslatedEntity implements AdvantageInterfac
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), type, value);
+        return Objects.hash(super.hashCode(), this.value);
     }
 }

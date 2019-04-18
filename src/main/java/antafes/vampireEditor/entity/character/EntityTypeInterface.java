@@ -16,51 +16,11 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2019, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
+
 package antafes.vampireEditor.entity.character;
 
-/**
- * Ability interface.
- *
- * @author Marian Pollzien
- */
-public interface AbilityInterface {
-    /**
-     * List of ability types.
-     */
-    public enum AbilityType implements EntityTypeInterface {
-        TALENT,
-        SKILL,
-        KNOWLEDGE
-    }
-
-    /**
-     * Get the key of the ability.
-     *
-     * @return
-     */
-    public String getKey();
-
-    /**
-     * Get the name of the ability.
-     *
-     * @return
-     */
-    public String getName();
-
-    /**
-     * Get the type of ability.
-     *
-     * @return
-     */
-    public EntityTypeInterface getType();
-
-    /**
-     * Get the value of the ability.
-     *
-     * @return
-     */
-    public int getValue();
+public interface EntityTypeInterface {
 }

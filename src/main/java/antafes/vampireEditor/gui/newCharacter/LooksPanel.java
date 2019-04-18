@@ -22,8 +22,12 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.BaseEntity;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.ClanStorage;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
@@ -605,9 +609,10 @@ public class LooksPanel extends javax.swing.JPanel {
      * @return
      */
     public DefaultComboBoxModel getClans() {
+        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement("");
-        ArrayList<Clan> sortedClans = new ArrayList<>(VampireEditor.getClans().values());
+        ArrayList<BaseEntity> sortedClans = new ArrayList<>(clanStorage.getList().values());
         sortedClans.sort(new ClanComparator());
 
         sortedClans.forEach(model::addElement);
@@ -673,9 +678,14 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param builder Character builder object
      */
     public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         builder.setName(this.nameField.getText());
         builder.setChronicle(this.chronicleField.getText());
-        builder.setGeneration(VampireEditor.getGeneration(Integer.parseInt(this.generationContentLabel.getText())));
+        try {
+            builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()));
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
         builder.setNature(this.natureField.getText());
         builder.setHideout(this.hideoutField.getText());
         builder.setPlayer(this.playerField.getText());
@@ -703,12 +713,17 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param adjustment Generation adjustment
      */
     public void adjustGeneration(int adjustment) {
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         int generation = LooksPanel.DEFAULT_GENERATION;
         generation -= adjustment;
 
         this.generationContentLabel.setText(Integer.toString(generation));
-        this.parent.setAttributeMaximum(
-            Objects.requireNonNull(VampireEditor.getGeneration(generation)).getMaximumAttributes()
-        );
+        try {
+            this.parent.setAttributeMaximum(
+                Objects.requireNonNull(generationStorage.getEntity(generation)).getMaximumAttributes()
+            );
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
     }
 }

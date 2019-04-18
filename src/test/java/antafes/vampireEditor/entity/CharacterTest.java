@@ -26,6 +26,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -82,12 +83,14 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getName(), "Test Character");
     }
 
-    public void testGetClan() {
-        Assert.assertEquals(this.character.getClan(), VampireEditor.getClan("brujah"));
+    public void testGetClan() throws EntityStorageException {
+        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        Assert.assertEquals(this.character.getClan(), clanStorage.getEntity("brujah"));
     }
 
-    public void testGetGeneration() {
-        Assert.assertEquals(this.character.getGeneration(), VampireEditor.getGeneration(4));
+    public void testGetGeneration() throws EntityStorageException {
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        Assert.assertEquals(this.character.getGeneration(), generationStorage.getEntity(4));
     }
 
     public void testGetChronicle() {
@@ -248,8 +251,9 @@ public class CharacterTest {
         }
     }
 
-    public void testGetRoad() throws EntityException {
-        final Road expected = new Road.Builder().fillDataFromObject(VampireEditor.getRoad("roadOfHumanity"))
+    public void testGetRoad() throws EntityException, EntityStorageException {
+        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        final Road expected = new Road.Builder().fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
             .setValue(5)
             .build();
         final Road actual = this.character.getRoad();
@@ -463,9 +467,10 @@ public class CharacterTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many attributes")
-    public void testBuilderTooManyAttributes() throws EntityException {
+    public void testBuilderTooManyAttributes() throws EntityException, EntityStorageException {
         ArrayList list = this.character.getAttributes();
-        list.add(VampireEditor.getAttribute("strength"));
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        list.add(storage.getEntity("strength"));
         new Character.Builder()
             .fillDataFromObject(this.character)
             .setAttributes(list)
@@ -473,9 +478,10 @@ public class CharacterTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many abilities")
-    public void testBuilderTooManyAbilities() throws EntityException {
+    public void testBuilderTooManyAbilities() throws EntityException, EntityStorageException {
         ArrayList list = this.character.getAbilities();
-        list.add(VampireEditor.getAbility("acting"));
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        list.add(storage.getEntity("alertness"));
         new Character.Builder()
             .fillDataFromObject(this.character)
             .setAbilities(list)

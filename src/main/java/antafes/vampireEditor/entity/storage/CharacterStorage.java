@@ -26,12 +26,9 @@ import antafes.myXML.XMLValidator;
 import antafes.myXML.XMLWriter;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.character.Ability;
-import antafes.vampireEditor.entity.character.Advantage;
-import antafes.vampireEditor.entity.character.Attribute;
-import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.character.*;
 import org.w3c.dom.Element;
 
 import java.text.ParseException;
@@ -42,10 +39,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Storage for characters
  *
  * @author Marian Pollzien
  */
-public class CharacterStorage {
+public class CharacterStorage extends BaseStorage {
     private final Configuration configuration;
     private final XMLWriter xw;
     private final XMLParser xp;
@@ -54,7 +52,9 @@ public class CharacterStorage {
     /**
      * Create a new character storage.
      */
-    public CharacterStorage() {
+    CharacterStorage() {
+        super();
+
         HashMap<String, String> rootAttributes = new HashMap<>();
         rootAttributes.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         this.configuration = Configuration.getInstance();
@@ -66,6 +66,27 @@ public class CharacterStorage {
     }
 
     /**
+     * Initializes the storage and pre-loads available data.
+     *
+     * @TODO This might be used in the future to preload previously opened characters.
+     */
+    @Override
+    public void init() {
+    }
+
+    /**
+     * Fetch a single ability for a given key.
+     *
+     * @param key The key under which to find the entity
+     *
+     * @return The entity
+     */
+    @Override
+    public Character getEntity(String key) throws EntityStorageException {
+        return (Character) super.getEntity(key);
+    }
+
+    /**
      * Save the given character.
      *
      * @param character The character to save
@@ -74,6 +95,7 @@ public class CharacterStorage {
     public void save(antafes.vampireEditor.entity.Character character, String filename) {
         this.addRequiredFields(character);
         this.xw.write(this.configuration.getSaveDirPath(filename));
+        this.getList().put(character.getId().toString(), character);
     }
 
     /**
@@ -82,18 +104,20 @@ public class CharacterStorage {
      * @param filename The file to load
      *
      * @return The loaded character
-     * @throws java.lang.Exception Thrown if character couldn't be loaded
+     * @throws EntityStorageException Thrown if character couldn't be loaded
      */
-    public antafes.vampireEditor.entity.Character load(String filename) throws Exception  {
+    public antafes.vampireEditor.entity.Character load(String filename) throws EntityStorageException  {
         if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
             Character character = this.fillValues();
 
             if (character != null) {
+                this.getList().put(character.getId().toString(), character);
+
                 return character;
             }
         }
 
-        Exception ex = new Exception("Could not load character '" + filename + "'!");
+        EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
 
         this.xp.getExceptionList().forEach(ex::addSuppressed);
 
@@ -200,10 +224,22 @@ public class CharacterStorage {
             return null;
         }
 
+        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         builder.setId(UUID.fromString(id));
         builder.setName(XMLParser.getTagValue("name", root));
-        builder.setClan(VampireEditor.getClan(XMLParser.getTagValue("clan", root)));
-        builder.setGeneration(VampireEditor.getGeneration(XMLParser.getTagValueInt("generation", root)));
+
+        try {
+            builder.setClan(clanStorage.getEntity(XMLParser.getTagValue("clan", root)));
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
+
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            builder.setGeneration(generationStorage.getEntity(XMLParser.getTagValueInt("generation", root)));
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
         builder.setChronicle(XMLParser.getTagValue("chronicle", root));
         builder.setExperience(XMLParser.getTagValueInt("experience", root));
         builder.setNature(XMLParser.getTagValue("nature", root));
@@ -215,17 +251,18 @@ public class CharacterStorage {
         builder.setSect(XMLParser.getTagValue("sect", root));
 
         Element attributes = XMLParser.getTagElement("attributes", root);
+        AttributeStorage attributeStorage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         XMLParser.getAllChildren(attributes).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Attribute attribute = VampireEditor.getAttribute(key);
+                Attribute attribute = attributeStorage.getEntity(key);
                 Attribute.Builder attributeBuilder = new Attribute.Builder()
                     .fillDataFromObject(attribute);
 
                 return attributeBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -233,17 +270,18 @@ public class CharacterStorage {
         }).forEachOrdered(builder::addAttribute);
 
         Element abilities = XMLParser.getTagElement("abilities", root);
+        AbilityStorage abilityStorage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Ability ability = VampireEditor.getAbility(key);
+                Ability ability = abilityStorage.getEntity(key);
                 Ability.Builder abilityBuilder = new Ability.Builder()
                     .fillDataFromObject(ability);
 
                 return abilityBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -251,38 +289,54 @@ public class CharacterStorage {
         }).forEachOrdered(builder::addAbility);
 
         Element advantages = XMLParser.getTagElement("advantages", root);
+        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         XMLParser.getAllChildren(advantages).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
-                Advantage advantage = VampireEditor.getAdvantage(key);
+                Advantage advantage = advantageStorage.getEntity(key);
                 Advantage.Builder advantageBuilder = new Advantage.Builder()
                     .fillDataFromObject(advantage);
 
                 return advantageBuilder
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException ex) {
+            } catch (EntityException | EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             return null;
         }).forEachOrdered(builder::addAdvantage);
 
+        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
         XMLParser.getAllChildren(XMLParser.getTagElement("merits", root))
-            .forEach((element) -> builder.addMerit(VampireEditor.getMerits().get(XMLParser.getElementValue(element))));
+            .forEach((element) -> {
+                try {
+                    builder.addMerit(meritStorage.getEntity(XMLParser.getElementValue(element)));
+                } catch (EntityStorageException e) {
+                    e.printStackTrace();
+                }
+            });
 
+        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
         XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root))
-            .forEach((element) -> builder.addFlaw(VampireEditor.getFlaws().get(XMLParser.getElementValue(element))));
+            .forEach((element) -> {
+                try {
+                    builder.addFlaw(flawStorage.getEntity(XMLParser.getElementValue(element)));
+                } catch (EntityStorageException e) {
+                    e.printStackTrace();
+                }
+            });
 
+        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         Element road = XMLParser.getTagElement("road", root);
-        Road.Builder roadBuilder = new Road.Builder()
-            .fillDataFromObject(VampireEditor.getRoad(road.getAttribute("key")))
-            .setValue(XMLParser.getTagValueInt("road", root));
-
+        Road.Builder roadBuilder = null;
         try {
+            roadBuilder = new Road.Builder()
+                .fillDataFromObject(roadStorage.getEntity(road.getAttribute("key")))
+                .setValue(XMLParser.getTagValueInt("road", root));
             builder.setRoad(roadBuilder.build());
-        } catch (EntityException ex) {
-            Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EntityStorageException | EntityException e) {
+            e.printStackTrace();
         }
 
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));

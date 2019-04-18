@@ -23,9 +23,12 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
@@ -321,16 +324,8 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      */
     @Override
     protected ArrayList<Advantage> getValues(String type) {
-        ArrayList<Advantage> list = new ArrayList<>();
-        VampireEditor.getAdvantages().forEach((String key, Advantage advantage) -> {
-            if (type != null) {
-                if (AdvantageInterface.AdvantageType.valueOf(type.toUpperCase()).equals(advantage.getType())) {
-                    list.add(advantage);
-                }
-            } else {
-                list.add(advantage);
-            }
-        });
+        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        ArrayList<Advantage> list = storage.getEntityListByType(AdvantageInterface.AdvantageType.valueOf(type.toUpperCase()));
         list.sort(new StringComparator());
 
         return list;
@@ -447,26 +442,28 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                 JSpinner spinner = (JSpinner) fields.get(i);
                 Advantage advantage;
 
-                if (this.getComboBoxes(key).size() > 0) {
-                    JComboBox comboBox = this.getComboBoxes(key).get(i);
-
-                    if (Objects.equals(comboBox.getSelectedItem(), "")) {
-                        continue;
-                    }
-
-                    advantage = (Advantage) comboBox.getSelectedItem();
-                } else {
-                    advantage = VampireEditor.getAdvantage(spinner.getName());
-                }
 
                 try {
+                    if (this.getComboBoxes(key).size() > 0) {
+                        JComboBox comboBox = this.getComboBoxes(key).get(i);
+
+                        if (Objects.equals(comboBox.getSelectedItem(), "")) {
+                            continue;
+                        }
+
+                        advantage = (Advantage) comboBox.getSelectedItem();
+                    } else {
+                        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+                        advantage = storage.getEntity(spinner.getName());
+                    }
+
                     builder.addAdvantage(
                         new Advantage.Builder()
                             .fillDataFromObject(advantage)
                             .setValue((int) spinner.getValue())
                             .build()
                     );
-                } catch (EntityException ex) {
+                } catch (EntityException | EntityStorageException ex) {
                     Logger.getLogger(AdvantagesPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -503,21 +500,26 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
             comboBox.addItemListener((ItemEvent e) -> {
                 JComboBox element = (JComboBox) e.getSource();
+                AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
 
-                if (VampireEditor.getAdvantage("generation").equals(element.getSelectedItem())) {
-                    this.addGenerationSpinnerItemListener(spinner);
-                } else {
-                    // Remove the generation bonus
-                    if (spinner.getChangeListeners().length > 1) {
-                        for (ChangeListener listener : spinner.getChangeListeners()) {
-                            if (listener.toString().contains(AdvantagesPanel.class.toString())) {
-                                spinner.removeChangeListener(listener);
-                                break;
+                try {
+                    if (storage.getEntity("generation").equals(element.getSelectedItem())) {
+                        this.addGenerationSpinnerItemListener(spinner);
+                    } else {
+                        // Remove the generation bonus
+                        if (spinner.getChangeListeners().length > 1) {
+                            for (ChangeListener listener : spinner.getChangeListeners()) {
+                                if (listener.toString().contains(AdvantagesPanel.class.toString())) {
+                                    spinner.removeChangeListener(listener);
+                                    break;
+                                }
                             }
+                            ((LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0))
+                                .adjustGeneration(0);
                         }
-                        ((LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0))
-                            .adjustGeneration(0);
                     }
+                } catch (EntityStorageException ex) {
+                    VampireEditor.log(ex.getMessage());
                 }
             });
         }

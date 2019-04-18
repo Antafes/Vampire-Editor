@@ -24,10 +24,9 @@ package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.character.Ability;
-import antafes.vampireEditor.entity.character.Advantage;
-import antafes.vampireEditor.entity.character.Attribute;
-import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.BaseWindow;
 import test.methodselectors.NoTest;
 
@@ -48,12 +47,16 @@ public class TestCharacterUtility {
     @NoTest
     public static antafes.vampireEditor.entity.Character createTestCharacter() {
         try {
+            ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+            GenerationStorage generationStorage = (GenerationStorage) StorageFactory
+                .getStorage(StorageFactory.StorageType.GENERATION);
+            RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
             antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder()
                 .setId(UUID.fromString("8ddb1360-316b-11e9-b210-d663bd873d93"))
                 .setName("Test Character")
-                .setGeneration(VampireEditor.getGeneration(4))
+                .setGeneration(generationStorage.getEntity(4))
                 .setChronicle("Test chronicle")
                 .setNature("wise")
                 .setDemeanor("strict")
@@ -62,9 +65,9 @@ public class TestCharacterUtility {
                 .setSire("Sir Testing")
                 .setSect("Test sect")
                 .setPlayer("Test player")
-                .setClan(VampireEditor.getClan("brujah"))
+                .setClan(clanStorage.getEntity("brujah"))
                 .setSex(antafes.vampireEditor.entity.Character.Sex.MALE)
-                .setRoad(VampireEditor.getRoads().get("roadOfHumanity"))
+                .setRoad(roadStorage.getEntity("roadOfHumanity"))
                 .setWillpower(5)
                 .setUsedWillpower(1)
                 .setBloodPool(3)
@@ -86,65 +89,70 @@ public class TestCharacterUtility {
             TestCharacterUtility.addAbilities(builder);
 
             Advantage.Builder advantageBuilder = new Advantage.Builder();
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("allies"))
+            AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("allies"))
                 .setValue(3);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("influence"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("influence"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("auspex"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("auspex"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("celerity"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("celerity"))
                 .setValue(1);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("dominate"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("dominate"))
                 .setValue(1);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("conscience"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("conscience"))
                 .setValue(3);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("courage"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("courage"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(VampireEditor.getAdvantage("self-control"))
+            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("self-control"))
                 .setValue(2);
             builder.addAdvantage(advantageBuilder.build());
 
-            builder.addFlaw(VampireEditor.getFlaws().get("monstrous"));
-            builder.addFlaw(VampireEditor.getFlaws().get("deepSleeper"));
-            builder.addMerit(VampireEditor.getMerits().get("commonSense"));
-            builder.addMerit(VampireEditor.getMerits().get("eideticMemory"));
+            MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+            FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+            builder.addFlaw(flawStorage.getEntity("monstrous"));
+            builder.addFlaw(flawStorage.getEntity("deepSleeper"));
+            builder.addMerit(meritStorage.getEntity("commonSense"));
+            builder.addMerit(meritStorage.getEntity("eideticMemory"));
             Road.Builder roadBuilder = new Road.Builder()
-                .fillDataFromObject(VampireEditor.getRoad("roadOfHumanity"))
+                .fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
                 .setValue(5);
             builder.setRoad(roadBuilder.build());
 
             return builder.build();
-        } catch (EntityException ex) {
+        } catch (EntityException | EntityStorageException ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
     }
 
-    private static void addAttributes(Character.Builder builder) throws EntityException {
+    private static void addAttributes(Character.Builder builder) throws EntityException, EntityStorageException {
         Attribute.Builder attributeBuilder = new Attribute.Builder();
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("strength")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("dexterity")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("stamina")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("charisma")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("appearance")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("manipulation")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("intelligence")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("perception")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(VampireEditor.getAttribute("wits")).setValue(1).build());
+        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("strength")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("dexterity")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("stamina")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("charisma")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("appearance")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("manipulation")).setValue(2).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("intelligence")).setValue(2).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("perception")).setValue(3).build());
+        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("wits")).setValue(1).build());
     }
 
     private static void addAbilities(Character.Builder builder) {
         Ability.Builder abilityBuilder = new Ability.Builder();
+        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
 
-        VampireEditor.getAbilities().forEach(((s, ability) -> {
+        storage.getList().forEach(((s, ability) -> {
             try {
                 builder.addAbility(abilityBuilder.fillDataFromObject(ability).setValue(3).build());
             } catch (EntityException e) {

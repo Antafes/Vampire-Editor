@@ -24,7 +24,10 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
 
@@ -108,7 +111,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(lastStepsScrollPane);
 
-        this.setAttributeMaximum(Objects.requireNonNull(VampireEditor.getGeneration(12)).getMaximumAttributes());
+        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            this.setAttributeMaximum(Objects.requireNonNull(generationStorage.getEntity(12)).getMaximumAttributes());
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
         characterTabPane.setEnabledAt(3, false);

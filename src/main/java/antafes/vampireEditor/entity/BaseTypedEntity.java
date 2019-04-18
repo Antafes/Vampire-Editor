@@ -1,7 +1,7 @@
 /*
- * This file is part of Vampire_Editor.
+ * This file is part of Vampire Editor.
  *
- * Vampire_Editor is free software: you can redistribute it and/or modify
+ * Vampire Editor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -14,45 +14,40 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Vampire Editor. If not, see <http://www.gnu.org/licenses/>.
  *
- * @package Vampire_Editor
+ * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2019, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
-
-import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
+package antafes.vampireEditor.entity;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Ability object.
- *
- * @author Marian Pollzien
+ * A base typed entity.
  */
-public class Ability extends BaseTypedTranslatedEntity implements AbilityInterface {
-    private final int value;
+public abstract class BaseTypedEntity extends BaseEntity {
+    private final Enum type;
 
     /**
-     * Builder for Ability objects.
+     * Builder for typed entities.
      */
-    public static class Builder extends BaseTypedTranslatedEntity.Builder<Builder> {
-        private int value = 0;
+    public abstract static class Builder<T extends Builder<T>> extends BaseEntity.Builder {
+        private Enum type;
 
         /**
-         * Build a new Ability object.
+         * Check if all necessary values are set.
+         * This has to be called in the build method.
          *
-         * @return The created ability entity
-         * @throws EntityException Throws an EntityException if something went wrong during build of the entity
+         * @throws EntityException If something is missing but required
          */
         @Override
-        public Ability build() throws EntityException {
-            this.checkValues();
-
-            return new Ability(this);
+        protected void checkValues() throws EntityException {
+            if (this.self().getType() == null) {
+                throw new EntityException("Missing type for entity: " + this);
+            }
         }
 
         /**
@@ -61,8 +56,20 @@ public class Ability extends BaseTypedTranslatedEntity implements AbilityInterfa
          * @return The object itself
          */
         @Override
-        protected Builder self() {
-            return this;
+        protected abstract T self();
+
+        /**
+         * Fill every property from the given object into this builder.
+         *
+         * @param object A BaseEntity to fetch values from
+         *
+         * @return The builder object
+         */
+        @Override
+        public T fillDataFromObject(BaseEntity object) {
+            super.fillDataFromObject(object);
+
+            return this.self();
         }
 
         /**
@@ -74,22 +81,19 @@ public class Ability extends BaseTypedTranslatedEntity implements AbilityInterfa
          */
         @Override
         protected boolean checkMethod(Method method) {
-            return super.checkMethod(method)
-                || (
-                    method.getName().equals("getType") && method.getDeclaringClass().equals(Ability.class)
-                );
+            return super.checkMethod(method) || method.getName().equals("getName");
         }
 
         /**
          * Get the list of methods from which data can be fetched.
          *
-         * @return
+         * @return A list of getter methods
          */
         @Override
         protected ArrayList getDataMethods() {
             ArrayList<Method> methodList = super.getDataMethods();
 
-            for (Method declaredMethod : Ability.class.getDeclaredMethods()) {
+            for (Method declaredMethod : BaseTypedEntity.class.getDeclaredMethods()) {
                 if (this.checkMethod(declaredMethod)) {
                     continue;
                 }
@@ -116,58 +120,34 @@ public class Ability extends BaseTypedTranslatedEntity implements AbilityInterfa
                 Class[] parameterTypes = new Class[1];
                 parameterTypes[0] = getter.getReturnType();
 
-                return Ability.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
+                return BaseTypedEntity.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
             }
         }
 
-        /**
-         * Set the abilities value.
-         *
-         * @param value
-         *
-         * @return The builder object
-         */
-        public Builder setValue(int value) {
-            this.value = value;
+        public Enum getType() {
+            return type;
+        }
+
+        public T setType(Enum type) {
+            this.type = type;
 
             return this.self();
         }
     }
 
     /**
-     * Create a new ability with type and value.
+     * Create new base entity.
      *
-     * @param builder The builder object
+     * @param builder The builder object to fetch the data from
      */
-    protected Ability(Builder builder) {
+    protected BaseTypedEntity(Builder builder) {
         super(builder);
 
-        this.value = builder.value;
+        this.type = builder.type;
     }
 
-    @Override
-    public AbilityType getType() {
-        return (AbilityType) super.getType();
-    }
-
-    /**
-     * Get the value of the ability.
-     *
-     * @return
-     */
-    @Override
-    public int getValue() {
-        return this.value;
-    }
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return String representation of the object
-     */
-    @Override
-    public String toString() {
-        return this.getName();
+    public Enum getType() {
+        return type;
     }
 
     /**
@@ -191,9 +171,9 @@ public class Ability extends BaseTypedTranslatedEntity implements AbilityInterfa
             return false;
         }
 
-        Ability ability = (Ability) obj;
+        BaseTypedEntity entity = (BaseTypedEntity) obj;
 
-        return this.value == ability.value;
+        return this.type.equals(entity.type);
     }
 
     /**
@@ -203,6 +183,6 @@ public class Ability extends BaseTypedTranslatedEntity implements AbilityInterfa
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.value);
+        return Objects.hash(this.type);
     }
 }
