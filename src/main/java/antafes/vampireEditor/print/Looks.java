@@ -127,7 +127,7 @@ public class Looks extends PrintBase {
             PositionX.LEFT1.getPosition(),
             yLeft++,
             PositionX.LEFT2.getPosition(),
-            formatter.format(this.getCharacter().getDayOfBirth())
+            this.getCharacter().getDayOfBirth() != null ? formatter.format(this.getCharacter().getDayOfBirth()) : ""
         );
         this.addValueEntry(
             "dayOfDeath",
