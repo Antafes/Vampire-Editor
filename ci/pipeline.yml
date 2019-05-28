@@ -37,7 +37,7 @@ resources:
     owner: Antafes
     repository: Vampire-Editor
     release: true
-    drafts: true
+    drafts: false
     access_token: ((acccess_token))
 
 jobs:
@@ -121,7 +121,7 @@ jobs:
           tag: stable-slim
       inputs:
       - name: vampire-editor-repo
-      - name: vampire-editor-pre-release
+      - name: vampire-editor-release
       run:
         path: ci/check-version.sh
         dir: vampire-editor-repo
