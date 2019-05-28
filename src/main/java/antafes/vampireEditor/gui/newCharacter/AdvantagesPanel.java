@@ -102,7 +102,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
             AdvantageInterface.AdvantageType.VIRTUE.name(),
             list,
             true,
-            0,
+            1,
             3
         );
     }
