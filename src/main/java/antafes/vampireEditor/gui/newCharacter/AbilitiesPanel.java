@@ -46,6 +46,16 @@ import java.util.logging.Logger;
  */
 public class AbilitiesPanel extends BaseListPanel {
     /**
+     * The maximum of points per ability that can be issued with ability points instead of additional points.
+     */
+    private int maxCreationPoints = 3;
+
+    /**
+     * The amount of points above the maximum defined in this.maxCreationPoints
+     */
+    private int amountAboveMaximum = 0;
+
+    /**
      * Constructor
      *
      * @param parent Parent element
@@ -162,9 +172,47 @@ public class AbilitiesPanel extends BaseListPanel {
                 }
 
                 checkFieldsFilled();
+                // Resetting this right before the calculation of free additional points to get the correct value.
+                amountAboveMaximum = 0;
                 getParentComponent().calculateUsedFreeAdditionalPoints();
             }
         };
+    }
+
+    /**
+     * Calculate and return the sum of points spent for the given type.
+     * This will also check for values above the maximum points during creation.
+     *
+     * @param type Identifier
+     *
+     * @return Sum of points
+     */
+    @Override
+    public int getPointsSum(String type) {
+        int sum = 0;
+
+        for (Component component: this.getFields(type)) {
+            JSpinner spinner = (JSpinner) component;
+            int value = Integer.parseInt(spinner.getValue().toString());
+
+            if (value > this.maxCreationPoints) {
+                this.amountAboveMaximum += value - this.maxCreationPoints;
+                value = this.maxCreationPoints;
+            }
+
+            sum += value;
+        }
+
+        return sum;
+    }
+
+    /**
+     * The amount of points above the maximum defined in this.maxCreationPoints
+     *
+     * @return
+     */
+    public int getAmountAboveMaximum() {
+        return this.amountAboveMaximum;
     }
 
     /**

@@ -399,6 +399,15 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
+     * The amount of points above the maximum defined.
+     *
+     * @return
+     */
+    private int getAbilityPointsOverMax() {
+        return this.abilitiesPanel.getAmountAboveMaximum();
+    }
+
+    /**
      * Calculate and return the sum of points spent for backgrounds.
      *
      * @return
@@ -508,6 +517,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         if (this.checkKnowledgePoints()) {
             freeSum += (this.getKnowledgePointsSum() - this.getKnowledgeMaxPoints()) * 2;
         }
+
+        freeSum += this.getAbilityPointsOverMax() * 2;
 
         if (this.checkBackgroundPoints()) {
             freeSum += (this.getBackgroundPointsSum() - this.getBackgroundMaxPoints());
