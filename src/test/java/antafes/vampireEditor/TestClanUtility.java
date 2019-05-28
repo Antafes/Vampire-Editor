@@ -53,7 +53,7 @@ public class TestClanUtility {
             .addName(Configuration.Language.ENGLISH, "Test clan")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname")
             .addAdvantage(advantageStorage.getEntity("allies"))
-            .addWeakness(weaknessStorage.getEntity("bloodTithe"))
+            .addWeakness(weaknessStorage.getEntity("obsession"))
             .build();
     }
 }
