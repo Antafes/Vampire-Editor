@@ -15,8 +15,8 @@
 			<advantage>quietus</advantage>
 		</advantages>
 		<weaknesses>
-			<weakness>bloodTithe</weakness>
-			<weakness>diableryTraces</weakness>
+			<weakness>obsession</weakness>
+			<weakness>darkening</weakness>
 		</weaknesses>
 	</clan>
 	<clan key="brujah">
@@ -106,7 +106,7 @@
 			<advantage>obfuscate</advantage>
 		</advantages>
 		<weaknesses>
-			<weakness>irredeemablyInsane</weakness>
+			<weakness>irredeemableDerangement</weakness>
 		</weaknesses>
 	</clan>
 	<clan key="nosferatu">
@@ -142,7 +142,7 @@
 			<advantage>fortitude</advantage>
 		</advantages>
 		<weaknesses>
-			<weakness>favoriteCrimes</weakness>
+			<weakness>personalTrait</weakness>
 		</weaknesses>
 	</clan>
 	<clan key="setites">

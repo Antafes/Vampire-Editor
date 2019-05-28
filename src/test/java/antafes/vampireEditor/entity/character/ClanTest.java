@@ -24,7 +24,6 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
@@ -139,7 +138,7 @@ public class ClanTest {
             .addName(Configuration.Language.ENGLISH, "Test clan 2")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname 2")
             .addAdvantage(storage.getEntity("contacts"))
-            .addWeakness(weaknessStorage.getEntity("diableryTraces"))
+            .addWeakness(weaknessStorage.getEntity("darkening"))
             .build();
 
         Assert.assertNotEquals(this.clan, object);
