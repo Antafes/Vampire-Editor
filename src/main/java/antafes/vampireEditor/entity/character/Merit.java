@@ -35,14 +35,4 @@ public class Merit extends SpecialFeature {
     public Merit(Builder builder) {
         super(builder);
     }
-
-    /**
-     * Returns a string representation of the merit.
-     *
-     * @return A string representation of the merit
-     */
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

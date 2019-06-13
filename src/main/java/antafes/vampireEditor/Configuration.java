@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 public class Configuration
 {
     private static Configuration instance;
-    static String PATH = System.getProperty("user.home") + "/.vampire/";
+    static final String PATH = System.getProperty("user.home") + "/.vampire/";
     private final Properties properties;
     private final File propertiesFile;
 

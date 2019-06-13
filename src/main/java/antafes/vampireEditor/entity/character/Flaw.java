@@ -35,14 +35,4 @@ public class Flaw extends SpecialFeature {
     public Flaw(Builder builder) {
         super(builder);
     }
-
-    /**
-     * Returns a string representation of the flaw.
-     *
-     * @return A string representation of the flaw
-     */
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

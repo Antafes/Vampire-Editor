@@ -81,7 +81,7 @@ public class WeaknessTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.weakness.equals(null));
+        Assert.assertNotEquals(this.weakness, null);
     }
 
     public void testDifferentObject() {

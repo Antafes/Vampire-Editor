@@ -37,8 +37,8 @@ import java.io.File;
 @Test
 public class CharacterStorageTest {
     private CharacterStorage characterStorage;
-    private String saveDir = System.getProperty("user.home") + "/.vampire/testSave";
-    private String filename = "TestCharacter.xml";
+    private final String saveDir = System.getProperty("user.home") + "/.vampire/testSave";
+    private final String filename = "TestCharacter.xml";
 
     @BeforeMethod
     public void setUp() {

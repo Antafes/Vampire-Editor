@@ -109,7 +109,7 @@ public class GenerationTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.generation.equals(null));
+        Assert.assertNotEquals(this.generation, null);
     }
 
     public void testDifferentObject() {

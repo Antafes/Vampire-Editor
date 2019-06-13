@@ -98,7 +98,7 @@ public class MeritTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.merit.equals(null));
+        Assert.assertNotEquals(this.merit, null);
     }
 
     public void testDifferentObject() {

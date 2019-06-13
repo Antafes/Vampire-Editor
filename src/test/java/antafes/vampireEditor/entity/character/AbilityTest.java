@@ -98,7 +98,7 @@ public class AbilityTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.ability.equals(null));
+        Assert.assertNotEquals(this.ability, null);
     }
 
     public void testDifferentObject() {

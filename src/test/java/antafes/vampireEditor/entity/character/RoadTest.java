@@ -89,7 +89,7 @@ public class RoadTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.road.equals(null));
+        Assert.assertNotEquals(this.road, null);
     }
 
     public void testDifferentObject() {

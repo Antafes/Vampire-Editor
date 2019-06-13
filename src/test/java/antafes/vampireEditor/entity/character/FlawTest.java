@@ -98,7 +98,7 @@ public class FlawTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.flaw.equals(null));
+        Assert.assertNotEquals(this.flaw, null);
     }
 
     public void testDifferentObject() {

@@ -21,7 +21,6 @@
  */
 package antafes.vampireEditor;
 
-import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 
@@ -39,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,14 +48,6 @@ import java.util.logging.Logger;
  */
 public class VampireEditor {
     private static final boolean DEBUG = false;
-    private static final ArrayList<Generation> GENERATIONS = new ArrayList<>();
-    private static final HashMap<String, Advantage> ADVANTAGES = new HashMap<>();
-    private static final HashMap<String, Weakness> WEAKNESSES = new HashMap<>();
-    private static final HashMap<String, Clan> CLANS = new HashMap<>();
-    private static final HashMap<String, Attribute> ATTRIBUTES = new HashMap<>();
-    private static final HashMap<String, Merit> MERITS = new HashMap<>();
-    private static final HashMap<String, Flaw> FLAWS = new HashMap<>();
-    private static final HashMap<String, Road> ROADS = new HashMap<>();
 
     /**
      * @param args the command line arguments

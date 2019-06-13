@@ -48,10 +48,10 @@ import java.util.Objects;
 public abstract class PrintBase extends JPanel implements TranslatableComponent {
     private final PageFormat pageFormat;
     private final JPanel innerPanel;
-    private Character character;
+    private final Character character;
     private final GridBagConstraints constraints;
     private GridBagLayout layout;
-    private Configuration configuration;
+    private final Configuration configuration;
     private LanguageInterface language;
     private Class followingPage = null;
     private Class previousPage = null;

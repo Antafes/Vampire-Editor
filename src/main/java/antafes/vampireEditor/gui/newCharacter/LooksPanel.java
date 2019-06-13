@@ -51,7 +51,7 @@ import java.util.*;
  * @author Marian Pollzien
  */
 public class LooksPanel extends javax.swing.JPanel {
-    static int DEFAULT_GENERATION = 12;
+    static final int DEFAULT_GENERATION = 12;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;

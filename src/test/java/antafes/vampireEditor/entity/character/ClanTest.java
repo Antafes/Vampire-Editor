@@ -123,7 +123,7 @@ public class ClanTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.clan.equals(null));
+        Assert.assertNotEquals(this.clan, null);
     }
 
     public void testDifferentObject() {
