@@ -329,9 +329,8 @@ public class CharacterStorage extends BaseStorage {
 
         RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         Element road = XMLParser.getTagElement("road", root);
-        Road.Builder roadBuilder = null;
         try {
-            roadBuilder = new Road.Builder()
+            Road.Builder roadBuilder = new Road.Builder()
                 .fillDataFromObject(roadStorage.getEntity(road.getAttribute("key")))
                 .setValue(XMLParser.getTagValueInt("road", root));
             builder.setRoad(roadBuilder.build());

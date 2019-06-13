@@ -97,7 +97,7 @@ public class AttributeTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.attribute.equals(null));
+        Assert.assertNotEquals(this.attribute, null);
     }
 
     public void testDifferentObject() {

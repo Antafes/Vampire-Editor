@@ -48,10 +48,10 @@ public class AbilitiesPanel extends BaseListPanel {
     /**
      * The maximum of points per ability that can be issued with ability points instead of additional points.
      */
-    private int maxCreationPoints = 3;
+    private static final int MAX_CREATION_POINTS = 3;
 
     /**
-     * The amount of points above the maximum defined in this.maxCreationPoints
+     * The amount of points above the maximum defined in this.MAX_CREATION_POINTS
      */
     private int amountAboveMaximum = 0;
 
@@ -195,9 +195,9 @@ public class AbilitiesPanel extends BaseListPanel {
             JSpinner spinner = (JSpinner) component;
             int value = Integer.parseInt(spinner.getValue().toString());
 
-            if (value > this.maxCreationPoints) {
-                this.amountAboveMaximum += value - this.maxCreationPoints;
-                value = this.maxCreationPoints;
+            if (value > MAX_CREATION_POINTS) {
+                this.amountAboveMaximum += value - MAX_CREATION_POINTS;
+                value = MAX_CREATION_POINTS;
             }
 
             sum += value;
@@ -207,7 +207,7 @@ public class AbilitiesPanel extends BaseListPanel {
     }
 
     /**
-     * The amount of points above the maximum defined in this.maxCreationPoints
+     * The amount of points above the maximum defined in this.MAX_CREATION_POINTS
      *
      * @return
      */

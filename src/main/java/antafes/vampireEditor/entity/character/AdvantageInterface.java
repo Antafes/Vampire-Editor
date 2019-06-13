@@ -30,7 +30,7 @@ public interface AdvantageInterface {
     /**
      * List of advantage types.
      */
-    public static enum AdvantageType implements EntityTypeInterface {
+    public enum AdvantageType implements EntityTypeInterface {
         BACKGROUND,
         DISCIPLINE,
         VIRTUE

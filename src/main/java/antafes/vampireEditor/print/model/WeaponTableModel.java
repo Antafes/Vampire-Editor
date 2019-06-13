@@ -30,24 +30,23 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 public class WeaponTableModel implements TableModel {
-    private LanguageInterface language;
-    private String[] columnNames;
+    private final String[] columnNames;
 
     /**
      * Constructor
      */
     public WeaponTableModel() {
         Configuration configuration = Configuration.getInstance();
-        this.language = configuration.getLanguageObject();
+        LanguageInterface language = configuration.getLanguageObject();
 
         this.columnNames = new String[]{
-            this.language.translate("weapon/attack"),
-            this.language.translate("diff."),
-            this.language.translate("damage"),
-            this.language.translate("range"),
-            this.language.translate("rate"),
-            this.language.translate("ammo"),
-            this.language.translate("conceal")
+            language.translate("weapon/attack"),
+            language.translate("diff."),
+            language.translate("damage"),
+            language.translate("range"),
+            language.translate("rate"),
+            language.translate("ammo"),
+            language.translate("conceal")
         };
     }
 

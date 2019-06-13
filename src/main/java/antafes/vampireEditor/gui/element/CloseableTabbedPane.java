@@ -103,8 +103,8 @@ public class CloseableTabbedPane extends JTabbedPane {
      * Close action handler.
      */
     private class TabCloseActionHandler implements ActionListener {
-        private Component tab;
-        private CloseableTabbedPane pane;
+        private final Component tab;
+        private final CloseableTabbedPane pane;
 
         /**
          * Constructor

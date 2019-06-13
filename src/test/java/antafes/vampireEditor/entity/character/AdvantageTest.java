@@ -98,7 +98,7 @@ public class AdvantageTest {
     }
 
     public void testObjectNull() {
-        Assert.assertFalse(this.advantage.equals(null));
+        Assert.assertNotEquals(this.advantage, null);
     }
 
     public void testDifferentObject() {

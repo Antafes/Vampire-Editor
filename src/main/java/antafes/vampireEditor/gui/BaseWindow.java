@@ -107,15 +107,14 @@ public class BaseWindow extends javax.swing.JFrame {
                     );
                     switch(result){
                         case JOptionPane.YES_OPTION:
-                        super.approveSelection();
-                        return;
+                            super.approveSelection();
+                            return;
                         case JOptionPane.NO_OPTION:
-                        return;
                         case JOptionPane.CLOSED_OPTION:
-                        return;
+                            return;
                         case JOptionPane.CANCEL_OPTION:
-                        cancelSelection();
-                        return;
+                            cancelSelection();
+                            return;
                     }
                 }
                 super.approveSelection();

@@ -32,13 +32,6 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 abstract public class BaseListPanel extends BasePanel {
-    /**
-     * Initialize everything.
-     */
-    @Override
-    protected void init() {
-        super.init();
-    }
 
     /**
      * Add labels and spinners by the given list and under the given headline.
