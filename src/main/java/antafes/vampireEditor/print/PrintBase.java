@@ -21,22 +21,24 @@
  */
 package antafes.vampireEditor.print;
 
-import org.apache.commons.lang3.StringUtils;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.gui.utility.Font;
 import antafes.vampireEditor.gui.TranslatableComponent;
+import antafes.vampireEditor.gui.utility.Font;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.element.BarLabel;
-import antafes.vampireEditor.print.utility.Dot;
 import antafes.vampireEditor.print.element.DotElement;
+import antafes.vampireEditor.print.utility.Dot;
 import antafes.vampireEditor.print.utility.StringProperties;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
@@ -45,7 +47,7 @@ import java.util.Objects;
  *
  * @author Marian Pollzien
  */
-public abstract class PrintBase extends JPanel implements TranslatableComponent {
+public abstract class PrintBase extends JPanel implements TranslatableComponent, Printable {
     private final PageFormat pageFormat;
     private final JPanel innerPanel;
     private final Character character;
@@ -58,6 +60,11 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent 
     private int maxY = 0;
 
     public PrintBase(Character character) {
+        this(character, true);
+    }
+
+    public PrintBase(Character character, boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
         this.configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
         this.innerPanel = new JPanel();
@@ -86,7 +93,8 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent 
     private void init() {
         this.layout = new GridBagLayout();
         this.innerPanel.setLayout(this.layout);
-        Dimension size = new Dimension(this.getImageableWidth(), 0);
+        // Reduced the width by 20 to get a gap of 10 on each side
+        Dimension size = new Dimension(this.getImageableWidth() - 20, 0);
         this.innerPanel.setSize(size);
         this.innerPanel.setPreferredSize(size);
         this.innerPanel.setBackground(Color.WHITE);
@@ -793,5 +801,38 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent 
         public int getPosition() {
             return this.position;
         }
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        super.setSize(width, height);
+
+        Dimension size = this.innerPanel.getSize();
+        size.height = height;
+        this.innerPanel.setSize(size);
+    }
+
+    @Override
+    public void setSize(Dimension d) {
+        super.setSize(d);
+
+        Dimension size = this.innerPanel.getSize();
+        size.height = d.height;
+        this.innerPanel.setSize(size);
+    }
+
+    @Override
+    public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+        // There are currently 4 print pages and as the page index is zero based, this should only reach 3
+        if (pageIndex > 3) {
+            return Printable.NO_SUCH_PAGE;
+        }
+
+        Graphics2D graphics2D = (Graphics2D) graphics;
+        graphics2D.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+        this.print(graphics2D);
+
+        return Printable.PAGE_EXISTS;
     }
 }

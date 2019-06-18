@@ -81,6 +81,8 @@ public class German extends Language {
         this.getTranslations().put("openMnemonic", "f");
         this.getTranslations().put("save", "Speichern");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("print", "Drucken");
+        this.getTranslations().put("printMnemonic", "D");
         this.getTranslations().put("existingFile", "Existierende Datei");
         this.getTranslations().put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
         this.getTranslations().put("couldNotLoad", "Laden fehlgeschlagen");
@@ -162,6 +164,8 @@ public class German extends Language {
      * Add texts only used on the print and print preview
      */
     private void print() {
+        this.getTranslations().put("printCharacter", "Print character");
+
         this.getTranslations().put("merit", "Vorzug");
         this.getTranslations().put("flaw", "Schwäche");
         this.getTranslations().put("rituals", "Rituale");

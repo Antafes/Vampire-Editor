@@ -33,7 +33,7 @@ import java.awt.*;
  */
 public class DotElement extends JPanel {
     private GridLayout layout;
-    private final int dotSize = 14;
+    private final int dotSize = 13;
 
     public DotElement() {
         this.init();

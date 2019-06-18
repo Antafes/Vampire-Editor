@@ -78,9 +78,11 @@ public class English extends Language {
         this.getTranslations().put("new", "New");
         this.getTranslations().put("newMnemonic", "N");
         this.getTranslations().put("open", "Open");
-        this.getTranslations().put("openMnemonic", "S");
+        this.getTranslations().put("openMnemonic", "O");
         this.getTranslations().put("save", "Save");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("print", "Print");
+        this.getTranslations().put("printMnemonic", "P");
         this.getTranslations().put("existingFile", "Existing file");
         this.getTranslations().put("fileExists", "The selected file already exists, overwrite?");
         this.getTranslations().put("couldNotLoad", "Could not load");
@@ -162,6 +164,8 @@ public class English extends Language {
      * Add texts only used on the print and print preview
      */
     private void print() {
+        this.getTranslations().put("printCharacter", "Print character");
+
         this.getTranslations().put("merit", "Merit");
         this.getTranslations().put("flaw", "Flaw");
         this.getTranslations().put("rituals", "Rituals");

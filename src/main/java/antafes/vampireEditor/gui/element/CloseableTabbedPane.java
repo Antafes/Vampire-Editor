@@ -23,6 +23,8 @@
 package antafes.vampireEditor.gui.element;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.gui.BaseWindow;
+import sun.awt.SunToolkit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -126,6 +128,12 @@ public class CloseableTabbedPane extends JTabbedPane {
         @Override
         public void actionPerformed(ActionEvent e) {
             this.pane.remove(this.tab);
+            BaseWindow window = (BaseWindow) SunToolkit.getContainingWindow(this.pane);
+
+            if (!window.isAnyCharacterLoaded()) {
+                window.disablePrintMenuItem();
+                window.disableSaveMenuItem();
+            }
         }
     }
 }
