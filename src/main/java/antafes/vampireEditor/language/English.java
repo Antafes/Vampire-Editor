@@ -88,6 +88,7 @@ public class English extends Language {
         this.getTranslations().put("couldNotLoad", "Could not load");
         this.getTranslations().put("couldNotLoadCharacter", "Could not load the character.");
         this.getTranslations().put("close", "Close");
+        this.getTranslations().put("loadingCharacter", "Loading character, please wait");
     }
 
     /**

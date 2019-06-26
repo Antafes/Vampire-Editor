@@ -385,42 +385,47 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
-            this.configuration.saveProperties();
-            CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+            ShowWaitAction waitAction = new ShowWaitAction(this);
+            waitAction.show(aVoid -> {
+                this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
+                this.configuration.saveProperties();
+                CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
-            try {
-                antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+                try {
+                    antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
 
-                int characterTab = this.isCharacterLoaded(character);
-                if (characterTab != -1) {
-                    this.charactersTabPane.setSelectedIndex(characterTab);
-                    VampireEditor.log("Character was already open, switched to tab.");
-                    return;
+                    int characterTab = this.isCharacterLoaded(character);
+                    if (characterTab != -1) {
+                        this.charactersTabPane.setSelectedIndex(characterTab);
+                        VampireEditor.log("Character was already open, switched to tab.");
+                        return null;
+                    }
+
+                    this.addCharacter(character);
+                    this.printMenuItem.setEnabled(true);
+                    this.saveMenuItem.setEnabled(true);
+                    VampireEditor.log("Loaded character " + character.getName());
+                } catch (Exception ex) {
+                    Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(
+                        this,
+                        this.language.translate("couldNotLoadCharacter"),
+                        this.language.translate("couldNotLoad"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    ArrayList<String> list = new ArrayList<>(
+                        Collections.singletonList(ex.getMessage())
+                    );
+
+                    for (Throwable throwable : ex.getSuppressed()) {
+                        list.add(throwable.getMessage());
+                    }
+
+                    VampireEditor.log(list);
                 }
 
-                this.addCharacter(character);
-                this.printMenuItem.setEnabled(true);
-                this.saveMenuItem.setEnabled(true);
-                VampireEditor.log("Loaded character " + character.getName());
-            } catch (Exception ex) {
-                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(
-                    this,
-                    this.language.translate("couldNotLoadCharacter"),
-                    this.language.translate("couldNotLoad"),
-                    JOptionPane.ERROR_MESSAGE
-                );
-                ArrayList<String> list = new ArrayList<>(
-                    Collections.singletonList(ex.getMessage())
-                );
-
-                for (Throwable throwable : ex.getSuppressed()) {
-                    list.add(throwable.getMessage());
-                }
-
-                VampireEditor.log(list);
-            }
+                return null;
+            });
         }
     }
 

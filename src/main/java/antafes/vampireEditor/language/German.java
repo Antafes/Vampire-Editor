@@ -88,6 +88,7 @@ public class German extends Language {
         this.getTranslations().put("couldNotLoad", "Laden fehlgeschlagen");
         this.getTranslations().put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
         this.getTranslations().put("close", "Schließen");
+        this.getTranslations().put("loadingCharacter", "Lade Character, bitte warten");
     }
 
     /**
