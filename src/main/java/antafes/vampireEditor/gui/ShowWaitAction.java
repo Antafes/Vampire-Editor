@@ -31,9 +31,9 @@ import java.util.function.Function;
 
 class ShowWaitAction {
     protected static final long SLEEP_TIME = 3 * 1000;
-    private JFrame window;
+    private Window window;
 
-    public ShowWaitAction(JFrame window) {
+    public ShowWaitAction(Window window) {
         this.window = window;
     }
 
