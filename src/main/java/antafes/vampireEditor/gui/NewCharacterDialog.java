@@ -609,15 +609,20 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.advantagesPanel.fillCharacter(builder);
         this.lastStepsPanel.fillCharacter(builder);
 
-        try {
-            this.parent.addCharacter(builder.build());
-            VampireEditor.log(new ArrayList<>(
-                Collections.singletonList("closing window")
-            ));
-            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        } catch (EntityException ex) {
-            Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ShowWaitAction waitAction = new ShowWaitAction(this);
+        waitAction.show(aVoid -> {
+            try {
+                this.parent.addCharacter(builder.build());
+                VampireEditor.log(new ArrayList<>(
+                    Collections.singletonList("closing window")
+                ));
+                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            } catch (EntityException ex) {
+                Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return null;
+        });
     }
 
     /**

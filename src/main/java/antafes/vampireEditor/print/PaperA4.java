@@ -45,6 +45,6 @@ public class PaperA4 extends Paper {
      */
     private void init() {
         this.setSize(A4_WIDTH, A4_HEIGHT);
-        this.setImageableArea(INCH, INCH, A4_WIDTH - 2 * INCH, A4_HEIGHT - 2 * INCH);
+        this.setImageableArea(0, 0, A4_WIDTH, A4_HEIGHT);
     }
 }

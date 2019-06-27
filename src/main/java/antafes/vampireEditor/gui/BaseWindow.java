@@ -29,6 +29,8 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.language.LanguageInterface;
+import antafes.vampireEditor.print.PaperA4;
+import antafes.vampireEditor.print.PrintBase;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -36,6 +38,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.awt.print.Book;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +75,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private JFileChooser saveFileChooser;
     private JMenuItem saveMenuItem;
     private JMenuItem openMenuItem;
+    private JMenuItem printMenuItem;
 
     /**
      * Creates new form BaseWindow
@@ -127,6 +134,7 @@ public class BaseWindow extends javax.swing.JFrame {
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
+        printMenuItem = new JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -205,7 +213,14 @@ public class BaseWindow extends javax.swing.JFrame {
         saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(this::saveMenuItemActionPerformed);
+        saveMenuItem.setEnabled(false);
         fileMenu.add(saveMenuItem);
+
+        printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        printMenuItem.setText("Print");
+        printMenuItem.addActionListener(this::printMenuItemActionPerformed);
+        printMenuItem.setEnabled(false);
+        fileMenu.add(printMenuItem);
 
         closeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         closeMenuItem.setText("Quit");
@@ -370,41 +385,100 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
-            this.configuration.saveProperties();
-            CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+            ShowWaitAction waitAction = new ShowWaitAction(this);
+            waitAction.show(aVoid -> {
+                this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
+                this.configuration.saveProperties();
+                CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
-            try {
-                antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+                try {
+                    antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
 
-                int characterTab = this.isCharacterLoaded(character);
-                if (characterTab != -1) {
-                    this.charactersTabPane.setSelectedIndex(characterTab);
-                    VampireEditor.log("Character was already open, switched to tab.");
-                    return;
+                    int characterTab = this.isCharacterLoaded(character);
+                    if (characterTab != -1) {
+                        this.charactersTabPane.setSelectedIndex(characterTab);
+                        VampireEditor.log("Character was already open, switched to tab.");
+                        return null;
+                    }
+
+                    this.addCharacter(character);
+                    this.printMenuItem.setEnabled(true);
+                    this.saveMenuItem.setEnabled(true);
+                    VampireEditor.log("Loaded character " + character.getName());
+                } catch (Exception ex) {
+                    Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(
+                        this,
+                        this.language.translate("couldNotLoadCharacter"),
+                        this.language.translate("couldNotLoad"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    ArrayList<String> list = new ArrayList<>(
+                        Collections.singletonList(ex.getMessage())
+                    );
+
+                    for (Throwable throwable : ex.getSuppressed()) {
+                        list.add(throwable.getMessage());
+                    }
+
+                    VampireEditor.log(list);
                 }
 
-                this.addCharacter(character);
-                VampireEditor.log("Loaded character " + character.getName());
-            } catch (Exception ex) {
-                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(
-                    this,
-                    this.language.translate("couldNotLoadCharacter"),
-                    this.language.translate("couldNotLoad"),
-                    JOptionPane.ERROR_MESSAGE
-                );
-                ArrayList<String> list = new ArrayList<>(
-                    Collections.singletonList(ex.getMessage())
-                );
-
-                for (Throwable throwable : ex.getSuppressed()) {
-                    list.add(throwable.getMessage());
-                }
-
-                VampireEditor.log(list);
-            }
+                return null;
+            });
         }
+    }
+
+    /**
+     * Action performed event for the print menu entry.
+     *
+     * @param evt Event object
+     */
+    private void printMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        if (!this.isAnyCharacterLoaded()) {
+            return;
+        }
+
+        PrinterJob printerJob = PrinterJob.getPrinterJob();
+        PageFormat pageFormat = printerJob.defaultPage();
+        PaperA4 paper = new PaperA4();
+        pageFormat.setPaper(paper);
+        printerJob.setJobName(this.language.translate("printCharacter"));
+        Dimension dimension = new Dimension((int) pageFormat.getWidth(), (int) pageFormat.getHeight());
+
+        Book book = new Book();
+        ArrayList<PrintBase> pages = ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getPrintPages();
+        for (PrintBase page: pages) {
+            book.append(page, pageFormat);
+        }
+
+        printerJob.setPageable(book);
+
+        if (!printerJob.printDialog()) {
+            return;
+        }
+
+        try {
+            printerJob.print();
+        } catch (PrinterException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Disable the save menu item.
+     */
+    public void disableSaveMenuItem()
+    {
+        this.saveMenuItem.setEnabled(false);
+    }
+
+    /**
+     * Disable the print menu item.
+     */
+    public void disablePrintMenuItem()
+    {
+        this.printMenuItem.setEnabled(false);
     }
 
     /**
@@ -483,6 +557,8 @@ public class BaseWindow extends javax.swing.JFrame {
         this.openMenuItem.setMnemonic(this.language.translate("openMnemonic").charAt(0));
         this.saveMenuItem.setText(this.language.translate("save"));
         this.saveMenuItem.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
+        this.printMenuItem.setText(this.language.translate("print"));
+        this.printMenuItem.setMnemonic(this.language.translate("printMnemonic").charAt(0));
     }
 
     /**
@@ -520,6 +596,8 @@ public class BaseWindow extends javax.swing.JFrame {
             characterTabbedPane.init();
             this.charactersTabPane.add(character.getName(), characterTabbedPane);
             this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(characterTabbedPane));
+            this.printMenuItem.setEnabled(true);
+            this.saveMenuItem.setEnabled(true);
         } catch (Exception ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -539,7 +617,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @return
      */
-    private boolean isAnyCharacterLoaded() {
+    public boolean isAnyCharacterLoaded() {
         try {
             ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
             return true;

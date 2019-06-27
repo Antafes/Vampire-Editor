@@ -44,7 +44,17 @@ public class General extends PrintBase {
      * @param character The character to display
      */
     public General(Character character) {
-        super(character);
+        this(character, true);
+    }
+
+    /**
+     * Create a new looks print object.
+     *
+     * @param character        The character to display
+     * @param isDoubleBuffered Activates or deactivates double buffering
+     */
+    public General(Character character, boolean isDoubleBuffered) {
+        super(character, isDoubleBuffered);
 
         this.setFollowingPage(MeritsAndFlaws.class);
     }

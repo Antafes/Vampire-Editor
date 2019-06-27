@@ -27,6 +27,8 @@ import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PrintBase;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,6 +42,7 @@ import java.util.logging.Logger;
 public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
     private antafes.vampireEditor.entity.Character character;
     private PrintBase page;
+    private JScrollPane scrollPane;
 
     /**
      * Start construction of the print preview
@@ -67,22 +70,18 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                 }
             }
 
-            UIManager.setLookAndFeel(previousLF);
-
-            JScrollPane scrollPane = new JScrollPane();
-            scrollPane.setBackground(Color.WHITE);
-            scrollPane.setViewportView(this.page);
-            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            this.scrollPane = new JScrollPane();
+            this.scrollPane.setBackground(Color.WHITE);
+            this.scrollPane.setViewportView(this.page);
+            this.scrollPane.getVerticalScrollBar().setUnitIncrement(16);
             GroupLayout layout = new GroupLayout(this);
             this.setLayout(layout);
 
+            UIManager.setLookAndFeel(previousLF);
+
             BasicArrowButton rightButton = new BasicArrowButton(BasicArrowButton.EAST);
             rightButton.addActionListener((ActionEvent e) -> {
-                PrintBase nextPage = this.page.getFollowingPageObject();
-                nextPage.create();
-                this.page = nextPage;
-                this.removeAll();
-                this.addContent();
+                this.nextPage();
             });
 
             if (this.page.getFollowingPageObject() == null) {
@@ -91,11 +90,7 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
 
             BasicArrowButton leftButton = new BasicArrowButton(BasicArrowButton.WEST);
             leftButton.addActionListener((ActionEvent e) -> {
-                PrintBase nextPage = this.page.getPreviousPageObject();
-                nextPage.create();
-                this.page = nextPage;
-                this.removeAll();
-                this.addContent();
+                this.previousPage();
             });
 
             if (this.page.getPreviousPageObject() == null) {
@@ -114,7 +109,7 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                     .addGroup(
                         layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
+                            .addComponent(this.scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
                             .addContainerGap()
                     )
             );
@@ -130,7 +125,7 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                                 .addComponent(rightButton, 20, 20, 20)
                         )
                         .addGap(5)
-                        .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                        .addComponent(this.scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                         .addContainerGap()
                 )
             );
@@ -163,5 +158,39 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
     @Override
     public void updateTexts() {
         this.page.updateTexts();
+    }
+
+    /**
+     * Switch to the next page.
+     */
+    private void nextPage() {
+        PrintBase nextPage = this.page.getFollowingPageObject();
+        nextPage.create();
+        this.page = nextPage;
+        this.removeAll();
+        this.addContent();
+    }
+
+    /**
+     * Switch to the previous page.
+     */
+    private void previousPage() {
+        PrintBase previousPage = this.page.getPreviousPageObject();
+        previousPage.create();
+        this.page = previousPage;
+        this.removeAll();
+        this.addContent();
+    }
+
+    /**
+     * Paint the contents of the preview pane.
+     *
+     * @param graphics Graphics context in which to paint
+     */
+    public void printContent(Graphics graphics) {
+        Border oldBorder = this.scrollPane.getBorder();
+        this.scrollPane.setBorder(new EmptyBorder(oldBorder.getBorderInsets(this.scrollPane)));
+        this.scrollPane.paint(graphics);
+        this.scrollPane.setBorder(oldBorder);
     }
 }

@@ -25,9 +25,13 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.language.LanguageInterface;
+import antafes.vampireEditor.print.General;
+import antafes.vampireEditor.print.PaperA4;
+import antafes.vampireEditor.print.PrintBase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * A tabbed panel for displaying a character.
@@ -38,6 +42,8 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private final Configuration configuration;
     private LanguageInterface language;
     private antafes.vampireEditor.entity.Character character = null;
+    private PrintPreviewPanel printPreview;
+    private ArrayList<PrintBase> printPages;
 
     /**
      * Creates new form CharacterFrame
@@ -45,6 +51,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     public CharacterTabbedPane() {
         this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
+        this.printPages = new ArrayList<>();
     }
 
     /**
@@ -132,11 +139,65 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      * Add the print preview panel.
      */
     private void addPrintPreviewPanel() {
-        PrintPreviewPanel panel = new PrintPreviewPanel();
-        panel.setCharacter(this.character);
-        panel.start();
-        this.add(panel);
-        this.setTitleAt(this.indexOfComponent(panel), this.language.translate("printPreview"));
+        this.printPreview = new PrintPreviewPanel();
+        this.printPreview.setCharacter(this.character);
+        this.printPreview.start();
+        this.add(this.printPreview);
+        this.setTitleAt(this.indexOfComponent(this.printPreview), this.language.translate("printPreview"));
+        this.fillPrintPages();
+    }
+
+    /**
+     * Fill in every available print page.
+     */
+    private void fillPrintPages()
+    {
+        PaperA4 paper = new PaperA4();
+        Dimension dimension = new Dimension((int) paper.getImageableWidth(), (int) paper.getImageableHeight());
+        General generalPage = new General(this.character);
+        generalPage.setSize(dimension);
+        generalPage.create();
+        this.layoutComponent(generalPage);
+        this.printPages.add(generalPage);
+        PrintBase page = generalPage.getFollowingPageObject();
+
+        do {
+            page.setSize(dimension);
+            page.create();
+            this.layoutComponent(page);
+            this.printPages.add(page);
+            page = page.getFollowingPageObject();
+        } while (page != null);
+    }
+
+    /**
+     * Layout the component and each child element in it.
+     *
+     * @param component The component to layout
+     */
+    private void layoutComponent(Component component)
+    {
+        synchronized (component.getTreeLock())
+        {
+            component.doLayout();
+
+            if (component instanceof Container)
+            {
+                for (Component child : ((Container)component).getComponents())
+                {
+                    this.layoutComponent(child);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the print preview panel.
+     *
+     * @return
+     */
+    public PrintPreviewPanel getPrintPreview() {
+        return printPreview;
     }
 
     /**
@@ -155,6 +216,15 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      */
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    /**
+     * Get the list of print pages.
+     *
+     * @return
+     */
+    public ArrayList<PrintBase> getPrintPages() {
+        return this.printPages;
     }
 
     /**
