@@ -2,15 +2,19 @@
 <weaknesses>
     <weakness key="obsession">
         <English>Obsession with highest intellectual or creative ability.</English>
+        <German>Besessen von der höchsten intelektuellen oder schöpferischen Fähigkeit.</German>
     </weakness>
     <weakness key="darkening">
         <English>Skin darkens with age</English>
+        <German>Die Haut dunkelt mit dem Alter</German>
     </weakness>
     <weakness key="easierFrenzy">
         <English>Fall easier into frenzy and can't prevent it with willpower</English>
+        <German>Verfallen leichter in Raserei und können sie keine Willenskraft zum Verhindern einsetzen</German>
     </weakness>
     <weakness key="corpse-like">
         <English>Appear ashy and corpse-like</English>
+        <German>Leichenhaftes Aussehen</German>
     </weakness>
     <weakness key="frenzyTraits">
         <English>Frenzy will left animal traits</English>
@@ -22,6 +26,7 @@
     </weakness>
     <weakness key="irredeemableDerangement">
         <English>Irredeemable derangement</English>
+        <German>Unheilbare Geistesstörung</German>
     </weakness>
     <weakness key="monstrousAppearance">
         <English>Monstrous appearance</English>
@@ -29,6 +34,7 @@
     </weakness>
     <weakness key="personalTrait">
         <English>Personal trait</English>
+        <German>Persönliche Schlüsseleigenschaft</German>
     </weakness>
     <weakness key="sunlightAllergy">
         <English>Stronger sunlight allergy</English>
