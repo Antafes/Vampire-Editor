@@ -142,12 +142,14 @@ public class BarLabel extends JLabel {
         this.textLabel = new JLabel() {
             @Override
             protected void paintComponent(Graphics g) {
-                FontMetrics fontMetrics = this.getFontMetrics(this.getFont());
-                int textWidth = fontMetrics.stringWidth(this.getText());
-                int textHeight = fontMetrics.getHeight();
-                int x = this.getPreferredSize().width / 2 - textWidth / 2;
-                g.setColor(Color.WHITE);
-                g.fillRect(x, TOP, textWidth + 4, textHeight + 4);
+                if (!this.getText().isEmpty()) {
+                    FontMetrics fontMetrics = this.getFontMetrics(this.getFont());
+                    int textWidth = fontMetrics.stringWidth(this.getText());
+                    int textHeight = fontMetrics.getHeight();
+                    int x = this.getPreferredSize().width / 2 - textWidth / 2;
+                    g.setColor(Color.WHITE);
+                    g.fillRect(x, TOP, textWidth + 4, textHeight + 4);
+                }
 
                 super.paintComponent(g);
             }
