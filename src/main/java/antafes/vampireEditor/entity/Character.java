@@ -23,6 +23,7 @@ package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.utility.StringComparator;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -731,8 +732,11 @@ public class Character extends BaseEntity {
      * @return List of attributes
      */
     public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
-        return (ArrayList) this.attributes.stream()
+        ArrayList attributes = (ArrayList) this.attributes.stream()
             .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
+        attributes.sort(new StringComparator());
+
+        return attributes;
     }
 
     /**
@@ -752,8 +756,11 @@ public class Character extends BaseEntity {
      * @return List of abilities
      */
     public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
-        return (ArrayList) this.abilities.stream()
+        ArrayList abilities = (ArrayList) this.abilities.stream()
             .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
+        abilities.sort(new StringComparator());
+
+        return abilities;
     }
 
     /**
@@ -773,8 +780,11 @@ public class Character extends BaseEntity {
      * @return List of advantages
      */
     public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
-        return (ArrayList) this.advantages.stream()
+        ArrayList advantages = (ArrayList) this.advantages.stream()
             .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
+        advantages.sort(new StringComparator());
+
+        return advantages;
     }
 
     /**
