@@ -3,46 +3,55 @@
     <road key="roadOfBeast">
         <name>
             <English>Road of Beast</English>
+            <German>Der Weg des Tiers</German>
         </name>
     </road>
     <road key="roadOfHeaven">
         <name>
             <English>Road of Heaven</English>
+            <German>Der Weg des Himmels</German>
         </name>
     </road>
     <road key="roadOfHumanity">
         <name>
             <English>Road of Humanity</English>
+            <German>Der Weg der Menschlichkeit</German>
         </name>
     </road>
     <road key="roadOfKings">
         <name>
             <English>Road of Kings</English>
+            <German>Der Weg der Könige</German>
         </name>
     </road>
     <road key="roadOfLilith">
         <name>
             <English>Road of Lilith</English>
+            <German>Der Weg der Lilith</German>
         </name>
     </road>
     <road key="roadOfMetamorphosis">
         <name>
             <English>Road of Metamorphosis</English>
+            <German>Der Weg der Metamorphose</German>
         </name>
     </road>
     <road key="roadOfSin">
         <name>
             <English>Road of Sin</English>
+            <German>Der Weg der Sünde</German>
         </name>
     </road>
     <road key="roadOfBones">
         <name>
             <English>Road of Bones</English>
+            <German>Der Weg der Knochen</German>
         </name>
     </road>
     <road key="roadOfYasa">
         <name>
             <English>Road of Yasa</English>
+            <German>Der Weg des Jassa</German>
         </name>
     </road>
 </roads>

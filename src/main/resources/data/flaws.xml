@@ -3,6 +3,7 @@
     <flaw key="deepSleeper">
         <name>
             <English>Deep Sleeper</English>
+            <German>Tiefer Schlaf</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -10,6 +11,7 @@
     <flaw key="nightmares">
         <name>
             <English>Nightmares</English>
+            <German>Albträume</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -17,6 +19,7 @@
     <flaw key="preyExclusion">
         <name>
             <English>Prey Exclusion</English>
+            <German>Beuteausschluss</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -24,6 +27,7 @@
     <flaw key="amnesia">
         <name>
             <English>Amnesia</English>
+            <German>Amnesie</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -31,6 +35,7 @@
     <flaw key="fleshEater">
         <name>
             <English>Flesh Eater</English>
+            <German>Fleischfresser</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -38,6 +43,7 @@
     <flaw key="vengeful">
         <name>
             <English>Vengeful</English>
+            <German>Rache</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -45,6 +51,7 @@
     <flaw key="ethicalProhibition2">
         <name>
             <English>Ethical Prohibition</English>
+            <German>Skrupel</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -52,6 +59,7 @@
     <flaw key="ethicalProhibition4">
         <name>
             <English>Ethical Prohibition</English>
+            <German>Skrupel</German>
         </name>
         <type>MENTAL</type>
         <cost>4</cost>
@@ -59,6 +67,7 @@
     <flaw key="oddGait">
         <name>
             <English>Odd Gait</English>
+            <German>Seltsamer Gang</German>
         </name>
         <type>PHYSICAL</type>
         <cost>1</cost>
@@ -66,6 +75,7 @@
     <flaw key="raggedBite">
         <name>
             <English>Ragged Bite</English>
+            <German>Zackiger Biss</German>
         </name>
         <type>PHYSICAL</type>
         <cost>2</cost>
@@ -73,6 +83,7 @@
     <flaw key="addiction">
         <name>
             <English>Addiction</English>
+            <German>Sucht</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -80,6 +91,7 @@
     <flaw key="monstrous">
         <name>
             <English>Monstrous</English>
+            <German>Monstrosität</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -87,6 +99,7 @@
     <flaw key="permanentWound">
         <name>
             <English>Permanent Wound</English>
+            <German>Dauerhafte Wunde</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -94,6 +107,7 @@
     <flaw key="slowHealing">
         <name>
             <English>Slow Healing</English>
+            <German>Langsame Heilung</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -101,6 +115,7 @@
     <flaw key="child">
         <name>
             <English>Child</English>
+            <German>Kind</German>
         </name>
         <type>PHYSICAL</type>
         <cost>4</cost>
@@ -108,6 +123,7 @@
     <flaw key="impairedSense">
         <name>
             <English>Impaired Sense</English>
+            <German>Eingeschränkter Sinn</German>
         </name>
         <type>PHYSICAL</type>
         <cost>4</cost>
@@ -115,6 +131,7 @@
     <flaw key="mute">
         <name>
             <English>Mute</English>
+            <German>Stummheit</German>
         </name>
         <type>PHYSICAL</type>
         <cost>4</cost>
@@ -122,6 +139,7 @@
     <flaw key="fleshOfTheCorpse">
         <name>
             <English>Flesh of the Corpse</English>
+            <German>Leichenfleisch</German>
         </name>
         <type>PHYSICAL</type>
         <cost>5</cost>
@@ -129,6 +147,7 @@
     <flaw key="unclean2">
         <name>
             <English>Unclean</English>
+            <German>Unrein</German>
         </name>
         <type>PHYSICAL</type>
         <cost>2</cost>
@@ -136,6 +155,7 @@
     <flaw key="unclean3">
         <name>
             <English>Unclean</English>
+            <German>Unrein</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -143,6 +163,7 @@
     <flaw key="uncleanNosferatu">
         <name>
             <English>Unclean - Nosferatu</English>
+            <German>Unrein - Nosferatu</German>
         </name>
         <type>PHYSICAL</type>
         <cost>1</cost>
@@ -150,6 +171,7 @@
     <flaw key="darkSecret">
         <name>
             <English>Dark Secret</English>
+            <German>Dunkles Geheimnis</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -157,6 +179,7 @@
     <flaw key="infamousSire">
         <name>
             <English>Infamous Sire</English>
+            <German>Berüchtigter Erzeuger</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -164,6 +187,7 @@
     <flaw key="mistakenIdentity">
         <name>
             <English>Mistaken Identity</English>
+            <German>Verwechslung</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -171,6 +195,7 @@
     <flaw key="outsider">
         <name>
             <English>Outsider</English>
+            <German>Fremder</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -178,6 +203,7 @@
     <flaw key="siresResentment">
         <name>
             <English>Sire's Resentment</English>
+            <German>Ablehnender Erzeuger</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -185,6 +211,7 @@
     <flaw key="smellOfTheGrave">
         <name>
             <English>Smell of the Grave</English>
+            <German>Grabgeruch</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -192,6 +219,7 @@
     <flaw key="vulgar">
         <name>
             <English>Vulgar</English>
+            <German>Vulgär</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -199,6 +227,7 @@
     <flaw key="apostate">
         <name>
             <English>Apostate</English>
+            <German>Apostat</German>
         </name>
         <type>SOCIAL</type>
         <cost>2</cost>
@@ -206,6 +235,7 @@
     <flaw key="territorial">
         <name>
             <English>Territorial</English>
+            <German>Territorial</German>
         </name>
         <type>SOCIAL</type>
         <cost>2</cost>
@@ -213,6 +243,7 @@
     <flaw key="hunted">
         <name>
             <English>Hunted</English>
+            <German>Gehagt</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -220,6 +251,7 @@
     <flaw key="markedForDeath">
         <name>
             <English>Marked for Death</English>
+            <German>Vogelfrei</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -227,6 +259,7 @@
     <flaw key="oathbreaker">
         <name>
             <English>Oathbreaker</English>
+            <German>Eidbrecher</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -234,6 +267,7 @@
     <flaw key="outspokenHeretic">
         <name>
             <English>Outspoken Heretic</English>
+            <German>Bekennender Ketzer</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -241,6 +275,7 @@
     <flaw key="nameless">
         <name>
             <English>Nameless</English>
+            <German>Namenlos</German>
         </name>
         <type>SOCIAL</type>
         <cost>5</cost>
@@ -248,6 +283,7 @@
     <flaw key="enemy1">
         <name>
             <English>Enemy</English>
+            <German>Feind</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -255,6 +291,7 @@
     <flaw key="enemy2">
         <name>
             <English>Enemy</English>
+            <German>Feind</German>
         </name>
         <type>SOCIAL</type>
         <cost>2</cost>
@@ -262,6 +299,7 @@
     <flaw key="enemy3">
         <name>
             <English>Enemy</English>
+            <German>Feind</German>
         </name>
         <type>SOCIAL</type>
         <cost>3</cost>
@@ -269,6 +307,7 @@
     <flaw key="enemy4">
         <name>
             <English>Enemy</English>
+            <German>Feind</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -276,6 +315,7 @@
     <flaw key="enemy5">
         <name>
             <English>Enemy</English>
+            <German>Feind</German>
         </name>
         <type>SOCIAL</type>
         <cost>5</cost>
@@ -283,6 +323,7 @@
     <flaw key="rivalry1">
         <name>
             <English>Rivalry</English>
+            <German>Rivalität</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -290,6 +331,7 @@
     <flaw key="rivalry2">
         <name>
             <English>Rivalry</English>
+            <German>Rivalität</German>
         </name>
         <type>SOCIAL</type>
         <cost>2</cost>
@@ -297,6 +339,7 @@
     <flaw key="rivalry3">
         <name>
             <English>Rivalry</English>
+            <German>Rivalität</German>
         </name>
         <type>SOCIAL</type>
         <cost>3</cost>
@@ -304,6 +347,7 @@
     <flaw key="rivalry4">
         <name>
             <English>Rivalry</English>
+            <German>Rivalität</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -311,6 +355,7 @@
     <flaw key="rivalry5">
         <name>
             <English>Rivalry</English>
+            <German>Rivalität</German>
         </name>
         <type>SOCIAL</type>
         <cost>5</cost>
@@ -318,6 +363,7 @@
     <flaw key="castNoReflection">
         <name>
             <English>Cast no Reflection</English>
+            <German>Kein Spiegelbild</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -325,6 +371,7 @@
     <flaw key="initiateOfTheRoad">
         <name>
             <English>Initiate of the Road</English>
+            <German>Initiat des Weges</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -332,6 +379,7 @@
     <flaw key="repulsedByGarlic">
         <name>
             <English>Repulsed by Garlic</English>
+            <German>Abgestoßen durch Knoblauch</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -339,6 +387,7 @@
     <flaw key="touchOfFrost">
         <name>
             <English>Touch of Frost</English>
+            <German>Frostige Berührung</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -346,6 +395,7 @@
     <flaw key="cannotEmbrace">
         <name>
             <English>Cannot Embrace</English>
+            <German>Unfruchtbar</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -353,6 +403,7 @@
     <flaw key="eeriePresence">
         <name>
             <English>Eerie Presence</English>
+            <German>Unheimliche Präsenz</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -360,6 +411,7 @@
     <flaw key="repulsiveToAnimals">
         <name>
             <English>Repulsive to Animals</English>
+            <German>Abstoßend für Tiere</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -367,6 +419,7 @@
     <flaw key="thirteenthGeneration">
         <name>
             <English>Thirteenth Generation</English>
+            <German>13. Generation</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -374,6 +427,7 @@
     <flaw key="weakAura">
         <name>
             <English>Weak Aura</English>
+            <German>Schwache Aura</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -381,6 +435,7 @@
     <flaw key="animateShadow">
         <name>
             <English>Animate Shadow</English>
+            <German>Belebter Schatten</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -388,6 +443,7 @@
     <flaw key="cloakedByShadow">
         <name>
             <English>Cloaked by Shadow</English>
+            <German>In Schatten gehüllt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -395,6 +451,7 @@
     <flaw key="haunted">
         <name>
             <English>Haunted</English>
+            <German>Spuk</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -402,6 +459,7 @@
     <flaw key="potentAura">
         <name>
             <English>Potent Aura</English>
+            <German>Starke Aura</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -409,6 +467,7 @@
     <flaw key="cantCrossRunningWater">
         <name>
             <English>Can't cross running Water</English>
+            <German>Kann kein fließendes Wasser überqueren</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -416,6 +475,7 @@
     <flaw key="gripOfTheDamned">
         <name>
             <English>Grip of the Damned</English>
+            <German>Griff der Verdammten</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -423,6 +483,7 @@
     <flaw key="darkFate">
         <name>
             <English>Dark Fate</English>
+            <German>Dunkles Schicksal</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -430,6 +491,7 @@
     <flaw key="harbingerOfTheAbyss">
         <name>
             <English>Harbinger of the Abyss</English>
+            <German>Sendbote der Hölle</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -437,6 +499,7 @@
     <flaw key="lightSensitive">
         <name>
             <English>Light-Sensitive</English>
+            <German>Lichtempfindlich</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -444,6 +507,7 @@
     <flaw key="weakBlood">
         <name>
             <English>Weak Blood</English>
+            <German>Schwaches Blut</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -451,6 +515,7 @@
     <flaw key="cursed1">
         <name>
             <English>Cursed</English>
+            <German>Verflucht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -458,6 +523,7 @@
     <flaw key="cursed2">
         <name>
             <English>Cursed</English>
+            <German>Verflucht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -465,6 +531,7 @@
     <flaw key="cursed3">
         <name>
             <English>Crused</English>
+            <German>Verflucht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -472,6 +539,7 @@
     <flaw key="cursed4">
         <name>
             <English>Crused</English>
+            <German>Verflucht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -479,6 +547,7 @@
     <flaw key="cursed5">
         <name>
             <English>Crused</English>
+            <German>Verflucht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -486,6 +555,7 @@
     <flaw key="demonHounded1">
         <name>
             <English>Demon-Hounded</English>
+            <German>Von Dämonen gejagt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -493,6 +563,7 @@
     <flaw key="demonHounded2">
         <name>
             <English>Demon-Hounded</English>
+            <German>Von Dämonen gejagt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -500,6 +571,7 @@
     <flaw key="demonHounded3">
         <name>
             <English>Demon-Hounded</English>
+            <German>Von Dämonen gejagt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -507,6 +579,7 @@
     <flaw key="demonHounded4">
         <name>
             <English>Demon-Hounded</English>
+            <German>Von Dämonen gejagt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -514,6 +587,7 @@
     <flaw key="demonHounded5">
         <name>
             <English>Demon-Hounded</English>
+            <German>Von Dämonen gejagt</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -521,6 +595,7 @@
     <flaw key="unlucky1">
         <name>
             <English>Unlucky</English>
+            <German>Pech</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -528,6 +603,7 @@
     <flaw key="unlucky2">
         <name>
             <English>Unlucky</English>
+            <German>Pech</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -535,6 +611,7 @@
     <flaw key="unlucky3">
         <name>
             <English>Unlucky</English>
+            <German>Pech</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -542,6 +619,7 @@
     <flaw key="unlucky4">
         <name>
             <English>Unlucky</English>
+            <German>Pech</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -549,6 +627,7 @@
     <flaw key="unlucky5">
         <name>
             <English>Unlucky</English>
+            <German>Pech</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
@@ -556,6 +635,7 @@
     <flaw key="permanentThirdEye2">
         <name>
             <English>Permanent Third Eye</English>
+            <German>Dauerhaftes drittes Auge</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -563,6 +643,7 @@
     <flaw key="permanentThirdEye4">
         <name>
             <English>Permanent Third Eye</English>
+            <German>Dauerhaftes drittes Auge</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
