@@ -625,13 +625,13 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
         this.setMaxY(this.getMaxY() + 1);
         for (int i = 0; i < blockHeight; i++) {
             this.addText(
-                StringUtils.repeat('_', 58),
+                StringUtils.repeat('_', 56),
                 PositionX.LEFT1.getPosition(),
                 this.getMaxY(),
                 3
             );
             this.addText(
-                StringUtils.repeat('_', 58),
+                StringUtils.repeat('_', 56),
                 PositionX.MIDDLE2.getPosition(),
                 this.getMaxY(),
                 3
