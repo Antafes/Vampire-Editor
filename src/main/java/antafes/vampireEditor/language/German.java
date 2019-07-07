@@ -95,7 +95,7 @@ public class German extends Language {
      * Content of the about dialog.
      */
     private void about() {
-        this.getTranslations().put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
+        this.getTranslations().put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.\n\nTeile der Materialien unterliegen den Urheberrechten und Marken der White Wolf Entertainment AB und werden mit Genehmigung verwendet. Alle Rechte vorbehalten. Für weitere Informationen besuchen Sie bitte white-wolf.com.\n\nDas komplette Programm und alles dazu gehörige sind keine offiziellen Materialien von White Wolf.");
     }
 
     /**
