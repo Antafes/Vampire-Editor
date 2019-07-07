@@ -95,7 +95,7 @@ public class German extends Language {
      * Content of the about dialog.
      */
     private void about() {
-        this.getTranslations().put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.");
+        this.getTranslations().put("aboutText", "Dieses Programm wurde von Marian Pollzien erstellt.\n\nTeile des Materials sind Urheberrechte und Warenzeichen von Paradox Interactive AB und werden mit Genehmigung verwendet. Alle Rechte vorbehalten. Für weitere Informationen besuchen Sie bitte worldofdarkness.com.");
     }
 
     /**

@@ -95,7 +95,7 @@ public class English extends Language {
      * Content of the about dialog.
      */
     private void about() {
-        this.getTranslations().put("aboutText", "This tool was created by Marian Pollzien.");
+        this.getTranslations().put("aboutText", "This tool was created by Marian Pollzien.\n\nPortions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit worldofdarkness.com.");
     }
 
     /**

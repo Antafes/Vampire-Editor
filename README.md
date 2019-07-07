@@ -14,3 +14,12 @@ Deployment
 
 If a new version should be released, adjust the version in the VERSION file first and commit it accordingly into the master branch.
 The build pipeline will automatically check if the version has been changed and thus will create a new release.
+
+Copyright and Trademark
+-----------------------
+
+<img src="images/darkpack_logo2.png" width="100" />
+
+Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. 
+All rights reserved. 
+For more information please visit https://worldofdarkness.com.

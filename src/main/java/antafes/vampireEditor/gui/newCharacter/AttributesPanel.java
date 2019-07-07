@@ -330,7 +330,7 @@ public class AttributesPanel extends BaseListPanel {
 
         fields.stream().filter((field) -> (field.getName().equals("appearance"))).map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             int value = (int) spinner.getValue(),
-                maximum = (int) ((SpinnerNumberModel) spinner.getModel()).getMaximum(),
+                maximum = Integer.parseInt(((SpinnerNumberModel) spinner.getModel()).getMaximum().toString()),
                 minimum = 1;
 
             if (clan.getKey().equals("nosferatu")) {
@@ -347,7 +347,7 @@ public class AttributesPanel extends BaseListPanel {
 
             spinner.setModel(
                 new SpinnerNumberModel(
-                    value > maximum ? maximum : value,
+                    Math.min(value, maximum),
                     minimum,
                     maximum,
                     1
