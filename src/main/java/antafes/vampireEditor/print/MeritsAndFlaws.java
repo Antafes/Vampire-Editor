@@ -152,7 +152,7 @@ public class MeritsAndFlaws extends PrintBase {
         for (int i = 0; i < 8; i++) {
             try {
                 this.addString(
-                    StringUtils.repeat('_', 45),
+                    StringUtils.repeat('_', 40),
                     propertiesBuilder
                         .setColumnWidth(3)
                         .setPosX(PositionX.LEFT1.getPosition())
@@ -175,7 +175,7 @@ public class MeritsAndFlaws extends PrintBase {
 
         for (int i = 0; i < 8; i++) {
             this.addValueEntry(
-                "___________________________________",
+                StringUtils.repeat('_', 32),
                 PositionX.RIGHT1.getPosition(),
                 ySkills++,
                 PositionX.RIGHT2.getPosition(),
@@ -200,7 +200,7 @@ public class MeritsAndFlaws extends PrintBase {
         for (int i = 0; i < 8; i++) {
             try {
                 this.addString(
-                    StringUtils.repeat('_', 30),
+                    StringUtils.repeat('_', 28),
                     propertiesBuilder
                         .setPosX(PositionX.LEFT1.getPosition())
                         .setPosY(yName++)
@@ -215,7 +215,7 @@ public class MeritsAndFlaws extends PrintBase {
         for (int i = 0; i < 8; i++) {
             try {
                 this.addString(
-                    StringUtils.repeat('_', 30),
+                    StringUtils.repeat('_', 28),
                     propertiesBuilder
                         .setPosX(PositionX.MIDDLE1.getPosition())
                         .setPosY(ySource++)
@@ -252,7 +252,7 @@ public class MeritsAndFlaws extends PrintBase {
         this.addText(
             StringUtils.rightPad(
                 this.getLanguage().translate("class") + ":",
-                20,
+                19,
                 '_'
             ),
             PositionX.RIGHT2.getPosition(),
@@ -261,7 +261,7 @@ public class MeritsAndFlaws extends PrintBase {
         this.addText(
             StringUtils.rightPad(
                 this.getLanguage().translate("rating") + ":",
-                20,
+                19,
                 '_'
             ),
             PositionX.RIGHT2.getPosition(),
@@ -284,7 +284,7 @@ public class MeritsAndFlaws extends PrintBase {
 
         for (int i = 0; i < 3; i++) {
             this.addText(
-                StringUtils.repeat("_", 20),
+                StringUtils.repeat("_", 19),
                 PositionX.RIGHT2.getPosition(),
                 yRight++,
                 2
