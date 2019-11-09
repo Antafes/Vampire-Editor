@@ -28,7 +28,6 @@ import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.BaseWindow;
-import test.methodselectors.NoTest;
 
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -44,7 +43,6 @@ public class TestCharacterUtility {
      *
      * @return A test character
      */
-    @NoTest
     public static antafes.vampireEditor.entity.Character createTestCharacter() {
         try {
             ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);

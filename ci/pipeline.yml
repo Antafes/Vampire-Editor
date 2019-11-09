@@ -62,6 +62,7 @@ jobs:
           - name: vampire-editor-repo-pr
         run:
           path: ci/test.sh
+          args: ["((maven_access_token))"]
           dir: vampire-editor-repo-pr
         caches:
           - path: maven
@@ -95,6 +96,7 @@ jobs:
       - name: dist
       run:
         path: ci/build-dev.sh
+        args: ["((maven_access_token))"]
         dir: vampire-editor-repo-dev
       caches:
         - path: maven
@@ -139,6 +141,7 @@ jobs:
       - name: dist
       run:
         path: ci/build.sh
+        args: ["((maven_access_token))"]
         dir: vampire-editor-repo
       caches:
         - path: maven
