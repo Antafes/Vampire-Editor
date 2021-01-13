@@ -3,6 +3,7 @@
     <merit key="celestialAttunement">
         <name>
             <English>Celestial Attunement</English>
+            <German>Zeitgefühl</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -10,6 +11,7 @@
     <merit key="commonSense">
         <name>
             <English>Common Sense</English>
+            <German>Gesunder Menschenverstand</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -17,6 +19,7 @@
     <merit key="literacy">
         <name>
             <English>Literacy</English>
+            <German>Bildung</German>
         </name>
         <type>MENTAL</type>
         <cost>1</cost>
@@ -24,6 +27,7 @@
     <merit key="eideticMemory">
         <name>
             <English>Eidetic Memory</English>
+            <German>Fotografisches Gedächtnis</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -31,6 +35,7 @@
     <merit key="lightSleeper">
         <name>
             <English>Light Sleeper</English>
+            <German>Leichter Schlaf</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -38,6 +43,7 @@
     <merit key="multiLingual">
         <name>
             <English>Multi-Lingual</English>
+            <German>Sprachen</German>
         </name>
         <type>MENTAL</type>
         <cost>2</cost>
@@ -45,6 +51,7 @@
     <merit key="ambidextrous">
         <name>
             <English>Ambidextrous</English>
+            <German>Beidhändigkeit</German>
         </name>
         <type>PHYSICAL</type>
         <cost>1</cost>
@@ -52,6 +59,7 @@
     <merit key="deceptiveEating">
         <name>
             <English>Deceptive Eating</English>
+            <German>Essen</German>
         </name>
         <type>PHYSICAL</type>
         <cost>1</cost>
@@ -59,6 +67,7 @@
     <merit key="blushOfHealth">
         <name>
             <English>Blush of Health</English>
+            <German>Rosiger Teint</German>
         </name>
         <type>PHYSICAL</type>
         <cost>2</cost>
@@ -66,6 +75,7 @@
     <merit key="withoutATrace">
         <name>
             <English>Without a Trace</English>
+            <German>Spurlos</German>
         </name>
         <type>PHYSICAL</type>
         <cost>2</cost>
@@ -73,6 +83,7 @@
     <merit key="efficientDigestion">
         <name>
             <English>Efficient Digestion</English>
+            <German>Wirksame Verdauung</German>
         </name>
         <type>PHYSICAL</type>
         <cost>3</cost>
@@ -80,6 +91,7 @@
     <merit key="sturdy">
         <name>
             <English>Sturdy</English>
+            <German>Robust</German>
         </name>
         <type>PHYSICAL</type>
         <cost>4</cost>
@@ -87,6 +99,7 @@
     <merit key="linguaFranca">
         <name>
             <English>Lingua Franca</English>
+            <German>Lingua Franca</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -94,6 +107,7 @@
     <merit key="prestigiousSire">
         <name>
             <English>Prestigious Sire</English>
+            <German>Angesehener Erzeuger</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -101,6 +115,7 @@
     <merit key="theCompanyOfSaintsAndHeroes">
         <name>
             <English>The company of Saints and Heroes</English>
+            <German>Gesellschaft von Heiligen und Helden</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -108,6 +123,7 @@
     <merit key="patron1">
         <name>
             <English>Patron</English>
+            <German>Schirmherr</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -115,6 +131,7 @@
     <merit key="patron2">
         <name>
             <English>Patron</English>
+            <German>Schirmherr</German>
         </name>
         <type>SOCIAL</type>
         <cost>2</cost>
@@ -122,6 +139,7 @@
     <merit key="patron3">
         <name>
             <English>Patron</English>
+            <German>Schirmherr</German>
         </name>
         <type>SOCIAL</type>
         <cost>3</cost>
@@ -129,6 +147,7 @@
     <merit key="patron4">
         <name>
             <English>Patron</English>
+            <German>Schirmherr</German>
         </name>
         <type>SOCIAL</type>
         <cost>4</cost>
@@ -136,6 +155,7 @@
     <merit key="patron5">
         <name>
             <English>Patron</English>
+            <German>Schirmherr</German>
         </name>
         <type>SOCIAL</type>
         <cost>5</cost>
@@ -143,6 +163,7 @@
     <merit key="debtOfGratitude1">
         <name>
             <English>Debt of Gratitude</English>
+            <German>Dankesschuld</German>
         </name>
         <type>SOCIAL</type>
         <cost>1</cost>
@@ -150,6 +171,7 @@
     <merit key="debtOfGratitude3">
         <name>
             <English>Debt of Gratitude</English>
+            <German>Dankesschuld</German>
         </name>
         <type>SOCIAL</type>
         <cost>3</cost>
@@ -157,6 +179,7 @@
     <merit key="inoffensiveToAnimals">
         <name>
             <English>Inoffensive to Animals</English>
+            <German>Harmlos für Tiere</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -164,6 +187,7 @@
     <merit key="clanApostate">
         <name>
             <English>Clan Apostate</English>
+            <German>Abtrünniger des Clans</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -171,6 +195,7 @@
     <merit key="darksight">
         <name>
             <English>Darksight</English>
+            <German>Dunkelsicht</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -178,6 +203,7 @@
     <merit key="medium">
         <name>
             <English>Medium</English>
+            <German>Medium</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -185,6 +211,7 @@
     <merit key="weakAura">
         <name>
             <English>Weak Aura</English>
+            <German>Schwache Aura</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -192,6 +219,7 @@
     <merit key="oracularAbility">
         <name>
             <English>Oracular Ability</English>
+            <German>Pythische Fähigkeit</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -199,6 +227,7 @@
     <merit key="potentAura">
         <name>
             <English>Potent Aura</English>
+            <German>Starke Aura</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -206,6 +235,7 @@
     <merit key="spiritMentor">
         <name>
             <English>Spirit Mentor</English>
+            <German>Geisterhafter Mentor</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -213,6 +243,7 @@
     <merit key="unbondable">
         <name>
             <English>Unbondable</English>
+            <German>Ungebunden</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -220,6 +251,7 @@
     <merit key="trueLove">
         <name>
             <English>True Love</English>
+            <German>Wahre Liebe</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -227,6 +259,7 @@
     <merit key="nineLives">
         <name>
             <English>Nine Lives</English>
+            <German>Neun Leben</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>6</cost>
@@ -234,6 +267,7 @@
     <merit key="lucky1">
         <name>
             <English>Lucky</English>
+            <German>Glück</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>1</cost>
@@ -241,6 +275,7 @@
     <merit key="lucky2">
         <name>
             <English>Lucky</English>
+            <German>Glück</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>2</cost>
@@ -248,6 +283,7 @@
     <merit key="lucky3">
         <name>
             <English>Lucky</English>
+            <German>Glück</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>3</cost>
@@ -255,6 +291,7 @@
     <merit key="lucky4">
         <name>
             <English>Lucky</English>
+            <German>Glück</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>4</cost>
@@ -262,6 +299,7 @@
     <merit key="lucky5">
         <name>
             <English>Lucky</English>
+            <German>Glück</German>
         </name>
         <type>SUPERNATURAL</type>
         <cost>5</cost>
