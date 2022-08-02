@@ -95,11 +95,6 @@ public class BaseWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         languageGroup = new javax.swing.ButtonGroup();
-        aboutDialog = new javax.swing.JDialog(this, true);
-        JPanel jPanel1 = new JPanel();
-        closeAboutButton = new javax.swing.JButton();
-        JScrollPane jScrollPane2 = new JScrollPane();
-        aboutTextPane = new javax.swing.JTextPane();
         saveFileChooser = new javax.swing.JFileChooser(){
             @Override
             public void approveSelection(){
@@ -142,55 +137,7 @@ public class BaseWindow extends javax.swing.JFrame {
         englishMenuItem = new javax.swing.JRadioButtonMenuItem();
         germanMenuItem = new javax.swing.JRadioButtonMenuItem();
 
-        aboutDialog.setModal(true);
-        aboutDialog.setResizable(false);
-        aboutDialog.setSize(new java.awt.Dimension(300, 400));
-
-        closeAboutButton.setText("Close");
-        closeAboutButton.addActionListener(this::closeAboutButtonActionPerformed);
-
-        aboutTextPane.setEditable(false);
-        aboutTextPane.setText("This program was created by Marian Pollzien.");
-        aboutTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                aboutTextPaneKeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(aboutTextPane);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(closeAboutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(closeAboutButton)
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
-        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
-        aboutDialogLayout.setHorizontalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        aboutDialogLayout.setVerticalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        this.createAboutDialog();
 
         saveFileChooser.setCurrentDirectory(null);
 
@@ -237,21 +184,21 @@ public class BaseWindow extends javax.swing.JFrame {
 
         menuBar.add(helpMenu);
 
-        languageMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/english.png"))); // NOI18N
+        languageMenu.setIcon(new ImageIcon(VampireEditor.getResourceInJar("images/english.png"))); // NOI18N
 
         englishMenuItem.addActionListener(this::languageMenuItemActionPerformed);
         languageGroup.add(englishMenuItem);
         englishMenuItem.setSelected(true);
         englishMenuItem.setText("English");
         englishMenuItem.setActionCommand("English");
-        englishMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/english.png"))); // NOI18N
+        englishMenuItem.setIcon(new ImageIcon(VampireEditor.getResourceInJar("images/english.png"))); // NOI18N
         languageMenu.add(englishMenuItem);
 
         germanMenuItem.addActionListener(this::languageMenuItemActionPerformed);
         languageGroup.add(germanMenuItem);
         germanMenuItem.setText("German");
         germanMenuItem.setActionCommand("German");
-        germanMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/german.png"))); // NOI18N
+        germanMenuItem.setIcon(new ImageIcon(VampireEditor.getResourceInJar("images/german.png"))); // NOI18N
         languageMenu.add(germanMenuItem);
 
         menuBar.add(Box.createHorizontalGlue());
@@ -272,6 +219,72 @@ public class BaseWindow extends javax.swing.JFrame {
         );
 
         pack();
+    }
+
+    private void createAboutDialog()
+    {
+        aboutDialog = new javax.swing.JDialog(this, true);
+        JPanel jPanel1 = new JPanel();
+        closeAboutButton = new javax.swing.JButton();
+        JScrollPane jScrollPane2 = new JScrollPane();
+        aboutTextPane = new javax.swing.JTextPane();
+        JLabel darkPackLogo = new JLabel(new ImageIcon(VampireEditor.getResourceInJar("images/darkPackLogo.png")));
+
+        aboutDialog.setModal(true);
+        aboutDialog.setResizable(false);
+        aboutDialog.setSize(new Dimension(300, 400));
+
+        closeAboutButton.setText("Close");
+        closeAboutButton.addActionListener(this::closeAboutButtonActionPerformed);
+
+        aboutTextPane.setEditable(false);
+        aboutTextPane.setText("This program was created by Marian Pollzien.");
+        aboutTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(KeyEvent evt) {
+                aboutTextPaneKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(aboutTextPane);
+
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addComponent(darkPackLogo, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(closeAboutButton, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(darkPackLogo)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(closeAboutButton)
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+
+        GroupLayout aboutDialogLayout = new GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
+        aboutDialogLayout.setHorizontalGroup(
+            aboutDialogLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        aboutDialogLayout.setVerticalGroup(
+            aboutDialogLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
     }
 
     /**
@@ -392,7 +405,7 @@ public class BaseWindow extends javax.swing.JFrame {
                 CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
                 try {
-                    antafes.vampireEditor.entity.Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
+                    Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
 
                     int characterTab = this.isCharacterLoaded(character);
                     if (characterTab != -1) {
@@ -589,7 +602,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param character Character to add
      */
-    public void addCharacter(antafes.vampireEditor.entity.Character character) {
+    public void addCharacter(Character character) {
         try {
             CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
             characterTabbedPane.setCharacter(character);
