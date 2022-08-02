@@ -203,7 +203,7 @@ public class Looks extends PrintBase {
     protected void addVisualsInformation() {
         this.addHeadlines(new String[]{"coterieChart", "characterSketch"});
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 9; i++) {
             this.addText(
                 " ",
                 PositionX.LEFT1.getPosition(),
