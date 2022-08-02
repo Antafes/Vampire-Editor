@@ -190,6 +190,14 @@
             <German>Abtrünniger des Clans</German>
         </name>
         <type>SUPERNATURAL</type>
+        <cost>1</cost>
+    </merit>
+    <merit key="clanApostate2">
+        <name>
+            <English>Clan Apostate</English>
+            <German>Abtrünniger des Clans</German>
+        </name>
+        <type>SUPERNATURAL</type>
         <cost>2</cost>
     </merit>
     <merit key="darksight">
