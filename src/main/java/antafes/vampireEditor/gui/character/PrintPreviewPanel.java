@@ -27,8 +27,6 @@ import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PrintBase;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -180,17 +178,5 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
         this.page = previousPage;
         this.removeAll();
         this.addContent();
-    }
-
-    /**
-     * Paint the contents of the preview pane.
-     *
-     * @param graphics Graphics context in which to paint
-     */
-    public void printContent(Graphics graphics) {
-        Border oldBorder = this.scrollPane.getBorder();
-        this.scrollPane.setBorder(new EmptyBorder(oldBorder.getBorderInsets(this.scrollPane)));
-        this.scrollPane.paint(graphics);
-        this.scrollPane.setBorder(oldBorder);
     }
 }

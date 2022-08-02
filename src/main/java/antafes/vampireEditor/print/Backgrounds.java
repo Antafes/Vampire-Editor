@@ -104,8 +104,8 @@ public class Backgrounds extends PrintBase {
      * Add the possessions.
      */
     protected void addPossessionsInformation() {
-        this.addBlock(new String[]{"gear", "equipment"}, 5);
-        this.addBlock(new String[]{"feedingGrounds", "miscellaneous"}, 5);
+        this.addBlock(new String[]{"gear", "equipment"}, 4);
+        this.addBlock(new String[]{"feedingGrounds", "miscellaneous"}, 4);
     }
 
     /**
