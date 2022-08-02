@@ -11,6 +11,7 @@
 		<type>BACKGROUND</type>
 		<name>
 			<English>Alternate identity</English>
+			<German>Deckidentität</German>
 		</name>
 	</advantage>
 	<advantage key="contacts">
@@ -24,12 +25,14 @@
 		<type>BACKGROUND</type>
 		<name>
 			<English>Domain</English>
+			<German>Domäne</German>
 		</name>
 	</advantage>
 	<advantage key="fame">
 		<type>BACKGROUND</type>
 		<name>
 			<English>Fame</English>
+			<German>Ruhm</German>
 		</name>
 	</advantage>
 	<advantage key="generation">
@@ -85,12 +88,14 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Abombwe</English>
+			<German>Abombwe</German>
 		</name>
 	</advantage>
 	<advantage key="abyssMysticism">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Abyss Mysticism</English>
+			<German>Mystik des Abgrunds</German>
 		</name>
 	</advantage>
 	<advantage key="animalism">
@@ -111,12 +116,14 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Blood Sorcery</English>
+			<German>Blutmagie</German>
 		</name>
 	</advantage>
 	<advantage key="bardo">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Bardo</English>
+			<German>Bardo</German>
 		</name>
 	</advantage>
 	<advantage key="celerity">
@@ -137,6 +144,7 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Daimonion</English>
+			<German>Daimonion</German>
 		</name>
 	</advantage>
 	<advantage key="dementation">
@@ -156,7 +164,8 @@
 	<advantage key="flight">
 		<type>DISCIPLINE</type>
 		<name>
-			<English>FLight</English>
+			<English>Flight</English>
+			<German>Fliegen</German>
 		</name>
 	</advantage>
 	<advantage key="fortitude">
@@ -170,18 +179,21 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Koldunic Sorcery</English>
+			<German>Koldunische Hexerei</German>
 		</name>
 	</advantage>
 	<advantage key="mytherceria">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Mytherceria</English>
+			<German>Mytherceria</German>
 		</name>
 	</advantage>
 	<advantage key="necromancy">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Necromancy</English>
+			<German>Nekromantie</German>
 		</name>
 	</advantage>
 	<advantage key="obfuscate">
@@ -195,12 +207,14 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Obtenebration</English>
+			<German>Schattenspiele</German>
 		</name>
 	</advantage>
 	<advantage key="ogham">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Ogham</English>
+			<German>Ogham</German>
 		</name>
 	</advantage>
 	<advantage key="potence">
@@ -242,12 +256,14 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Spiritus</English>
+			<German>Spiritus</German>
 		</name>
 	</advantage>
 	<advantage key="temporis">
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Temporis</English>
+			<German>Temporis</German>
 		</name>
 	</advantage>
 	<advantage key="thaumaturgy">
@@ -261,6 +277,7 @@
 		<type>DISCIPLINE</type>
 		<name>
 			<English>Valeren</English>
+			<German>Valeren</German>
 		</name>
 	</advantage>
 	<advantage key="vicissitude">
