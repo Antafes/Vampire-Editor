@@ -165,7 +165,7 @@ public class German extends Language {
      * Add texts only used on the print and print preview
      */
     private void print() {
-        this.getTranslations().put("printCharacter", "Print character");
+        this.getTranslations().put("printCharacter", "Charakter drucken");
 
         this.getTranslations().put("merit", "Vorzug");
         this.getTranslations().put("flaw", "Schwäche");
