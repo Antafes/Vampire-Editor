@@ -22,10 +22,11 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.BaseEntity;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.*;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.ClanStorage;
+import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentDocumentListener;
@@ -63,7 +64,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JButton backButton;
     private javax.swing.JTextField chronicleField;
     private javax.swing.JLabel chronicleLabel;
-    private javax.swing.JComboBox<String> clanComboBox;
+    private javax.swing.JComboBox<BaseEntity> clanComboBox;
     private javax.swing.JLabel clanLabel;
     private javax.swing.JTextField conceptField;
     private javax.swing.JLabel conceptLabel;
@@ -95,7 +96,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel requiredLabel;
     private javax.swing.JTextField sectField;
     private javax.swing.JLabel sectLabel;
-    private javax.swing.JComboBox<String> sexField;
+    private javax.swing.JComboBox<Character.Sex> sexField;
     private javax.swing.JLabel sexLabel;
     private javax.swing.JTextField sireField;
     private javax.swing.JLabel sireLabel;
@@ -508,7 +509,7 @@ public class LooksPanel extends javax.swing.JPanel {
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
-            Clan clan = (Clan) ((JComboBox) evt.getSource()).getSelectedItem();
+            Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
             this.parent.setClanDisciplins(clan);
             this.parent.adjustAttributesToClan(clan);
         }
@@ -583,7 +584,7 @@ public class LooksPanel extends javax.swing.JPanel {
                 ) {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
                 } else if (this.getComponent() instanceof JComboBox
-                    && Objects.equals(((JComboBox) this.getComponent()).getSelectedItem(), "")
+                    && Objects.equals(((JComboBox<BaseTranslatedEntity>) this.getComponent()).getSelectedItem(), "")
                 ) {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
                 } else {
@@ -596,22 +597,19 @@ public class LooksPanel extends javax.swing.JPanel {
 
     /**
      * Get the sexes for showing them in the form.
-     *
-     * @return
      */
-    public DefaultComboBoxModel getSexes() {
-        return new DefaultComboBoxModel(antafes.vampireEditor.entity.Character.Sex.values());
+    public DefaultComboBoxModel<Character.Sex> getSexes() {
+        return new DefaultComboBoxModel<>(antafes.vampireEditor.entity.Character.Sex.values());
     }
 
     /**
      * Get the generations for showing them in the form.
-     *
-     * @return
      */
-    public DefaultComboBoxModel getClans() {
+    public DefaultComboBoxModel<BaseEntity> getClans() {
         ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
+        DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
+        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        model.addElement(emptyEntity);
         ArrayList<BaseEntity> sortedClans = new ArrayList<>(clanStorage.getList().values());
         sortedClans.sort(new ClanComparator());
 

@@ -21,7 +21,12 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.EmptyEntity;
+import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.utility.Weighting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +43,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     public static final int UNLIMITEDMAXFIELDS = -1;
 
     private boolean useWeightings = true;
-    private HashMap<String, ArrayList<JComboBox>> comboBoxes;
+    private HashMap<String, ArrayList<JComboBox<BaseTranslatedEntity>>> comboBoxes;
     private int spinnerMaximumValue = 10;
 
     /**
@@ -196,7 +201,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             .addComponent(groupLabel);
 
         if (this.isUsingWeightings()) {
-            JComboBox weightingElement = this.addWeighting(headline);
+            JComboBox<Weighting> weightingElement = this.addWeighting(headline);
             listHorizontalGroup.addGroup(layout.createSequentialGroup()
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, 100)
                 .addComponent(weightingElement, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
@@ -233,7 +238,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 HashMap<String, Component> newElements = this.addRow(
                     element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
                 );
-                this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+                this.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
             }
         });
 
@@ -250,7 +255,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 layout,
                 maxFields
             );
-            this.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+            this.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
         }
 
         this.addPointFields(type, groups, layout);
@@ -331,14 +336,15 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         HashMap<String, GroupLayout.Group> groups,
         GroupLayout layout
     ) {
-        JComboBox elementComboBox = new JComboBox();
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        JComboBox<BaseTranslatedEntity> elementComboBox = new JComboBox<>();
+        DefaultComboBoxModel<BaseTranslatedEntity> model = new DefaultComboBoxModel<>();
 
         if (element == null) {
-            model.addElement("");
+            EmptyEntity empty = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+            model.addElement(empty);
         }
 
-        this.getValues(type).forEach(model::addElement);
+        this.getValues(type).forEach(anObject -> model.addElement((BaseTranslatedEntity) anObject));
         elementComboBox.setModel(model);
 
         if (selected != null) {
@@ -393,7 +399,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         ItemListener listener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                JComboBox element = (JComboBox) e.getSource();
+                JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
                 BaseEditableListPanel panel = (BaseEditableListPanel) element.getParent();
 
                 if (e.getStateChange() != ItemEvent.SELECTED
@@ -406,7 +412,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 HashMap<String, Component> newElements = panel.addRow(
                     null, type, spinnerMinimum, fields, groups, layout
                 );
-                panel.getComboBoxes().get(type).add((JComboBox) newElements.get("comboBox"));
+                panel.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
 
                 if (maxFields == BaseEditableListPanel.UNLIMITEDMAXFIELDS || fields.size() < maxFields) {
                     panel.addComboBoxItemListener(newElements, type, spinnerMinimum, fields, groups, layout, maxFields);
@@ -419,13 +425,11 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 panel.repaint();
             }
         };
-        ((JComboBox) elements.get("comboBox")).addItemListener(listener);
+        ((JComboBox<BaseTranslatedEntity>) elements.get("comboBox")).addItemListener(listener);
     }
 
     /**
      * Check whether this uses weightings or not.
-     *
-     * @return
      */
     public boolean isUsingWeightings() {
         return useWeightings;
@@ -433,8 +437,6 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
     /**
      * Set whether this should use weightings or not.
-     *
-     * @param useWeightings
      */
     public void setUseWeightings(boolean useWeightings) {
         this.useWeightings = useWeightings;
@@ -442,10 +444,8 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
     /**
      * Get the hashmap with all combo boxes that were added to the form.
-     *
-     * @return
      */
-    public HashMap<String, ArrayList<JComboBox>> getComboBoxes() {
+    public HashMap<String, ArrayList<JComboBox<BaseTranslatedEntity>>> getComboBoxes() {
         return this.comboBoxes;
     }
 
@@ -456,14 +456,12 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      *
      * @return List of comboboxes
      */
-    public ArrayList<JComboBox> getComboBoxes(String type) {
+    public ArrayList<JComboBox<BaseTranslatedEntity>> getComboBoxes(String type) {
         return this.comboBoxes.get(type);
     }
 
     /**
      * Get the spinner maximum value.
-     *
-     * @return
      */
     public int getSpinnerMaximumValue() {
         return this.spinnerMaximumValue;
@@ -471,8 +469,6 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
     /**
      * Set the spinner maximum value.
-     *
-     * @param spinnerMaximumValue
      */
     public void setSpinnerMaximumValue(int spinnerMaximumValue) {
         this.spinnerMaximumValue = spinnerMaximumValue;

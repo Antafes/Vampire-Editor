@@ -23,14 +23,13 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseEntity;
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.character.SpecialFeature;
-import antafes.vampireEditor.entity.storage.FlawStorage;
-import antafes.vampireEditor.entity.storage.MeritStorage;
-import antafes.vampireEditor.entity.storage.RoadStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
 import antafes.vampireEditor.utility.StringComparator;
@@ -49,7 +48,7 @@ import java.util.*;
  */
 public class LastStepsPanel extends BasePanel {
     private JLabel flawInfoLabel;
-    private JComboBox roadComboBox;
+    private JComboBox<BaseTranslatedEntity> roadComboBox;
 
     /**
      * Create the last steps panel.
@@ -163,9 +162,10 @@ public class LastStepsPanel extends BasePanel {
         GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
         GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 
-        this.roadComboBox = new JComboBox();
-        DefaultComboBoxModel roadModel = new DefaultComboBoxModel();
-        roadModel.addElement("");
+        this.roadComboBox = new JComboBox<>();
+        DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        roadModel.addElement(emptyEntity);
         this.roadComboBox.setModel(roadModel);
         this.getRoadValues().forEach(roadModel::addElement);
         this.roadComboBox.addItemListener((ItemEvent e) -> {
@@ -175,7 +175,7 @@ public class LastStepsPanel extends BasePanel {
                 this.enableNextButton();
             }
         });
-        this.roadComboBox.setMaximumRowCount(this.roadComboBox.getModel().getSize() < 20 ? this.roadComboBox.getModel().getSize() : 20);
+        this.roadComboBox.setMaximumRowCount(Math.min(this.roadComboBox.getModel().getSize(), 20));
 
         comboBoxHorizontalGroup.addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
         listOuterVerticalGroup
@@ -187,8 +187,6 @@ public class LastStepsPanel extends BasePanel {
 
     /**
      * Get the values for the road combo box.
-     *
-     * @return
      */
     protected ArrayList<Road> getRoadValues() {
         RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
@@ -245,7 +243,7 @@ public class LastStepsPanel extends BasePanel {
         HashMap<String, Component> newElements = this.addRow(
             type, this.getFields(type), innerGroups
         );
-        ((JComboBox) newElements.get("comboBox")).addItemListener(
+        ((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox")).addItemListener(
             this.getComboBoxItemListener(type, this.getFields(type), innerGroups)
         );
 
@@ -267,9 +265,10 @@ public class LastStepsPanel extends BasePanel {
         ArrayList<Component> fields,
         HashMap<String, GroupLayout.Group> groups
     ) {
-        WideComboBox elementComboBox = new WideComboBox();
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement("");
+        WideComboBox<BaseTranslatedEntity> elementComboBox = new WideComboBox<>();
+        DefaultComboBoxModel<BaseTranslatedEntity> model = new DefaultComboBoxModel<>();
+        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        model.addElement(emptyEntity);
         this.getSpecialFeatureValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
         groups.get("comboBoxHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
@@ -316,7 +315,7 @@ public class LastStepsPanel extends BasePanel {
         String type, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups
     ) {
         return (ItemEvent e) -> {
-            JComboBox element = (JComboBox) e.getSource();
+            JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
 
             if (element.getSelectedItem() == null || element.getSelectedItem().equals("")) {
                 return;
@@ -326,7 +325,7 @@ public class LastStepsPanel extends BasePanel {
                 type, fields, groups
             );
 
-            ((JComboBox) newElements.get("comboBox")).addItemListener(
+            ((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox")).addItemListener(
                 this.getComboBoxItemListener(type, fields, groups)
             );
 
@@ -375,7 +374,7 @@ public class LastStepsPanel extends BasePanel {
     private void calculateFreeAdditionalPoints() {
         int sum = 0;
 
-        sum = this.getFields("flaw").stream().map((field) -> (JComboBox) field)
+        sum = this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
             .map((comboBox) -> ((Flaw) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
@@ -392,23 +391,17 @@ public class LastStepsPanel extends BasePanel {
         this.getParentComponent().calculateUsedFreeAdditionalPoints();
 
         if (sum <= 7) {
-            if (this.getParentComponent().checkFreeAdditionalPoints()) {
-                this.getNextButton().setEnabled(false);
-            } else {
-                this.getNextButton().setEnabled(true);
-            }
+            this.getNextButton().setEnabled(!this.getParentComponent().checkFreeAdditionalPoints());
         }
     }
 
     /**
      * Get the points used for merits.
-     *
-     * @return
      */
     public int getMeritPoints() {
         int sum = 0;
 
-        sum = this.getFields("merit").stream().map((field) -> (JComboBox) field)
+        sum = this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
             .map((comboBox) -> ((Merit) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
@@ -433,10 +426,10 @@ public class LastStepsPanel extends BasePanel {
      */
     @Override
     public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
-        this.getFields("merit").stream().map((field) -> (JComboBox) field)
+        this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
             .forEachOrdered((comboBox) -> builder.addMerit((Merit) comboBox.getSelectedItem()));
-        this.getFields("flaw").stream().map((field) -> (JComboBox) field)
+        this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
             .forEachOrdered((comboBox) -> builder.addFlaw((Flaw) comboBox.getSelectedItem()));
         builder.setRoad((Road) this.roadComboBox.getSelectedItem());

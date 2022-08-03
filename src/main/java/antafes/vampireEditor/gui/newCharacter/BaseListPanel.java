@@ -39,7 +39,7 @@ import java.util.HashMap;
 abstract public class BaseListPanel extends BasePanel {
 
     private HashMap<String, HashMap<String, JTextField>> pointFields;
-    private HashMap<String, JComboBox> weightings;
+    private HashMap<String, JComboBox<Weighting>> weightings;
     private int weightingCounter = 0;
 
     public BaseListPanel(NewCharacterDialog parent) {
@@ -117,7 +117,7 @@ abstract public class BaseListPanel extends BasePanel {
         GroupLayout layout = (GroupLayout) this.getLayout();
         JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        JComboBox weightingElement = this.addWeighting(headline);
+        JComboBox<Weighting> weightingElement = this.addWeighting(headline);
 
         GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
             .addGap(11, 11, 11);
@@ -264,9 +264,9 @@ abstract public class BaseListPanel extends BasePanel {
      *
      * @return The weighting combo box
      */
-    protected JComboBox addWeighting(String headline) {
-        JComboBox weightingElement = new JComboBox();
-        weightingElement.setModel(new DefaultComboBoxModel(Weighting.values()));
+    protected JComboBox<Weighting> addWeighting(String headline) {
+        JComboBox<Weighting> weightingElement = new JComboBox<>();
+        weightingElement.setModel(new DefaultComboBoxModel<>(Weighting.values()));
         weightingElement.setSelectedIndex(0);
 
         if (!this.weightings.isEmpty()) {
@@ -278,9 +278,9 @@ abstract public class BaseListPanel extends BasePanel {
         }
 
         weightingElement.addActionListener((ActionEvent e) -> {
-            JComboBox element = (JComboBox) e.getSource();
-            JComboBox second, third;
-            ArrayList<JComboBox> elements = new ArrayList<>(this.weightings.values());
+            JComboBox<Weighting> element = (JComboBox<Weighting>) e.getSource();
+            JComboBox<Weighting> second, third;
+            ArrayList<JComboBox<Weighting>> elements = new ArrayList<>(this.weightings.values());
             elements.remove(element);
             second = elements.get(0);
             third = elements.get(1);
@@ -364,7 +364,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param second The second weighting combo box
      * @param third The third weighting combo box
      */
-    protected void switchWeightings(JComboBox first, JComboBox second, JComboBox third) {
+    protected void switchWeightings(JComboBox<Weighting> first, JComboBox<Weighting> second, JComboBox<Weighting> third) {
         Weighting firstSelection = (Weighting) first.getSelectedItem();
         Weighting secondSelection = (Weighting) second.getSelectedItem();
         Weighting thirdSelection = (Weighting) third.getSelectedItem();
@@ -484,7 +484,7 @@ abstract public class BaseListPanel extends BasePanel {
         );
         field.setModel(
             new SpinnerNumberModel(
-                value > maximum ? maximum : value,
+                Math.min(value, maximum),
                 minimum,
                 maximum,
                 1
@@ -503,8 +503,6 @@ abstract public class BaseListPanel extends BasePanel {
 
     /**
      * Get the point fields hashmap.
-     *
-     * @return
      */
     protected HashMap<String, HashMap<String, JTextField>> getPointFields() {
         return pointFields;
@@ -512,17 +510,13 @@ abstract public class BaseListPanel extends BasePanel {
 
     /**
      * Get the weightings list.
-     *
-     * @return
      */
-    protected HashMap<String, JComboBox> getWeightings() {
+    protected HashMap<String, JComboBox<Weighting>> getWeightings() {
         return weightings;
     }
 
     /**
      * Get the weighting counter.
-     *
-     * @return
      */
     protected int getWeightingCounter() {
         return weightingCounter;
@@ -530,8 +524,6 @@ abstract public class BaseListPanel extends BasePanel {
 
     /**
      * Set the weighting counter.
-     *
-     * @param weightingCounter
      */
     protected void setWeightingCounter(int weightingCounter) {
         this.weightingCounter = weightingCounter;
@@ -566,8 +558,6 @@ abstract public class BaseListPanel extends BasePanel {
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     abstract public void setSpinnerMaximum(int maximum);
 }

@@ -22,6 +22,7 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
@@ -164,8 +165,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Calculate and return the sum of points spent for backgrounds.
-     *
-     * @return
      */
     public int getBackgroundPointsSum() {
         return this.getPointsSum(AdvantageInterface.AdvantageType.BACKGROUND.name());
@@ -182,8 +181,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Get the maximum points available for talents.
-     *
-     * @return
      */
     public int getBackgroundMaxPoints() {
         return this.getMaxPoints(AdvantageInterface.AdvantageType.BACKGROUND.name());
@@ -198,8 +195,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Calculate and return the sum of points spent for disciplines.
-     *
-     * @return
      */
     public int getDisciplinePointsSum() {
         return this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLINE.name());
@@ -216,8 +211,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Get the maximum points available for disciplines.
-     *
-     * @return
      */
     public int getDisciplineMaxPoints() {
         return this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
@@ -232,8 +225,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Calculate and return the sum of points spent for virtues.
-     *
-     * @return
      */
     public int getVirtuePointsSum() {
         return this.getPointsSum(AdvantageInterface.AdvantageType.VIRTUE.name());
@@ -250,8 +241,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Get the maximum points available for virtues.
-     *
-     * @return
      */
     public int getVirtueMaxPoints() {
         return this.getMaxPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
@@ -259,8 +248,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
@@ -352,15 +339,13 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
     /**
      * Set the disciplines of the given clan.
-     *
-     * @param clan
      */
     public void setDisciplines(Clan clan) {
         if (this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name()).size() == 1) {
             clan.getAdvantages().forEach((discipline) -> {
-                ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
+                ArrayList<JComboBox<BaseTranslatedEntity>> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
 
-                JComboBox comboBox = comboBoxList.get(comboBoxList.size() - 1);
+                JComboBox<BaseTranslatedEntity> comboBox = comboBoxList.get(comboBoxList.size() - 1);
                 comboBox.setSelectedItem(discipline);
                 comboBox.setEditable(false);
                 comboBox.setEnabled(false);
@@ -375,9 +360,9 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         } else {
             AtomicInteger counter = new AtomicInteger();
             clan.getAdvantages().forEach((discipline) -> {
-                ArrayList<JComboBox> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
+                ArrayList<JComboBox<BaseTranslatedEntity>> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
                 int boxCounter = 0;
-                for (JComboBox comboBox : comboBoxList) {
+                for (JComboBox<BaseTranslatedEntity> comboBox : comboBoxList) {
                     if (!comboBox.isEnabled() && !comboBox.isEditable()) {
                         if (counter.get() == boxCounter) {
                             comboBox.setSelectedItem(discipline);
@@ -445,7 +430,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
                 try {
                     if (this.getComboBoxes(key).size() > 0) {
-                        JComboBox comboBox = this.getComboBoxes(key).get(i);
+                        JComboBox<BaseTranslatedEntity> comboBox = this.getComboBoxes(key).get(i);
 
                         if (Objects.equals(comboBox.getSelectedItem(), "")) {
                             continue;
@@ -493,13 +478,13 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     ) {
         super.addComboBoxItemListener(elements, type, spinnerMinimum, fields, groups, layout, maxFields);
 
-        JComboBox comboBox = (JComboBox) elements.get("comboBox");
+        JComboBox<BaseTranslatedEntity> comboBox = (JComboBox<BaseTranslatedEntity>) elements.get("comboBox");
         JSpinner spinner = (JSpinner) elements.get("spinner");
 
         // Fetching the second element, as the first is only an empty string.
         if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
             comboBox.addItemListener((ItemEvent e) -> {
-                JComboBox element = (JComboBox) e.getSource();
+                JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
                 AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
 
                 try {
