@@ -44,7 +44,8 @@ public class StorageFactory {
         FLAW ("antafes.vampireEditor.entity.storage.FlawStorage"),
         GENERATION ("antafes.vampireEditor.entity.storage.GenerationStorage"),
         ROAD ("antafes.vampireEditor.entity.storage.RoadStorage"),
-        CHARACTER ("antafes.vampireEditor.entity.storage.CharacterStorage");
+        CHARACTER ("antafes.vampireEditor.entity.storage.CharacterStorage"),
+        EMPTY ("antafes.vampireEditore.entity.storage.EmptyEntityStorage");
 
         private final String storageClass;
 
