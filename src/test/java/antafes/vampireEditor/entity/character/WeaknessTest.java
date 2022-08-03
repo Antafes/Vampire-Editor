@@ -37,7 +37,7 @@ public class WeaknessTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.weakness = new Weakness.Builder()
+        this.weakness = Weakness.builder()
             .setKey("testWeakness")
             .addName(Configuration.Language.ENGLISH, "Test weakness")
             .build();
@@ -56,7 +56,7 @@ public class WeaknessTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.weakness.getNames();
+        final HashMap<Configuration.Language, String> actual = this.weakness.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -89,7 +89,7 @@ public class WeaknessTest {
     }
 
     public void testDifferentAbility() throws EntityException {
-        final Weakness object = new Weakness.Builder()
+        final Weakness object = Weakness.builder()
             .setKey("testWeakness2")
             .addName(Configuration.Language.ENGLISH, "Test weakness 2")
             .build();
@@ -99,8 +99,7 @@ public class WeaknessTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.weakness.hashCode();
-        final int actual = new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        final int actual = this.weakness.toBuilder()
             .build()
             .hashCode();
 
@@ -109,39 +108,34 @@ public class WeaknessTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        this.weakness.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        this.weakness.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        this.weakness.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        this.weakness.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Weakness.Builder()
-            .fillDataFromObject(this.weakness)
+        this.weakness.toBuilder()
             .build();
     }
 }

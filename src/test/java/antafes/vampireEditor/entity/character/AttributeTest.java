@@ -37,7 +37,7 @@ public class AttributeTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.attribute = new Attribute.Builder()
+        this.attribute = Attribute.builder()
             .setKey("testAttribute")
             .addName(Configuration.Language.ENGLISH, "Test attribute")
             .setType(AttributeInterface.AttributeType.PHYSICAL)
@@ -58,7 +58,7 @@ public class AttributeTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.attribute.getNames();
+        final HashMap<Configuration.Language, String> actual = this.attribute.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -105,7 +105,7 @@ public class AttributeTest {
     }
 
     public void testDifferentAttribute() throws EntityException {
-        final Attribute object = new Attribute.Builder()
+        final Attribute object = Attribute.builder()
             .setKey("testAttribute2")
             .addName(Configuration.Language.ENGLISH, "Test attribute 2")
             .setType(AttributeInterface.AttributeType.MENTAL)
@@ -117,8 +117,7 @@ public class AttributeTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.attribute.hashCode();
-        final int actual = new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        final int actual = this.attribute.toBuilder()
             .build()
             .hashCode();
 
@@ -127,47 +126,41 @@ public class AttributeTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .setType(null)
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Attribute.Builder()
-            .fillDataFromObject(this.attribute)
+        this.attribute.toBuilder()
             .build();
     }
 }

@@ -30,8 +30,8 @@ import java.util.HashMap;
 /**
  * Base storage object.
  */
-public abstract class BaseStorage {
-    private final HashMap<String, BaseEntity> list;
+public abstract class BaseStorage<T extends BaseEntity> {
+    private final HashMap<String, T> list;
 
     /**
      * Constructor
@@ -52,7 +52,7 @@ public abstract class BaseStorage {
      *
      * @return The entity
      */
-    public BaseEntity getEntity(String key) throws EntityStorageException {
+    public T getEntity(String key) throws EntityStorageException {
         if (this.list.containsKey(key)) {
             return this.list.get(key);
         }
@@ -62,10 +62,8 @@ public abstract class BaseStorage {
 
     /**
      * Get the list of stored entities.
-     *
-     * @return
      */
-    public HashMap<String, BaseEntity> getList() {
+    public HashMap<String, T> getList() {
         return this.list;
     }
 }

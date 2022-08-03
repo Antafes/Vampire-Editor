@@ -21,12 +21,12 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -37,6 +37,7 @@ import java.util.ArrayList;
  * @author Marian Pollzien
  */
 public class AbilitiesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
+    @Setter
     private antafes.vampireEditor.entity.Character character = null;
 
     /**
@@ -107,8 +108,6 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
@@ -118,16 +117,6 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields("knowledge").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-    }
-
-    /**
-     * Set the character used to prefill every field.
-     *
-     * @param character
-     */
-    @Override
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     /**

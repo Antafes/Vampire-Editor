@@ -21,197 +21,33 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Objects;
+import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Attribute object.
  *
  * @author Marian Pollzien
  */
-public class Attribute extends BaseTranslatedEntity implements AttributeInterface {
-    private final AttributeType type;
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
+public class Attribute extends BaseTypedTranslatedEntity implements AttributeInterface {
     private final int value;
 
     /**
-     * Builder for Ability objects.
-     */
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        private AttributeType type;
-        private int value = 0;
-
-        /**
-         * Check if all necessary values are set.
-         * This has to be called in the build method.
-         *
-         * @throws EntityException If something is missing but required
-         */
-        @Override
-        protected void checkValues() throws EntityException {
-            super.checkValues();
-
-            if (this.type == null) {
-                throw new EntityException("Missing type");
-            }
-        }
-
-        /**
-         * Build a new Ability object.
-         *
-         * @return The created attribute entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        @Override
-        public Attribute build() throws EntityException {
-            this.checkValues();
-
-            return new Attribute(this);
-        }
-
-        /**
-         * Get an instance of itself.
-         *
-         * @return The object itself
-         */
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        /**
-         * Get the list of methods from which data can be fetched.
-         *
-         * @return
-         */
-        @Override
-        protected ArrayList getDataMethods() {
-            ArrayList<Method> methodList = super.getDataMethods();
-
-            for (Method declaredMethod : Attribute.class.getDeclaredMethods()) {
-                if (this.checkMethod(declaredMethod)) {
-                    continue;
-                }
-
-                methodList.add(declaredMethod);
-            }
-
-            return methodList;
-        }
-
-        /**
-         * Get a setter method from the given getter.
-         *
-         * @param getter The getter to build the setter out of
-         *
-         * @return Setter method object
-         * @throws NoSuchMethodException Exception thrown if no method of that name exists
-         */
-        @Override
-        protected Method getSetter(Method getter) throws NoSuchMethodException {
-            try {
-                return super.getSetter(getter);
-            } catch (NoSuchMethodException ex) {
-                Class[] parameterTypes = new Class[1];
-                parameterTypes[0] = getter.getReturnType();
-
-                return Attribute.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
-            }
-        }
-
-        public Builder setType(AttributeType type) {
-            this.type = type;
-
-            return this.self();
-        }
-
-        public Builder setValue(int value) {
-            this.value = value;
-
-            return this.self();
-        }
-    }
-
-    /**
-     * Create a new attribute with value.
-     *
-     * @param builder The builder object
-     */
-    public Attribute(Builder builder) {
-        super(builder);
-
-        this.type = builder.type;
-        this.value = builder.value;
-    }
-
-    /**
      * Get the type of attribute.
-     *
-     * @return
      */
     @Override
     public AttributeType getType() {
-        return type;
+        return (AttributeType) super.getType();
     }
 
-    /**
-     * Get the current value of the attribute.
-     *
-     * @return
-     */
     @Override
-    public int getValue() {
-        return value;
-    }
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return A string representation of the object
-     */
-    @Override
-    public String toString() {
-        return this.getName();
-    }
-
-    /**
-     * Check if the given object equals this object.
-     *
-     * @param obj The object to check
-     *
-     * @return True if both are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        if (!super.equals(obj)) {
-            return false;
-        }
-
-        Attribute attribute = (Attribute) obj;
-
-        return value == attribute.value &&
-            type == attribute.type;
-    }
-
-    /**
-     * Generate a hash code.
-     *
-     * @return Hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), type, value);
+    public String toString()
+    {
+        return super.toString();
     }
 }

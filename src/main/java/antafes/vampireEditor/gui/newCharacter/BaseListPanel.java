@@ -24,6 +24,9 @@ package antafes.vampireEditor.gui.newCharacter;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
@@ -36,10 +39,12 @@ import java.util.HashMap;
  *
  * @author Marian Pollzien
  */
+@Getter
 abstract public class BaseListPanel extends BasePanel {
 
     private HashMap<String, HashMap<String, JTextField>> pointFields;
     private HashMap<String, JComboBox<Weighting>> weightings;
+    @Setter(AccessLevel.PROTECTED)
     private int weightingCounter = 0;
 
     public BaseListPanel(NewCharacterDialog parent) {
@@ -499,34 +504,6 @@ abstract public class BaseListPanel extends BasePanel {
      */
     protected HashMap<String, JTextField> getPointFields(String type) {
         return this.pointFields.get(type);
-    }
-
-    /**
-     * Get the point fields hashmap.
-     */
-    protected HashMap<String, HashMap<String, JTextField>> getPointFields() {
-        return pointFields;
-    }
-
-    /**
-     * Get the weightings list.
-     */
-    protected HashMap<String, JComboBox<Weighting>> getWeightings() {
-        return weightings;
-    }
-
-    /**
-     * Get the weighting counter.
-     */
-    protected int getWeightingCounter() {
-        return weightingCounter;
-    }
-
-    /**
-     * Set the weighting counter.
-     */
-    protected void setWeightingCounter(int weightingCounter) {
-        this.weightingCounter = weightingCounter;
     }
 
     /**

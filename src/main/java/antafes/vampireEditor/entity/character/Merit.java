@@ -21,18 +21,22 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
+
 /**
  * Merit object.
  *
  * @author Marian Pollzien
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Merit extends SpecialFeature {
-    /**
-     * Merit constructor.
-     *
-     * @param builder The builder object
-     */
-    public Merit(Builder builder) {
-        super(builder);
+    @Override
+    public String toString()
+    {
+        return super.toString();
     }
 }

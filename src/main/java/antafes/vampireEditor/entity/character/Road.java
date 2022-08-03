@@ -22,167 +22,24 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Road object.
  *
  * @author Marian Pollzien
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Road extends BaseTranslatedEntity implements RoadInterface {
     private final int value;
 
-    /**
-     * Builder for Ability objects.
-     */
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        private int value = 0;
-
-        /**
-         * Build a new Ability object.
-         *
-         * @return The created ability entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        @Override
-        public Road build() throws EntityException {
-            this.checkValues();
-
-            return new Road(this);
-        }
-
-        /**
-         * Get an instance of itself.
-         *
-         * @return The object itself
-         */
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        /**
-         * Get the list of methods from which data can be fetched.
-         *
-         * @return
-         */
-        @Override
-        protected ArrayList getDataMethods() {
-            ArrayList<Method> methodList = super.getDataMethods();
-
-            for (Method declaredMethod : Road.class.getDeclaredMethods()) {
-                if (this.checkMethod(declaredMethod)) {
-                    continue;
-                }
-
-                methodList.add(declaredMethod);
-            }
-
-            return methodList;
-        }
-
-        /**
-         * Get a setter method from the given getter.
-         *
-         * @param getter The getter to build the setter out of
-         *
-         * @return Setter method object
-         * @throws NoSuchMethodException Exception thrown if no method of that name exists
-         */
-        @Override
-        protected Method getSetter(Method getter) throws NoSuchMethodException {
-            try {
-                return super.getSetter(getter);
-            } catch (NoSuchMethodException ex) {
-                Class[] parameterTypes = new Class[1];
-                parameterTypes[0] = getter.getReturnType();
-
-                return Road.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
-            }
-        }
-
-        /**
-         * Set the road value.
-         *
-         * @param value
-         *
-         * @return
-         */
-        public Builder setValue(int value) {
-            this.value = value;
-
-            return this.self();
-        }
-    }
-
-    /**
-     * Create a new road object.
-     *
-     * @param builder The builder object
-     */
-    public Road(Builder builder) {
-        super(builder);
-
-        this.value = builder.value;
-    }
-
-    /**
-     * Get the road value.
-     *
-     * @return
-     */
-    public int getValue() {
-        return this.value;
-    }
-
-    /**
-     * Get a string representation of the road.
-     *
-     * @return A string representation of the road
-     */
     @Override
-    public String toString() {
-        return this.getName();
-    }
-
-    /**
-     * Check if the given object equals this object.
-     *
-     * @param obj The object to check
-     *
-     * @return True if both are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        if (!super.equals(obj)) {
-            return false;
-        }
-
-        Road road = (Road) obj;
-
-        return value == road.value;
-    }
-
-    /**
-     * Generate a hash code.
-     *
-     * @return Hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), value);
+    public String toString()
+    {
+        return super.toString();
     }
 }

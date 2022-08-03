@@ -60,7 +60,7 @@ public class ClanTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.clan.getNames();
+        final HashMap<Configuration.Language, String> actual = this.clan.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -74,7 +74,7 @@ public class ClanTest {
     }
 
     public void testGetNicknames() {
-        final HashMap actual = this.clan.getNicknames();
+        final HashMap<Configuration.Language, String> actual = this.clan.getNicknames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -96,7 +96,7 @@ public class ClanTest {
     }
 
     public void testGetAdvantages() {
-        final ArrayList actual = this.clan.getAdvantages();
+        final ArrayList<Advantage> actual = this.clan.getAdvantages();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -104,7 +104,7 @@ public class ClanTest {
     }
 
     public void testGetWeaknesses() {
-        final ArrayList actual = this.clan.getWeaknesses();
+        final ArrayList<Weakness> actual = this.clan.getWeaknesses();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -133,7 +133,7 @@ public class ClanTest {
     public void testDifferentClan() throws EntityException, EntityStorageException {
         AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
-        final Clan object = new Clan.Builder()
+        final Clan object = Clan.builder()
             .setKey("testClan2")
             .addName(Configuration.Language.ENGLISH, "Test clan 2")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname 2")
@@ -146,8 +146,7 @@ public class ClanTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.clan.hashCode();
-        final int actual = new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        final int actual = this.clan.toBuilder()
             .build()
             .hashCode();
 
@@ -156,87 +155,76 @@ public class ClanTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nicknames for entity.*")
     public void testBuilderNullNicknames() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setNicknames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nicknames for entity.*")
     public void testBuilderEmptyNicknames() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setNicknames(new HashMap<>())
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing advantages for entity.*")
     public void testBuilderNullAdvantages() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setAdvantages(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing advantages for entity.*")
     public void testBuilderEmptyAdvantages() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setAdvantages(new ArrayList<>())
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing weaknesses for entity.*")
     public void testBuilderNullWeaknesses() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setWeaknesses(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing weaknesses for entity.*")
     public void testBuilderEmptyWeaknesses() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .setWeaknesses(new ArrayList<>())
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Clan.Builder()
-            .fillDataFromObject(this.clan)
+        this.clan.toBuilder()
             .build();
     }
 }

@@ -34,7 +34,7 @@ public class GenerationTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.generation = new Generation.Builder()
+        this.generation = Generation.builder()
             .setGeneration(5)
             .setMaximumAttributes(10)
             .setMaximumBloodPool(15)
@@ -70,8 +70,7 @@ public class GenerationTest {
 
     public void testGetMaximumBloodPoolIndefinite() throws EntityException {
         final int expected = Integer.MAX_VALUE;
-        final int actual = new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        final int actual = this.generation.toBuilder()
             .setMaximumBloodPool(-1)
             .build()
             .getMaximumBloodPool();
@@ -88,8 +87,7 @@ public class GenerationTest {
 
     public void testGetBloodPerRoundIndefinite() throws EntityException {
         final int expected = Integer.MAX_VALUE;
-        final int actual = new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        final int actual = this.generation.toBuilder()
             .setBloodPerRound(-1)
             .build()
             .getBloodPerRound();
@@ -117,7 +115,7 @@ public class GenerationTest {
     }
 
     public void testDifferentGeneration() throws EntityException {
-        final Generation object = new Generation.Builder()
+        final Generation object = Generation.builder()
             .setGeneration(8)
             .setMaximumAttributes(8)
             .setMaximumBloodPool(12)
@@ -129,8 +127,7 @@ public class GenerationTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.generation.hashCode();
-        final int actual = new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        final int actual = this.generation.toBuilder()
             .build()
             .hashCode();
 
@@ -139,64 +136,56 @@ public class GenerationTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing generation")
     public void testBuilderMissingGeneration() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setGeneration(0)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing generation")
     public void testBuilderMissingGenerationBelowZero() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setGeneration(-10)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum attributes")
     public void testBuilderMissingMaximumAttributes() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setMaximumAttributes(0)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum attributes")
     public void testBuilderMissingMaximumAttributesBelowZero() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setMaximumAttributes(-10)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood pool")
     public void testBuilderMissingMaximumBloodStockool() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setMaximumBloodPool(0)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing maximum blood pool")
     public void testBuilderMissingMaximumBloodStockoolBelowZero() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setMaximumBloodPool(-10)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing blood per round")
     public void testBuilderMissingBloodPerRound() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setBloodPerRound(0)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing blood per round")
     public void testBuilderMissingBloodPerRoundBelowZero() throws EntityException {
-        new Generation.Builder()
-            .fillDataFromObject(this.generation)
+        this.generation.toBuilder()
             .setBloodPerRound(-10)
             .build();
     }

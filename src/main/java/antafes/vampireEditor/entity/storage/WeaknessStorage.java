@@ -25,19 +25,15 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Weakness;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for weaknesses.
  */
-public class WeaknessStorage extends BaseStorage {
+public class WeaknessStorage extends BaseStorage<Weakness> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -62,30 +58,14 @@ public class WeaknessStorage extends BaseStorage {
                     name.getFirstChild().getNodeValue()
                 ));
 
-                try {
-                    this.getList().put(
-                        element.getAttribute("key"),
-                        new Weakness.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                this.getList().put(
+                    element.getAttribute("key"),
+                    Weakness.builder()
+                        .setKey(element.getAttribute("key"))
+                        .setNames(names)
+                        .build()
+                );
             });
         }
-    }
-
-    /**
-     * Fetch a single weakness for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Weakness getEntity(String key) throws EntityStorageException {
-        return (Weakness) super.getEntity(key);
     }
 }

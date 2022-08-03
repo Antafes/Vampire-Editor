@@ -21,10 +21,10 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 public class GeneralPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
+    @Setter
     private antafes.vampireEditor.entity.Character character = null;
 
     /**
@@ -164,16 +165,6 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
         elementList.put("bloodPool", bloodPool);
 
         this.addFields("other", false, elementList);
-    }
-
-    /**
-     * Set the character used to pre-fill every field.
-     *
-     * @param character
-     */
-    @Override
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     /**

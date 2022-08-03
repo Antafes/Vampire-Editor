@@ -25,21 +25,16 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Flaw;
-import antafes.vampireEditor.entity.character.SpecialFeature;
 import antafes.vampireEditor.entity.character.SpecialFeatureInterface;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for flaws.
  */
-public class FlawStorage extends BaseStorage {
+public class FlawStorage extends BaseStorage<Flaw> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -64,33 +59,16 @@ public class FlawStorage extends BaseStorage {
                     name.getFirstChild().getNodeValue()
                 ));
 
-                try {
                     this.getList().put(
                         element.getAttribute("key"),
-                        new SpecialFeature.Builder()
-                            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+                        Flaw.builder()
                             .setNames(names)
                             .setKey(element.getAttribute("key"))
                             .setCost(XMLParser.getTagValueInt("cost", element))
                             .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
                             .build()
                     );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
             });
         }
-    }
-
-    /**
-     * Fetch a single flaw for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Flaw getEntity(String key) throws EntityStorageException {
-        return (Flaw) super.getEntity(key);
     }
 }

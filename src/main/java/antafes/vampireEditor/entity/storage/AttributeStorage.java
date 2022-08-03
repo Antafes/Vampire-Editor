@@ -25,24 +25,17 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.BaseEntity;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import org.w3c.dom.Element;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for attributes.
  */
-public class AttributeStorage extends BaseStorage {
+public class AttributeStorage extends BaseTypedStorage<Attribute, AttributeInterface.AttributeType> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -67,65 +60,17 @@ public class AttributeStorage extends BaseStorage {
                     translatedName.getFirstChild().getNodeValue()
                 ));
 
-                try {
-                    this.getList().put(
-                        element.getAttribute("key"),
-                        new Attribute.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setType(AttributeInterface.AttributeType.valueOf(
-                                XMLParser.getTagValue("type", element)
-                            ))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                this.getList().put(
+                    element.getAttribute("key"),
+                    Attribute.builder()
+                        .setKey(element.getAttribute("key"))
+                        .setNames(names)
+                        .setType(AttributeInterface.AttributeType.valueOf(
+                            XMLParser.getTagValue("type", element)
+                        ))
+                        .build()
+                );
             });
         }
-    }
-
-    /**
-     * Fetch a single attribute for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Attribute getEntity(String key) throws EntityStorageException {
-        return (Attribute) super.getEntity(key);
-    }
-
-    /**
-     * Fetch a subset of attributes from the storage.
-     *
-     * @param type The type of attributes to fetch
-     *
-     * @return Map of abilities
-     */
-    public HashMap<String, Attribute> getEntityMapByType(AttributeInterface.AttributeType type) {
-        HashMap<String, Attribute> list = new HashMap<>();
-
-        this.getList().forEach((String key, BaseEntity entity) -> {
-            Attribute attribute = (Attribute) entity;
-
-            if (Objects.equals(type, attribute.getType())) {
-                list.put(key, attribute);
-            }
-        });
-
-        return list;
-    }
-
-    /**
-     * Fetch a subset of attributes from the storage.
-     *
-     * @param type The type of attributes to fetch
-     *
-     * @return List of abilities
-     */
-    public ArrayList<Attribute> getEntityListByType(AttributeInterface.AttributeType type) {
-        return new ArrayList<>(this.getEntityMapByType(type).values());
     }
 }

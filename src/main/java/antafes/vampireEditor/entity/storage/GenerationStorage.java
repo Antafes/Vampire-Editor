@@ -24,20 +24,17 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Generation;
 import org.w3c.dom.Element;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for generations.
  */
-public class GenerationStorage extends BaseStorage {
+public class GenerationStorage extends BaseStorage<Generation> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -58,32 +55,16 @@ public class GenerationStorage extends BaseStorage {
             root = xp.getRootElement();
             ArrayList<Element> elements = XMLParser.getAllChildren(root);
             elements.forEach((element) -> {
-                try {
-                    Generation generation = new Generation.Builder()
-                        .setGeneration(Integer.parseInt(element.getAttribute("value")))
-                        .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
-                        .setMaximumBloodPool(XMLParser.getTagValueInt("maximumBloodPool", element))
-                        .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
-                        .build();
+                Generation generation = Generation.builder()
+                    .setGeneration(Integer.parseInt(element.getAttribute("value")))
+                    .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
+                    .setMaximumBloodPool(XMLParser.getTagValueInt("maximumBloodPool", element))
+                    .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
+                    .build();
 
-                    this.getList().put(Integer.toString(generation.getGeneration()), generation);
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                this.getList().put(Integer.toString(generation.getGeneration()), generation);
             });
         }
-    }
-
-    /**
-     * Fetch a single generation for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Generation getEntity(String key) throws EntityStorageException {
-        return (Generation) super.getEntity(key);
     }
 
     /**

@@ -23,12 +23,14 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
@@ -421,7 +423,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * @param builder Character builder object
      */
     @Override
-    public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         this.getFields().forEach((key, fields) -> {
             for (int i = 0; i < fields.size(); i++) {
                 JSpinner spinner = (JSpinner) fields.get(i);
@@ -436,6 +438,10 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                             continue;
                         }
 
+                        if (comboBox.getSelectedItem().equals(this.getEmptyEntity())) {
+                            continue;
+                        }
+
                         advantage = (Advantage) comboBox.getSelectedItem();
                     } else {
                         AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
@@ -443,16 +449,20 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                     }
 
                     builder.addAdvantage(
-                        new Advantage.Builder()
-                            .fillDataFromObject(advantage)
+                        advantage.toBuilder()
                             .setValue((int) spinner.getValue())
                             .build()
                     );
-                } catch (EntityException | EntityStorageException ex) {
+                } catch (EntityStorageException ex) {
                     Logger.getLogger(AdvantagesPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
+    }
+
+    private EmptyEntity getEmptyEntity()
+    {
+        return ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
     }
 
     /**

@@ -68,9 +68,8 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getId(), UUID.fromString("8ddb1360-316b-11e9-b210-d663bd873d93"));
     }
 
-    public void testGetNewId() throws EntityException {
-        Character character = new Character.Builder()
-            .fillDataFromObject(this.character)
+    public void testGetNewId() {
+        Character character = this.character.toBuilder()
             .setId(null)
             .build();
         final UUID actual = character.getId();
@@ -97,18 +96,18 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getChronicle(), "Test chronicle");
     }
 
-    public void testGetNullChronicle() throws EntityException {
-        Character character = new Character.Builder()
-            .fillDataFromObject(this.character)
+    public void testGetNullChronicle()
+    {
+        Character character = this.character.toBuilder()
             .setChronicle(null)
             .build();
 
         Assert.assertNull(character.getChronicle());
     }
 
-    public void testGetEmptyChronicle() throws EntityException {
-        Character character = new Character.Builder()
-            .fillDataFromObject(this.character)
+    public void testGetEmptyChronicle()
+    {
+        Character character = this.character.toBuilder()
             .setChronicle("")
             .build();
 
@@ -148,7 +147,7 @@ public class CharacterTest {
     }
 
     public void testGetAttributes() {
-        final ArrayList actual = this.character.getAttributes();
+        final ArrayList<Attribute> actual = this.character.getAttributes();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -192,7 +191,7 @@ public class CharacterTest {
     }
 
     public void testGetAbilities() {
-        final ArrayList actual = this.character.getAbilities();
+        final ArrayList<Ability> actual = this.character.getAbilities();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -211,7 +210,7 @@ public class CharacterTest {
     }
 
     public void testGetAdvantages() {
-        final ArrayList actual = this.character.getAdvantages();
+        final ArrayList<Advantage> actual = this.character.getAdvantages();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -251,9 +250,9 @@ public class CharacterTest {
         }
     }
 
-    public void testGetRoad() throws EntityException, EntityStorageException {
+    public void testGetRoad() throws EntityStorageException {
         RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        final Road expected = new Road.Builder().fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
+        final Road expected =roadStorage.getEntity("roadOfHumanity").toBuilder()
             .setValue(5)
             .build();
         final Road actual = this.character.getRoad();
@@ -335,162 +334,143 @@ public class CharacterTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing name")
-    public void testBuilderEmptyName() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+    public void testBuilderEmptyName() {
+        this.character.toBuilder()
             .setName("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing name")
     public void testBuilderNullName() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setName(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing clan")
     public void testBuilderEmptyClan() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setClan(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing generation")
     public void testBuilderEmptyGeneration() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setGeneration(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
     public void testBuilderEmptyNature() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setNature("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
     public void testBuilderNullNature() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setNature(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
     public void testBuilderEmptyDemeanor() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setDemeanor("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
     public void testBuilderNullDemeanor() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setDemeanor(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
     public void testBuilderEmptyConcept() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setConcept("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
     public void testBuilderNullConcept() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setConcept(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Attributes are empty")
     public void testBuilderEmptyAttributes() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAttributes(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Abilities are empty")
     public void testBuilderEmptyAbilities() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAbilities(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Advantages are empty")
     public void testBuilderEmptyAdvantages() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAdvantages(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing attributes")
     public void testBuilderMissingAttributes() throws EntityException {
-        ArrayList list = this.character.getAttributes();
+        ArrayList<Attribute> list = this.character.getAttributes();
         list.remove(0);
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAttributes(list)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing abilities")
     public void testBuilderMissingAbilities() throws EntityException {
-        ArrayList list = this.character.getAbilities();
+        ArrayList<Ability> list = this.character.getAbilities();
         list.remove(0);
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAbilities(list)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing advantages")
     public void testBuilderMissingAdvantages() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAdvantages(new ArrayList<>(this.character.getAdvantages().subList(0, 4)))
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many attributes")
     public void testBuilderTooManyAttributes() throws EntityException, EntityStorageException {
-        ArrayList list = this.character.getAttributes();
+        ArrayList<Attribute> list = this.character.getAttributes();
         AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         list.add(storage.getEntity("strength"));
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAttributes(list)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many abilities")
     public void testBuilderTooManyAbilities() throws EntityException, EntityStorageException {
-        ArrayList list = this.character.getAbilities();
+        ArrayList<Ability> list = this.character.getAbilities();
         AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         list.add(storage.getEntity("alertness"));
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .setAbilities(list)
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Character.Builder()
-            .fillDataFromObject(this.character)
+        this.character.toBuilder()
             .build();
     }
 }

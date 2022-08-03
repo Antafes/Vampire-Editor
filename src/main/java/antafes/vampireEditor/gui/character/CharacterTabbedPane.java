@@ -22,12 +22,13 @@
 package antafes.vampireEditor.gui.character;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,9 +42,13 @@ import java.util.ArrayList;
 public class CharacterTabbedPane extends JTabbedPane implements TranslatableComponent {
     private final Configuration configuration;
     private LanguageInterface language;
+    @Getter
+    @Setter
     private antafes.vampireEditor.entity.Character character = null;
+    @Getter
     private PrintPreviewPanel printPreview;
-    private ArrayList<PrintBase> printPages;
+    @Getter
+    private final ArrayList<PrintBase> printPages;
 
     /**
      * Creates new form CharacterFrame
@@ -189,42 +194,6 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
                 }
             }
         }
-    }
-
-    /**
-     * Get the print preview panel.
-     *
-     * @return
-     */
-    public PrintPreviewPanel getPrintPreview() {
-        return printPreview;
-    }
-
-    /**
-     * Get the character from which all data is fetched.
-     *
-     * @return
-     */
-    public Character getCharacter() {
-        return this.character;
-    }
-
-    /**
-     * Set the character from which to fetch all data.
-     *
-     * @param character
-     */
-    public void setCharacter(Character character) {
-        this.character = character;
-    }
-
-    /**
-     * Get the list of print pages.
-     *
-     * @return
-     */
-    public ArrayList<PrintBase> getPrintPages() {
-        return this.printPages;
     }
 
     /**

@@ -481,7 +481,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      *
      * @return List of values
      */
-    abstract protected ArrayList getValues(String type);
+    abstract protected ArrayList<?> getValues(String type);
 
     /**
      * Get an entity of the given type for the given key.

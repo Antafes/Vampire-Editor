@@ -37,7 +37,7 @@ public class RoadTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.road = new Road.Builder()
+        this.road = Road.builder()
             .setKey("testRoad")
             .addName(Configuration.Language.ENGLISH, "Test road")
             .setValue(11)
@@ -57,7 +57,7 @@ public class RoadTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.road.getNames();
+        final HashMap<Configuration.Language, String> actual = this.road.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -97,7 +97,7 @@ public class RoadTest {
     }
 
     public void testDifferentAbility() throws EntityException {
-        final Road object = new Road.Builder()
+        final Road object = Road.builder()
             .setKey("testRoad2")
             .addName(Configuration.Language.ENGLISH, "Test road 2")
             .setValue(22)
@@ -108,8 +108,7 @@ public class RoadTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.road.hashCode();
-        final int actual = new Road.Builder()
-            .fillDataFromObject(this.road)
+        final int actual = this.road.toBuilder()
             .build()
             .hashCode();
 
@@ -118,39 +117,34 @@ public class RoadTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Road.Builder()
-            .fillDataFromObject(this.road)
+        this.road.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Road.Builder()
-            .fillDataFromObject(this.road)
+        this.road.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Road.Builder()
-            .fillDataFromObject(this.road)
+        this.road.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Road.Builder()
-            .fillDataFromObject(this.road)
+        this.road.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Road.Builder()
-            .fillDataFromObject(this.road)
+        this.road.toBuilder()
             .build();
     }
 }

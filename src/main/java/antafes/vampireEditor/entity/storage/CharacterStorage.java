@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author Marian Pollzien
  */
-public class CharacterStorage extends BaseStorage {
+public class CharacterStorage extends BaseStorage<Character> {
     private final Configuration configuration;
     private final XMLWriter xw;
     private final XMLParser xp;
@@ -215,7 +215,7 @@ public class CharacterStorage extends BaseStorage {
      * @return The newly created character
      */
     private antafes.vampireEditor.entity.Character fillValues() {
-        antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder();
+        antafes.vampireEditor.entity.Character.CharacterBuilder<?, ?> builder = antafes.vampireEditor.entity.Character.builder();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Element root = this.xp.getRootElement();
         String id = root.getAttribute("id");
@@ -256,13 +256,11 @@ public class CharacterStorage extends BaseStorage {
             try {
                 String key = element.getAttribute("key");
                 Attribute attribute = attributeStorage.getEntity(key);
-                Attribute.Builder attributeBuilder = new Attribute.Builder()
-                    .fillDataFromObject(attribute);
 
-                return attributeBuilder
+                return attribute.toBuilder()
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -275,13 +273,11 @@ public class CharacterStorage extends BaseStorage {
             try {
                 String key = element.getAttribute("key");
                 Ability ability = abilityStorage.getEntity(key);
-                Ability.Builder abilityBuilder = new Ability.Builder()
-                    .fillDataFromObject(ability);
 
-                return abilityBuilder
+                return ability.toBuilder()
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -294,13 +290,11 @@ public class CharacterStorage extends BaseStorage {
             try {
                 String key = element.getAttribute("key");
                 Advantage advantage = advantageStorage.getEntity(key);
-                Advantage.Builder advantageBuilder = new Advantage.Builder()
-                    .fillDataFromObject(advantage);
 
-                return advantageBuilder
+                return advantage.toBuilder()
                     .setValue(XMLParser.getElementValueInt(element))
                     .build();
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -330,11 +324,14 @@ public class CharacterStorage extends BaseStorage {
         RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         Element road = XMLParser.getTagElement("road", root);
         try {
-            Road.Builder roadBuilder = new Road.Builder()
-                .fillDataFromObject(roadStorage.getEntity(road.getAttribute("key")))
-                .setValue(XMLParser.getTagValueInt("road", root));
-            builder.setRoad(roadBuilder.build());
-        } catch (EntityStorageException | EntityException e) {
+            builder.setRoad(
+                roadStorage
+                    .getEntity(road.getAttribute("key"))
+                    .toBuilder()
+                    .setValue(XMLParser.getTagValueInt("road", root))
+                    .build()
+            );
+        } catch (EntityStorageException e) {
             e.printStackTrace();
         }
 
@@ -380,12 +377,6 @@ public class CharacterStorage extends BaseStorage {
         builder.setStory(XMLParser.getTagValue("story", root));
         builder.setDescription(XMLParser.getTagValue("description", root));
 
-        try {
-            return builder.build();
-        } catch (EntityException ex) {
-            Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
+        return builder.build();
     }
 }

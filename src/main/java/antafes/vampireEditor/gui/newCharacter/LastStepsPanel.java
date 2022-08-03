@@ -22,8 +22,8 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
@@ -164,8 +164,7 @@ public class LastStepsPanel extends BasePanel {
 
         this.roadComboBox = new JComboBox<>();
         DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
-        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
-        roadModel.addElement(emptyEntity);
+        roadModel.addElement(this.getEmptyEntity());
         this.roadComboBox.setModel(roadModel);
         this.getRoadValues().forEach(roadModel::addElement);
         this.roadComboBox.addItemListener((ItemEvent e) -> {
@@ -191,7 +190,7 @@ public class LastStepsPanel extends BasePanel {
     protected ArrayList<Road> getRoadValues() {
         RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         ArrayList<Road> list = new ArrayList<>();
-        roadStorage.getList().forEach((String key, BaseEntity road) -> list.add((Road) road));
+        roadStorage.getList().forEach((String key, Road road) -> list.add(road));
         list.sort(new StringComparator());
 
         return list;
@@ -267,8 +266,7 @@ public class LastStepsPanel extends BasePanel {
     ) {
         WideComboBox<BaseTranslatedEntity> elementComboBox = new WideComboBox<>();
         DefaultComboBoxModel<BaseTranslatedEntity> model = new DefaultComboBoxModel<>();
-        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
-        model.addElement(emptyEntity);
+        model.addElement(this.getEmptyEntity());
         this.getSpecialFeatureValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
         groups.get("comboBoxHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
@@ -375,7 +373,7 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
-            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
+            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .map((comboBox) -> ((Flaw) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
@@ -402,11 +400,16 @@ public class LastStepsPanel extends BasePanel {
         int sum = 0;
 
         sum = this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
-            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), "")))
+            .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .map((comboBox) -> ((Merit) comboBox.getSelectedItem()).getCost())
             .reduce(sum, Integer::sum);
 
         return sum;
+    }
+
+    private EmptyEntity getEmptyEntity()
+    {
+        return ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
     }
 
     /**
@@ -425,12 +428,12 @@ public class LastStepsPanel extends BasePanel {
      * @param builder Character builder object
      */
     @Override
-    public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
-            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
+            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .forEachOrdered((comboBox) -> builder.addMerit((Merit) comboBox.getSelectedItem()));
         this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
-            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), "")))
+            .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .forEachOrdered((comboBox) -> builder.addFlaw((Flaw) comboBox.getSelectedItem()));
         builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }

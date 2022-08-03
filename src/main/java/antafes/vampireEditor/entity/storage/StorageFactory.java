@@ -24,6 +24,7 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,38 +33,36 @@ import java.util.logging.Logger;
  * Factory for fetching certain storages.
  */
 public class StorageFactory {
-    private static final HashMap<StorageType, BaseStorage> storages = new HashMap<>();
+    private static final HashMap<StorageType, BaseStorage<?>> storages = new HashMap<>();
 
     public enum StorageType {
-        ABILITY ("antafes.vampireEditor.entity.storage.AbilityStorage"),
-        ADVANTAGE ("antafes.vampireEditor.entity.storage.AdvantageStorage"),
-        ATTRIBUTE ("antafes.vampireEditor.entity.storage.AttributeStorage"),
-        WEAKNESS ("antafes.vampireEditor.entity.storage.WeaknessStorage"),
-        CLAN ("antafes.vampireEditor.entity.storage.ClanStorage"),
-        MERIT ("antafes.vampireEditor.entity.storage.MeritStorage"),
-        FLAW ("antafes.vampireEditor.entity.storage.FlawStorage"),
-        GENERATION ("antafes.vampireEditor.entity.storage.GenerationStorage"),
-        ROAD ("antafes.vampireEditor.entity.storage.RoadStorage"),
-        CHARACTER ("antafes.vampireEditor.entity.storage.CharacterStorage"),
-        EMPTY ("antafes.vampireEditore.entity.storage.EmptyEntityStorage");
+        ABILITY (AbilityStorage.class),
+        ADVANTAGE (AdvantageStorage.class),
+        ATTRIBUTE (AttributeStorage.class),
+        WEAKNESS (WeaknessStorage.class),
+        CLAN (ClanStorage.class),
+        MERIT (MeritStorage.class),
+        FLAW (FlawStorage.class),
+        GENERATION (GenerationStorage.class),
+        ROAD (RoadStorage.class),
+        CHARACTER (CharacterStorage.class),
+        EMPTY (EmptyEntityStorage.class);
 
-        private final String storageClass;
+        private final Class<?> storageClass;
 
         /**
          * Constructor
          *
          * @param storageClass The storage class name
          */
-        StorageType(String storageClass) {
+        StorageType(Class<?> storageClass) {
             this.storageClass = storageClass;
         }
 
         /**
          * Get the storage class name.
-         *
-         * @return
          */
-        public String getStorageClass() {
+        public Class<?> getStorageClass() {
             return storageClass;
         }
     }
@@ -74,10 +73,10 @@ public class StorageFactory {
     public static void storageWarmUp() {
         for (StorageType type : StorageType.values()) {
             try {
-                BaseStorage storage = (BaseStorage) Class.forName(type.getStorageClass()).newInstance();
+                BaseStorage<?> storage = (BaseStorage<?>) type.getStorageClass().getDeclaredConstructor().newInstance();
                 storage.init();
                 StorageFactory.storages.put(type, storage);
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
                 Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, e);
             }
         }
@@ -90,7 +89,7 @@ public class StorageFactory {
      *
      * @return The storage
      */
-    public static BaseStorage getStorage(StorageType type) {
+    public static BaseStorage<?> getStorage(StorageType type) {
         if (StorageFactory.storages.isEmpty()) {
             StorageFactory.storageWarmUp();
         }

@@ -48,7 +48,7 @@ public class TestClanUtility {
     public static Clan createTestClan() throws EntityException, EntityStorageException {
         AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
-        return new Clan.Builder()
+        return Clan.builder()
             .setKey("testClan")
             .addName(Configuration.Language.ENGLISH, "Test clan")
             .addNickname(Configuration.Language.ENGLISH, "Test nickname")

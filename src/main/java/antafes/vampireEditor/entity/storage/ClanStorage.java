@@ -25,7 +25,6 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Clan;
@@ -35,13 +34,11 @@ import org.w3c.dom.Element;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for clans.
  */
-public class ClanStorage extends BaseStorage {
+public class ClanStorage extends BaseStorage<Clan> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -72,34 +69,18 @@ public class ClanStorage extends BaseStorage {
                     name.getFirstChild().getNodeValue()
                 ));
 
-                try {
-                    this.getList().put(
-                        element.getAttribute("key"),
-                        new Clan.Builder()
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .setNicknames(nicknames)
-                            .setAdvantages(this.getClanDisciplins(XMLParser.getTagElement("advantages", element)))
-                            .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
-                            .build()
-                    );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                this.getList().put(
+                    element.getAttribute("key"),
+                    Clan.builder()
+                        .setKey(element.getAttribute("key"))
+                        .setNames(names)
+                        .setNicknames(nicknames)
+                        .setAdvantages(this.getClanDisciplines(XMLParser.getTagElement("advantages", element)))
+                        .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
+                        .build()
+                );
             });
         }
-    }
-
-    /**
-     * Fetch a single clan for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Clan getEntity(String key) throws EntityStorageException {
-        return (Clan) super.getEntity(key);
     }
 
     /**
@@ -109,7 +90,7 @@ public class ClanStorage extends BaseStorage {
      *
      * @return List of advantage objects
      */
-    private ArrayList<Advantage> getClanDisciplins(Element element) {
+    private ArrayList<Advantage> getClanDisciplines(Element element) {
         ArrayList<Advantage> advantagesList = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
         AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);

@@ -21,9 +21,9 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.TranslatableComponent;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 public class LooksPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
+    @Setter
     private antafes.vampireEditor.entity.Character character = null;
 
     /**
@@ -120,16 +121,6 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
         dateField.setSize(167, GroupLayout.DEFAULT_SIZE);
 
         return dateField;
-    }
-
-    /**
-     * Set the character used to prefill every field.
-     *
-     * @param character
-     */
-    @Override
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     /**

@@ -21,10 +21,11 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PrintBase;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -38,9 +39,10 @@ import java.util.logging.Logger;
  * @author Marian Pollzien
  */
 public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
+    @Getter
+    @Setter
     private antafes.vampireEditor.entity.Character character;
     private PrintBase page;
-    private JScrollPane scrollPane;
 
     /**
      * Start construction of the print preview
@@ -68,10 +70,10 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                 }
             }
 
-            this.scrollPane = new JScrollPane();
-            this.scrollPane.setBackground(Color.WHITE);
-            this.scrollPane.setViewportView(this.page);
-            this.scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            JScrollPane scrollPane = new JScrollPane();
+            scrollPane.setBackground(Color.WHITE);
+            scrollPane.setViewportView(this.page);
+            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
             GroupLayout layout = new GroupLayout(this);
             this.setLayout(layout);
 
@@ -107,7 +109,7 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                     .addGroup(
                         layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(this.scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
+                            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
                             .addContainerGap()
                     )
             );
@@ -123,31 +125,13 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
                                 .addComponent(rightButton, 20, 20, 20)
                         )
                         .addGap(5)
-                        .addComponent(this.scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                         .addContainerGap()
                 )
             );
         } catch (IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException | ClassNotFoundException ex) {
             Logger.getLogger(PrintPreviewPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    /**
-     * Get the used character object.
-     *
-     * @return
-     */
-    public Character getCharacter() {
-        return this.character;
-    }
-
-    /**
-     * Set the character object to use.
-     *
-     * @param character
-     */
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     /**

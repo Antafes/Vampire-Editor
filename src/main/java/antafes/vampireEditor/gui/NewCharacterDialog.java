@@ -23,13 +23,15 @@ package antafes.vampireEditor.gui;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,17 +50,21 @@ import java.util.logging.Logger;
 public class NewCharacterDialog extends javax.swing.JDialog {
 
     private final LanguageInterface language;
+    @Getter
     private int maxActiveTab = 0;
     private LooksPanel looksPanel;
     private AttributesPanel attributesPanel;
     private AbilitiesPanel abilitiesPanel;
     private AdvantagesPanel advantagesPanel;
     private LastStepsPanel lastStepsPanel;
+    @Setter
     private BaseWindow parent;
 
     // List of created fields
     private javax.swing.JButton cancelButton;
+    @Getter
     private javax.swing.JTabbedPane characterTabPane;
+    @Getter
     private javax.swing.JTextField freeAdditionalMaxPointsTextField;
     private javax.swing.JLabel freeAdditionalPointsLabel;
     private javax.swing.JTextField freeAdditionalPointsTextField;
@@ -162,7 +168,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Action perfmored event for the cancel button.
+     * Action performed event for the cancel button.
      *
      * @param evt Event object
      */
@@ -172,22 +178,11 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     public void setAttributeMaximum(int maximum) {
         this.attributesPanel.setSpinnerMaximum(maximum);
         this.abilitiesPanel.setSpinnerMaximum(maximum);
         this.advantagesPanel.setSpinnerMaximum(maximum);
-    }
-
-    /**
-     * Get the tabbed pane inside this dialog.
-     *
-     * @return
-     */
-    public JTabbedPane getCharacterTabPane() {
-        return characterTabPane;
     }
 
     /**
@@ -228,18 +223,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Get the current maximum active tab.
-     *
-     * @return
-     */
-    public int getMaxActiveTab() {
-        return this.maxActiveTab;
-    }
-
-    /**
      * Calculate and return the sum of points spent for physical attributes.
-     *
-     * @return
      */
     private int getPhysicalPointsSum() {
         return this.attributesPanel.getPhysicalPointsSum();
@@ -256,8 +240,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for physical attributes.
-     *
-     * @return
      */
     private int getPhysicalMaxPoints() {
         return this.attributesPanel.getPhysicalMaxPoints();
@@ -265,8 +247,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for social attributes.
-     *
-     * @return
      */
     private int getSocialPointsSum() {
         return this.attributesPanel.getSocialPointsSum();
@@ -283,8 +263,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for social attributes.
-     *
-     * @return
      */
     private int getSocialMaxPoints() {
         return this.attributesPanel.getSocialMaxPoints();
@@ -292,8 +270,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for mental attributes.
-     *
-     * @return
      */
     private int getMentalPointsSum() {
         return this.attributesPanel.getMentalPointsSum();
@@ -310,8 +286,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for mental attributes.
-     *
-     * @return
      */
     private int getMentalMaxPoints() {
         return this.attributesPanel.getMentalMaxPoints();
@@ -319,8 +293,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for talents.
-     *
-     * @return
      */
     private int getTalentPointsSum() {
         return this.abilitiesPanel.getTalentPointsSum();
@@ -337,8 +309,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for talents.
-     *
-     * @return
      */
     private int getTalentMaxPoints() {
         return this.abilitiesPanel.getTalentMaxPoints();
@@ -346,8 +316,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for skills.
-     *
-     * @return
      */
     private int getSkillPointsSum() {
         return this.abilitiesPanel.getSkillPointsSum();
@@ -364,8 +332,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for skills.
-     *
-     * @return
      */
     private int getSkillMaxPoints() {
         return this.abilitiesPanel.getSkillMaxPoints();
@@ -373,8 +339,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for knowledge.
-     *
-     * @return
      */
     private int getKnowledgePointsSum() {
         return this.abilitiesPanel.getKnowledgePointsSum();
@@ -391,8 +355,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for knowledge.
-     *
-     * @return
      */
     private int getKnowledgeMaxPoints() {
         return this.abilitiesPanel.getKnowledgeMaxPoints();
@@ -400,8 +362,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * The amount of points above the maximum defined.
-     *
-     * @return
      */
     private int getAbilityPointsOverMax() {
         return this.abilitiesPanel.getAmountAboveMaximum();
@@ -409,8 +369,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Calculate and return the sum of points spent for backgrounds.
-     *
-     * @return
      */
     private int getBackgroundPointsSum() {
         return this.advantagesPanel.getBackgroundPointsSum();
@@ -427,44 +385,36 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for backgrounds.
-     *
-     * @return
      */
     private int getBackgroundMaxPoints() {
         return this.advantagesPanel.getBackgroundMaxPoints();
     }
 
     /**
-     * Calculate and return the sum of points spent for disciplins.
-     *
-     * @return
+     * Calculate and return the sum of points spent for disciplines.
      */
-    private int getDisciplinPointsSum() {
+    private int getDisciplinePointsSum() {
         return this.advantagesPanel.getDisciplinePointsSum();
     }
 
     /**
-     * Check if the spent points for disciplins is above its maximum.
+     * Check if the spent points for disciplines is above its maximum.
      *
      * @return True if spent points are above maximum
      */
-    private boolean checkDisciplinPoints() {
+    private boolean checkDisciplinePoints() {
         return this.advantagesPanel.checkDisciplinePoints();
     }
 
     /**
-     * Get the maximum points available for disciplins.
-     *
-     * @return
+     * Get the maximum points available for disciplines.
      */
-    private int getDisciplinMaxPoints() {
+    private int getDisciplineMaxPoints() {
         return this.advantagesPanel.getDisciplineMaxPoints();
     }
 
     /**
      * Calculate and return the sum of points spent for virtues.
-     *
-     * @return
      */
     private int getVirtuePointsSum() {
         return this.advantagesPanel.getVirtuePointsSum();
@@ -481,8 +431,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
     /**
      * Get the maximum points available for virtues.
-     *
-     * @return
      */
     private int getVirtueMaxPoints() {
         return this.advantagesPanel.getVirtueMaxPoints();
@@ -524,8 +472,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             freeSum += (this.getBackgroundPointsSum() - this.getBackgroundMaxPoints());
         }
 
-        if (this.checkDisciplinPoints()) {
-            freeSum += (this.getDisciplinPointsSum() - this.getDisciplinMaxPoints()) * 7;
+        if (this.checkDisciplinePoints()) {
+            freeSum += (this.getDisciplinePointsSum() - this.getDisciplineMaxPoints()) * 7;
         }
 
         if (this.checkVirtuePoints()) {
@@ -565,30 +513,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set the clan disciplins on the advantages panel.
-     *
-     * @param clan
+     * Set the clan disciplines on the advantages panel.
      */
-    public void setClanDisciplins(Clan clan) {
+    public void setClanDisciplines(Clan clan) {
         this.advantagesPanel.setDisciplines(clan);
-    }
-
-    /**
-     * Get the textfield for the maximum free additional points.
-     *
-     * @return
-     */
-    public JTextField getFreeAdditionalMaxPointsTextField() {
-        return freeAdditionalMaxPointsTextField;
-    }
-
-    /**
-     * Set the parent container.
-     *
-     * @param parent
-     */
-    public void setParent(BaseWindow parent) {
-        this.parent = parent;
     }
 
     /**
@@ -602,7 +530,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         VampireEditor.log(new ArrayList<>(
             Collections.singletonList("finishing character")
         ));
-        antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder();
+        Character.CharacterBuilder<?, ?> builder = Character.builder();
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
         this.abilitiesPanel.fillCharacter(builder);
@@ -611,15 +539,11 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         ShowWaitAction waitAction = new ShowWaitAction(this);
         waitAction.show(aVoid -> {
-            try {
-                this.parent.addCharacter(builder.build());
-                VampireEditor.log(new ArrayList<>(
-                    Collections.singletonList("closing window")
-                ));
-                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            } catch (EntityException ex) {
-                Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            this.parent.addCharacter(builder.build());
+            VampireEditor.log(new ArrayList<>(
+                Collections.singletonList("closing window")
+            ));
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             
             return null;
         });

@@ -22,7 +22,7 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
@@ -397,9 +397,8 @@ public class AbilitiesPanel extends BaseListPanel {
      * @param builder Character builder
      */
     @Override
-    public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
-        Ability.Builder abilityBuilder = new Ability.Builder();
         this.getFields().forEach((key, fields) -> {
             for (Component field : fields) {
                 JSpinner spinner = (JSpinner) field;
@@ -407,12 +406,11 @@ public class AbilitiesPanel extends BaseListPanel {
                 try {
                     Ability ability = storage.getEntity(spinner.getName());
                     builder.addAbility(
-                        abilityBuilder
-                            .fillDataFromObject(ability)
+                        ability.toBuilder()
                             .setValue((int) spinner.getValue())
                             .build()
                     );
-                } catch (EntityException | EntityStorageException ex) {
+                } catch (EntityStorageException ex) {
                     Logger.getLogger(AbilitiesPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

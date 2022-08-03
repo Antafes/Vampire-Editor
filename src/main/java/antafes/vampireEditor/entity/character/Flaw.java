@@ -21,18 +21,22 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
+
 /**
  * Flaw object.
  *
  * @author Marian Pollzien
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Flaw extends SpecialFeature {
-    /**
-     * Flaw constructor
-     *
-     * @param builder The builder object
-     */
-    public Flaw(Builder builder) {
-        super(builder);
+    @Override
+    public String toString()
+    {
+        return super.toString();
     }
 }
