@@ -18,7 +18,7 @@ The build pipeline will automatically check if the version has been changed and 
 Copyright and Trademark
 -----------------------
 
-<img src="images/darkpack_logo2.png" width="100" />
+<img src="src/main/resources/images/darkPackLogo.png" width="100" />
 
 Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. 
 All rights reserved. 
