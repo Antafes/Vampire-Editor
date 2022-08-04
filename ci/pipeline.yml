@@ -1,0 +1,153 @@
+resource_types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: teliaoss/github-pr-resource
+
+resources:
+- name: vampire-editor-repo
+  type: git
+  source:
+    uri: https://github.com/Antafes/Vampire-Editor
+    branch: master
+    private_key: ((private_key))
+- name: vampire-editor-repo-dev
+  type: git
+  source:
+    uri: https://github.com/Antafes/Vampire-Editor
+    branch: dev
+    private_key: ((private_key))
+- name: vampire-editor-repo-pr
+  type: pull-request
+  check_every: 10m
+  source:
+    repository: Antafes/Vampire-Editor
+    access_token: ((acccess_token))
+- name: vampire-editor-pre-release
+  type: github-release
+  source:
+    owner: Antafes
+    repository: Vampire-Editor
+    pre_release: true
+    release: false
+    access_token: ((acccess_token))
+- name: vampire-editor-release
+  type: github-release
+  source:
+    owner: Antafes
+    repository: Vampire-Editor
+    release: true
+    drafts: false
+    access_token: ((acccess_token))
+
+jobs:
+- name: vampire-editor-pr
+  plan:
+    - get: vampire-editor-repo-pr
+      trigger: true
+      version: every
+    - put: vampire-editor-repo-pr
+      params:
+        path: vampire-editor-repo-pr
+        status: pending
+    - task: unit-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3-jdk-8
+        inputs:
+          - name: vampire-editor-repo-pr
+        run:
+          path: ci/test.sh
+          args: ["((maven_access_token))"]
+          dir: vampire-editor-repo-pr
+        caches:
+          - path: maven
+      on_failure:
+        put: vampire-editor-repo-pr
+        params:
+          path: vampire-editor-repo-pr
+          status: failure
+    - put: vampire-editor-repo-pr
+      params:
+        path: vampire-editor-repo-pr
+        status: success
+
+- name: vampire-editor-dev
+  plan:
+  - get: vampire-editor-pre-release
+  - get: vampire-editor-repo-dev
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3-jdk-8
+      inputs:
+      - name: vampire-editor-pre-release
+      - name: vampire-editor-repo-dev
+      outputs:
+      - name: dist
+      run:
+        path: ci/build-dev.sh
+        args: ["((maven_access_token))"]
+        dir: vampire-editor-repo-dev
+      caches:
+        - path: maven
+  - put: vampire-editor-pre-release
+    params:
+     name: dist/name
+     tag: dist/tag
+     commitish: dist/commit_sha
+     globs:
+      - dist/*.zip
+
+- name: vampire-editor
+  plan:
+  - get: vampire-editor-repo
+    trigger: true
+  - get: vampire-editor-pre-release
+  - task: check-version
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: debian
+          tag: stable-slim
+      inputs:
+      - name: vampire-editor-repo
+      - name: vampire-editor-release
+      run:
+        path: ci/check-version.sh
+        dir: vampire-editor-repo
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3-jdk-8
+      inputs:
+      - name: vampire-editor-repo
+      outputs:
+      - name: dist
+      run:
+        path: ci/build.sh
+        args: ["((maven_access_token))"]
+        dir: vampire-editor-repo
+      caches:
+        - path: maven
+  - put: vampire-editor-release
+    params:
+      name: dist/name
+      tag: dist/tag
+      globs:
+      - dist/*.zip

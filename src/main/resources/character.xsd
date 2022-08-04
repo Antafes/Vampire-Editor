@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema version="1.0"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xsd:element name="character">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="clan" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="generation" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="chronicle" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="experience" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="nature" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="hideout" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="player" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="demeanor" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="concept" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="sire" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="sect" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="attributes" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="attribute" minOccurs="9" maxOccurs="9">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:integer">
+                                            <xsd:attribute name="key" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="abilities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="ability" minOccurs="30" maxOccurs="30">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:integer">
+                                            <xsd:attribute name="key" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="advantages" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="advantage" minOccurs="1" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:integer">
+                                            <xsd:attribute name="key" type="xsd:string" use="required" />
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="merits" minOccurs="0" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="merit" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="flaws" minOccurs="0" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="flaw" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="road" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:simpleContent>
+                            <xsd:extension base="xsd:integer">
+                                <xsd:attribute name="key" type="xsd:string" use="required" />
+                            </xsd:extension>
+                        </xsd:simpleContent>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="willpower" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="usedWillpower" type="xsd:integer" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="bloodPool" type="xsd:integer" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="age" type="xsd:integer" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="apparentAge" type="xsd:integer" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="dayOfBirth" type="xsd:date" minOccurs="0" maxOccurs="1" nillable="1" />
+                <xsd:element name="dayOfDeath" type="xsd:date" minOccurs="0" maxOccurs="1" nillable="1" />
+                <xsd:element name="hairColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="eyeColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="skinColor" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="nationality" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="height" type="xsd:decimal" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="weight" type="xsd:decimal" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="sex" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="story" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:string" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
