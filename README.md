@@ -4,6 +4,11 @@ Vampire Editor
 This is a character generator for Vampires: Dark Ages.
 The editor will be in English and German, but as of now some parts may only have English texts available. After the German version of the 20th anniversary edition is published, I certainly will add all German translations.
 
+Known Issues
+------------
+
+There is a difference between the cost for clan apostate in the German and English version of the anniversary edition.
+
 Development
 -----------
 
