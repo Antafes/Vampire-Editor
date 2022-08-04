@@ -38,7 +38,7 @@ public class AdvantageTest {
     @BeforeMethod
     public void setUp() throws EntityException {
         Configuration.getInstance().loadProperties();
-        this.advantage = new Advantage.Builder()
+        this.advantage = Advantage.builder()
             .setKey("testAdvantage")
             .addName(Configuration.Language.ENGLISH, "Test advantage")
             .setType(AdvantageInterface.AdvantageType.BACKGROUND)
@@ -59,7 +59,7 @@ public class AdvantageTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.advantage.getNames();
+        final HashMap<Configuration.Language, String> actual = this.advantage.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -106,7 +106,7 @@ public class AdvantageTest {
     }
 
     public void testDifferentAdvantage() throws EntityException {
-        final Advantage object = new Advantage.Builder()
+        final Advantage object = Advantage.builder()
             .setKey("testAdvantage2")
             .addName(Configuration.Language.ENGLISH, "Test advantage 2")
             .setType(AdvantageInterface.AdvantageType.DISCIPLINE)
@@ -118,8 +118,7 @@ public class AdvantageTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.advantage.hashCode();
-        final int actual = new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        final int actual = this.advantage.toBuilder()
             .build()
             .hashCode();
 
@@ -128,47 +127,41 @@ public class AdvantageTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .setType(null)
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Advantage.Builder()
-            .fillDataFromObject(this.advantage)
+        this.advantage.toBuilder()
             .build();
     }
 }

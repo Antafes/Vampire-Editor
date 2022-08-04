@@ -22,58 +22,21 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 /**
  *
  * @author Marian Pollzien
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Weakness extends BaseTranslatedEntity implements WeaknessInterface {
-    /**
-     * Builder for Ability objects.
-     */
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        /**
-         * Build a new weakness object.
-         *
-         * @return The created weakness entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        @Override
-        public Weakness build() throws EntityException {
-            this.checkValues();
-
-            return new Weakness(this);
-        }
-
-        /**
-         * Get an instance of itself.
-         *
-         * @return The object itself
-         */
-        @Override
-        protected Builder self() {
-            return this;
-        }
-    }
-
-    /**
-     * Create a new weakness object.
-     *
-     * @param builder The builder object
-     */
-    public Weakness(Builder builder) {
-        super(builder);
-    }
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return String representation of the object
-     */
     @Override
-    public String toString() {
-        return this.getName();
+    public String toString()
+    {
+        return super.toString();
     }
 }

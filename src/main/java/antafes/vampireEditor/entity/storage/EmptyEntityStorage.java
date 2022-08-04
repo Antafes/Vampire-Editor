@@ -23,28 +23,23 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
 
 import java.util.HashMap;
 
-public class EmptyEntityStorage extends BaseStorage
+public class EmptyEntityStorage extends BaseStorage<EmptyEntity>
 {
     private EmptyEntity entity;
 
     @Override
     public void init()
     {
-        try {
-            this.entity = new EmptyEntity.Builder()
-                .setKey("empty")
-                .addName(Configuration.Language.ENGLISH, "")
-                .addName(Configuration.Language.GERMAN, "")
-                .build();
-        } catch (EntityException ignored) {
-        }
+        this.entity = EmptyEntity.builder()
+            .setKey("empty")
+            .addName(Configuration.Language.ENGLISH, "")
+            .addName(Configuration.Language.GERMAN, "")
+            .build();
     }
 
     public EmptyEntity getEntity()
@@ -62,7 +57,7 @@ public class EmptyEntityStorage extends BaseStorage
      * There is no list to return!
      */
     @Override
-    public HashMap<String, BaseEntity> getList()
+    public HashMap<String, EmptyEntity> getList()
     {
         return null;
     }

@@ -21,128 +21,24 @@
  */
 package antafes.vampireEditor.entity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import lombok.Data;
+import lombok.SneakyThrows;
+import lombok.experimental.SuperBuilder;
 
 /**
  * A base entity.
  */
+@Data
+@SuperBuilder(setterPrefix = "set", toBuilder = true)
 public abstract class BaseEntity {
-    public abstract static class Builder<T extends Builder<T>> {
-        /**
-         * Build a new base entity.
-         *
-         * @return The created entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        public abstract BaseEntity build() throws EntityException;
+    @SneakyThrows(EntityException.class)
+    protected BaseEntity(BaseEntityBuilder<?, ?> b)
+    {
+        b.checkValues();
+    }
 
-        /**
-         * Check if all necessary values are set.
-         * This has to be called in the build method.
-         *
-         * @throws EntityException If something is missing but required
-         */
+    public static abstract class BaseEntityBuilder<C extends BaseEntity, B extends BaseEntityBuilder<C, B>>
+    {
         protected abstract void checkValues() throws EntityException;
-
-        /**
-         * Get an instance of itself.
-         *
-         * @return The object itself
-         */
-        protected abstract T self();
-
-        /**
-         * Fill every property from the given object into this builder.
-         *
-         * @param object A BaseEntity to fetch values from
-         *
-         * @return The builder object
-         */
-        public T fillDataFromObject(BaseEntity object) {
-            this.self().getDataMethods().forEach((declaredMethod) -> {
-                try {
-                    Method setter = this.getSetter(declaredMethod);
-                    setter.invoke(this, declaredMethod.invoke(object, (Object[])null));
-                } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(BaseEntity.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-
-            return this.self();
-        }
-
-        /**
-         * Check whether the given method can be used to fill in data.
-         *
-         * @param method The method to check.
-         *
-         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
-         */
-        protected boolean checkMethod(Method method) {
-            return !method.getName().startsWith("get") || method.getName().equals("getDataMethods");
-        }
-
-        /**
-         * Get the list of methods from which data can be fetched.
-         *
-         * @return A list of getter methods
-         */
-        protected ArrayList<Method> getDataMethods() {
-            ArrayList<Method> methodList = new ArrayList<>();
-
-            for (Method declaredMethod : BaseEntity.class.getDeclaredMethods()) {
-                if (this.checkMethod(declaredMethod)) {
-                    continue;
-                }
-
-                methodList.add(declaredMethod);
-            }
-
-            return methodList;
-        }
-
-        /**
-         * Get a setter method from the given getter.
-         *
-         * @param getter The getter to build the setter out of
-         *
-         * @return Setter method object
-         * @throws NoSuchMethodException Exception thrown if no method of that name exists
-         */
-        protected Method getSetter(Method getter) throws NoSuchMethodException {
-            Class[] parameterTypes = new Class[1];
-            parameterTypes[0] = getter.getReturnType();
-
-            return BaseEntity.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
-        }
-    }
-
-    /**
-     * Create new base entity.
-     *
-     * @param builder The builder object
-     */
-    protected BaseEntity(Builder<?> builder) {
-    }
-
-    /**
-     * Check if the given object equals this object.
-     *
-     * @param obj The object to check
-     *
-     * @return True if both are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        return (obj != null && this.getClass() == obj.getClass());
     }
 }

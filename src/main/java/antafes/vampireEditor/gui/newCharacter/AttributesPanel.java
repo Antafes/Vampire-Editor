@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
@@ -171,8 +171,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Calculate and return the sum of points spent for physical attributes.
-     *
-     * @return
      */
     public int getPhysicalPointsSum() {
         return this.getPointsSum("physical");
@@ -189,8 +187,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Get the maximum points available for physical attributes.
-     *
-     * @return
      */
     public int getPhysicalMaxPoints() {
         return this.getMaxPoints("physical");
@@ -205,8 +201,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Calculate and return the sum of points spent for social attributes.
-     *
-     * @return
      */
     public int getSocialPointsSum() {
         return this.getPointsSum("social");
@@ -223,8 +217,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Get the maximum points available for social attributes.
-     *
-     * @return
      */
     public int getSocialMaxPoints() {
         return this.getMaxPoints("social");
@@ -239,8 +231,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Calculate and return the sum of points spent for mental attributes.
-     *
-     * @return
      */
     public int getMentalPointsSum() {
         return this.getPointsSum("mental");
@@ -257,8 +247,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Get the maximum points available for mental attributes.
-     *
-     * @return
      */
     public int getMentalMaxPoints() {
         return this.getMaxPoints("mental");
@@ -266,8 +254,6 @@ public class AttributesPanel extends BaseListPanel {
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
@@ -380,46 +366,44 @@ public class AttributesPanel extends BaseListPanel {
      * @param builder Character builder object
      */
     @Override
-    public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());
-                Attribute.Builder attributeBuilder = new Attribute.Builder();
+
                 builder.addAttribute(
-                    attributeBuilder.fillDataFromObject(attribute)
+                    attribute.toBuilder()
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.getFields("social").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());
-                Attribute.Builder attributeBuilder = new Attribute.Builder();
 
                 builder.addAttribute(
-                    attributeBuilder.fillDataFromObject(attribute)
+                    attribute.toBuilder()
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.getFields("mental").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());
-                Attribute.Builder attributeBuilder = new Attribute.Builder();
 
                 builder.addAttribute(
-                    attributeBuilder.fillDataFromObject(attribute)
+                    attribute.toBuilder()
                         .setValue((int) spinner.getValue())
                         .build()
                 );
-            } catch (EntityException | EntityStorageException ex) {
+            } catch (EntityStorageException ex) {
                 Logger.getLogger(AttributesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });

@@ -25,19 +25,15 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Road;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for roads.
  */
-public class RoadStorage extends BaseStorage {
+public class RoadStorage extends BaseStorage<Road> {
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -62,30 +58,14 @@ public class RoadStorage extends BaseStorage {
                     name.getFirstChild().getNodeValue()
                 ));
 
-                try {
                     this.getList().put(
                         element.getAttribute("key"),
-                        new Road.Builder()
+                        Road.builder()
                             .setNames(names)
                             .setKey(element.getAttribute("key"))
                             .build()
                     );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
             });
         }
-    }
-
-    /**
-     * Fetch a single road for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Road getEntity(String key) throws EntityStorageException {
-        return (Road) super.getEntity(key);
     }
 }

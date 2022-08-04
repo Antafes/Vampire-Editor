@@ -22,28 +22,17 @@
 
 package antafes.vampireEditor.entity;
 
-public class EmptyEntity extends BaseTranslatedEntity
-{
-    /**
-     * Create a new empty entity.
-     *
-     * @param builder The builder object
-     */
-    protected EmptyEntity(Builder builder) {
-        super(builder);
-    }
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        @Override
-        public EmptyEntity build() throws EntityException
-        {
-            return new EmptyEntity(this);
-        }
-
-        @Override
-        protected Builder self()
-        {
-            return this;
-        }
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
+public class EmptyEntity extends BaseTranslatedEntity {
+    @Override
+    public String toString()
+    {
+        return "";
     }
 }

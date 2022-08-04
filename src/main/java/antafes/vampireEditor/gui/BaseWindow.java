@@ -36,6 +36,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.print.Book;
@@ -147,29 +148,29 @@ public class BaseWindow extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
-        newMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
         newMenuItem.setText("New");
         newMenuItem.addActionListener(this::newMenuItemActionPerformed);
         fileMenu.add(newMenuItem);
 
-        openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         openMenuItem.setText("Open");
         openMenuItem.addActionListener(this::openMenuItemActionPerformed);
         fileMenu.add(openMenuItem);
 
-        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(this::saveMenuItemActionPerformed);
         saveMenuItem.setEnabled(false);
         fileMenu.add(saveMenuItem);
 
-        printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        printMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         printMenuItem.setText("Print");
         printMenuItem.addActionListener(this::printMenuItemActionPerformed);
         printMenuItem.setEnabled(false);
         fileMenu.add(printMenuItem);
 
-        closeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        closeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
         closeMenuItem.setText("Quit");
         closeMenuItem.addActionListener(this::closeMenuItemActionPerformed);
         fileMenu.add(closeMenuItem);
@@ -457,7 +458,6 @@ public class BaseWindow extends javax.swing.JFrame {
         PaperA4 paper = new PaperA4();
         pageFormat.setPaper(paper);
         printerJob.setJobName(this.language.translate("printCharacter"));
-        Dimension dimension = new Dimension((int) pageFormat.getWidth(), (int) pageFormat.getHeight());
 
         Book book = new Book();
         ArrayList<PrintBase> pages = ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getPrintPages();
@@ -618,8 +618,6 @@ public class BaseWindow extends javax.swing.JFrame {
 
     /**
      * Get the character of the currently selected tab.
-     *
-     * @return
      */
     private antafes.vampireEditor.entity.Character getActiveCharacter() {
         return ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
@@ -627,8 +625,6 @@ public class BaseWindow extends javax.swing.JFrame {
 
     /**
      * Check if a character already has been loaded.
-     *
-     * @return
      */
     public boolean isAnyCharacterLoaded() {
         try {

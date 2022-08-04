@@ -55,8 +55,7 @@ public class ClanComparatorTest {
 
     public void testCompareFirstGreater() throws EntityException, EntityStorageException {
         ClanComparator comparator = new ClanComparator();
-        Clan clan1 = new Clan.Builder()
-            .fillDataFromObject(TestClanUtility.createTestClan())
+        Clan clan1 = TestClanUtility.createTestClan().toBuilder()
             .setNames(new HashMap<>())
             .addName(Configuration.Language.ENGLISH, "First test clan")
             .build();

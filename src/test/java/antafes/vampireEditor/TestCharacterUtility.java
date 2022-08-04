@@ -25,7 +25,6 @@ package antafes.vampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
-import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.BaseWindow;
 
@@ -51,7 +50,7 @@ public class TestCharacterUtility {
             RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
-            antafes.vampireEditor.entity.Character.Builder builder = new antafes.vampireEditor.entity.Character.Builder()
+            Character.CharacterBuilder<?, ?> builder = Character.builder()
                 .setId(UUID.fromString("8ddb1360-316b-11e9-b210-d663bd873d93"))
                 .setName("Test Character")
                 .setGeneration(generationStorage.getEntity(4))
@@ -86,32 +85,15 @@ public class TestCharacterUtility {
             TestCharacterUtility.addAttributes(builder);
             TestCharacterUtility.addAbilities(builder);
 
-            Advantage.Builder advantageBuilder = new Advantage.Builder();
             AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("allies"))
-                .setValue(3);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("influence"))
-                .setValue(2);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("auspex"))
-                .setValue(2);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("celerity"))
-                .setValue(1);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("dominate"))
-                .setValue(1);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("conscience"))
-                .setValue(3);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("courage"))
-                .setValue(2);
-            builder.addAdvantage(advantageBuilder.build());
-            advantageBuilder.fillDataFromObject(advantageStorage.getEntity("self-control"))
-                .setValue(2);
-            builder.addAdvantage(advantageBuilder.build());
+            builder.addAdvantage(advantageStorage.getEntity("allies").toBuilder().setValue(3).build());
+            builder.addAdvantage(advantageStorage.getEntity("influence").toBuilder().setValue(2).build());
+            builder.addAdvantage(advantageStorage.getEntity("auspex").toBuilder().setValue(2).build());
+            builder.addAdvantage(advantageStorage.getEntity("celerity").toBuilder().setValue(1).build());
+            builder.addAdvantage(advantageStorage.getEntity("dominate").toBuilder().setValue(1).build());
+            builder.addAdvantage(advantageStorage.getEntity("conscience").toBuilder().setValue(3).build());
+            builder.addAdvantage(advantageStorage.getEntity("courage").toBuilder().setValue(2).build());
+            builder.addAdvantage(advantageStorage.getEntity("self-control").toBuilder().setValue(2).build());
 
             MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
             FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
@@ -119,10 +101,7 @@ public class TestCharacterUtility {
             builder.addFlaw(flawStorage.getEntity("deepSleeper"));
             builder.addMerit(meritStorage.getEntity("commonSense"));
             builder.addMerit(meritStorage.getEntity("eideticMemory"));
-            Road.Builder roadBuilder = new Road.Builder()
-                .fillDataFromObject(roadStorage.getEntity("roadOfHumanity"))
-                .setValue(5);
-            builder.setRoad(roadBuilder.build());
+            builder.setRoad(roadStorage.getEntity("roadOfHumanity").toBuilder().setValue(5).build());
 
             return builder.build();
         } catch (EntityException | EntityStorageException ex) {
@@ -132,30 +111,24 @@ public class TestCharacterUtility {
         return null;
     }
 
-    private static void addAttributes(Character.Builder builder) throws EntityException, EntityStorageException {
-        Attribute.Builder attributeBuilder = new Attribute.Builder();
+    private static void addAttributes(Character.CharacterBuilder<?, ?> builder) throws EntityException, EntityStorageException {
         AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("strength")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("dexterity")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("stamina")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("charisma")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("appearance")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("manipulation")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("intelligence")).setValue(2).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("perception")).setValue(3).build());
-        builder.addAttribute(attributeBuilder.fillDataFromObject(storage.getEntity("wits")).setValue(1).build());
+        builder.addAttribute(storage.getEntity("strength").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("dexterity").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("stamina").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("charisma").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("appearance").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("manipulation").toBuilder().setValue(2).build());
+        builder.addAttribute(storage.getEntity("intelligence").toBuilder().setValue(2).build());
+        builder.addAttribute(storage.getEntity("perception").toBuilder().setValue(3).build());
+        builder.addAttribute(storage.getEntity("wits").toBuilder().setValue(1).build());
     }
 
-    private static void addAbilities(Character.Builder builder) {
-        Ability.Builder abilityBuilder = new Ability.Builder();
+    private static void addAbilities(Character.CharacterBuilder<?, ?> builder) {
         AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
 
         storage.getList().forEach(((s, ability) -> {
-            try {
-                builder.addAbility(abilityBuilder.fillDataFromObject(ability).setValue(3).build());
-            } catch (EntityException e) {
-                e.printStackTrace();
-            }
+                builder.addAbility((ability).toBuilder().setValue(3).build());
         }));
     }
 }

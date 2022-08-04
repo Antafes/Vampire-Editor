@@ -21,17 +21,19 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.NewCharacterDialog;
-
-import javax.swing.*;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 /**
  * BasePanel object.
  *
  * @author Marian Pollzien
  */
+@Getter
 abstract public class BasePanel extends antafes.vampireEditor.gui.BasePanel {
-
+    @Getter(AccessLevel.NONE)
     private final NewCharacterDialog parent;
     private javax.swing.JButton backButton;
     private javax.swing.JButton nextButton;
@@ -141,29 +143,9 @@ abstract public class BasePanel extends antafes.vampireEditor.gui.BasePanel {
 
     /**
      * Get the parent component.
-     *
-     * @return
      */
     public NewCharacterDialog getParentComponent() {
         return this.parent;
-    }
-
-    /**
-     * Get the back button component.
-     *
-     * @return
-     */
-    public JButton getBackButton() {
-        return this.backButton;
-    }
-
-    /**
-     * Get the next button component.
-     *
-     * @return
-     */
-    public JButton getNextButton() {
-        return this.nextButton;
     }
 
     /**
@@ -183,5 +165,5 @@ abstract public class BasePanel extends antafes.vampireEditor.gui.BasePanel {
      *
      * @param builder Character builder object
      */
-    abstract public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder);
+    abstract public void fillCharacter(Character.CharacterBuilder<?, ?> builder);
 }

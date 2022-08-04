@@ -30,7 +30,7 @@ public interface SpecialFeatureInterface {
     /**
      * List of special feature types.
      */
-    public enum SpecialFeatureType {
+    public enum SpecialFeatureType implements EntityTypeInterface {
         PHYSICAL,
         MENTAL,
         SOCIAL,

@@ -37,8 +37,7 @@ public class FlawTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.flaw = (Flaw) new Flaw.Builder()
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw = Flaw.builder()
             .setKey("testFlaw")
             .addName(Configuration.Language.ENGLISH, "Test flaw")
             .setType(SpecialFeatureInterface.SpecialFeatureType.PHYSICAL)
@@ -59,7 +58,7 @@ public class FlawTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.flaw.getNames();
+        final HashMap<Configuration.Language, String> actual = this.flaw.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -106,8 +105,7 @@ public class FlawTest {
     }
 
     public void testDifferentFlaw() throws EntityException {
-        final Flaw object = (Flaw) new Flaw.Builder()
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        final Flaw object = Flaw.builder()
             .setKey("testFlaw2")
             .addName(Configuration.Language.ENGLISH, "Test flaw 2")
             .setType(SpecialFeatureInterface.SpecialFeatureType.MENTAL)
@@ -118,9 +116,7 @@ public class FlawTest {
     }
 
     public void testDifferentCost() throws EntityException {
-        final Flaw object = (Flaw) new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        final Flaw object = this.flaw.toBuilder()
             .setCost(22)
             .build();
 
@@ -128,9 +124,7 @@ public class FlawTest {
     }
 
     public void testDifferentType() throws EntityException {
-        final Flaw object = (Flaw) new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        final Flaw object = this.flaw.toBuilder()
             .setType(SpecialFeatureInterface.SpecialFeatureType.SOCIAL)
             .build();
 
@@ -139,9 +133,7 @@ public class FlawTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.flaw.hashCode();
-        final int actual = new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        final int actual = this.flaw.toBuilder()
             .build()
             .hashCode();
 
@@ -150,60 +142,41 @@ public class FlawTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .setType(null)
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing special feature class")
-    public void testBuilderMissingSpecialFeatureClass() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .build();
-    }
-
     public void testBuilderBuild() throws EntityException {
-        new Flaw.Builder()
-            .fillDataFromObject(this.flaw)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.FLAW)
+        this.flaw.toBuilder()
             .build();
     }
 }

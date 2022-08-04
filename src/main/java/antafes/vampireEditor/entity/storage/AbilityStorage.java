@@ -25,9 +25,6 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.BaseEntity;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import org.w3c.dom.Element;
@@ -35,14 +32,12 @@ import org.w3c.dom.Element;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for abilities.
  */
-public class AbilityStorage extends BaseStorage {
+public class AbilityStorage extends BaseTypedStorage<Ability, AbilityInterface.AbilityType>
+{
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -70,65 +65,17 @@ public class AbilityStorage extends BaseStorage {
                     translatedName.getFirstChild().getNodeValue()
                 ));
 
-                try {
-                    this.getList().put(
-                        element.getAttribute("key"),
-                        new Ability.Builder()
-                            .setType(
-                                AbilityInterface.AbilityType.valueOf(XMLParser.getTagValue("type", element))
-                            )
-                            .setKey(element.getAttribute("key"))
-                            .setNames(names)
-                            .build()
+                this.getList().put(
+                    element.getAttribute("key"),
+                    Ability.builder()
+                        .setType(
+                            AbilityInterface.AbilityType.valueOf(XMLParser.getTagValue("type", element))
+                        )
+                        .setKey(element.getAttribute("key"))
+                        .setNames(names)
+                        .build()
                     );
-                } catch (EntityException ex) {
-                    Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
-                }
             });
         }
-    }
-
-    /**
-     * Fetch a single ability for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Ability getEntity(String key) throws EntityStorageException {
-        return (Ability) super.getEntity(key);
-    }
-
-    /**
-     * Fetch a subset of abilities from the storage.
-     *
-     * @param type The type of abilities to fetch
-     *
-     * @return Map of abilities
-     */
-    public HashMap<String, Ability> getEntityMapByType(AbilityInterface.AbilityType type) {
-        HashMap<String, Ability> list = new HashMap<>();
-
-        this.getList().forEach((String key, BaseEntity entity) -> {
-            Ability ability = (Ability) entity;
-
-            if (Objects.equals(type, ability.getType())) {
-                list.put(key, ability);
-            }
-        });
-
-        return list;
-    }
-
-    /**
-     * Fetch a subset of abilities from the storage.
-     *
-     * @param type The type of abilities to fetch
-     *
-     * @return List of abilities
-     */
-    public ArrayList<Ability> getEntityListByType(AbilityInterface.AbilityType type) {
-        return new ArrayList<>(this.getEntityMapByType(type).values());
     }
 }

@@ -23,45 +23,34 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.EntityException;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Generation object.
  *
  * @author Marian Pollzien
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Generation extends BaseEntity implements GenerationInterface {
     private final int generation;
     private final int maximumAttributes;
     private final int maximumBloodPool;
     private final int bloodPerRound;
 
+    @Override
+    public String toString()
+    {
+        return Integer.toString(this.generation);
+    }
+
     /**
      * Builder for generation objects.
      */
-    public static class Builder extends BaseEntity.Builder<Builder> {
-        private int generation;
-        private int maximumAttributes;
-        private int maximumBloodPool;
-        private int bloodPerRound;
-
-        /**
-         * Build a new character object.
-         *
-         * @return The generation created entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        @Override
-        public Generation build() throws EntityException {
-            this.checkValues();
-
-            return new Generation(this);
-        }
-
+    public abstract static class GenerationBuilder<C extends Generation, B extends GenerationBuilder<C, B>> extends BaseEntityBuilder<C, B> {
         /**
          * Check if all necessary values are set.
          *
@@ -85,151 +74,10 @@ public class Generation extends BaseEntity implements GenerationInterface {
                 throw new EntityException("Missing blood per round");
             }
         }
-
-        /**
-         * Get the current instance.
-         *
-         * @return The object itself
-         */
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        /**
-         * Get the list of methods from which data can be fetched.
-         *
-         * @return A list of getter methods
-         */
-        @Override
-        protected ArrayList<Method> getDataMethods() {
-            ArrayList<Method> methodList = super.getDataMethods();
-
-            for (Method declaredMethod : Generation.class.getDeclaredMethods()) {
-                if (this.checkMethod(declaredMethod)) {
-                    continue;
-                }
-
-                methodList.add(declaredMethod);
-            }
-
-            return methodList;
-        }
-
-        /**
-         * Get a setter method from the given getter.
-         *
-         * @param getter The getter to build the setter out of
-         *
-         * @return Setter method object
-         * @throws NoSuchMethodException Exception thrown if no method of that name exists
-         */
-        @Override
-        protected Method getSetter(Method getter) throws NoSuchMethodException {
-            try {
-                return super.getSetter(getter);
-            } catch (NoSuchMethodException ex) {
-                Class[] parameterTypes = new Class[1];
-                parameterTypes[0] = getter.getReturnType();
-
-                return Generation.Builder.class.getDeclaredMethod(
-                    "set" + getter.getName().substring(3),
-                    parameterTypes
-                );
-            }
-        }
-
-        /**
-         * Set the generation.
-         *
-         * @param generation
-         *
-         * @return The builder object
-         */
-        public Builder setGeneration(int generation) {
-            this.generation = generation;
-
-            return this.self();
-        }
-
-        /**
-         * Set the maximum attribute value.
-         *
-         * @param maximumAttributes
-         *
-         * @return The builder object
-         */
-        public Builder setMaximumAttributes(int maximumAttributes) {
-            this.maximumAttributes = maximumAttributes;
-
-            return this.self();
-        }
-
-        /**
-         * Set the maximum blood pool value.
-         *
-         * @param maximumBloodPool
-         *
-         * @return The builder object
-         */
-        public Builder setMaximumBloodPool(int maximumBloodPool) {
-            this.maximumBloodPool = maximumBloodPool;
-
-            return this.self();
-        }
-
-        /**
-         * Set the blood per round value.
-         *
-         * @param bloodPerRound
-         *
-         * @return The builder object
-         */
-        public Builder setBloodPerRound(int bloodPerRound) {
-            this.bloodPerRound = bloodPerRound;
-
-            return this.self();
-        }
-    }
-
-    /**
-     * Create a new generation object.
-     *
-     * @param builder The builder object
-     */
-    protected Generation(Builder builder) {
-        super(builder);
-
-        this.generation = builder.generation;
-        this.maximumAttributes = builder.maximumAttributes;
-        this.maximumBloodPool = builder.maximumBloodPool;
-        this.bloodPerRound = builder.bloodPerRound;
-    }
-
-    /**
-     * Get the generation number.
-     *
-     * @return
-     */
-    @Override
-    public int getGeneration() {
-        return this.generation;
-    }
-
-    /**
-     * Get the maximum for attributes.
-     *
-     * @return
-     */
-    @Override
-    public int getMaximumAttributes() {
-        return this.maximumAttributes;
     }
 
     /**
      * Get the maximum for the blood pool.
-     *
-     * @return
      */
     @Override
     public int getMaximumBloodPool() {
@@ -242,8 +90,6 @@ public class Generation extends BaseEntity implements GenerationInterface {
 
     /**
      * Get the maximum allowed usage of blood per round.
-     *
-     * @return
      */
     @Override
     public int getBloodPerRound() {
@@ -252,61 +98,5 @@ public class Generation extends BaseEntity implements GenerationInterface {
         }
 
         return this.bloodPerRound;
-    }
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return A string representation of the object
-     */
-    @Override
-    public String toString() {
-        return Integer.toString(this.generation);
-    }
-
-
-
-    /**
-     * Check if the given object equals this object.
-     *
-     * @param obj The object to check
-     *
-     * @return True if both are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        if (!super.equals(obj)) {
-            return false;
-        }
-
-        Generation that = (Generation) obj;
-
-        return generation == that.generation &&
-            maximumAttributes == that.maximumAttributes &&
-            maximumBloodPool == that.maximumBloodPool &&
-            bloodPerRound == that.bloodPerRound;
-    }
-
-    /**
-     * Generate a hash code.
-     *
-     * @return Hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-            generation,
-            maximumAttributes,
-            maximumBloodPool,
-            bloodPerRound
-        );
     }
 }

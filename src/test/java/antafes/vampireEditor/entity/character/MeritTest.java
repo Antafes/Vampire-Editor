@@ -37,8 +37,7 @@ public class MeritTest {
 
     @BeforeMethod
     public void setUp() throws EntityException {
-        this.merit = (Merit) new Merit.Builder()
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit = Merit.builder()
             .setKey("testMerit")
             .addName(Configuration.Language.ENGLISH, "Test merit")
             .setType(SpecialFeatureInterface.SpecialFeatureType.PHYSICAL)
@@ -59,7 +58,7 @@ public class MeritTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.merit.getNames();
+        final HashMap<Configuration.Language, String> actual = this.merit.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -106,8 +105,7 @@ public class MeritTest {
     }
 
     public void testDifferentMerit() throws EntityException {
-        final Merit object = (Merit) new Merit.Builder()
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        final Merit object = Merit.builder()
             .setKey("testMerit2")
             .addName(Configuration.Language.ENGLISH, "Test merit 2")
             .setType(SpecialFeatureInterface.SpecialFeatureType.MENTAL)
@@ -118,9 +116,7 @@ public class MeritTest {
     }
 
     public void testDifferentCost() throws EntityException {
-        final Merit object = (Merit) new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        final Merit object = this.merit.toBuilder()
             .setCost(22)
             .build();
 
@@ -128,9 +124,7 @@ public class MeritTest {
     }
 
     public void testDifferentType() throws EntityException {
-        final Merit object = (Merit) new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        final Merit object = this.merit.toBuilder()
             .setType(SpecialFeatureInterface.SpecialFeatureType.SOCIAL)
             .build();
 
@@ -139,9 +133,7 @@ public class MeritTest {
 
     public void testHashCode() throws EntityException {
         final int expected = this.merit.hashCode();
-        final int actual = new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        final int actual = this.merit.toBuilder()
             .build()
             .hashCode();
 
@@ -150,60 +142,41 @@ public class MeritTest {
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderNullKey() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type")
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .setType(null)
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing special feature class")
-    public void testBuilderMissingSpecialFeatureClass() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .build();
-    }
-
     public void testBuilderBuild() throws EntityException {
-        new Merit.Builder()
-            .fillDataFromObject(this.merit)
-            .setSpecialFeatureClass(SpecialFeature.Builder.SpecialFeatureClass.MERIT)
+        this.merit.toBuilder()
             .build();
     }
 }

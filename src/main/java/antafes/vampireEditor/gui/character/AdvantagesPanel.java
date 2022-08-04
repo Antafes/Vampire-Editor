@@ -27,6 +27,7 @@ import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -37,7 +38,8 @@ import java.util.ArrayList;
  * @author Marian Pollzien
  */
 public class AdvantagesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    private antafes.vampireEditor.entity.Character character = null;
+    @Setter
+    private Character character = null;
 
     /**
      * Initialize everything.
@@ -108,8 +110,6 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
 
     /**
      * Set the maximum value for the attribute spinners.
-     *
-     * @param maximum
      */
     @Override
     public void setSpinnerMaximum(int maximum) {
@@ -119,16 +119,6 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
         this.getFields("virtues").stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-    }
-
-    /**
-     * Set the character used to pre-fill every field.
-     *
-     * @param character
-     */
-    @Override
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     /**

@@ -38,7 +38,7 @@ public class AbilityTest {
     @BeforeMethod
     public void setUp() throws EntityException {
         Configuration.getInstance().loadProperties();
-        this.ability = new Ability.Builder()
+        this.ability = Ability.builder()
             .setKey("testAbility")
             .addName(Configuration.Language.ENGLISH, "Test ability")
             .setType(AbilityInterface.AbilityType.TALENT)
@@ -59,7 +59,7 @@ public class AbilityTest {
     }
 
     public void testGetNames() {
-        final HashMap actual = this.ability.getNames();
+        final HashMap<Configuration.Language, String> actual = this.ability.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -105,8 +105,9 @@ public class AbilityTest {
         Assert.assertNotEquals(this.ability, "");
     }
 
-    public void testDifferentAbility() throws EntityException {
-        final Ability object = new Ability.Builder()
+    public void testDifferentAbility()
+    {
+        final Ability object = Ability.builder()
             .setKey("testAbility2")
             .addName(Configuration.Language.ENGLISH, "Test ability 2")
             .setType(AbilityInterface.AbilityType.KNOWLEDGE)
@@ -116,10 +117,10 @@ public class AbilityTest {
         Assert.assertNotEquals(this.ability, object);
     }
 
-    public void testHashCode() throws EntityException {
+    public void testHashCode()
+    {
         final int expected = this.ability.hashCode();
-        final int actual = new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        final int actual = this.ability.toBuilder()
             .build()
             .hashCode();
 
@@ -127,48 +128,43 @@ public class AbilityTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
-    public void testBuilderNullKey() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+    public void testBuilderNullKey()
+    {
+        this.ability.toBuilder()
             .setKey(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
     public void testBuilderEmptyKey() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        this.ability.toBuilder()
             .setKey("")
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderNullNames() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        this.ability.toBuilder()
             .setNames(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
     public void testBuilderEmptyNames() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        this.ability.toBuilder()
             .setNames(new HashMap<>())
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing type for entity.*")
     public void testBuilderEmptyType() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        this.ability.toBuilder()
             .setType(null)
             .build();
     }
 
     public void testBuilderBuild() throws EntityException {
-        new Ability.Builder()
-            .fillDataFromObject(this.ability)
+        this.ability.toBuilder()
             .build();
     }
 }

@@ -510,7 +510,7 @@ public class LooksPanel extends javax.swing.JPanel {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
             Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
-            this.parent.setClanDisciplins(clan);
+            this.parent.setClanDisciplines(clan);
             this.parent.adjustAttributesToClan(clan);
         }
     }
@@ -675,7 +675,7 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @param builder Character builder object
      */
-    public void fillCharacter(antafes.vampireEditor.entity.Character.Builder builder) {
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         builder.setName(this.nameField.getText());
         builder.setChronicle(this.chronicleField.getText());

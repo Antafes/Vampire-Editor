@@ -24,241 +24,28 @@ package antafes.vampireEditor.entity.character;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.EntityException;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Clan object.
  *
  * @author Marian Pollzien <map@wafriv.de>
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Clan extends BaseTranslatedEntity implements ClanInterface {
     private final HashMap<Configuration.Language, String> nicknames;
     private final ArrayList<Advantage> advantages;
     private final ArrayList<Weakness> weaknesses;
 
     /**
-     * Builder for Ability objects.
-     */
-    public static class Builder extends BaseTranslatedEntity.Builder<Builder> {
-        private HashMap<Configuration.Language, String> nicknames;
-        private ArrayList<Advantage> advantages;
-        private ArrayList<Weakness> weaknesses;
-
-        public Builder() {
-            this.nicknames = new HashMap<>();
-            this.advantages = new ArrayList<>();
-            this.weaknesses = new ArrayList<>();
-        }
-
-        /**
-         * Check if all necessary values are set.
-         * This has to be called in the build method.
-         *
-         * @throws EntityException If something is missing but required
-         */
-        @Override
-        protected void checkValues() throws EntityException {
-            super.checkValues();
-
-            if (this.self().nicknames == null || this.self().nicknames.isEmpty()) {
-                throw new EntityException("Missing nicknames for entity: " + this);
-            }
-
-            if (this.self().advantages == null || this.self().advantages.isEmpty()) {
-                throw new EntityException("Missing advantages for entity: " + this);
-            }
-
-            if (this.self().weaknesses == null || this.self().weaknesses.isEmpty()) {
-                throw new EntityException("Missing weaknesses for entity: " + this);
-            }
-        }
-
-        /**
-         * Build a new Ability object.
-         *
-         * @return The created clan entity
-         * @throws antafes.vampireEditor.entity.EntityException Throws an EntityException if something went wrong during build
-         *                                              of the entity
-         */
-        @Override
-        public Clan build() throws EntityException {
-            this.checkValues();
-
-            return new Clan(this);
-        }
-
-        /**
-         * Get an instance of itself.
-         *
-         * @return The object itself
-         */
-        @Override
-        protected Builder self() {
-            return this;
-        }
-
-        /**
-         * Get the list of methods from which data can be fetched.
-         *
-         * @return
-         */
-        @Override
-        protected ArrayList getDataMethods() {
-            ArrayList<Method> methodList = super.getDataMethods();
-
-            for (Method declaredMethod : Clan.class.getDeclaredMethods()) {
-                if (this.checkMethod(declaredMethod)) {
-                    continue;
-                }
-
-                methodList.add(declaredMethod);
-            }
-
-            return methodList;
-        }
-
-        /**
-         * Check whether the given method can be used to fill in data.
-         *
-         * @param method The method to check.
-         *
-         * @return True if the method is not a getter or is the method "getDataMethods", otherwise false
-         */
-        @Override
-        protected boolean checkMethod(Method method) {
-            return super.checkMethod(method) || method.getName().equals("getNickname");
-        }
-
-        /**
-         * Get a setter method from the given getter.
-         *
-         * @param getter The getter to build the setter out of
-         *
-         * @return Setter method object
-         * @throws NoSuchMethodException Exception thrown if no method of that name exists
-         */
-        @Override
-        protected Method getSetter(Method getter) throws NoSuchMethodException {
-            try {
-                return super.getSetter(getter);
-            } catch (NoSuchMethodException ex) {
-                Class[] parameterTypes = new Class[1];
-                parameterTypes[0] = getter.getReturnType();
-
-                return Clan.Builder.class.getDeclaredMethod("set" + getter.getName().substring(3), parameterTypes);
-            }
-        }
-
-        /**
-         * Set a map of translated nicknames.
-         *
-         * @param nicknames
-         *
-         * @return
-         */
-        public Builder setNicknames(HashMap<Configuration.Language, String> nicknames) {
-            this.nicknames = nicknames;
-
-            return this.self();
-        }
-
-        /**
-         * Add a single translated nickname.
-         *
-         * @param language The language for the nickname
-         * @param nickname The nickname
-         *
-         * @return The builder object
-         */
-        public Builder addNickname(Configuration.Language language, String nickname) {
-            this.nicknames.put(language, nickname);
-
-            return this.self();
-        }
-
-        /**
-         * Set the list of advantages.
-         *
-         * @param advantages
-         *
-         * @return The builder object
-         */
-        public Builder setAdvantages(ArrayList<Advantage> advantages) {
-            this.advantages = advantages;
-
-            return this.self();
-        }
-
-        /**
-         * Add a single discipline.
-         *
-         * @param discipline The discipline to add
-         *
-         * @return The builder object
-         */
-        public Builder addAdvantage(Advantage discipline) {
-            this.advantages.add(discipline);
-
-            return this.self();
-        }
-
-        /**
-         * Set the list of weaknesses.
-         *
-         * @param weaknesses
-         *
-         * @return
-         */
-        public Builder setWeaknesses(ArrayList<Weakness> weaknesses) {
-            this.weaknesses = weaknesses;
-
-            return this.self();
-        }
-
-        /**
-         * Add a single weakness.
-         *
-         * @param weakness The weakness to add
-         *
-         * @return The builder object
-         */
-        public Builder addWeakness(Weakness weakness) {
-            this.weaknesses.add(weakness);
-
-            return this.self();
-        }
-    }
-
-    /**
-     * Create a new clan object.
-     *
-     * @param builder The builder object
-     */
-    public Clan(Builder builder) {
-        super(builder);
-
-        this.nicknames = builder.nicknames;
-        this.advantages = builder.advantages;
-        this.weaknesses = builder.weaknesses;
-    }
-
-    /**
-     * Get the nicknames of the clan.
-     *
-     * @return
-     */
-    public HashMap<Configuration.Language, String> getNicknames() {
-        return nicknames;
-    }
-
-    /**
      * Get the clan nicknames.
-     *
-     * @return
      */
     @Override
     public String getNickname() {
@@ -273,71 +60,89 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
         return nickname;
     }
 
-    /**
-     * Get the list of advantages every clan member has.
-     *
-     * @return
-     */
     @Override
-    public ArrayList<Advantage> getAdvantages() {
-        return this.advantages;
+    public String toString()
+    {
+        return super.toString();
     }
 
     /**
-     * Get the list of weaknesses every clan member has.
-     *
-     * @return
+     * Builder for Ability objects.
      */
-    @Override
-    public ArrayList<Weakness> getWeaknesses() {
-        return this.weaknesses;
-    }
+    public abstract static class ClanBuilder<C extends Clan, B extends ClanBuilder<C, B>> extends BaseTranslatedEntityBuilder<C, B> {
+        /**
+         * Check if all necessary values are set.
+         * This has to be called in the build method.
+         *
+         * @throws EntityException If something is missing but required
+         */
+        @Override
+        protected void checkValues() throws EntityException {
+            super.checkValues();
 
-    /**
-     * Returns a string representation of the clan.
-     *
-     * @return A string representation of the clan
-     */
-    @Override
-    public String toString() {
-        return this.getName();
-    }
+            if (this.nicknames == null || this.nicknames.isEmpty()) {
+                throw new EntityException("Missing nicknames for entity: " + this);
+            }
 
-    /**
-     * Check if the given object equals this object.
-     *
-     * @param obj The object to check
-     *
-     * @return True if both are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
+            if (this.advantages == null || this.advantages.isEmpty()) {
+                throw new EntityException("Missing advantages for entity: " + this);
+            }
+
+            if (this.weaknesses == null || this.weaknesses.isEmpty()) {
+                throw new EntityException("Missing weaknesses for entity: " + this);
+            }
         }
 
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
+        /**
+         * Add a single translated nickname.
+         *
+         * @param language The language for the nickname
+         * @param nickname The nickname
+         *
+         * @return The builder object
+         */
+        public B addNickname(Configuration.Language language, String nickname) {
+            if (this.nicknames == null) {
+                this.nicknames = new HashMap<>();
+            }
+
+            this.nicknames.put(language, nickname);
+
+            return this.self();
         }
 
-        if (!super.equals(obj)) {
-            return false;
+        /**
+         * Add a single discipline.
+         *
+         * @param discipline The discipline to add
+         *
+         * @return The builder object
+         */
+        public B addAdvantage(Advantage discipline) {
+            if (this.advantages == null) {
+                this.advantages = new ArrayList<>();
+            }
+
+            this.advantages.add(discipline);
+
+            return this.self();
         }
 
-        Clan clan = (Clan) obj;
+        /**
+         * Add a single weakness.
+         *
+         * @param weakness The weakness to add
+         *
+         * @return The builder object
+         */
+        public B addWeakness(Weakness weakness) {
+            if (this.weaknesses == null) {
+                this.weaknesses = new ArrayList<>();
+            }
 
-        return Objects.equals(nicknames, clan.nicknames) &&
-            Objects.equals(advantages, clan.advantages) &&
-            Objects.equals(weaknesses, clan.weaknesses);
-    }
+            this.weaknesses.add(weakness);
 
-    /**
-     * Generate a hash code.
-     *
-     * @return Hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), nicknames, advantages, weaknesses);
+            return this.self();
+        }
     }
 }

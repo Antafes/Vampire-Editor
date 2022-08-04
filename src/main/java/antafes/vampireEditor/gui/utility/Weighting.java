@@ -22,6 +22,7 @@
 package antafes.vampireEditor.gui.utility;
 
 import antafes.vampireEditor.Configuration;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import java.util.Arrays;
  *
  * @author Marian Pollzien
  */
+@Getter
 public enum Weighting {
     PRIMARY (7, 13),
     SECONDARY (5, 9),
@@ -53,24 +55,6 @@ public enum Weighting {
         Configuration configuration = Configuration.getInstance();
 
         return configuration.getLanguageObject().translate(this.name());
-    }
-
-    /**
-     * Get the maximum attribute points available for the weighting.
-     *
-     * @return
-     */
-    public int getAttributeMax() {
-        return attributeMax;
-    }
-
-    /**
-     * Get the maximum ability points available for the weighting.
-     *
-     * @return
-     */
-    public int getAbilitiesMax() {
-        return abilitiesMax;
     }
 
     /**

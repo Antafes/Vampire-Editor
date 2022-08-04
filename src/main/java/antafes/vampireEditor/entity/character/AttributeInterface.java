@@ -30,7 +30,7 @@ public interface AttributeInterface {
     /**
      * List of possible attribute types.
      */
-    public enum AttributeType {
+    public enum AttributeType implements EntityTypeInterface {
         PHYSICAL,
         SOCIAL,
         MENTAL
