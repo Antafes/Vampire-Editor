@@ -112,7 +112,7 @@ jobs:
   plan:
   - get: vampire-editor-repo
     trigger: true
-  - get: vampire-editor-pre-release
+  - get: vampire-editor-release
   - task: check-version
     config:
       platform: linux
