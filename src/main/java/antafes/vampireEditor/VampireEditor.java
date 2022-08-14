@@ -129,13 +129,15 @@ public class VampireEditor {
      * Open up the editors base window.
      */
     private void openBaseWindow() {
-        BaseWindow baseWindow = new BaseWindow();
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Image img = kit.createImage(
-            VampireEditor.getResourceInJar("images/logo16.png")
-        );
-        baseWindow.setIconImage(img);
-        baseWindow.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            BaseWindow baseWindow = new BaseWindow();
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(
+                VampireEditor.getResourceInJar("images/logo16.png")
+            );
+            baseWindow.setIconImage(img);
+            baseWindow.setVisible(true);
+        });
     }
 
     /**
