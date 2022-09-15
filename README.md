@@ -13,6 +13,8 @@ There is a difference between the cost for clan apostate in the German and Engli
 This tool uses my [MyXML library](https://github.com/Antafes/MyXML) for parsing and writing XML files.
 Therefore access to the GitHub Maven registry is needed.
 Please follow the steps described in [GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) for how to set up everything needed to access GitHubs Maven registry.
+An example settings file is provided under ``.m2/settings.xml.dist``.
+There you just need to replace the ``[[YourPasswordHere]]`` blocks in with your GitHub secret.
 The descriptions are made with linux in mind, for Windows users just replace the `~` with the following path: `C:\Users\[your username]\`
 
 If your IDE supports modules and has something available, modules for the following would be helpful:
@@ -20,7 +22,7 @@ If your IDE supports modules and has something available, modules for the follow
 - Lombok (if available Delombok or something of that kind)
 - TestNG
 
-To make adjustments on the build pipelines in Concourse CI, you would also need it's CLI tool "fly".
+To make adjustments on the build pipelines in Concourse CI, you would also need its CLI tool "fly".
 This can simply be downloaded from my [CI Server](https://ci.wafriv.de/).
 Login to the CI Server is only available for contributors!
 The full documentation on Concourse can be found on their [website](https://concourse-ci.org/docs.html).
