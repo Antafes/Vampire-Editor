@@ -38,6 +38,7 @@ public class German extends Language {
         this.character();
         this.health();
         this.print();
+        this.unsavedCharacters();
     }
 
     /**
@@ -226,11 +227,14 @@ public class German extends Language {
         this.getTranslations().put("incapacitated", "Außer Gefecht");
     }
 
-    /**
-     * Get the language.
-     *
-     * @return
-     */
+    private void unsavedCharacters()
+    {
+        this.getTranslations().put("unsavedCharactersTitle", "Ungespeicherte Charaktere");
+        this.getTranslations().put("dontSave", "Nicht speichern");
+        this.getTranslations().put("dontSaveMnemonic", "n");
+        this.getTranslations().put("unsavedCharacters", "Du hast nicht gespeicherte Charaktere offen, möchtest du sie jetzt speichern?");
+    }
+
     @Override
     public String getLanguage() {
         return "German";

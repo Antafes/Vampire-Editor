@@ -539,7 +539,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         ShowWaitAction waitAction = new ShowWaitAction(this);
         waitAction.show(aVoid -> {
-            this.parent.addCharacter(builder.build());
+            this.parent.addCharacter(builder.build(), true);
             VampireEditor.log(new ArrayList<>(
                 Collections.singletonList("closing window")
             ));

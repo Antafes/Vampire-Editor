@@ -16,36 +16,30 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
+package antafes.vampireEditor.gui.event.listener;
 
-/**
- * Attribute object.
- *
- * @author Marian Pollzien
- */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Attribute extends BaseValuedTypedTranslatedEntity implements AttributeInterface {
-    /**
-     * Get the type of attribute.
-     */
-    @Override
-    public AttributeType getType() {
-        return (AttributeType) super.getType();
+import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
+
+import java.util.function.Consumer;
+
+public class CloseProgrammeListener extends EventListener<CloseProgrammeEvent>
+{
+    public CloseProgrammeListener()
+    {
     }
 
-    @Override
-    public String toString()
+    public CloseProgrammeListener(Consumer<CloseProgrammeEvent> consumer)
     {
-        return super.toString();
+        super(consumer);
+    }
+
+    public CloseProgrammeListener(Consumer<CloseProgrammeEvent> consumer, int priority)
+    {
+        super(consumer, priority);
     }
 }

@@ -26,7 +26,6 @@ import antafes.vampireEditor.gui.TranslatableComponent;
 import lombok.Setter;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -55,7 +54,7 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
      * Add all looks fields.
      */
     protected void addLooksFields() {
-        this.addFields("looks", false, new ArrayList<>());
+        this.addFields(new HashMap<>(), "looks", false);
     }
 
     /**
@@ -66,7 +65,7 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
      * @param elementList List of elements
      */
     @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
         LinkedHashMap<String, JComponent> fieldNames = new LinkedHashMap<>();
 
         fieldNames.put("age", this.generateTextField("age", false));

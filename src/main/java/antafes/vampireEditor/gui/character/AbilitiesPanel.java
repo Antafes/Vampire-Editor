@@ -22,33 +22,25 @@
 package antafes.vampireEditor.gui.character;
 
 import antafes.vampireEditor.entity.character.AbilityInterface;
-import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
-import antafes.vampireEditor.utility.StringComparator;
-import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Marian Pollzien
  */
-public class AbilitiesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    @Setter
-    private antafes.vampireEditor.entity.Character character = null;
-
-    /**
-     * Initialize everything.
-     */
+public class AbilitiesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     protected void init() {
         this.addTalentFields();
         this.addSkillFields();
         this.addKnowledgeFields();
-        this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
+        this.setSpinnerMaximum(this.getCharacter().getGeneration().getMaximumAttributes());
         this.fillCharacterData();
 
         super.init();
@@ -82,21 +74,25 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      * @param type Ability type
      */
     private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
 
-        this.character.getAbilities().stream()
+        this.getCharacter().getAbilities().values().stream()
             .filter((ability) -> (ability.getType().equals(type)))
-            .forEachOrdered((ability) -> list.add(ability.getName()));
-        list.sort(new StringComparator());
+            .forEachOrdered((ability) -> list.put(ability.getKey(), ability.getName()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue(String::compareTo));
 
         this.addFields(fieldName, list);
     }
 
-    /**
-     * Create the attributes document listener.
-     *
-     * @return Change listener for the component
-     */
+    @Override
+    protected void addChangeListener(JSpinner field)
+    {
+        super.addChangeListener(field);
+        this.addChangeListenerForCharacterChanged(field);
+    }
+
     @Override
     protected ComponentChangeListener createChangeListener() {
         return new ComponentChangeListener() {
@@ -106,9 +102,6 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
         };
     }
 
-    /**
-     * Set the maximum value for the attribute spinners.
-     */
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields("talents").stream().map((component) -> (JSpinner) component)
@@ -124,14 +117,15 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      */
     @Override
     public void fillCharacterData() {
-        if (this.character == null) {
+        if (this.getCharacter() == null) {
             return;
         }
 
+        //noinspection CodeBlock2Expr
         this.getFields().forEach((type, abilitiesList) -> abilitiesList.stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> {
-                this.character.getAbilities().stream()
-                    .filter((ability) -> (ability.getName().equals(spinner.getName())))
+                this.getCharacter().getAbilities().values().stream()
+                    .filter((ability) -> (ability.getKey().equals(spinner.getName())))
                     .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
             }
         ));

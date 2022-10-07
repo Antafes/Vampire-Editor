@@ -21,36 +21,28 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
-import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
-import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Marian Pollzien
  */
-public class AdvantagesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    @Setter
-    private Character character = null;
-
-    /**
-     * Initialize everything.
-     */
+public class AdvantagesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     protected void init() {
         this.setTranslateFieldLabels(false);
         this.addBackgroundFields();
         this.addDisciplineFields();
         this.addVirtueFields();
-        this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
+        this.setSpinnerMaximum(this.getCharacter().getGeneration().getMaximumAttributes());
         this.fillCharacterData();
 
         super.init();
@@ -84,21 +76,25 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
      * @param type Advantage type to use
      */
     private void addAdvantageFields(String fieldName, AdvantageInterface.AdvantageType type) {
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
 
-        this.character.getAdvantages().stream()
+        this.getCharacter().getAdvantages().values().stream()
             .filter((advantage) -> (advantage.getType().equals(type)))
-            .forEachOrdered((advantage) -> list.add(advantage.getName()));
-        list.sort(new StringComparator());
+            .forEachOrdered((advantage) -> list.put(advantage.getKey(), advantage.getName()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue(new StringComparator()));
 
         this.addFields(fieldName, list);
     }
 
-    /**
-     * Create the attributes document listener.
-     *
-     * @return Change listener for the component
-     */
+    @Override
+    protected void addChangeListener(JSpinner field)
+    {
+        super.addChangeListener(field);
+        this.addChangeListenerForCharacterChanged(field);
+    }
+
     @Override
     protected ComponentChangeListener createChangeListener() {
         return new ComponentChangeListener() {
@@ -108,9 +104,6 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
         };
     }
 
-    /**
-     * Set the maximum value for the attribute spinners.
-     */
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields("background").stream().map((component) -> (JSpinner) component)
@@ -126,14 +119,15 @@ public class AdvantagesPanel extends BaseListPanel implements TranslatableCompon
      */
     @Override
     public void fillCharacterData() {
-        if (this.character == null) {
+        if (this.getCharacter() == null) {
             return;
         }
 
+        //noinspection CodeBlock2Expr
         this.getFields().forEach((type, advantagesList) -> advantagesList.stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> {
-                this.character.getAdvantages().stream()
-                    .filter((advantage) -> (advantage.getName().equals(spinner.getName())))
+                this.getCharacter().getAdvantages().values().stream()
+                    .filter((advantage) -> (advantage.getKey().equals(spinner.getName())))
                     .forEachOrdered((advantage) -> spinner.setValue(advantage.getValue()));
             }
         ));

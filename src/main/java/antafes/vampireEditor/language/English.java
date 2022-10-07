@@ -38,6 +38,7 @@ public class English extends Language {
         this.character();
         this.health();
         this.print();
+        this.unsavedCharacters();
     }
 
     /**
@@ -224,6 +225,14 @@ public class English extends Language {
         this.getTranslations().put("mauled", "Mauled");
         this.getTranslations().put("crippled", "Crippled");
         this.getTranslations().put("incapacitated", "Incapacitated");
+    }
+
+    private void unsavedCharacters()
+    {
+        this.getTranslations().put("unsavedCharactersTitle", "Unsaved characters");
+        this.getTranslations().put("dontSave", "Don't save");
+        this.getTranslations().put("dontSaveMnemonic", "d");
+        this.getTranslations().put("unsavedCharacters", "There are unsaved characters open. Do you want to save them now?");
     }
 
     /**

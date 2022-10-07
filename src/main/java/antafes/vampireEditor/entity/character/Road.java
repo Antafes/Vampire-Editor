@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.BaseValuedTranslatedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,9 +34,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Road extends BaseTranslatedEntity implements RoadInterface {
-    private final int value;
-
+public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     @Override
     public String toString()
     {

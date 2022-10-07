@@ -74,7 +74,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param spinnerMinimum Maximum value for the spinners
      */
     @Override
-    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
+    protected void addFields(String headline, HashMap<String, String> elementList, int spinnerMinimum) {
         this.addFields(headline, null, elementList, spinnerMinimum, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
@@ -86,7 +86,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param spinnerMinimum Maximum value for the spinners
      * @param maxFields Maximum number of fields to create
      */
-    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum, int maxFields) {
+    protected void addFields(String headline, HashMap<String, String> elementList, int spinnerMinimum, int maxFields) {
         this.addFields(headline, null, elementList, spinnerMinimum, maxFields);
     }
 
@@ -97,7 +97,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param type Identifier for the group of fields
      * @param elementList List of element names that should be added as JSpinner
      */
-    protected void addFields(String headline, String type, ArrayList<String> elementList) {
+    protected void addFields(String headline, String type, HashMap<String, String> elementList) {
         this.addFields(headline, type, elementList, 0, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
@@ -109,7 +109,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param elementList List of element names that should be added as JSpinner
      * @param maxFields Maximum number of fields to create
      */
-    protected void addFields(String headline, String type, ArrayList<String> elementList, int maxFields) {
+    protected void addFields(String headline, String type, HashMap<String, String> elementList, int maxFields) {
         this.addFields(headline, type, elementList, 0, maxFields);
     }
 
@@ -120,7 +120,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param type Identifier for the group of fields
      */
     protected void addFields(String headline, String type) {
-        this.addFields(headline, type, new ArrayList<>(), 0, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
+        this.addFields(headline, type, new HashMap<>(), 0, BaseEditableListPanel.UNLIMITEDMAXFIELDS);
     }
 
     /**
@@ -131,7 +131,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param maxFields Maximum number of fields to create
      */
     protected void addFields(String headline, String type, int maxFields) {
-        this.addFields(headline, type, new ArrayList<>(), 0, maxFields);
+        this.addFields(headline, type, new HashMap<>(), 0, maxFields);
     }
 
     /**
@@ -146,7 +146,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     protected void addFields(
         String headline,
         String type,
-        ArrayList<String> elementList,
+        HashMap<String, String> elementList,
         int spinnerMinimum,
         int maxFields
     ) {
@@ -166,7 +166,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     protected void addFields(
         String headline,
         String type,
-        ArrayList<String> elementList,
+        HashMap<String, String> elementList,
         boolean nonEditable,
         int spinnerMinimum,
         int maxFields
@@ -231,7 +231,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         groups.put("listVerticalGroup", listOuterVerticalGroup);
         groups.put("listHorizontalGroup", listHorizontalGroup);
 
-        elementList.forEach((element) -> {
+        elementList.forEach((key, element) -> {
             if (nonEditable) {
                 super.addRow(element, spinnerMinimum, this.getFields(type), groups, layout);
             } else {

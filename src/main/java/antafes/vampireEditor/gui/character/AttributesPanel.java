@@ -22,33 +22,26 @@
 package antafes.vampireEditor.gui.character;
 
 import antafes.vampireEditor.entity.character.AttributeInterface;
-import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
-import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Marian Pollzien
  */
-public class AttributesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    @Setter
-    private antafes.vampireEditor.entity.Character character = null;
-
-    /**
-     * Initialize everything.
-     */
+public class AttributesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     protected void init() {
         this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
-        this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
+        this.setSpinnerMaximum(this.getCharacter().getGeneration().getMaximumAttributes());
         this.fillCharacterData();
 
         super.init();
@@ -75,28 +68,19 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
         this.addAttributeFields("mental", AttributeInterface.AttributeType.MENTAL);
     }
 
-    /**
-     * Add attribute fields with the given fieldName and for the given attribute type.
-     *
-     * @param fieldName Name of the field
-     * @param type Attribute type to use
-     */
     private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
 
-        this.character.getAttributes().stream()
+        this.getCharacter().getAttributes().values().stream()
             .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> list.add(attribute.getName()));
-        list.sort(new StringComparator());
+            .forEachOrdered((attribute) -> list.put(attribute.getKey(), attribute.getName()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue(new StringComparator()));
 
         this.addFields(fieldName, list);
     }
 
-    /**
-     * Create the attributes document listener.
-     *
-     * @return Change listener for the component
-     */
     @Override
     protected ComponentChangeListener createChangeListener() {
         return new ComponentChangeListener() {
@@ -106,9 +90,6 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
         };
     }
 
-    /**
-     * Set the maximum value for the attribute spinners.
-     */
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields("physical").stream().map((component) -> (JSpinner) component)
@@ -124,14 +105,15 @@ public class AttributesPanel extends BaseListPanel implements TranslatableCompon
      */
     @Override
     public void fillCharacterData() {
-        if (this.character == null) {
+        if (this.getCharacter() == null) {
             return;
         }
 
+        //noinspection CodeBlock2Expr
         this.getFields().forEach((type, attributeList) -> attributeList.stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> {
-                this.character.getAttributes().stream()
-                    .filter((attribute) -> (attribute.getName().equals(spinner.getName())))
+                this.getCharacter().getAttributes().values().stream()
+                    .filter((attribute) -> (attribute.getKey().equals(spinner.getName())))
                     .forEachOrdered((attribute) -> spinner.setValue(attribute.getValue()));
             }
         ));

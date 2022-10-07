@@ -22,7 +22,11 @@
 package antafes.vampireEditor.gui.character;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.TranslatableComponent;
+import antafes.vampireEditor.gui.element.CloseableTabbedPane;
+import antafes.vampireEditor.gui.event.CharacterChangedEvent;
+import antafes.vampireEditor.gui.event.listener.CharacterChangedListener;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PaperA4;
@@ -49,6 +53,9 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private PrintPreviewPanel printPreview;
     @Getter
     private final ArrayList<PrintBase> printPages;
+    @Setter
+    @Getter
+    private boolean isCharacterChanged = false;
 
     /**
      * Creates new form CharacterFrame
@@ -71,6 +78,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
 
         this.setSelectedIndex(-1);
         this.initComponents();
+        this.addCharacterChangedListener();
     }
 
     /**
@@ -83,6 +91,27 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.addAdvantagesPanel();
         this.addLooksPanel();
         this.addPrintPreviewPanel();
+    }
+
+    private void addCharacterChangedListener()
+    {
+        VampireEditor.getDispatcher().addListener(
+            CharacterChangedEvent.class,
+            new CharacterChangedListener((event) -> {
+                this.isCharacterChanged = event.isChanged();
+                CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
+                    .getAncestorOfClass(CloseableTabbedPane.class, this);
+                String tabName = this.getCharacter().getName();
+
+                if (this.isCharacterChanged) {
+                    tabName += "*";
+                }
+
+                tabbedPane.setTitleAt(tabbedPane.indexOfComponent(this), tabName);
+                tabbedPane.revalidate();
+                tabbedPane.repaint();
+            })
+        );
     }
 
     /**

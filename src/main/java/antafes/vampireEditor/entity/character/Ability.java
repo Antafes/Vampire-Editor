@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,9 +34,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
-public class Ability extends BaseTypedTranslatedEntity implements AbilityInterface {
-    private int value;
-
+public class Ability extends BaseValuedTypedTranslatedEntity implements AbilityInterface {
     @Override
     public AbilityType getType()
     {
