@@ -26,6 +26,7 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.character.CharacterPanelInterface;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
@@ -418,9 +419,15 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.saveFileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            VampireEditor.log(new ArrayList<>(
-                Collections.singletonList("Saving character " + character.getName())
-            ));
+            VampireEditor.log(String.format("Updating character %s from form fields", character.getName()));
+            Character.CharacterBuilder<?, ?> characterBuilder = character.toBuilder();
+            for (Component component : ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getComponents()) {
+                if (component instanceof CharacterPanelInterface) {
+                    ((CharacterPanelInterface) component).updateCharacter(characterBuilder);
+                }
+            }
+            character = characterBuilder.build();
+            VampireEditor.log(String.format("Saving character %s", character.getName()));
             this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
             CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);

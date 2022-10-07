@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import lombok.Setter;
@@ -36,6 +37,91 @@ import java.util.LinkedHashMap;
 public class LooksPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
     @Setter
     private antafes.vampireEditor.entity.Character character = null;
+
+    /**
+     * Fill in the character data. If no character is set, nothing will be added.
+     */
+    @Override
+    public void fillCharacterData() {
+        if (this.character == null) {
+            return;
+        }
+
+        this.getFields("looks").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
+            if (null != element.getName()) switch (element.getName()) {
+                case "age":
+                    if (this.character.getAge() > 0) {
+                        element.setText(Integer.toString(this.character.getAge()));
+                    }
+
+                    break;
+                case "looksLikeAge":
+                    if (this.character.getApparentAge() > 0) {
+                        element.setText(Integer.toString(this.character.getApparentAge()));
+                    }
+
+                    break;
+                case "dayOfBirth":
+                    if (this.character.getDayOfBirth() != null) {
+                        ((JFormattedTextField) element).setValue(this.character.getDayOfBirth());
+                    }
+
+                    break;
+                case "dayOfDeath":
+                    if (this.character.getDayOfDeath() != null) {
+                        ((JFormattedTextField) element).setValue(this.character.getDayOfDeath());
+                    }
+
+                    break;
+                case "hairColor":
+                    element.setText(this.character.getHairColor());
+                    break;
+                case "eyeColor":
+                    element.setText(this.character.getEyeColor());
+                    break;
+                case "skinColor":
+                    element.setText(this.character.getSkinColor());
+                    break;
+                case "nationality":
+                    element.setText(this.character.getNationality());
+                    break;
+                case "size":
+                    if (this.character.getHeight() > 0) {
+                        element.setText(Integer.toString(this.character.getHeight()));
+                    }
+
+                    break;
+                case "weight":
+                    if (this.character.getWeight() > 0) {
+                        element.setText(Integer.toString(this.character.getWeight()));
+                    }
+
+                    break;
+                case "sex":
+                    element.setText(this.character.getSex().toString());
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    @Override
+    public void updateTexts() {
+        this.getConfiguration().loadProperties();
+        this.setLanguage(this.getConfiguration().getLanguageObject());
+        this.removeAll();
+        this.initComponents();
+        this.init();
+        this.invalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        // Nothing to do here, as none of the looks fields are editable at the moment.
+    }
 
     /**
      * Initialize everything.
@@ -120,84 +206,5 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
         dateField.setSize(167, GroupLayout.DEFAULT_SIZE);
 
         return dateField;
-    }
-
-    /**
-     * Fill in the character data. If no character is set, nothing will be added.
-     */
-    @Override
-    public void fillCharacterData() {
-        if (this.character == null) {
-            return;
-        }
-
-        this.getFields("looks").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
-            if (null != element.getName()) switch (element.getName()) {
-                case "age":
-                    if (this.character.getAge() > 0) {
-                        element.setText(Integer.toString(this.character.getAge()));
-                    }
-
-                    break;
-                case "looksLikeAge":
-                    if (this.character.getApparentAge() > 0) {
-                        element.setText(Integer.toString(this.character.getApparentAge()));
-                    }
-
-                    break;
-                case "dayOfBirth":
-                    if (this.character.getDayOfBirth() != null) {
-                        ((JFormattedTextField) element).setValue(this.character.getDayOfBirth());
-                    }
-
-                    break;
-                case "dayOfDeath":
-                    if (this.character.getDayOfDeath() != null) {
-                        ((JFormattedTextField) element).setValue(this.character.getDayOfDeath());
-                    }
-
-                    break;
-                case "hairColor":
-                    element.setText(this.character.getHairColor());
-                    break;
-                case "eyeColor":
-                    element.setText(this.character.getEyeColor());
-                    break;
-                case "skinColor":
-                    element.setText(this.character.getSkinColor());
-                    break;
-                case "nationality":
-                    element.setText(this.character.getNationality());
-                    break;
-                case "size":
-                    if (this.character.getHeight() > 0) {
-                        element.setText(Integer.toString(this.character.getHeight()));
-                    }
-
-                    break;
-                case "weight":
-                    if (this.character.getWeight() > 0) {
-                        element.setText(Integer.toString(this.character.getWeight()));
-                    }
-
-                    break;
-                case "sex":
-                    element.setText(this.character.getSex().toString());
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
-    @Override
-    public void updateTexts() {
-        this.getConfiguration().loadProperties();
-        this.setLanguage(this.getConfiguration().getLanguageObject());
-        this.removeAll();
-        this.initComponents();
-        this.init();
-        this.invalidate();
-        this.repaint();
     }
 }

@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
@@ -30,12 +32,76 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
  * @author Marian Pollzien
  */
 public class AdvantagesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
+    @Override
+    public void setSpinnerMaximum(int maximum) {
+        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+    }
+
+    /**
+     * Fill in the character data. If no character is set, nothing will be added.
+     */
+    @Override
+    public void fillCharacterData() {
+        if (this.getCharacter() == null) {
+            return;
+        }
+
+        //noinspection CodeBlock2Expr
+        this.getFields().forEach((type, advantagesList) -> advantagesList.stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> {
+                    this.getCharacter().getAdvantages().values().stream()
+                        .filter((advantage) -> (advantage.getKey().equals(spinner.getName())))
+                        .forEachOrdered((advantage) -> spinner.setValue(advantage.getValue()));
+                }
+            ));
+    }
+
+    /**
+     * Reload the language object and update the texts of every component in the component.
+     */
+    @Override
+    public void updateTexts() {
+        this.getConfiguration().loadProperties();
+        this.setLanguage(this.getConfiguration().getLanguageObject());
+        this.removeAll();
+        this.initComponents();
+        this.init();
+        this.invalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        for (AdvantageInterface.AdvantageType advantageType : AdvantageInterface.AdvantageType.values()) {
+            //noinspection CodeBlock2Expr
+            this.getCharacter().getAdvantagesByType(advantageType)
+                .forEach(advantage -> {
+                    this.getFields(advantageType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                        if (!Objects.equals(component.getName(), advantage.getKey())) {
+                            return;
+                        }
+
+                        Advantage.AdvantageBuilder<?, ?> advantageBuilder = advantage.toBuilder();
+                        advantageBuilder.setValue((int) component.getValue());
+                        characterBuilder.addAdvantage(advantageBuilder.build());
+                    });
+                });
+        }
+    }
+
     @Override
     protected void init() {
         this.setTranslateFieldLabels(false);
@@ -48,25 +114,50 @@ public class AdvantagesPanel extends BaseCharacterListPanel implements Translata
         super.init();
     }
 
+    @Override
+    protected void addChangeListener(JSpinner field)
+    {
+        super.addChangeListener(field);
+        this.addChangeListenerForCharacterChanged(field);
+    }
+
+    @Override
+    protected ComponentChangeListener createChangeListener() {
+        return new ComponentChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+            }
+        };
+    }
+
     /**
      * Add all background fields sorted by the translated name.
      */
     private void addBackgroundFields() {
-        this.addAdvantageFields("background", AdvantageInterface.AdvantageType.BACKGROUND);
+        this.addAdvantageFields(
+            AdvantageInterface.AdvantageType.BACKGROUND.toString(),
+            AdvantageInterface.AdvantageType.BACKGROUND
+        );
     }
 
     /**
      * Add all discipline fields sorted by the translated name.
      */
     private void addDisciplineFields() {
-        this.addAdvantageFields("disciplines", AdvantageInterface.AdvantageType.DISCIPLINE);
+        this.addAdvantageFields(
+            AdvantageInterface.AdvantageType.DISCIPLINE.toString(),
+            AdvantageInterface.AdvantageType.DISCIPLINE
+        );
     }
 
     /**
      * Add all virtue fields sorted by the translated name.
      */
     private void addVirtueFields() {
-        this.addAdvantageFields("virtues", AdvantageInterface.AdvantageType.VIRTUE);
+        this.addAdvantageFields(
+            AdvantageInterface.AdvantageType.VIRTUE.toString(),
+            AdvantageInterface.AdvantageType.VIRTUE
+        );
     }
 
     /**
@@ -86,64 +177,5 @@ public class AdvantagesPanel extends BaseCharacterListPanel implements Translata
             .sorted(Map.Entry.comparingByValue(new StringComparator()));
 
         this.addFields(fieldName, list);
-    }
-
-    @Override
-    protected void addChangeListener(JSpinner field)
-    {
-        super.addChangeListener(field);
-        this.addChangeListenerForCharacterChanged(field);
-    }
-
-    @Override
-    protected ComponentChangeListener createChangeListener() {
-        return new ComponentChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-            }
-        };
-    }
-
-    @Override
-    public void setSpinnerMaximum(int maximum) {
-        this.getFields("background").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("disciplines").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("virtues").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-    }
-
-    /**
-     * Fill in the character data. If no character is set, nothing will be added.
-     */
-    @Override
-    public void fillCharacterData() {
-        if (this.getCharacter() == null) {
-            return;
-        }
-
-        //noinspection CodeBlock2Expr
-        this.getFields().forEach((type, advantagesList) -> advantagesList.stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> {
-                this.getCharacter().getAdvantages().values().stream()
-                    .filter((advantage) -> (advantage.getKey().equals(spinner.getName())))
-                    .forEachOrdered((advantage) -> spinner.setValue(advantage.getValue()));
-            }
-        ));
-    }
-
-    /**
-     * Reload the language object and update the texts of every component in the component.
-     */
-    @Override
-    public void updateTexts() {
-        this.getConfiguration().loadProperties();
-        this.setLanguage(this.getConfiguration().getLanguageObject());
-        this.removeAll();
-        this.initComponents();
-        this.init();
-        this.invalidate();
-        this.repaint();
     }
 }

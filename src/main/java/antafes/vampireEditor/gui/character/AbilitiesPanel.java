@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
@@ -29,12 +31,76 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
  * @author Marian Pollzien
  */
 public class AbilitiesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
+    @Override
+    public void setSpinnerMaximum(int maximum) {
+        this.getFields(AbilityInterface.AbilityType.TALENT.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AbilityInterface.AbilityType.SKILL.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+        this.getFields(AbilityInterface.AbilityType.KNOWLEDGE.toString()).stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
+    }
+
+    /**
+     * Fill in the character data. If no character is set, nothing will be added.
+     */
+    @Override
+    public void fillCharacterData() {
+        if (this.getCharacter() == null) {
+            return;
+        }
+
+        //noinspection CodeBlock2Expr
+        this.getFields().forEach((type, abilitiesList) -> abilitiesList.stream().map((component) -> (JSpinner) component)
+            .forEachOrdered((spinner) -> {
+                    this.getCharacter().getAbilities().values().stream()
+                        .filter((ability) -> (ability.getKey().equals(spinner.getName())))
+                        .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
+                }
+            ));
+    }
+
+    /**
+     * Reload the language object and update all texts.
+     */
+    @Override
+    public void updateTexts() {
+        this.getConfiguration().loadProperties();
+        this.setLanguage(this.getConfiguration().getLanguageObject());
+        this.removeAll();
+        this.initComponents();
+        this.init();
+        this.invalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        for (AbilityInterface.AbilityType abilityType : AbilityInterface.AbilityType.values()) {
+            //noinspection CodeBlock2Expr
+            this.getCharacter().getAbilitiesByType(abilityType)
+                .forEach(ability -> {
+                    this.getFields(abilityType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                        if (!Objects.equals(component.getName(), ability.getKey())) {
+                            return;
+                        }
+
+                        Ability.AbilityBuilder<?, ?> abilityBuilder = ability.toBuilder();
+                        abilityBuilder.setValue((int) component.getValue());
+                        characterBuilder.addAbility(abilityBuilder.build());
+                    });
+                });
+        }
+    }
+
     @Override
     protected void init() {
         this.addTalentFields();
@@ -46,25 +112,41 @@ public class AbilitiesPanel extends BaseCharacterListPanel implements Translatab
         super.init();
     }
 
+    @Override
+    protected void addChangeListener(JSpinner field)
+    {
+        super.addChangeListener(field);
+        this.addChangeListenerForCharacterChanged(field);
+    }
+
+    @Override
+    protected ComponentChangeListener createChangeListener() {
+        return new ComponentChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+            }
+        };
+    }
+
     /**
      * Add all talent fields sorted by the translated name.
      */
     private void addTalentFields() {
-        this.addAbilityFields("talents", AbilityInterface.AbilityType.TALENT);
+        this.addAbilityFields(AbilityInterface.AbilityType.TALENT.toString(), AbilityInterface.AbilityType.TALENT);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSkillFields() {
-        this.addAbilityFields("skills", AbilityInterface.AbilityType.SKILL);
+        this.addAbilityFields(AbilityInterface.AbilityType.SKILL.toString(), AbilityInterface.AbilityType.SKILL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addKnowledgeFields() {
-        this.addAbilityFields("knowledge", AbilityInterface.AbilityType.KNOWLEDGE);
+        this.addAbilityFields(AbilityInterface.AbilityType.KNOWLEDGE.toString(), AbilityInterface.AbilityType.KNOWLEDGE);
     }
 
     /**
@@ -84,64 +166,5 @@ public class AbilitiesPanel extends BaseCharacterListPanel implements Translatab
             .sorted(Map.Entry.comparingByValue(String::compareTo));
 
         this.addFields(fieldName, list);
-    }
-
-    @Override
-    protected void addChangeListener(JSpinner field)
-    {
-        super.addChangeListener(field);
-        this.addChangeListenerForCharacterChanged(field);
-    }
-
-    @Override
-    protected ComponentChangeListener createChangeListener() {
-        return new ComponentChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-            }
-        };
-    }
-
-    @Override
-    public void setSpinnerMaximum(int maximum) {
-        this.getFields("talents").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("skills").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("knowledge").stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-    }
-
-    /**
-     * Fill in the character data. If no character is set, nothing will be added.
-     */
-    @Override
-    public void fillCharacterData() {
-        if (this.getCharacter() == null) {
-            return;
-        }
-
-        //noinspection CodeBlock2Expr
-        this.getFields().forEach((type, abilitiesList) -> abilitiesList.stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> {
-                this.getCharacter().getAbilities().values().stream()
-                    .filter((ability) -> (ability.getKey().equals(spinner.getName())))
-                    .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
-            }
-        ));
-    }
-
-    /**
-     * Reload the language object and update all texts.
-     */
-    @Override
-    public void updateTexts() {
-        this.getConfiguration().loadProperties();
-        this.setLanguage(this.getConfiguration().getLanguageObject());
-        this.removeAll();
-        this.initComponents();
-        this.init();
-        this.invalidate();
-        this.repaint();
     }
 }
