@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
@@ -32,11 +33,14 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 
 @Test
-public class WeaknessTest {
+public class WeaknessTest extends BaseTest
+{
     private Weakness weakness;
 
     @BeforeMethod
-    public void setUp() throws EntityException {
+    public void setUp()
+    {
+        super.setUp();
         this.weakness = Weakness.builder()
             .setKey("testWeakness")
             .addName(Configuration.Language.ENGLISH, "Test weakness")

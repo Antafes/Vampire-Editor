@@ -45,6 +45,7 @@ public class StorageFactory {
         FLAW (FlawStorage.class),
         GENERATION (GenerationStorage.class),
         ROAD (RoadStorage.class),
+        NATURE (NatureStorage.class),
         CHARACTER (CharacterStorage.class),
         EMPTY (EmptyEntityStorage.class);
 

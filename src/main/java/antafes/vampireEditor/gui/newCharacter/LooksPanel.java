@@ -22,13 +22,11 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.storage.ClanStorage;
-import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
-import antafes.vampireEditor.entity.storage.GenerationStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
@@ -88,7 +86,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nationalityField;
     private javax.swing.JLabel nationalityLabel;
-    private javax.swing.JTextField natureField;
+    private javax.swing.JComboBox<BaseEntity> natureField;
     private javax.swing.JLabel natureLabel;
     private javax.swing.JButton nextButton;
     private javax.swing.JTextField playerField;
@@ -167,7 +165,7 @@ public class LooksPanel extends javax.swing.JPanel {
         nameLabel = new javax.swing.JLabel();
         nationalityField = new javax.swing.JTextField();
         nationalityLabel = new javax.swing.JLabel();
-        natureField = new javax.swing.JTextField();
+        natureField = new javax.swing.JComboBox<>();
         natureLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         playerField = new javax.swing.JTextField();
@@ -254,8 +252,17 @@ public class LooksPanel extends javax.swing.JPanel {
         this.enteredFields.put(natureField, Boolean.FALSE);
         ComponentDocumentListener documentListener = this.createDocumentListener();
         documentListener.setComponent(natureField);
-        natureField.getDocument().addDocumentListener(documentListener);
+        natureField.setModel(this.getNatures());
+        natureField.setEditable(true);
         natureField.setName("nature"); // NOI18N
+        natureField.addActionListener(evt -> {
+            if (Objects.equals(natureField.getSelectedItem(), "")) {
+                enteredFields.replace(natureField, Boolean.FALSE);
+            } else {
+                enteredFields.replace(natureField, Boolean.TRUE);
+                checkFieldsFilled();
+            }
+        });
 
         eyeColorField.setName("eyeColor"); // NOI18N
 
@@ -618,6 +625,24 @@ public class LooksPanel extends javax.swing.JPanel {
         return model;
     }
 
+    private DefaultComboBoxModel<BaseEntity> getNatures()
+    {
+        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
+        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        model.addElement(emptyEntity);
+        ArrayList<BaseEntity> sortedNatures = new ArrayList<>(natureStorage.getList().values());
+        sortedNatures.sort((o1, o2) -> {
+            Nature n1 = (Nature) o1;
+            Nature n2 = (Nature) o2;
+
+            return n1.getName().compareToIgnoreCase(n2.getName());
+        });
+        sortedNatures.forEach(model::addElement);
+
+        return model;
+    }
+
     /**
      * Check if the next tab can be activated.
      */
@@ -684,7 +709,14 @@ public class LooksPanel extends javax.swing.JPanel {
         } catch (EntityStorageException e) {
             e.printStackTrace();
         }
-        builder.setNature(this.natureField.getText());
+        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        try {
+            builder.setNature(
+                natureStorage.getEntity(((Nature) Objects.requireNonNull(this.natureField.getSelectedItem())).getKey())
+            );
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
         builder.setHideout(this.hideoutField.getText());
         builder.setPlayer(this.playerField.getText());
         builder.setDemeanor(this.demeanorField.getText());

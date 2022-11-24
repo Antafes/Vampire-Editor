@@ -26,6 +26,8 @@ import antafes.vampireEditor.language.LanguageInterface;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +75,7 @@ public class Configuration
         {
             try
             {
-                try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(this.propertiesFile))) {
+                try (BufferedInputStream inputStream = new BufferedInputStream(Files.newInputStream(this.propertiesFile.toPath()))) {
                     this.properties.loadFromXML(inputStream);
                 }
             }
@@ -103,7 +105,7 @@ public class Configuration
                 this.propertiesFile.createNewFile();
             }
 
-            outputStream = new BufferedOutputStream(new FileOutputStream(this.propertiesFile));
+            outputStream = new BufferedOutputStream(Files.newOutputStream(this.propertiesFile.toPath()));
             this.properties.storeToXML(outputStream, null);
         }
         catch (IOException ignored)
@@ -169,8 +171,6 @@ public class Configuration
     /**
      * Get the extended state of the window. This correlates to the states from JFrame.
      * If nothing is found in the properties object JFrame.NORMAL is returned.
-     *
-     * @return
      */
     public int getExtendedState()
     {
@@ -178,7 +178,7 @@ public class Configuration
             return JFrame.NORMAL;
         }
 
-        return Integer.valueOf(this.properties.getProperty("extendedState"));
+        return Integer.parseInt(this.properties.getProperty("extendedState"));
     }
 
     /**
@@ -201,9 +201,11 @@ public class Configuration
         LanguageInterface language = null;
 
         try {
-            language = (LanguageInterface) Class.forName(this.getLanguage().getLanguageString()).newInstance();
+            language = (LanguageInterface) Class.forName(this.getLanguage().getLanguageString()).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
 
         return language;
@@ -249,8 +251,6 @@ public class Configuration
 
     /**
      * Set the extended state of the window.
-     *
-     * @param extendedState
      */
     public void setExtendedState(int extendedState) {
         this.properties.setProperty("extendedState", Integer.toString(extendedState));

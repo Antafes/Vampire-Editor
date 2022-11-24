@@ -47,6 +47,7 @@ public class TestCharacterUtility {
             ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
             GenerationStorage generationStorage = (GenerationStorage) StorageFactory
                 .getStorage(StorageFactory.StorageType.GENERATION);
+            NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
             RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
@@ -55,7 +56,7 @@ public class TestCharacterUtility {
                 .setName("Test Character")
                 .setGeneration(generationStorage.getEntity(4))
                 .setChronicle("Test chronicle")
-                .setNature("wise")
+                .setNature(natureStorage.getEntity("wise"))
                 .setDemeanor("strict")
                 .setConcept("Really no concept!")
                 .setHideout("Test hideout")

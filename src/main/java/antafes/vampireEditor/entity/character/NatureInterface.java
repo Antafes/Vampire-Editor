@@ -16,34 +16,14 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor;
+package antafes.vampireEditor.entity.character;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import java.io.InputStream;
-import java.net.URL;
-
-@Test
-public class VampireEditorTest extends BaseTest
+public interface NatureInterface
 {
-    public void testGetFileInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final InputStream expected = VampireEditorTest.class.getResourceAsStream(path);
-        final InputStream actual = VampireEditor.getFileInJar(path);
-
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetResourceInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final URL expected = VampireEditorTest.class.getResource(path);
-        final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
-    }
+    public String getKey();
+    public String getName();
 }

@@ -16,34 +16,29 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
 package antafes.vampireEditor;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 
-import java.io.InputStream;
-import java.net.URL;
+import javax.swing.*;
+import java.awt.*;
 
-@Test
-public class VampireEditorTest extends BaseTest
+public abstract class BaseTest
 {
-    public void testGetFileInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final InputStream expected = VampireEditorTest.class.getResourceAsStream(path);
-        final InputStream actual = VampireEditor.getFileInJar(path);
+    Configuration configuration;
 
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetResourceInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final URL expected = VampireEditorTest.class.getResource(path);
-        final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
+    @BeforeMethod
+    public void setUp()
+    {
+        this.configuration = Configuration.getInstance();
+        this.configuration.setOpenDirPath("test/open/dir/path");
+        this.configuration.setSaveDirPath("test/save/dir/path");
+        this.configuration.setLanguage(Configuration.Language.ENGLISH);
+        this.configuration.setWindowLocation(new Point(10, 10));
+        this.configuration.setExtendedState(JFrame.NORMAL);
     }
 }
