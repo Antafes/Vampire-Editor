@@ -26,12 +26,11 @@ import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -41,11 +40,11 @@ import java.util.Objects;
 public class AdvantagesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
@@ -134,48 +133,32 @@ public class AdvantagesPanel extends BaseCharacterListPanel implements Translata
      * Add all background fields sorted by the translated name.
      */
     private void addBackgroundFields() {
-        this.addAdvantageFields(
-            AdvantageInterface.AdvantageType.BACKGROUND.toString(),
-            AdvantageInterface.AdvantageType.BACKGROUND
-        );
+        this.addAdvantageFields(AdvantageInterface.AdvantageType.BACKGROUND);
     }
 
     /**
      * Add all discipline fields sorted by the translated name.
      */
     private void addDisciplineFields() {
-        this.addAdvantageFields(
-            AdvantageInterface.AdvantageType.DISCIPLINE.toString(),
-            AdvantageInterface.AdvantageType.DISCIPLINE
-        );
+        this.addAdvantageFields(AdvantageInterface.AdvantageType.DISCIPLINE);
     }
 
     /**
      * Add all virtue fields sorted by the translated name.
      */
     private void addVirtueFields() {
-        this.addAdvantageFields(
-            AdvantageInterface.AdvantageType.VIRTUE.toString(),
-            AdvantageInterface.AdvantageType.VIRTUE
-        );
+        this.addAdvantageFields(AdvantageInterface.AdvantageType.VIRTUE);
     }
 
     /**
      * Add advantage fields with the given fieldName and for the given advantage type.
      *
-     * @param fieldName Name of the field
      * @param type Advantage type to use
      */
-    private void addAdvantageFields(String fieldName, AdvantageInterface.AdvantageType type) {
-        HashMap<String, String> list = new HashMap<>();
-
-        this.getCharacter().getAdvantages().values().stream()
-            .filter((advantage) -> (advantage.getType().equals(type)))
-            .forEachOrdered((advantage) -> list.put(advantage.getKey(), advantage.getName()));
-        list.entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue(new StringComparator()));
-
-        this.addFields(fieldName, list);
+    private void addAdvantageFields(AdvantageInterface.AdvantageType type) {
+        this.addFields(
+            type.getKeyPlural(),
+            SortingUtility.sortAndStringifyEntityMapWithFiltering(new HashMap<>(this.getCharacter().getAdvantages()), type)
+        );
     }
 }

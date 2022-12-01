@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Getter;
+
 /**
  * Attribute interface.
  *
@@ -30,10 +32,20 @@ public interface AttributeInterface {
     /**
      * List of possible attribute types.
      */
+    @Getter
     public enum AttributeType implements EntityTypeInterface {
-        PHYSICAL,
-        SOCIAL,
-        MENTAL
+        PHYSICAL("physical", "physical"),
+        SOCIAL("social", "social"),
+        MENTAL("mental", "mental");
+
+        private final String keySingular;
+        private final String keyPlural;
+
+        AttributeType(String keySingular, String keyPlural)
+        {
+            this.keySingular = keySingular;
+            this.keyPlural = keyPlural;
+        }
     }
 
     /**

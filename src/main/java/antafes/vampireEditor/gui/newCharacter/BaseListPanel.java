@@ -172,7 +172,7 @@ abstract public class BaseListPanel extends BasePanel {
             groups.put("labelHorizontalGroup", labelHorizontalGroup);
             groups.put("elementHorizontalGroup", elementHorizontalGroup);
             groups.put("listVerticalGroup", listVerticalGroup);
-            this.addRow(element, spinnerMinimum, this.getFields(headline), groups, layout);
+            this.addRow(key, spinnerMinimum, this.getFields(headline), groups, layout);
         });
 
         HashMap<String, GroupLayout.Group> groups = new HashMap<>();

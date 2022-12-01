@@ -140,12 +140,16 @@ public class German extends Language {
         this.getTranslations().put("mental", "Geistig");
         this.getTranslations().put("abilities", "Fähigkeiten");
         this.getTranslations().put("talents", "Talente");
+        this.getTranslations().put("talent", "Talent");
         this.getTranslations().put("skills", "Fertigkeiten");
+        this.getTranslations().put("skill", "Fertigkeit");
         this.getTranslations().put("knowledge", "Kenntnisse");
         this.getTranslations().put("advantages", "Vorteile");
         this.getTranslations().put("background", "Hintergrund");
         this.getTranslations().put("disciplines", "Disziplinen");
+        this.getTranslations().put("discipline", "Disziplin");
         this.getTranslations().put("virtues", "Tugenden");
+        this.getTranslations().put("virtue", "Tugend");
         this.getTranslations().put("lastSteps", "Letzte Schritte");
         this.getTranslations().put("merits", "Vorzüge");
         this.getTranslations().put("flaws", "Schwächen");

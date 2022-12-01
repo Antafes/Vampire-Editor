@@ -36,7 +36,7 @@ import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.utility.Weighting;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -45,7 +45,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -83,32 +83,30 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      * Add all background fields sorted by the translated name.
      */
     private void addBackgroundFields() {
-        this.addFields("background", AdvantageInterface.AdvantageType.BACKGROUND.name());
+        this.addFields(
+            AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(),
+            AdvantageInterface.AdvantageType.BACKGROUND.name()
+        );
     }
 
     /**
      * Add all discipline fields sorted by the translated name.
      */
     private void addDisciplineFields() {
-        this.addFields("disciplines", AdvantageInterface.AdvantageType.DISCIPLINE.name());
+        this.addFields(
+            AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(),
+            AdvantageInterface.AdvantageType.DISCIPLINE.name()
+        );
     }
 
     /**
      * Add all virtue fields sorted by the translated name.
      */
     private void addVirtueFields() {
-        ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
-        HashMap<String, String> list = new HashMap<>();
-
-        advantages.forEach((advantage) -> list.put(advantage.getKey(), advantage.getKey()));
-        list.entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue());
-
         this.addFields(
-            "virtues",
+            AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(),
             AdvantageInterface.AdvantageType.VIRTUE.name(),
-            list,
+            SortingUtility.sortAndStringifyEntityMap(new HashMap<>(this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name()))),
             true,
             1,
             3
@@ -124,12 +122,10 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+        HashMap<String, Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
 
-        for (Advantage advantage : advantages) {
-            if (advantage.getKey().equals(element)) {
-                return advantage.getName();
-            }
+        if (advantages.containsKey(element)) {
+            return advantages.get(element).getName();
         }
 
         return super.getElementLabelText(element);
@@ -327,13 +323,18 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      *
      * @param type Identifier for the group of combo boxes
      *
-     * @return List of values
+     * @return Map of values
      */
     @Override
-    protected ArrayList<Advantage> getValues(String type) {
+    protected HashMap<String, Advantage> getValues(String type)
+    {
+        AdvantageInterface.AdvantageType advantageType = AdvantageInterface.AdvantageType.valueOf(type);
         AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        ArrayList<Advantage> list = storage.getEntityListByType(AdvantageInterface.AdvantageType.valueOf(type.toUpperCase()));
-        list.sort(new StringComparator());
+        LinkedHashMap<String, Advantage> list = new LinkedHashMap<>();
+
+        SortingUtility.sortEntityMap(
+            new HashMap<>(storage.getEntityMapByType(advantageType))
+        ).forEach((key, value) -> list.put(key, (Advantage) value));
 
         return list;
     }
@@ -348,10 +349,8 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      */
     @Override
     protected Advantage getEntity(String type, String key) {
-        for (Advantage advantage : this.getValues(type)) {
-            if (advantage.getKey().equals(key)) {
-                return advantage;
-            }
+        if (this.getValues(type).containsKey(key)) {
+            return this.getValues(type).get(key);
         }
 
         return null;
@@ -447,7 +446,6 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                 JSpinner spinner = (JSpinner) fields.get(i);
                 Advantage advantage;
 
-
                 try {
                     if (this.getComboBoxes(key).size() > 0) {
                         JComboBox<BaseTranslatedEntity> comboBox = this.getComboBoxes(key).get(i);
@@ -456,7 +454,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                             continue;
                         }
 
-                        if (comboBox.getSelectedItem().equals(this.getEmptyEntity())) {
+                        if (Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())) {
                             continue;
                         }
 
@@ -467,7 +465,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                     }
 
                     builder.addAdvantage(
-                        advantage.toBuilder()
+                        Objects.requireNonNull(advantage).toBuilder()
                             .setValue((int) spinner.getValue())
                             .build()
                     );
@@ -484,9 +482,9 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     }
 
     /**
-     * Add an item listener for the combobox.
+     * Add an item listener for the combo-box.
      *
-     * @param elements Map with the combobox and the spinner
+     * @param elements Map with the combo-box and the spinner
      * @param type Identifier for the field
      * @param spinnerMinimum Minimum value for the spinner
      * @param fields List of all fields

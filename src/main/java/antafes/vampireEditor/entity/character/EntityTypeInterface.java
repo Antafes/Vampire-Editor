@@ -23,4 +23,6 @@
 package antafes.vampireEditor.entity.character;
 
 public interface EntityTypeInterface {
+    public String getKeySingular();
+    public String getKeyPlural();
 }

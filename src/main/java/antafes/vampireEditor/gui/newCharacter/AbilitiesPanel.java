@@ -31,14 +31,12 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -126,16 +124,10 @@ public class AbilitiesPanel extends BaseListPanel {
      * @param type Ability type to use
      */
     private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
-        HashMap<String, String> list = new HashMap<>();
-
-        this.getValues(type.name()).stream()
-            .filter((ability) -> (ability.getType().equals(type)))
-            .forEachOrdered((ability) -> list.put(ability.getKey(), ability.getKey()));
-        list.entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue());
-
-        this.addFields(fieldName, list);
+        this.addFields(
+            fieldName,
+            SortingUtility.sortAndStringifyEntityMap(new HashMap<>(this.getValues(type)))
+        );
     }
 
     /**
@@ -145,12 +137,9 @@ public class AbilitiesPanel extends BaseListPanel {
      *
      * @return List of abilities
      */
-    protected ArrayList<Ability> getValues(String type) {
+    protected HashMap<String, Ability> getValues(AbilityInterface.AbilityType type) {
         AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
-        ArrayList<Ability> list = storage.getEntityListByType(AbilityInterface.AbilityType.valueOf(type.toUpperCase()));
-        list.sort(new StringComparator());
-
-        return list;
+        return storage.getEntityMapByType(type);
     }
 
     /**
