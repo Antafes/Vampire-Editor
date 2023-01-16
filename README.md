@@ -14,7 +14,7 @@ This tool uses my [MyXML library](https://github.com/Antafes/MyXML) for parsing 
 Therefore access to the GitHub Maven registry is needed.
 Please follow the steps described in [GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) for how to set up everything needed to access GitHubs Maven registry.
 An example settings file is provided under ``.m2/settings.xml.dist``.
-There you just need to replace the ``[[YourPasswordHere]]`` blocks in with your GitHub secret.
+There you just need to replace the ``[[YourUsernameHere]]`` and ``[[YourPasswordHere]]`` blocks in with your GitHub username and secret.
 The descriptions are made with linux in mind, for Windows users just replace the `~` with the following path: `C:\Users\[your username]\`
 
 If your IDE supports modules and has something available, modules for the following would be helpful:
