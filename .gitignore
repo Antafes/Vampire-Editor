@@ -31,3 +31,4 @@ hs_err_pid*
 
 # CI variables file
 ci/variables.yml
+.m2/settings.xml
