@@ -32,20 +32,10 @@ import java.awt.*;
 public abstract class ComponentChangeListener implements ChangeListener {
     private Component component;
 
-    /**
-     * Get the component this listener is registered on.
-     *
-     * @return
-     */
     public Component getComponent() {
         return component;
     }
 
-    /**
-     * Set the component this listener is registered on.
-     *
-     * @param component
-     */
     public void setComponent(Component component) {
         this.component = component;
     }

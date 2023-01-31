@@ -16,32 +16,22 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
+package antafes.vampireEditor.entity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Attribute object.
- *
- * @author Marian Pollzien
- */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Attribute extends BaseValuedTypedTranslatedEntity implements AttributeInterface {
-    /**
-     * Get the type of attribute.
-     */
-    @Override
-    public AttributeType getType() {
-        return (AttributeType) super.getType();
-    }
+@SuperBuilder(setterPrefix = "set", toBuilder = true)
+abstract public class BaseValuedTypedTranslatedEntity extends BaseTypedTranslatedEntity implements ValuedEntityInterface
+{
+    private final int value;
 
     @Override
     public String toString()

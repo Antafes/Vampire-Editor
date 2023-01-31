@@ -112,7 +112,7 @@ public class LastStepsPanel extends BasePanel {
      * @param headline The headline of the element group
      */
     protected void addFields(String headline) {
-        this.addFields(headline, new ArrayList<>());
+        this.addFields(headline, new HashMap<>());
     }
 
     /**
@@ -124,7 +124,7 @@ public class LastStepsPanel extends BasePanel {
      * @param elementList List of elements
      */
     @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
         if (!this.getFields().containsKey(headline)) {
             this.getFields().put(headline, new ArrayList<>());
         }

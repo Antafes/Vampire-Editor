@@ -30,6 +30,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,11 +54,11 @@ public class Character extends BaseEntity {
     private final String concept;
     private final String sire;
     private final String sect;
-    private final ArrayList<Attribute> attributes;
-    private final ArrayList<Ability> abilities;
-    private final ArrayList<Advantage> advantages;
-    private final ArrayList<Merit> merits;
-    private final ArrayList<Flaw> flaws;
+    private final HashMap<String, Attribute> attributes;
+    private final HashMap<String, Ability> abilities;
+    private final HashMap<String, Advantage> advantages;
+    private final HashMap<String, Merit> merits;
+    private final HashMap<String, Flaw> flaws;
     private final Road road;
     private final int willpower;
     private final int usedWillpower;
@@ -84,7 +85,7 @@ public class Character extends BaseEntity {
      * @return List of attributes
      */
     public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
-        ArrayList<Attribute> attributes = (ArrayList<Attribute>) this.attributes.stream()
+        ArrayList<Attribute> attributes = (ArrayList<Attribute>) this.attributes.values().stream()
             .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
         attributes.sort(new StringComparator());
 
@@ -99,7 +100,7 @@ public class Character extends BaseEntity {
      * @return List of abilities
      */
     public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
-        ArrayList<Ability> abilities = (ArrayList<Ability>) this.abilities.stream()
+        ArrayList<Ability> abilities = (ArrayList<Ability>) this.abilities.values().stream()
             .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
         abilities.sort(new StringComparator());
 
@@ -114,11 +115,23 @@ public class Character extends BaseEntity {
      * @return List of advantages
      */
     public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
-        ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.stream()
+        ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
             .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
         advantages.sort(new StringComparator());
 
         return advantages;
+    }
+
+    public boolean isAttribute(String key) {
+        return this.attributes.containsKey(key);
+    }
+
+    public boolean isAbility(String key) {
+        return this.abilities.containsKey(key);
+    }
+
+    public boolean isAdvantage(String key) {
+        return this.advantages.containsKey(key);
     }
 
     @Override
@@ -148,11 +161,11 @@ public class Character extends BaseEntity {
     public abstract static class CharacterBuilder<C extends Character, B extends CharacterBuilder<C, B>> extends BaseEntityBuilder<C, B> {
         public CharacterBuilder()
         {
-            this.attributes = new ArrayList<>();
-            this.abilities = new ArrayList<>();
-            this.advantages = new ArrayList<>();
-            this.merits = new ArrayList<>();
-            this.flaws = new ArrayList<>();
+            this.attributes = new HashMap<>();
+            this.abilities = new HashMap<>();
+            this.advantages = new HashMap<>();
+            this.merits = new HashMap<>();
+            this.flaws = new HashMap<>();
         }
 
         /**
@@ -257,31 +270,31 @@ public class Character extends BaseEntity {
         }
 
         public B addAttribute(Attribute attribute) {
-            this.attributes.add(attribute);
+            this.attributes.put(attribute.getKey(), attribute);
 
             return this.self();
         }
 
         public B addAbility(Ability ability) {
-            this.abilities.add(ability);
+            this.abilities.put(ability.getKey(), ability);
 
             return this.self();
         }
 
         public B addAdvantage(Advantage advantage) {
-            this.advantages.add(advantage);
+            this.advantages.put(advantage.getKey(), advantage);
 
             return this.self();
         }
 
         public B addMerit(Merit merit) {
-            this.merits.add(merit);
+            this.merits.put(merit.getKey(), merit);
 
             return this.self();
         }
 
         public B addFlaw(Flaw flaw) {
-            this.flaws.add(flaw);
+            this.flaws.put(flaw.getKey(), flaw);
 
             return this.self();
         }

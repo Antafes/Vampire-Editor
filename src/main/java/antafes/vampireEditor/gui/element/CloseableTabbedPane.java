@@ -30,8 +30,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class CloseableTabbedPane extends JTabbedPane {
+    private HashMap<Integer, JLabel> titleList;
+
     public CloseableTabbedPane() {
         this(TOP);
     }
@@ -42,6 +45,30 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy) {
         super(tabPlacement, tabLayoutPolicy);
+        this.titleList = new HashMap<>();
+    }
+
+    /**
+     * Insert a new tab.
+     *
+     * @param title The title to be displayed on the tab
+     * @param icon The icon to be displayed on the tab
+     * @param component The component to be displayed when this tab is clicked.
+     * @param tip The tooltip to be displayed for this tab
+     * @param index The position to insert this new tab ({@code > 0 and <= getTabCount()})
+     * @see #insertTab
+     */
+    @Override
+    public void insertTab(String title, Icon icon, Component component, String tip, int index) {
+        super.insertTab(title, icon, component, tip, index);
+
+        this.addTabCloseButtons(title, index);
+    }
+
+    @Override
+    public void setTitleAt(int index, String title)
+    {
+        this.titleList.get(index).setText(title);
     }
 
     /**
@@ -67,6 +94,7 @@ public class CloseableTabbedPane extends JTabbedPane {
         constraints.weightx = 1;
 
         panelTab.add(labelTitle, constraints);
+        this.titleList.put(index, labelTitle);
 
         constraints.gridx++;
         constraints.weightx = 0;
@@ -82,23 +110,6 @@ public class CloseableTabbedPane extends JTabbedPane {
             this
         );
         closeButton.addActionListener(handler);
-    }
-
-    /**
-     * Insert a new tab.
-     *
-     * @param title The title to be displayed on the tab
-     * @param icon The icon to be displayed on the tab
-     * @param component The component to be displayed when this tab is clicked.
-     * @param tip The tooltip to be displayed for this tab
-     * @param index The position to insert this new tab ({@code > 0 and <= getTabCount()})
-     * @see #insertTab
-     */
-    @Override
-    public void insertTab(String title, Icon icon, Component component, String tip, int index) {
-        super.insertTab(title, icon, component, tip, index);
-
-        this.addTabCloseButtons(title, index);
     }
 
     /**
@@ -130,7 +141,7 @@ public class CloseableTabbedPane extends JTabbedPane {
             this.pane.remove(this.tab);
             BaseWindow window = (BaseWindow) SunToolkit.getContainingWindow(this.pane);
 
-            if (!window.isAnyCharacterLoaded()) {
+            if (window.isNoCharacterLoaded()) {
                 window.disablePrintMenuItem();
                 window.disableSaveMenuItem();
             }

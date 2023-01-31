@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,9 +34,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Advantage extends BaseTypedTranslatedEntity implements AdvantageInterface {
-    private final int value;
-
+public class Advantage extends BaseValuedTypedTranslatedEntity implements AdvantageInterface {
     /**
      * Get the type of advantage.
      */

@@ -21,12 +21,12 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import lombok.Setter;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -37,91 +37,6 @@ import java.util.LinkedHashMap;
 public class LooksPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
     @Setter
     private antafes.vampireEditor.entity.Character character = null;
-
-    /**
-     * Initialize everything.
-     */
-    @Override
-    protected void init() {
-        this.addLooksFields();
-        this.fillCharacterData();
-        // Add an empty column for nicer styling.
-        this.addFields("empty", false, new HashMap<>());
-
-        super.init();
-    }
-
-    /**
-     * Add all looks fields.
-     */
-    protected void addLooksFields() {
-        this.addFields("looks", false, new ArrayList<>());
-    }
-
-    /**
-     * Add fields by the given list and under the given headline.
-     *
-     * @param headline The headline of the element group
-     * @param addHeadline Whether to add a headline
-     * @param elementList List of elements
-     */
-    @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
-        LinkedHashMap<String, JComponent> fieldNames = new LinkedHashMap<>();
-
-        fieldNames.put("age", this.generateTextField("age", false));
-        fieldNames.put("apparentAge", this.generateTextField("apparentAge", false));
-        fieldNames.put("dayOfBirth", this.generateDateFormattedTextField("dayOfBirth", false));
-        fieldNames.put("dayOfDeath", this.generateDateFormattedTextField("dayOfDeath", false));
-        fieldNames.put("hairColor", this.generateTextField("hairColor", false));
-        fieldNames.put("eyeColor", this.generateTextField("eyeColor", false));
-        fieldNames.put("skinColor", this.generateTextField("skinColor", false));
-        fieldNames.put("nationality", this.generateTextField("nationality", false));
-        fieldNames.put("height", this.generateTextField("height", false));
-        fieldNames.put("weight", this.generateTextField("weight", false));
-        fieldNames.put("sex", this.generateTextField("sex", false));
-
-        this.addFields(headline, addHeadline, fieldNames);
-    }
-
-    /**
-     * Generate a JTextField with name and editable set.
-     *
-     * @param name Name of the text field
-     * @param editable Whether it should be editable or not
-     *
-     * @return The generated text field
-     */
-    private JTextField generateTextField(String name, boolean editable) {
-        JTextField textField = new JTextField();
-        textField.setName(name);
-        textField.setEditable(editable);
-        textField.setSize(167, GroupLayout.DEFAULT_SIZE);
-
-        return textField;
-    }
-
-    /**
-     * Generate a JFormattedTextField with name and editable set.
-     *
-     * @param name Name of the date formatted text field
-     * @param editable Whether it should be editable or not
-     *
-     * @return The generated formatted text field
-     */
-    private JFormattedTextField generateDateFormattedTextField(String name, boolean editable) {
-        JFormattedTextField dateField = new JFormattedTextField();
-        dateField.setFormatterFactory(
-            new javax.swing.text.DefaultFormatterFactory(
-                new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM))
-            )
-        );
-        dateField.setEditable(editable);
-        dateField.setName(name);
-        dateField.setSize(167, GroupLayout.DEFAULT_SIZE);
-
-        return dateField;
-    }
 
     /**
      * Fill in the character data. If no character is set, nothing will be added.
@@ -200,5 +115,96 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
         this.init();
         this.invalidate();
         this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        // Nothing to do here, as none of the looks fields are editable at the moment.
+    }
+
+    /**
+     * Initialize everything.
+     */
+    @Override
+    protected void init() {
+        this.addLooksFields();
+        this.fillCharacterData();
+        // Add an empty column for nicer styling.
+        this.addFields("empty", false, new HashMap<>());
+
+        super.init();
+    }
+
+    /**
+     * Add all looks fields.
+     */
+    protected void addLooksFields() {
+        this.addFields(new HashMap<>(), "looks", false);
+    }
+
+    /**
+     * Add fields by the given list and under the given headline.
+     *
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
+     */
+    @Override
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
+        LinkedHashMap<String, JComponent> fieldNames = new LinkedHashMap<>();
+
+        fieldNames.put("age", this.generateTextField("age", false));
+        fieldNames.put("apparentAge", this.generateTextField("apparentAge", false));
+        fieldNames.put("dayOfBirth", this.generateDateFormattedTextField("dayOfBirth", false));
+        fieldNames.put("dayOfDeath", this.generateDateFormattedTextField("dayOfDeath", false));
+        fieldNames.put("hairColor", this.generateTextField("hairColor", false));
+        fieldNames.put("eyeColor", this.generateTextField("eyeColor", false));
+        fieldNames.put("skinColor", this.generateTextField("skinColor", false));
+        fieldNames.put("nationality", this.generateTextField("nationality", false));
+        fieldNames.put("height", this.generateTextField("height", false));
+        fieldNames.put("weight", this.generateTextField("weight", false));
+        fieldNames.put("sex", this.generateTextField("sex", false));
+
+        this.addFields(headline, addHeadline, fieldNames);
+    }
+
+    /**
+     * Generate a JTextField with name and editable set.
+     *
+     * @param name Name of the text field
+     * @param editable Whether it should be editable or not
+     *
+     * @return The generated text field
+     */
+    private JTextField generateTextField(String name, boolean editable) {
+        JTextField textField = new JTextField();
+        textField.setName(name);
+        textField.setEditable(editable);
+        textField.setSize(167, GroupLayout.DEFAULT_SIZE);
+
+        return textField;
+    }
+
+    /**
+     * Generate a JFormattedTextField with name and editable set.
+     *
+     * @param name Name of the date formatted text field
+     * @param editable Whether it should be editable or not
+     *
+     * @return The generated formatted text field
+     */
+    private JFormattedTextField generateDateFormattedTextField(String name, boolean editable) {
+        JFormattedTextField dateField = new JFormattedTextField();
+        dateField.setFormatterFactory(
+            new javax.swing.text.DefaultFormatterFactory(
+                new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM))
+            )
+        );
+        dateField.setEditable(editable);
+        dateField.setName(name);
+        dateField.setSize(167, GroupLayout.DEFAULT_SIZE);
+
+        return dateField;
     }
 }

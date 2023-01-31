@@ -21,101 +21,30 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
-import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
-import antafes.vampireEditor.utility.StringComparator;
-import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  *
  * @author Marian Pollzien
  */
-public class AbilitiesPanel extends BaseListPanel implements TranslatableComponent, CharacterPanelInterface {
-    @Setter
-    private antafes.vampireEditor.entity.Character character = null;
-
-    /**
-     * Initialize everything.
-     */
-    @Override
-    protected void init() {
-        this.addTalentFields();
-        this.addSkillFields();
-        this.addKnowledgeFields();
-        this.setSpinnerMaximum(this.character.getGeneration().getMaximumAttributes());
-        this.fillCharacterData();
-
-        super.init();
-    }
-
-    /**
-     * Add all talent fields sorted by the translated name.
-     */
-    private void addTalentFields() {
-        this.addAbilityFields("talents", AbilityInterface.AbilityType.TALENT);
-    }
-
-    /**
-     * Add all skill fields sorted by the translated name.
-     */
-    private void addSkillFields() {
-        this.addAbilityFields("skills", AbilityInterface.AbilityType.SKILL);
-    }
-
-    /**
-     * Add all knowledge fields sorted by the translated name.
-     */
-    private void addKnowledgeFields() {
-        this.addAbilityFields("knowledge", AbilityInterface.AbilityType.KNOWLEDGE);
-    }
-
-    /**
-     * Add ability fields with the given fieldName and for the given ability type.
-     *
-     * @param fieldName Name of the field
-     * @param type Ability type
-     */
-    private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
-        ArrayList<String> list = new ArrayList<>();
-
-        this.character.getAbilities().stream()
-            .filter((ability) -> (ability.getType().equals(type)))
-            .forEachOrdered((ability) -> list.add(ability.getName()));
-        list.sort(new StringComparator());
-
-        this.addFields(fieldName, list);
-    }
-
-    /**
-     * Create the attributes document listener.
-     *
-     * @return Change listener for the component
-     */
-    @Override
-    protected ComponentChangeListener createChangeListener() {
-        return new ComponentChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-            }
-        };
-    }
-
-    /**
-     * Set the maximum value for the attribute spinners.
-     */
+public class AbilitiesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields("talents").stream().map((component) -> (JSpinner) component)
+        this.getFields(AbilityInterface.AbilityType.TALENT.toString()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("skills").stream().map((component) -> (JSpinner) component)
+        this.getFields(AbilityInterface.AbilityType.SKILL.toString()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields("knowledge").stream().map((component) -> (JSpinner) component)
+        this.getFields(AbilityInterface.AbilityType.KNOWLEDGE.toString()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
@@ -124,17 +53,18 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
      */
     @Override
     public void fillCharacterData() {
-        if (this.character == null) {
+        if (this.getCharacter() == null) {
             return;
         }
 
+        //noinspection CodeBlock2Expr
         this.getFields().forEach((type, abilitiesList) -> abilitiesList.stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> {
-                this.character.getAbilities().stream()
-                    .filter((ability) -> (ability.getName().equals(spinner.getName())))
-                    .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
-            }
-        ));
+                    this.getCharacter().getAbilities().values().stream()
+                        .filter((ability) -> (ability.getKey().equals(spinner.getName())))
+                        .forEachOrdered((ability) -> spinner.setValue(ability.getValue()));
+                }
+            ));
     }
 
     /**
@@ -149,5 +79,92 @@ public class AbilitiesPanel extends BaseListPanel implements TranslatableCompone
         this.init();
         this.invalidate();
         this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        for (AbilityInterface.AbilityType abilityType : AbilityInterface.AbilityType.values()) {
+            //noinspection CodeBlock2Expr
+            this.getCharacter().getAbilitiesByType(abilityType)
+                .forEach(ability -> {
+                    this.getFields(abilityType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                        if (!Objects.equals(component.getName(), ability.getKey())) {
+                            return;
+                        }
+
+                        Ability.AbilityBuilder<?, ?> abilityBuilder = ability.toBuilder();
+                        abilityBuilder.setValue((int) component.getValue());
+                        characterBuilder.addAbility(abilityBuilder.build());
+                    });
+                });
+        }
+    }
+
+    @Override
+    protected void init() {
+        this.addTalentFields();
+        this.addSkillFields();
+        this.addKnowledgeFields();
+        this.setSpinnerMaximum(this.getCharacter().getGeneration().getMaximumAttributes());
+        this.fillCharacterData();
+
+        super.init();
+    }
+
+    @Override
+    protected void addChangeListener(JSpinner field)
+    {
+        super.addChangeListener(field);
+        this.addChangeListenerForCharacterChanged(field);
+    }
+
+    @Override
+    protected ComponentChangeListener createChangeListener() {
+        return new ComponentChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+            }
+        };
+    }
+
+    /**
+     * Add all talent fields sorted by the translated name.
+     */
+    private void addTalentFields() {
+        this.addAbilityFields(AbilityInterface.AbilityType.TALENT.toString(), AbilityInterface.AbilityType.TALENT);
+    }
+
+    /**
+     * Add all skill fields sorted by the translated name.
+     */
+    private void addSkillFields() {
+        this.addAbilityFields(AbilityInterface.AbilityType.SKILL.toString(), AbilityInterface.AbilityType.SKILL);
+    }
+
+    /**
+     * Add all knowledge fields sorted by the translated name.
+     */
+    private void addKnowledgeFields() {
+        this.addAbilityFields(AbilityInterface.AbilityType.KNOWLEDGE.toString(), AbilityInterface.AbilityType.KNOWLEDGE);
+    }
+
+    /**
+     * Add ability fields with the given fieldName and for the given ability type.
+     *
+     * @param fieldName Name of the field
+     * @param type Ability type
+     */
+    private void addAbilityFields(String fieldName, AbilityInterface.AbilityType type) {
+        HashMap<String, String> list = new HashMap<>();
+
+        this.getCharacter().getAbilities().values().stream()
+            .filter((ability) -> (ability.getType().equals(type)))
+            .forEachOrdered((ability) -> list.put(ability.getKey(), ability.getName()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue(String::compareTo));
+
+        this.addFields(fieldName, list);
     }
 }

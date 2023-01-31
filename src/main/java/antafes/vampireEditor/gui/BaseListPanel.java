@@ -24,7 +24,7 @@ package antafes.vampireEditor.gui;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -41,7 +41,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of elements to add
      */
     @Override
-    protected void addFields(String headline, ArrayList<String> elementList) {
+    protected void addFields(String headline, HashMap<String, String> elementList) {
         this.addFields(headline, true, elementList, 0);
     }
 
@@ -49,12 +49,12 @@ abstract public class BaseListPanel extends BasePanel {
      * Add labels and spinners by the given list and under the given headline.
      * This will use 0 as minimum value for the spinners.
      *
-     * @param headline Headline of the field block
-     * @param addHeadline Whether to add a headline or not
      * @param elementList List of elements to add
+     * @param headline    Headline of the field block
+     * @param addHeadline Whether to add a headline or not
      */
     @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
         this.addFields(headline, addHeadline, elementList, 0);
     }
 
@@ -66,7 +66,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param spinnerMinimum Minimum value for the created spinner
      * @param elementList List of elements to add
      */
-    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
+    protected void addFields(String headline, HashMap<String, String> elementList, int spinnerMinimum) {
         this.addFields(headline, true, elementList, spinnerMinimum);
     }
 
@@ -78,18 +78,18 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of elements to add
      * @param spinnerMinimum Minimum value for the created spinner
      */
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
+    protected void addFields(String headline, boolean addHeadline, HashMap<String, String> elementList, int spinnerMinimum) {
         LinkedHashMap<String, JComponent> elements = new LinkedHashMap<>();
 
-        elementList.forEach((string) -> {
+        elementList.forEach((key, value) -> {
             JSpinner spinner = new JSpinner();
             spinner.setModel(new SpinnerNumberModel(spinnerMinimum, spinnerMinimum, 10, 1));
             Dimension spinnerDimension = new Dimension(36, 20);
             spinner.setSize(spinnerDimension);
-            spinner.setName(string);
+            spinner.setName(key);
             this.addChangeListener(spinner);
 
-            elements.put(string, spinner);
+            elements.put(value, spinner);
         });
 
         this.addFields(headline, addHeadline, elements);

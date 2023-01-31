@@ -26,8 +26,13 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.character.CharacterPanelInterface;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
+import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
+import antafes.vampireEditor.gui.event.listener.CloseProgrammeListener;
+import antafes.vampireEditor.gui.event.listener.SaveAllCharactersListener;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
@@ -293,11 +298,41 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        this.configuration.setWindowLocation(this.getLocationOnScreen());
-        this.configuration.setExtendedState(this.getExtendedState());
-        this.configuration.saveProperties();
-        System.exit(0);
+    private void closeMenuItemActionPerformed(ActionEvent evt) {
+        if (this.checkForUnsavedCharacters()) {
+            this.showUnsavedCharactersDialog();
+        } else {
+            VampireEditor.getDispatcher().dispatch(new CloseProgrammeEvent());
+        }
+    }
+
+    /**
+     * Returns true if one or more unsaved characters are found.
+     */
+    private boolean checkForUnsavedCharacters() {
+        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
+            CharacterTabbedPane tab = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
+
+            if (tab.isCharacterChanged()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void showUnsavedCharactersDialog() {
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(this);
+        int x,
+            y,
+            width = dialog.getWidth(),
+            height = dialog.getHeight();
+
+        x = this.configuration.getWindowLocation().x + (this.getWidth() / 2 - width / 2);
+        y = this.configuration.getWindowLocation().y + (this.getHeight() / 2 - height / 2);
+
+        dialog.setBounds(x, y, width, height);
+        dialog.setVisible(true);
     }
 
     /**
@@ -305,7 +340,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void aboutMenuItemActionPerformed(ActionEvent evt) {
         int x,
             y,
             width = this.aboutDialog.getWidth(),
@@ -323,7 +358,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void closeAboutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void closeAboutButtonActionPerformed(ActionEvent evt) {
         this.aboutDialog.setVisible(false);
     }
 
@@ -332,7 +367,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void newMenuItemActionPerformed(ActionEvent evt) {
         int x, y, width, height;
 
         // Add the new character dialog.
@@ -365,26 +400,45 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!this.isAnyCharacterLoaded()) {
+    private void saveMenuItemActionPerformed(ActionEvent evt) {
+        try {
+            this.saveCurrentCharacter();
+        } catch (SaveCancelledException ignored) {}
+    }
+
+    private void saveCurrentCharacter() throws SaveCancelledException
+    {
+        if (this.isNoCharacterLoaded()) {
             return;
         }
 
-        antafes.vampireEditor.entity.Character character = this.getActiveCharacter();
+        Character character = this.getActiveCharacter();
         this.saveFileChooser.setCurrentDirectory(this.configuration.getSaveDirPath());
         this.saveFileChooser.setSelectedFile(this.configuration.getSaveDirPath(character.getName()));
         this.saveFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.saveFileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            VampireEditor.log(new ArrayList<>(
-                Collections.singletonList("Saving character " + character.getName())
-            ));
+            VampireEditor.log(String.format("Updating character %s from form fields", character.getName()));
+            Character.CharacterBuilder<?, ?> characterBuilder = character.toBuilder();
+            for (Component component : ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getComponents()) {
+                if (component instanceof CharacterPanelInterface) {
+                    ((CharacterPanelInterface) component).updateCharacter(characterBuilder);
+                }
+            }
+            character = characterBuilder.build();
+            VampireEditor.log(String.format("Saving character %s", character.getName()));
             this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
             CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
             storage.save(character, this.saveFileChooser.getSelectedFile().getName());
+            ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).setCharacterChanged(false);
+            this.charactersTabPane.setTitleAt(this.charactersTabPane.getSelectedIndex(), character.getName());
+        }
+
+        if (result == JFileChooser.CANCEL_OPTION) {
+            throw new SaveCancelledException();
         }
     }
 
@@ -393,7 +447,7 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void openMenuItemActionPerformed(ActionEvent evt) {
         this.openFileChooser.setCurrentDirectory(this.configuration.getOpenDirPath());
         this.openFileChooser.setFileFilter(new FileNameExtensionFilter("XML", "xml"));
         int result = this.openFileChooser.showOpenDialog(this);
@@ -448,8 +502,8 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param evt Event object
      */
-    private void printMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!this.isAnyCharacterLoaded()) {
+    private void printMenuItemActionPerformed(ActionEvent evt) {
+        if (this.isNoCharacterLoaded()) {
             return;
         }
 
@@ -542,6 +596,8 @@ public class BaseWindow extends javax.swing.JFrame {
         } else if (this.configuration.getLanguage() == Configuration.Language.GERMAN) {
             this.languageGroup.setSelected(this.germanMenuItem.getModel(), true);
         }
+
+        this.registerGlobalEvents();
     }
 
     /**
@@ -594,7 +650,7 @@ public class BaseWindow extends javax.swing.JFrame {
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
             escapeStroke, dispatchWindowClosingActionMapKey
         );
-        root.getActionMap().put( dispatchWindowClosingActionMapKey, dispatchClosing);
+        root.getActionMap().put(dispatchWindowClosingActionMapKey, dispatchClosing);
     }
 
     /**
@@ -602,18 +658,29 @@ public class BaseWindow extends javax.swing.JFrame {
      *
      * @param character Character to add
      */
-    public void addCharacter(Character character) {
+    public void addCharacter(Character character, boolean isCharacterChanged) {
         try {
             CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
             characterTabbedPane.setCharacter(character);
             characterTabbedPane.init();
-            this.charactersTabPane.add(character.getName(), characterTabbedPane);
+            characterTabbedPane.setCharacterChanged(isCharacterChanged);
+            String tabName = character.getName();
+
+            if (isCharacterChanged) {
+                tabName += "*";
+            }
+
+            this.charactersTabPane.add(tabName, characterTabbedPane);
             this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(characterTabbedPane));
             this.printMenuItem.setEnabled(true);
             this.saveMenuItem.setEnabled(true);
         } catch (Exception ex) {
             Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void addCharacter(Character character) {
+        this.addCharacter(character, false);
     }
 
     /**
@@ -626,12 +693,12 @@ public class BaseWindow extends javax.swing.JFrame {
     /**
      * Check if a character already has been loaded.
      */
-    public boolean isAnyCharacterLoaded() {
+    public boolean isNoCharacterLoaded() {
         try {
             ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).getCharacter();
-            return true;
-        } catch (NullPointerException ex) {
             return false;
+        } catch (NullPointerException ex) {
+            return true;
         }
     }
 
@@ -650,5 +717,44 @@ public class BaseWindow extends javax.swing.JFrame {
         }
 
         return -1;
+    }
+
+    private void registerGlobalEvents()
+    {
+        VampireEditor.getDispatcher().addListener(
+            CloseProgrammeEvent.class,
+            new CloseProgrammeListener((event) -> this.closeProgramme())
+        );
+        VampireEditor.getDispatcher().addListener(
+            SaveAllCharactersEvent.class,
+            new SaveAllCharactersListener((event) -> this.saveAllCharacters())
+        );
+    }
+
+    private void closeProgramme()
+    {
+        this.configuration.setWindowLocation(this.getLocationOnScreen());
+        this.configuration.setExtendedState(this.getExtendedState());
+        this.configuration.saveProperties();
+        System.exit(0);
+    }
+
+    private void saveAllCharacters()
+    {
+        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
+            CharacterTabbedPane tab = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
+
+            if (tab.isCharacterChanged()) {
+                this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(tab));
+
+                try {
+                    this.saveCurrentCharacter();
+                } catch (SaveCancelledException e) {
+                    return;
+                }
+            }
+        }
+
+        this.closeProgramme();
     }
 }

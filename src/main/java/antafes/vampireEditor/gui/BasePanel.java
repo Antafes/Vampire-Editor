@@ -303,8 +303,8 @@ abstract public class BasePanel extends JPanel {
      * @param headline The headline of the element group
      * @param elementList List of elements
      */
-    protected void addFields(String headline, ArrayList<String> elementList) {
-        this.addFields(headline, true, elementList);
+    protected void addFields(String headline, HashMap<String, String> elementList) {
+        this.addFields(elementList, headline, true);
     }
 
     /**
@@ -315,7 +315,7 @@ abstract public class BasePanel extends JPanel {
      * @param addHeadline Whether to add a headline
      * @param elementList List of elements
      */
-    abstract protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList);
+    abstract protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline);
 
     /**
      * Add the given fields and with the given headline.

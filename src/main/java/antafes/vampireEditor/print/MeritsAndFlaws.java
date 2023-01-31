@@ -112,7 +112,7 @@ public class MeritsAndFlaws extends PrintBase {
         this.setMaxY(this.getMaxY() + 1);
         int yMerit = this.getMaxY(), yFlaw = this.getMaxY();
 
-        for (Merit merit : this.getCharacter().getMerits()) {
+        for (Merit merit : this.getCharacter().getMerits().values()) {
             this.addText(
                 merit.getName(),
                 PositionX.LEFT1.getPosition(),
@@ -127,7 +127,7 @@ public class MeritsAndFlaws extends PrintBase {
             this.setMaxY(this.getMaxY() + 1);
         }
 
-        for (Flaw flaw : this.getCharacter().getFlaws()) {
+        for (Flaw flaw : this.getCharacter().getFlaws().values()) {
             this.addValueEntry(
                 flaw.getName(),
                 PositionX.RIGHT1.getPosition(),

@@ -75,18 +75,6 @@ public class CharacterStorage extends BaseStorage<Character> {
     }
 
     /**
-     * Fetch a single ability for a given key.
-     *
-     * @param key The key under which to find the entity
-     *
-     * @return The entity
-     */
-    @Override
-    public Character getEntity(String key) throws EntityStorageException {
-        return (Character) super.getEntity(key);
-    }
-
-    /**
      * Save the given character.
      *
      * @param character The character to save
@@ -151,31 +139,31 @@ public class CharacterStorage extends BaseStorage<Character> {
         this.xw.addChild("sect", character.getSect());
 
         Element attributes = this.xw.addChild("attributes");
-        character.getAttributes().forEach((attribute) -> {
+        character.getAttributes().forEach((key, attribute) -> {
             HashMap<String, String> attributeList = new HashMap<>();
-            attributeList.put("key", attribute.getKey());
+            attributeList.put("key", key);
             this.xw.addChild(attributes, "attribute", Integer.toString(attribute.getValue()), attributeList);
         });
 
         Element abilities = this.xw.addChild("abilities");
-        character.getAbilities().forEach((ability) -> {
+        character.getAbilities().forEach((key, ability) -> {
             HashMap<String, String> abilitiesList = new HashMap<>();
-            abilitiesList.put("key", ability.getKey());
+            abilitiesList.put("key", key);
             this.xw.addChild(abilities, "ability", Integer.toString(ability.getValue()), abilitiesList);
         });
 
         Element advantages = this.xw.addChild("advantages");
-        character.getAdvantages().forEach((advantage) -> {
+        character.getAdvantages().forEach((key, advantage) -> {
             HashMap<String, String> advantagesList = new HashMap<>();
-            advantagesList.put("key", advantage.getKey());
+            advantagesList.put("key", key);
             this.xw.addChild(advantages, "advantage", Integer.toString(advantage.getValue()), advantagesList);
         });
 
         Element merits = this.xw.addChild("merits");
-        character.getMerits().forEach((merit) -> this.xw.addChild(merits, "merit", merit.getKey()));
+        character.getMerits().forEach((key, merit) -> this.xw.addChild(merits, "merit", key));
 
         Element flaws = this.xw.addChild("flaws");
-        character.getFlaws().forEach((flaw) -> this.xw.addChild(flaws, "flaw", flaw.getKey()));
+        character.getFlaws().forEach((key, flaw) -> this.xw.addChild(flaws, "flaw", key));
 
         HashMap<String, String> roadAttributes = new HashMap<>();
         roadAttributes.put("key", character.getRoad().getKey());

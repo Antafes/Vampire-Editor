@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor;
 
+import antafes.eventDispatcher.Application;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 
@@ -29,7 +30,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,7 +47,8 @@ import java.util.logging.Logger;
  *
  * @author Marian Pollzien <map@wafriv.de>
  */
-public class VampireEditor {
+public class VampireEditor extends Application
+{
     private static final boolean DEBUG = false;
 
     /**
@@ -119,7 +121,7 @@ public class VampireEditor {
         }
 
         try {
-            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            Files.write(file, lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
         } catch (IOException ex) {
             Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -150,7 +152,7 @@ public class VampireEditor {
     }
 
     /**
-     * Get a file inside of the generated JAR.
+     * Get a file inside the generated JAR.
      *
      * @param path Path of the file
      *
@@ -161,7 +163,7 @@ public class VampireEditor {
     }
 
     /**
-     * Get a resource inside of the generated JAR.
+     * Get a resource inside the generated JAR.
      *
      * @param path Path of the file
      *

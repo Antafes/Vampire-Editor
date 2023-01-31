@@ -37,6 +37,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,12 +111,14 @@ public class AttributesPanel extends BaseListPanel {
      * @param type Attribute type
      */
     private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
 
         this.getValues(type.name()).stream()
             .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> list.add(attribute.getKey()));
-        list.sort(new StringComparator());
+            .forEachOrdered((attribute) -> list.put(attribute.getKey(), attribute.getKey()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue());
 
         this.addFields(fieldName, list, 1);
     }

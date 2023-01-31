@@ -44,6 +44,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -96,9 +97,12 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      */
     private void addVirtueFields() {
         ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
 
-        advantages.forEach((advantage) -> list.add(advantage.getKey()));
+        advantages.forEach((advantage) -> list.put(advantage.getKey(), advantage.getKey()));
+        list.entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue());
 
         this.addFields(
             "virtues",

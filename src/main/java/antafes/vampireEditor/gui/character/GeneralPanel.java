@@ -21,23 +21,140 @@
  */
 package antafes.vampireEditor.gui.character;
 
-import antafes.vampireEditor.gui.BasePanel;
+import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.character.Flaw;
+import antafes.vampireEditor.entity.character.Merit;
+import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
-import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
  *
  * @author Marian Pollzien
  */
-public class GeneralPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
-    @Setter
-    private antafes.vampireEditor.entity.Character character = null;
+public class GeneralPanel extends BaseCharacterPanel implements TranslatableComponent, CharacterPanelInterface {
+    /**
+     * Fill in the character data. If no character is set, nothing will be added.
+     */
+    @Override
+    public void fillCharacterData() {
+        if (this.getCharacter() == null) {
+            return;
+        }
+
+        this.getFields("base").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
+            if (null != element.getName()) {
+                switch (element.getName()) {
+                    case "name":
+                        element.setText(this.getCharacter().getName());
+                        break;
+                    case "chronicle":
+                        element.setText(this.getCharacter().getChronicle());
+                        break;
+                    case "generation":
+                        element.setText(this.getCharacter().getGeneration().toString());
+                        break;
+                    case "nature":
+                        element.setText(this.getCharacter().getNature());
+                        break;
+                    case "hideout":
+                        element.setText(this.getCharacter().getHideout());
+                        break;
+                    case "player":
+                        element.setText(this.getCharacter().getPlayer());
+                        break;
+                    case "demeanor":
+                        element.setText(this.getCharacter().getDemeanor());
+                        break;
+                    case "concept":
+                        element.setText(this.getCharacter().getConcept());
+                        break;
+                    case "sire":
+                        element.setText(this.getCharacter().getSire());
+                        break;
+                    case "clan":
+                        element.setText(this.getCharacter().getClan().getName());
+                        break;
+                    case "sect":
+                        element.setText(this.getCharacter().getSect());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        this.getFields("other").stream().map((field) -> (JSpinner) field).forEachOrdered((element) -> {
+            if (null != element.getName()) {
+                switch (element.getName()) {
+                    case "willpower":
+                        element.setValue(this.getCharacter().getWillpower());
+                        break;
+                    case "bloodStock":
+                        element.setValue(this.getCharacter().getBloodPool());
+                        break;
+                    default:
+                        element.setValue(this.getCharacter().getRoad().getValue());
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void updateTexts() {
+        this.getConfiguration().loadProperties();
+        this.setLanguage(this.getConfiguration().getLanguageObject());
+        this.removeAll();
+        this.initComponents();
+        this.init();
+        this.invalidate();
+        this.repaint();
+    }
+
+    @Override
+    public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
+    {
+        this.getFields("base").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
+            switch (element.getName()) {
+                case "hideout":
+                    characterBuilder.setHideout(element.getText());
+                    break;
+                case "player":
+                    characterBuilder.setPlayer(element.getText());
+                    break;
+                case "sire":
+                    characterBuilder.setSire(element.getText());
+                    break;
+                case "sect":
+                    characterBuilder.setSect(element.getText());
+                    break;
+                default:
+                    break;
+            }
+        });
+        this.getFields("other").stream().map((field) -> (JSpinner) field).forEachOrdered((element) -> {
+            switch (element.getName()) {
+                case "willpower":
+                    characterBuilder.setWillpower((int) element.getValue());
+                    break;
+                case "bloodStock":
+                    characterBuilder.setBloodPool((int) element.getValue());
+                    break;
+                default:
+                    Road.RoadBuilder<?, ?> roadBuilder = this.getCharacter().getRoad().toBuilder();
+                    roadBuilder.setValue((int) element.getValue());
+                    characterBuilder.setRoad(roadBuilder.build());
+                    break;
+            }
+        });
+    }
 
     /**
      * Initialize everything.
@@ -53,6 +170,18 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
     }
 
     /**
+     * Unused in this panel.
+     *
+     * @param headline The headline of the element group
+     * @param addHeadline Whether to add a headline
+     * @param elementList List of elements
+     */
+    @Override
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
      * Add all base fields.
      */
     private void addBaseFields() {
@@ -63,26 +192,18 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
         fieldNames.put("generation", this.generateTextField("generation", false));
         fieldNames.put("nature", this.generateTextField("nature", false));
         fieldNames.put("hideout", this.generateTextField("hideout"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("hideout"));
         fieldNames.put("player", this.generateTextField("player"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("player"));
         fieldNames.put("demeanor", this.generateTextField("demeanor", false));
         fieldNames.put("concept", this.generateTextField("concept", false));
         fieldNames.put("sire", this.generateTextField("sire"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("sire"));
         fieldNames.put("clan", this.generateTextField("clan", false));
         fieldNames.put("sect", this.generateTextField("sect"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("sect"));
 
         this.addFields("base", false, fieldNames);
-    }
-
-    /**
-     * Unused in this panel.
-     *
-     * @param headline The headline of the element group
-     * @param addHeadline Whether to add a headline
-     * @param elementList List of elements
-     */
-    @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -119,17 +240,19 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
      */
     private void addMeritAndFlawFields() {
         LinkedHashMap<String, JComponent> elementList = new LinkedHashMap<>();
-        this.character.getMerits().sort(new StringComparator());
-        this.character.getFlaws().sort(new StringComparator());
+        ArrayList<Merit> merits = new ArrayList<>(this.getCharacter().getMerits().values());
+        ArrayList<Flaw> flaws = new ArrayList<>(this.getCharacter().getFlaws().values());
+        merits.sort(new StringComparator());
+        flaws.sort(new StringComparator());
 
-        this.character.getMerits().forEach((merit) -> {
+        merits.forEach((merit) -> {
             JLabel label = new JLabel();
             label.setText(merit.toString());
             label.setSize(167, GroupLayout.DEFAULT_SIZE);
             elementList.put(merit.getKey(), label);
         });
 
-        this.character.getFlaws().forEach((flaw) -> {
+        flaws.forEach((flaw) -> {
             JLabel label = new JLabel();
             label.setText(flaw.toString());
             label.setSize(167, GroupLayout.DEFAULT_SIZE);
@@ -150,97 +273,23 @@ public class GeneralPanel extends BasePanel implements TranslatableComponent, Ch
         road.setModel(new SpinnerNumberModel(0, 0, 10, 1));
         road.setSize(spinnerDimension);
         road.setName("road");
-        elementList.put(this.character.getRoad().getName(), road);
+        elementList.put(this.getCharacter().getRoad().getName(), road);
+        this.addChangeListenerForCharacterChanged(road);
 
         JSpinner willpower = new JSpinner();
         willpower.setModel(new SpinnerNumberModel(0, 0, 10, 1));
         willpower.setSize(spinnerDimension);
         willpower.setName("willpower");
         elementList.put("willpower", willpower);
+        this.addChangeListenerForCharacterChanged(willpower);
 
         JSpinner bloodPool = new JSpinner();
-        bloodPool.setModel(new SpinnerNumberModel(0, 0, this.character.getGeneration().getMaximumBloodPool(), 1));
+        bloodPool.setModel(new SpinnerNumberModel(0, 0, this.getCharacter().getGeneration().getMaximumBloodPool(), 1));
         bloodPool.setSize(spinnerDimension);
         bloodPool.setName("bloodPool");
         elementList.put("bloodPool", bloodPool);
+        this.addChangeListenerForCharacterChanged(bloodPool);
 
         this.addFields("other", false, elementList);
-    }
-
-    /**
-     * Fill in the character data. If no character is set, nothing will be added.
-     */
-    @Override
-    public void fillCharacterData() {
-        if (this.character == null) {
-            return;
-        }
-
-        this.getFields("base").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
-            if (null != element.getName()) switch (element.getName()) {
-                case "name":
-                    element.setText(this.character.getName());
-                    break;
-                case "chronicle":
-                    element.setText(this.character.getChronicle());
-                    break;
-                case "generation":
-                    element.setText(this.character.getGeneration().toString());
-                    break;
-                case "nature":
-                    element.setText(this.character.getNature());
-                    break;
-                case "hideout":
-                    element.setText(this.character.getHideout());
-                    break;
-                case "player":
-                    element.setText(this.character.getPlayer());
-                    break;
-                case "demeanor":
-                    element.setText(this.character.getDemeanor());
-                    break;
-                case "concept":
-                    element.setText(this.character.getConcept());
-                    break;
-                case "sire":
-                    element.setText(this.character.getSire());
-                    break;
-                case "clan":
-                    element.setText(this.character.getClan().getName());
-                    break;
-                case "sect":
-                    element.setText(this.character.getSect());
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        this.getFields("other").stream().map((field) -> (JSpinner) field).forEachOrdered((element) -> {
-            if (null != element.getName()) {
-                switch (element.getName()) {
-                    case "willpower":
-                        element.setValue(this.character.getWillpower());
-                        break;
-                    case "bloodStock":
-                        element.setValue(this.character.getBloodPool());
-                        break;
-                    default:
-                        element.setValue(this.character.getRoad().getValue());
-                        break;
-                }
-            }
-        });
-    }
-
-    @Override
-    public void updateTexts() {
-        this.getConfiguration().loadProperties();
-        this.setLanguage(this.getConfiguration().getLanguageObject());
-        this.removeAll();
-        this.initComponents();
-        this.init();
-        this.invalidate();
-        this.repaint();
     }
 }

@@ -75,7 +75,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of element names that should be added as JSpinner
      */
     @Override
-    protected void addFields(String headline, ArrayList<String> elementList) {
+    protected void addFields(String headline, HashMap<String, String> elementList) {
         this.addFields(headline, elementList, 0);
     }
 
@@ -87,7 +87,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of element names that should be added as JSpinner
      */
     @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
         this.addFields(headline, addHeadline, elementList, 0);
     }
 
@@ -98,7 +98,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of element names that should be added as JSpinner
      * @param spinnerMinimum Maximum value for the spinners
      */
-    protected void addFields(String headline, ArrayList<String> elementList, int spinnerMinimum) {
+    protected void addFields(String headline, HashMap<String, String> elementList, int spinnerMinimum) {
         this.addFields(headline, true, elementList, spinnerMinimum);
     }
 
@@ -110,7 +110,7 @@ abstract public class BaseListPanel extends BasePanel {
      * @param elementList List of element names that should be added as JSpinner
      * @param spinnerMinimum Maximum value for the spinners
      */
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList, int spinnerMinimum) {
+    protected void addFields(String headline, boolean addHeadline, HashMap<String, String> elementList, int spinnerMinimum) {
         if (!this.getFields().containsKey(headline)) {
             this.getFields().put(headline, new ArrayList<>());
         }
@@ -167,7 +167,7 @@ abstract public class BaseListPanel extends BasePanel {
         GroupLayout.ParallelGroup labelHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
         GroupLayout.ParallelGroup elementHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 
-        elementList.forEach((element) -> {
+        elementList.forEach((key, element) -> {
             HashMap<String, GroupLayout.Group> groups = new HashMap<>();
             groups.put("labelHorizontalGroup", labelHorizontalGroup);
             groups.put("elementHorizontalGroup", elementHorizontalGroup);
