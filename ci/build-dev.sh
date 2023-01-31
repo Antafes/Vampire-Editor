@@ -21,6 +21,6 @@ mvn -Dmaven.test.skip=true clean package
 cp target/*.zip ../dist
 DATE=`date +%d%m%Y%H%M`
 echo "build-$DATE" >> ../dist/name
-TAG=`cat ../vampire-editor-pre-release/tag`
+TAG=`cat VERSION`
 echo "$TAG-$DATE" >> ../dist/tag
 cp .git/ref ../dist/commit_sha
