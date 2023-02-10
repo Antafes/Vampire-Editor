@@ -16,31 +16,30 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
 
-import lombok.Data;
-import lombok.SneakyThrows;
-import lombok.experimental.SuperBuilder;
+package antafes.vampireEditor.gui.event.listener;
 
-/**
- * A base entity.
- */
-@Data
-@SuperBuilder(setterPrefix = "set", toBuilder = true)
-public abstract class BaseEntity {
-    @SneakyThrows(EntityException.class)
-    protected BaseEntity(BaseEntityBuilder<?, ?> b)
+import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
+
+import java.util.function.Consumer;
+
+public class VirtueValueSetListener extends EventListener<VirtueValueSetEvent>
+{
+    public VirtueValueSetListener()
     {
-        b.checkValues();
-        b.executeAdditionalCalculations();
     }
 
-    public static abstract class BaseEntityBuilder<C extends BaseEntity, B extends BaseEntityBuilder<C, B>>
+    public VirtueValueSetListener(Consumer<VirtueValueSetEvent> consumer)
     {
-        protected abstract void checkValues() throws EntityException;
-        protected abstract void executeAdditionalCalculations();
+        super(consumer);
+    }
+
+    public VirtueValueSetListener(Consumer<VirtueValueSetEvent> consumer, int priority)
+    {
+        super(consumer, priority);
     }
 }

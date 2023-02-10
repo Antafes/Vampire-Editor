@@ -71,6 +71,11 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
             }
         }
 
+        @Override
+        protected void executeAdditionalCalculations()
+        {
+        }
+
         /**
          * Add a single translated name to the map.
          *

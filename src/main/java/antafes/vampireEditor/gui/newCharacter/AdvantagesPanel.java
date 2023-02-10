@@ -34,6 +34,7 @@ import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.utility.Weighting;
 import antafes.vampireEditor.utility.StringComparator;
 
@@ -154,6 +155,19 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
                 if (getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).contains(this.getComponent())) {
                     calculateUsedVirtuePoints();
+                    ArrayList<Component> fields = getFields(AdvantageInterface.AdvantageType.VIRTUE.name());
+                    ArrayList<Advantage> virtues = new ArrayList<>();
+                    AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+                    fields.forEach(component -> {
+                        try {
+                            Advantage.AdvantageBuilder<?, ?> builder = storage.getEntity(component.getName()).toBuilder();
+                            builder.setValue(Integer.parseInt(((JSpinner) component).getValue().toString()));
+                            virtues.add(builder.build());
+                        } catch (EntityStorageException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
+                    VampireEditor.getDispatcher().dispatch((new VirtueValueSetEvent()).setVirtues(virtues));
                 }
 
                 checkFieldsFilled();

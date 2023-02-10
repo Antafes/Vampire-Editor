@@ -30,6 +30,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Test
@@ -150,5 +151,28 @@ public class RoadTest extends BaseTest
     public void testBuilderBuild() throws EntityException {
         this.road.toBuilder()
             .build();
+    }
+
+    public void testCalculateRoadScore()
+    {
+        ArrayList<Advantage> advantages = new ArrayList<>();
+        advantages.add(
+            Advantage.builder()
+                .setKey("test1")
+                .setValue(2)
+                .setType(AdvantageInterface.AdvantageType.VIRTUE)
+                .addName(Configuration.Language.ENGLISH, "Test 1")
+                .build()
+        );
+        advantages.add(
+            Advantage.builder()
+                .setKey("test2")
+                .setValue(1)
+                .setType(AdvantageInterface.AdvantageType.VIRTUE)
+                .addName(Configuration.Language.ENGLISH, "Test 2")
+                .build()
+        );
+        int score = Road.calculateRoadScore(advantages);
+        Assert.assertEquals(score, 3);
     }
 }

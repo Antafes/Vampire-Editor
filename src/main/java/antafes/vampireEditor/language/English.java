@@ -160,6 +160,7 @@ public class English extends Language {
         this.getTranslations().put("printPreview", "Print preview");
         this.getTranslations().put("otherTraits", "Other traits");
         this.getTranslations().put("experience", "Experience");
+        this.getTranslations().put("roadScore", "Score");
     }
 
     /**

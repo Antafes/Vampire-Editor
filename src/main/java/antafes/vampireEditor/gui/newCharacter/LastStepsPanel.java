@@ -25,13 +25,13 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.character.Flaw;
-import antafes.vampireEditor.entity.character.Merit;
-import antafes.vampireEditor.entity.character.Road;
-import antafes.vampireEditor.entity.character.SpecialFeature;
+import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
+import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
+import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
+import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
@@ -40,7 +40,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  *
@@ -49,6 +52,7 @@ import java.util.*;
 public class LastStepsPanel extends BasePanel {
     private JLabel flawInfoLabel;
     private JComboBox<BaseTranslatedEntity> roadComboBox;
+    private JLabel roadLabel;
 
     /**
      * Create the last steps panel.
@@ -103,6 +107,17 @@ public class LastStepsPanel extends BasePanel {
      */
     private void addRoadFields() {
         this.addFields("road");
+
+        VampireEditor.getDispatcher().addListener(
+            VirtueValueSetEvent.class,
+            new VirtueValueSetListener(lastStepsHeadlineCreatedEvent -> {
+                LanguageInterface language = this.getConfiguration().getLanguageObject();
+                String text = language.translate("road")
+                    + " (" + language.translate("roadScore") + ": "
+                    + Road.calculateRoadScore(lastStepsHeadlineCreatedEvent.getVirtues()) + ')';
+                this.roadLabel.setText(text);
+            })
+        );
     }
 
     /**
@@ -132,6 +147,10 @@ public class LastStepsPanel extends BasePanel {
         GroupLayout layout = (GroupLayout) this.getLayout();
         JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
         groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        if (headline.equals("road")) {
+            this.roadLabel = groupLabel;
+        }
 
         GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
             .addComponent(
@@ -293,7 +312,7 @@ public class LastStepsPanel extends BasePanel {
         FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
 
         ArrayList<SpecialFeature> list = new ArrayList<>(
-            (Collection<SpecialFeature>)(Collection<?>)("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
+            ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
         list.sort(new StringComparator());
 
@@ -374,7 +393,7 @@ public class LastStepsPanel extends BasePanel {
 
         sum = this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
-            .map((comboBox) -> ((Flaw) comboBox.getSelectedItem()).getCost())
+            .map((comboBox) -> ((Flaw) Objects.requireNonNull(comboBox.getSelectedItem())).getCost())
             .reduce(sum, Integer::sum);
 
         if (sum > 7) {
@@ -401,7 +420,7 @@ public class LastStepsPanel extends BasePanel {
 
         sum = this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
-            .map((comboBox) -> ((Merit) comboBox.getSelectedItem()).getCost())
+            .map((comboBox) -> ((Merit) Objects.requireNonNull(comboBox.getSelectedItem())).getCost())
             .reduce(sum, Integer::sum);
 
         return sum;
