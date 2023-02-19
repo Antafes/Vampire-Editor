@@ -117,7 +117,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(lastStepsScrollPane);
 
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
             this.setAttributeMaximum(Objects.requireNonNull(generationStorage.getEntity(12)).getMaximumAttributes());
         } catch (EntityStorageException e) {

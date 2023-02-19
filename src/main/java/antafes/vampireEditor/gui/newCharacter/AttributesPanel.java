@@ -72,7 +72,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
 
         try {
             return storage.getEntity(element).getName();
@@ -125,7 +125,7 @@ public class AttributesPanel extends BaseListPanel {
      * @return List of attribute objects
      */
     protected HashMap<String, Attribute> getValues(AttributeInterface.AttributeType type) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         return storage.getEntityMapByType(type);
     }
 
@@ -362,7 +362,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());

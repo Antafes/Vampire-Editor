@@ -207,7 +207,7 @@ public class LastStepsPanel extends BasePanel {
      * Get the values for the road combo box.
      */
     protected ArrayList<Road> getRoadValues() {
-        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         ArrayList<Road> list = new ArrayList<>();
         roadStorage.getList().forEach((String key, Road road) -> list.add(road));
         list.sort(new StringComparator());
@@ -308,8 +308,8 @@ public class LastStepsPanel extends BasePanel {
      * @return List of special features
      */
     private ArrayList<SpecialFeature> getSpecialFeatureValues(String type) {
-        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
-        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+        MeritStorage meritStorage = StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+        FlawStorage flawStorage = StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
 
         ArrayList<SpecialFeature> list = new ArrayList<>(
             ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()

@@ -138,8 +138,8 @@ public class ClanTest extends BaseTest
     }
 
     public void testDifferentClan() throws EntityException, EntityStorageException {
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        WeaknessStorage weaknessStorage = StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
         final Clan object = Clan.builder()
             .setKey("testClan2")
             .addName(Configuration.Language.ENGLISH, "Test clan 2")
