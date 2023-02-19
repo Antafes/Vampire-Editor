@@ -153,7 +153,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                     calculateUsedVirtuePoints();
                     ArrayList<Component> fields = getFields(AdvantageInterface.AdvantageType.VIRTUE.name());
                     ArrayList<Advantage> virtues = new ArrayList<>();
-                    AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+                    AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
                     fields.forEach(component -> {
                         try {
                             Advantage.AdvantageBuilder<?, ?> builder = storage.getEntity(component.getName()).toBuilder();
@@ -329,7 +329,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
     protected HashMap<String, Advantage> getValues(String type)
     {
         AdvantageInterface.AdvantageType advantageType = AdvantageInterface.AdvantageType.valueOf(type);
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         LinkedHashMap<String, Advantage> list = new LinkedHashMap<>();
 
         SortingUtility.sortEntityMap(
@@ -460,7 +460,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
                         advantage = (Advantage) comboBox.getSelectedItem();
                     } else {
-                        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+                        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
                         advantage = storage.getEntity(spinner.getName());
                     }
 
@@ -511,7 +511,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
         if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
             comboBox.addItemListener((ItemEvent e) -> {
                 JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
-                AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+                AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
 
                 try {
                     if (storage.getEntity("generation").equals(element.getSelectedItem())) {

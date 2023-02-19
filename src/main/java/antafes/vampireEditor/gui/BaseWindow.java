@@ -430,7 +430,7 @@ public class BaseWindow extends javax.swing.JFrame {
             VampireEditor.log(String.format("Saving character %s", character.getName()));
             this.configuration.setSaveDirPath(this.saveFileChooser.getSelectedFile().getParent());
             this.configuration.saveProperties();
-            CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+            CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
             storage.save(character, this.saveFileChooser.getSelectedFile().getName());
             ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).setCharacterChanged(false);
@@ -457,7 +457,7 @@ public class BaseWindow extends javax.swing.JFrame {
             waitAction.show(aVoid -> {
                 this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
                 this.configuration.saveProperties();
-                CharacterStorage storage = (CharacterStorage) StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+                CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
                 try {
                     Character character = storage.load(this.openFileChooser.getSelectedFile().getName());

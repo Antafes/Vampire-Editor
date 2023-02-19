@@ -613,7 +613,7 @@ public class LooksPanel extends javax.swing.JPanel {
      * Get the generations for showing them in the form.
      */
     public DefaultComboBoxModel<BaseEntity> getClans() {
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
         EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
         model.addElement(emptyEntity);
@@ -627,7 +627,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
     private DefaultComboBoxModel<BaseEntity> getNatures()
     {
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
         EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
         model.addElement(emptyEntity);
@@ -701,8 +701,8 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param builder Character builder object
      */
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         builder.setName(this.nameField.getText())
             .setChronicle(this.chronicleField.getText());
         try {
@@ -739,7 +739,7 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param adjustment Generation adjustment
      */
     public void adjustGeneration(int adjustment) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         int generation = LooksPanel.DEFAULT_GENERATION;
         generation -= adjustment;
 

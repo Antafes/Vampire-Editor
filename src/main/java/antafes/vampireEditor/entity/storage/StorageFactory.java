@@ -90,11 +90,11 @@ public class StorageFactory {
      *
      * @return The storage
      */
-    public static BaseStorage<?> getStorage(StorageType type) {
+    public static <S extends BaseStorage<?>> S getStorage(StorageType type) {
         if (StorageFactory.storages.isEmpty()) {
             StorageFactory.storageWarmUp();
         }
 
-        return StorageFactory.storages.get(type);
+        return (S) type.storageClass.cast(StorageFactory.storages.get(type));
     }
 }
