@@ -74,6 +74,11 @@ public class Generation extends BaseEntity implements GenerationInterface {
                 throw new EntityException("Missing blood per round");
             }
         }
+
+        @Override
+        protected void executeAdditionalCalculations()
+        {
+        }
     }
 
     /**

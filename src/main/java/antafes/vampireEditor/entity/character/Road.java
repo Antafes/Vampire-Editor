@@ -26,6 +26,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+
 /**
  * Road object.
  *
@@ -39,5 +41,20 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     public String toString()
     {
         return super.toString();
+    }
+
+    public static int calculateRoadScore(ArrayList<Advantage> virtues)
+    {
+        int roadScore = 0;
+
+        for (Advantage virtue : virtues) {
+            if (virtue.getKey().equals("courage")) {
+                continue;
+            }
+
+            roadScore += virtue.getValue();
+        }
+
+        return roadScore;
     }
 }

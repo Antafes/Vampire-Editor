@@ -702,8 +702,8 @@ public class LooksPanel extends javax.swing.JPanel {
      */
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        builder.setName(this.nameField.getText());
-        builder.setChronicle(this.chronicleField.getText());
+        builder.setName(this.nameField.getText())
+            .setChronicle(this.chronicleField.getText());
         try {
             builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()));
         } catch (EntityStorageException e) {

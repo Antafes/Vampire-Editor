@@ -168,6 +168,36 @@ public class Character extends BaseEntity {
             this.flaws = new HashMap<>();
         }
 
+        public B addAttribute(Attribute attribute) {
+            this.attributes.put(attribute.getKey(), attribute);
+
+            return this.self();
+        }
+
+        public B addAbility(Ability ability) {
+            this.abilities.put(ability.getKey(), ability);
+
+            return this.self();
+        }
+
+        public B addAdvantage(Advantage advantage) {
+            this.advantages.put(advantage.getKey(), advantage);
+
+            return this.self();
+        }
+
+        public B addMerit(Merit merit) {
+            this.merits.put(merit.getKey(), merit);
+
+            return this.self();
+        }
+
+        public B addFlaw(Flaw flaw) {
+            this.flaws.put(flaw.getKey(), flaw);
+
+            return this.self();
+        }
+
         /**
          * Check if all necessary values are set.
          *
@@ -204,6 +234,12 @@ public class Character extends BaseEntity {
             this.checkAttributes();
             this.checkAbilities();
             this.checkAdvantages();
+        }
+
+        @Override
+        protected void executeAdditionalCalculations()
+        {
+            this.calculateRoadScore();
         }
 
         /**
@@ -269,34 +305,14 @@ public class Character extends BaseEntity {
             }
         }
 
-        public B addAttribute(Attribute attribute) {
-            this.attributes.put(attribute.getKey(), attribute);
-
-            return this.self();
-        }
-
-        public B addAbility(Ability ability) {
-            this.abilities.put(ability.getKey(), ability);
-
-            return this.self();
-        }
-
-        public B addAdvantage(Advantage advantage) {
-            this.advantages.put(advantage.getKey(), advantage);
-
-            return this.self();
-        }
-
-        public B addMerit(Merit merit) {
-            this.merits.put(merit.getKey(), merit);
-
-            return this.self();
-        }
-
-        public B addFlaw(Flaw flaw) {
-            this.flaws.put(flaw.getKey(), flaw);
-
-            return this.self();
+        private void calculateRoadScore()
+        {
+            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
+            ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
+                .filter((advantage) -> (advantage.getType() == AdvantageInterface.AdvantageType.VIRTUE))
+                .collect(Collectors.toList());
+            roadBuilder.setValue(Road.calculateRoadScore(advantages));
+            this.road = roadBuilder.build();
         }
     }
 }

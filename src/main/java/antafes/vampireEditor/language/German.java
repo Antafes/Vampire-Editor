@@ -149,7 +149,7 @@ public class German extends Language {
         this.getTranslations().put("lastSteps", "Letzte Schritte");
         this.getTranslations().put("merits", "Vorzüge");
         this.getTranslations().put("flaws", "Schwächen");
-        this.getTranslations().put("road", "Pfad");
+        this.getTranslations().put("road", "Weg");
         this.getTranslations().put("humanity", "Menschlichkeit");
         this.getTranslations().put("roadOf", "Pfad der ...");
         this.getTranslations().put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
@@ -160,6 +160,7 @@ public class German extends Language {
         this.getTranslations().put("printPreview", "Druckvorschau");
         this.getTranslations().put("otherTraits", "Andere Eigenschaften");
         this.getTranslations().put("experience", "Erfahrung");
+        this.getTranslations().put("roadScore", "Wert");
     }
 
     /**
