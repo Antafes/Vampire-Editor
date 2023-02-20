@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
@@ -32,11 +33,14 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 
 @Test
-public class RoadTest {
+public class RoadTest extends BaseTest
+{
     private Road road;
 
     @BeforeMethod
-    public void setUp() throws EntityException {
+    public void setUp()
+    {
+        super.setUp();
         this.road = Road.builder()
             .setKey("testRoad")
             .addName(Configuration.Language.ENGLISH, "Test road")

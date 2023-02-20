@@ -47,7 +47,7 @@ public class Character extends BaseEntity {
     private final Generation generation;
     private final String chronicle;
     private final int experience;
-    private final String nature;
+    private final Nature nature;
     private final String hideout;
     private final String player;
     private final String demeanor;
@@ -189,7 +189,7 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing generation");
             }
 
-            if (this.nature == null || this.nature.isEmpty()) {
+            if (this.nature == null) {
                 throw new EntityException("Missing nature");
             }
 

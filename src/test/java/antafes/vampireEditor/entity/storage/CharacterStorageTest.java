@@ -23,6 +23,7 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.myXML.XMLValidator;
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
@@ -35,13 +36,16 @@ import org.testng.annotations.Test;
 import java.io.File;
 
 @Test
-public class CharacterStorageTest {
+public class CharacterStorageTest extends BaseTest
+{
     private CharacterStorage characterStorage;
     private final String saveDir = System.getProperty("user.home") + "/.vampire/testSave";
     private final String filename = "TestCharacter.xml";
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp()
+    {
+        super.setUp();
         new VampireEditor();
         Configuration configuration = Configuration.getInstance();
         configuration.loadProperties();

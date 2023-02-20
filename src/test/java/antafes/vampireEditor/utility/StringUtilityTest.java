@@ -16,34 +16,33 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor;
+package antafes.vampireEditor.utility;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.InputStream;
-import java.net.URL;
-
-@Test
-public class VampireEditorTest extends BaseTest
+public class StringUtilityTest
 {
-    public void testGetFileInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final InputStream expected = VampireEditorTest.class.getResourceAsStream(path);
-        final InputStream actual = VampireEditor.getFileInJar(path);
-
-        Assert.assertEquals(actual, expected);
+    @Test(dataProvider = "dataProvider")
+    public void testToCamelCase(String string, String expected)
+    {
+        Assert.assertEquals(StringUtility.toCamelCase(string), expected);
     }
 
-    public void testGetResourceInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final URL expected = VampireEditorTest.class.getResource(path);
-        final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
+    @DataProvider(name = "dataProvider")
+    public String[][] dataProvider()
+    {
+        return new String[][] {
+            {"This is a nice text", "thisIsANiceText"},
+            {"Another wonderful Text", "anotherWonderfulText"},
+            {"This téxt contàins accents", "thisTextContainsAccents"},
+            {"This ä contains ü umlauts ö, all ß of them", "thisAeContainsUeUmlautsOeAllSsOfThem"},
+            {"There are big umlauts like Öffnung and small ones like Häuser", "thereAreBigUmlautsLikeOeffnungAndSmallOnesLikeHaeuser"}
+        };
     }
 }

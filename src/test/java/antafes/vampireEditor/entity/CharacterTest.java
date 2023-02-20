@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
@@ -37,11 +38,14 @@ import java.util.*;
 import static org.testng.Assert.assertEquals;
 
 @Test
-public class CharacterTest {
+public class CharacterTest extends BaseTest
+{
     private Character character;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp()
+    {
+        super.setUp();
         new VampireEditor();
         Configuration configuration = Configuration.getInstance();
         configuration.loadProperties();
@@ -116,7 +120,7 @@ public class CharacterTest {
     }
 
     public void testGetNature() {
-        Assert.assertEquals(this.character.getNature(), "wise");
+        Assert.assertEquals(this.character.getNature().toString(), "wise");
     }
 
     public void testGetHideout() {
@@ -351,13 +355,6 @@ public class CharacterTest {
     public void testBuilderEmptyGeneration() {
         this.character.toBuilder()
             .setGeneration(null)
-            .build();
-    }
-
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
-    public void testBuilderEmptyNature() {
-        this.character.toBuilder()
-            .setNature("")
             .build();
     }
 

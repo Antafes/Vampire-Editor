@@ -16,34 +16,27 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor;
+package antafes.vampireEditor.entity.character;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
-import java.io.InputStream;
-import java.net.URL;
-
-@Test
-public class VampireEditorTest extends BaseTest
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true, setterPrefix = "set")
+public class Nature extends BaseTranslatedEntity implements NatureInterface
 {
-    public void testGetFileInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final InputStream expected = VampireEditorTest.class.getResourceAsStream(path);
-        final InputStream actual = VampireEditor.getFileInJar(path);
+    private boolean manual;
 
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testGetResourceInJar() {
-        String path = "antafes/vampireEditor/VampireEditor.java";
-        final URL expected = VampireEditorTest.class.getResource(path);
-        final URL actual = VampireEditor.getResourceInJar(path);
-
-        Assert.assertEquals(actual, expected);
+    @Override
+    public String toString()
+    {
+        return super.toString();
     }
 }

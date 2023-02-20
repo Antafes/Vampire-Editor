@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.entity.EntityException;
@@ -38,13 +39,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Test
-public class ClanTest {
+public class ClanTest extends BaseTest
+{
     private Clan clan;
 
     @BeforeMethod
-    public void setUp() throws EntityException, EntityStorageException {
-        Configuration.getInstance().loadProperties();
-        this.clan = TestClanUtility.createTestClan();
+    public void setUp()
+    {
+        super.setUp();
+        try {
+            this.clan = TestClanUtility.createTestClan();
+        } catch (EntityException | EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterMethod

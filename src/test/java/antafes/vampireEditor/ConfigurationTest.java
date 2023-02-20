@@ -27,7 +27,6 @@ import antafes.vampireEditor.language.German;
 import antafes.vampireEditor.language.LanguageInterface;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.swing.*;
@@ -35,19 +34,8 @@ import java.awt.*;
 import java.io.File;
 
 @Test
-public class ConfigurationTest {
-    Configuration configuration;
-
-    @BeforeMethod
-    public void setUp() {
-        this.configuration = Configuration.getInstance();
-        this.configuration.setOpenDirPath("test/open/dir/path");
-        this.configuration.setSaveDirPath("test/save/dir/path");
-        this.configuration.setLanguage(Configuration.Language.ENGLISH);
-        this.configuration.setWindowLocation(new Point(10, 10));
-        this.configuration.setExtendedState(JFrame.NORMAL);
-    }
-
+public class ConfigurationTest extends BaseTest
+{
     @AfterMethod
     public void tearDown() {
         this.configuration = null;

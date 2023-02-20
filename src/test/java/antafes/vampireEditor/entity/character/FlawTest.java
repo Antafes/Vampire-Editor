@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EntityException;
 import org.testng.Assert;
@@ -32,11 +33,14 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 
 @Test
-public class FlawTest {
+public class FlawTest extends BaseTest
+{
     private Flaw flaw;
 
     @BeforeMethod
-    public void setUp() throws EntityException {
+    public void setUp()
+    {
+        super.setUp();
         this.flaw = Flaw.builder()
             .setKey("testFlaw")
             .addName(Configuration.Language.ENGLISH, "Test flaw")
