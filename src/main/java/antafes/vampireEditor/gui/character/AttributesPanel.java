@@ -26,12 +26,11 @@ import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -41,11 +40,11 @@ import java.util.Objects;
 public class AttributesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
     @Override
     public void setSpinnerMaximum(int maximum) {
-        this.getFields(AttributeInterface.AttributeType.PHYSICAL.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AttributeInterface.AttributeType.PHYSICAL.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AttributeInterface.AttributeType.SOCIAL.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AttributeInterface.AttributeType.SOCIAL.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AttributeInterface.AttributeType.MENTAL.toString()).stream().map((component) -> (JSpinner) component)
+        this.getFields(AttributeInterface.AttributeType.MENTAL.getKeyPlural()).stream().map((component) -> (JSpinner) component)
             .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
     }
 
@@ -126,42 +125,27 @@ public class AttributesPanel extends BaseCharacterListPanel implements Translata
      * Add all talent fields sorted by the translated name.
      */
     private void addPhysicalFields() {
-        this.addAttributeFields(
-            AttributeInterface.AttributeType.PHYSICAL.toString(),
-            AttributeInterface.AttributeType.PHYSICAL
-        );
+        this.addAttributeFields(AttributeInterface.AttributeType.PHYSICAL);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSocialFields() {
-        this.addAttributeFields(
-            AttributeInterface.AttributeType.SOCIAL.toString(),
-            AttributeInterface.AttributeType.SOCIAL
-        );
+        this.addAttributeFields(AttributeInterface.AttributeType.SOCIAL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addMentalFields() {
-        this.addAttributeFields(
-            AttributeInterface.AttributeType.MENTAL.toString(),
-            AttributeInterface.AttributeType.MENTAL
-        );
+        this.addAttributeFields(AttributeInterface.AttributeType.MENTAL);
     }
 
-    private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
-        HashMap<String, String> list = new HashMap<>();
-
-        this.getCharacter().getAttributes().values().stream()
-            .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> list.put(attribute.getKey(), attribute.getName()));
-        list.entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue(new StringComparator()));
-
-        this.addFields(fieldName, list);
+    private void addAttributeFields(AttributeInterface.AttributeType type) {
+        this.addFields(
+            type.getKeyPlural(),
+            SortingUtility.sortAndStringifyEntityMapWithFiltering(new HashMap<>(this.getCharacter().getAttributes()), type)
+        );
     }
 }

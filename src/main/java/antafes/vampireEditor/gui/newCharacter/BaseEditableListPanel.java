@@ -22,6 +22,7 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
@@ -233,10 +234,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
         elementList.forEach((key, element) -> {
             if (nonEditable) {
-                super.addRow(element, spinnerMinimum, this.getFields(type), groups, layout);
+                super.addRow(key, spinnerMinimum, this.getFields(type), groups, layout);
             } else {
                 HashMap<String, Component> newElements = this.addRow(
-                    element, this.getEntity(type, element), type, spinnerMinimum, this.getFields(type), groups, layout
+                    key, this.getEntity(type, key), type, spinnerMinimum, this.getFields(type), groups, layout
                 );
                 this.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
             }
@@ -286,22 +287,6 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * Add a single row to the current column.
      *
      * @param element The name of the element to add
-     * @param selected The selected index
-     * @param spinnerMinimum Minimum value for the spinner
-     * @param fields List of all fields
-     * @param groups Groups the element should be added to
-     * @param layout GroupLayout object
-     *
-     * @return Map with the label and the element
-     */
-    protected HashMap<String, Component> addRow(String element, Object selected, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
-        return this.addRow(element, selected, null, spinnerMinimum, fields, groups, layout);
-    }
-
-    /**
-     * Add a single row to the current column.
-     *
-     * @param element The name of the element to add
      * @param type Identifier for the fields
      * @param spinnerMinimum Minimum value for the spinner
      * @param fields List of all fields
@@ -329,7 +314,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      */
     protected HashMap<String, Component> addRow(
         String element,
-        Object selected,
+        BaseTypedTranslatedEntity selected,
         String type,
         int spinnerMinimum,
         ArrayList<Component> fields,
@@ -344,11 +329,11 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             model.addElement(empty);
         }
 
-        this.getValues(type).forEach(anObject -> model.addElement((BaseTranslatedEntity) anObject));
+        this.getValues(type).forEach((key, value) -> model.addElement((BaseTranslatedEntity) value));
         elementComboBox.setModel(model);
 
         if (selected != null) {
-            elementComboBox.setSelectedIndex(this.getValues(type).indexOf(selected));
+            elementComboBox.setSelectedItem(this.getValues(type).get(selected.getKey()));
         }
 
         JSpinner spinner = new JSpinner();
@@ -481,7 +466,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      *
      * @return List of values
      */
-    abstract protected ArrayList<?> getValues(String type);
+    abstract protected HashMap<?, ?> getValues(String type);
 
     /**
      * Get an entity of the given type for the given key.
@@ -491,5 +476,5 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      *
      * @return Returns an object if found, otherwise null.
      */
-    abstract protected Object getEntity(String type, String key);
+    abstract protected BaseTypedTranslatedEntity getEntity(String type, String key);
 }

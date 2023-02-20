@@ -140,12 +140,16 @@ public class English extends Language {
         this.getTranslations().put("mental", "Mental");
         this.getTranslations().put("abilities", "Abilities");
         this.getTranslations().put("talents", "Talents");
+        this.getTranslations().put("talent", "Talent");
         this.getTranslations().put("skills", "Skills");
+        this.getTranslations().put("skill", "Skill");
         this.getTranslations().put("knowledge", "Knowledge");
         this.getTranslations().put("advantages", "Advantages");
         this.getTranslations().put("background", "Background");
         this.getTranslations().put("disciplines", "Disciplines");
+        this.getTranslations().put("discipline", "Discipline");
         this.getTranslations().put("virtues", "Virtues");
+        this.getTranslations().put("virtue", "Virtue");
         this.getTranslations().put("lastSteps", "Last steps");
         this.getTranslations().put("merits", "Merits");
         this.getTranslations().put("flaws", "Flaws");

@@ -702,39 +702,35 @@ public class LooksPanel extends javax.swing.JPanel {
      */
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
         GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         builder.setName(this.nameField.getText())
             .setChronicle(this.chronicleField.getText());
         try {
-            builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()));
+            builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()))
+                .setNature(
+                    natureStorage.getEntity(((Nature) Objects.requireNonNull(this.natureField.getSelectedItem())).getKey())
+                );
         } catch (EntityStorageException e) {
             e.printStackTrace();
         }
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        try {
-            builder.setNature(
-                natureStorage.getEntity(((Nature) Objects.requireNonNull(this.natureField.getSelectedItem())).getKey())
-            );
-        } catch (EntityStorageException e) {
-            e.printStackTrace();
-        }
-        builder.setHideout(this.hideoutField.getText());
-        builder.setPlayer(this.playerField.getText());
-        builder.setDemeanor(this.demeanorField.getText());
-        builder.setConcept(this.conceptField.getText());
-        builder.setSire(this.sireField.getText());
-        builder.setClan((Clan) this.clanComboBox.getSelectedItem());
-        builder.setSect(this.sectField.getText());
-        builder.setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0);
-        builder.setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0);
-        builder.setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null);
-        builder.setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null);
-        builder.setHairColor(this.hairColorField.getText());
-        builder.setEyeColor(this.eyeColorField.getText());
-        builder.setSkinColor(this.skinColorField.getText());
-        builder.setNationality(this.nationalityField.getText());
-        builder.setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0);
-        builder.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
-        builder.setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
+        builder.setHideout(this.hideoutField.getText())
+            .setPlayer(this.playerField.getText())
+            .setDemeanor(this.demeanorField.getText())
+            .setConcept(this.conceptField.getText())
+            .setSire(this.sireField.getText())
+            .setClan((Clan) this.clanComboBox.getSelectedItem())
+            .setSect(this.sectField.getText())
+            .setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0)
+            .setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0)
+            .setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null)
+            .setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null)
+            .setHairColor(this.hairColorField.getText())
+            .setEyeColor(this.eyeColorField.getText())
+            .setSkinColor(this.skinColorField.getText())
+            .setNationality(this.nationalityField.getText())
+            .setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0)
+            .setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0)
+            .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
     }
 
     /**

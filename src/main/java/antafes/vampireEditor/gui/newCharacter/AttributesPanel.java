@@ -31,14 +31,13 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,40 +86,35 @@ public class AttributesPanel extends BaseListPanel {
      * Add all talent fields sorted by the translated name.
      */
     private void addPhysicalFields() {
-        this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.PHYSICAL);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSocialFields() {
-        this.addAttributeFields("social", AttributeInterface.AttributeType.SOCIAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.SOCIAL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addMentalFields() {
-        this.addAttributeFields("mental", AttributeInterface.AttributeType.MENTAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.MENTAL);
     }
 
     /**
      * Add attribute fields with the given fieldName and for the given attribute type.
      *
-     * @param fieldName Name of the field
      * @param type Attribute type
      */
-    private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
-        HashMap<String, String> list = new HashMap<>();
-
-        this.getValues(type.name()).stream()
-            .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> list.put(attribute.getKey(), attribute.getKey()));
-        list.entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue());
-
-        this.addFields(fieldName, list, 1);
+    private void addAttributeFields(AttributeInterface.AttributeType type)
+    {
+        this.addFields(
+            type.getKeyPlural(),
+            SortingUtility.sortAndStringifyEntityMap(new HashMap<>(this.getValues(type))),
+            1
+        );
     }
 
     /**
@@ -130,12 +124,9 @@ public class AttributesPanel extends BaseListPanel {
      *
      * @return List of attribute objects
      */
-    protected ArrayList<Attribute> getValues(String type) {
+    protected HashMap<String, Attribute> getValues(AttributeInterface.AttributeType type) {
         AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
-        ArrayList<Attribute> list = storage.getEntityListByType(AttributeInterface.AttributeType.valueOf(type.toUpperCase()));
-        list.sort(new StringComparator());
-
-        return list;
+        return storage.getEntityMapByType(type);
     }
 
     /**

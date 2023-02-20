@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Getter;
+
 /**
  * Special feature interface.
  *
@@ -30,11 +32,21 @@ public interface SpecialFeatureInterface {
     /**
      * List of special feature types.
      */
+    @Getter
     public enum SpecialFeatureType implements EntityTypeInterface {
-        PHYSICAL,
-        MENTAL,
-        SOCIAL,
-        SUPERNATURAL
+        PHYSICAL("physical", "physical"),
+        MENTAL("mental", "mental"),
+        SOCIAL("social", "social"),
+        SUPERNATURAL("superNatural", "superNatural");
+
+        private final String keySingular;
+        private final String keyPlural;
+
+        SpecialFeatureType(String keySingular, String keyPlural)
+        {
+            this.keySingular = keySingular;
+            this.keyPlural = keyPlural;
+        }
     }
 
     /**
