@@ -22,16 +22,17 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
 import antafes.vampireEditor.gui.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
@@ -40,9 +41,8 @@ import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -375,6 +375,7 @@ public class AdvantagesPanel extends BaseEditableListPanel {
                         super.paint(g);
                     }
                 });
+                this.getOrder().remove(comboBox);
             });
         } else {
             AtomicInteger counter = new AtomicInteger();
@@ -509,31 +510,12 @@ public class AdvantagesPanel extends BaseEditableListPanel {
 
         // Fetching the second element, as the first is only an empty string.
         if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
-            comboBox.addItemListener((ItemEvent e) -> {
-                JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
-                AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-
-                try {
-                    if (storage.getEntity("generation").equals(element.getSelectedItem())) {
-                        this.addGenerationSpinnerItemListener(spinner);
-                    } else {
-                        // Remove the generation bonus
-                        if (spinner.getChangeListeners().length > 1) {
-                            for (ChangeListener listener : spinner.getChangeListeners()) {
-                                if (listener.toString().contains(AdvantagesPanel.class.toString())) {
-                                    spinner.removeChangeListener(listener);
-                                    break;
-                                }
-                            }
-                            ((LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0))
-                                .adjustGeneration(0);
-                        }
-                    }
-                } catch (EntityStorageException ex) {
-                    VampireEditor.log(ex.getMessage());
-                }
-            });
+            if (this.hasComboBoxListener(comboBox)) {
+                comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner));
+            }
         }
+
+        this.listenForAddGenerationSpinnerItemListener();
     }
 
     /**
@@ -547,5 +529,24 @@ public class AdvantagesPanel extends BaseEditableListPanel {
             (ChangeEvent e) -> panel.adjustGeneration((int) ((JSpinner) e.getSource()).getValue())
         );
         panel.adjustGeneration((int) spinner.getValue());
+    }
+
+    private void listenForAddGenerationSpinnerItemListener()
+    {
+        VampireEditor.getDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener((event) -> this.addGenerationSpinnerItemListener(event.getSpinner()))
+        );
+    }
+
+    private boolean hasComboBoxListener(JComboBox<BaseTranslatedEntity> comboBox)
+    {
+        for (ItemListener itemListener : comboBox.getItemListeners()) {
+            if (itemListener instanceof AdvantagesComboBoxItemListener) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
