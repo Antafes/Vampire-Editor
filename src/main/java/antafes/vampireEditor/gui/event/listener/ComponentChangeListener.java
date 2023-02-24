@@ -19,17 +19,17 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.gui;
+package antafes.vampireEditor.gui.event.listener;
 
-import javax.swing.event.DocumentListener;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
- * DocumentListener with the possibility to store the component it is created on.
+ * ChangeListener with the possibility to store the component it is created on.
  *
  * @author Marian Pollzien
  */
-public abstract class ComponentDocumentListener implements DocumentListener {
+public abstract class ComponentChangeListener implements ChangeListener {
     private Component component;
 
     public Component getComponent() {

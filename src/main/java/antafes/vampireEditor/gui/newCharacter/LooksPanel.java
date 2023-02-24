@@ -27,7 +27,7 @@ import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.storage.*;
-import antafes.vampireEditor.gui.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;

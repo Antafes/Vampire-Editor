@@ -23,7 +23,7 @@
 package antafes.vampireEditor.gui.character;
 
 import antafes.vampireEditor.gui.BasePanel;
-import antafes.vampireEditor.gui.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import lombok.Getter;
 import lombok.Setter;

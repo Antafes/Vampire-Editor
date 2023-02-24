@@ -25,7 +25,7 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.gui.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
