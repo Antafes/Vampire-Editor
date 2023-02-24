@@ -33,7 +33,7 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.utility.Weighting;

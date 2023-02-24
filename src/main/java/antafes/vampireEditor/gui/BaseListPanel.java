@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
+
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;

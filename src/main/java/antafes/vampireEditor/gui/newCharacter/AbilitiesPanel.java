@@ -28,7 +28,7 @@ import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.entity.storage.AbilityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
 import antafes.vampireEditor.utility.SortingUtility;
