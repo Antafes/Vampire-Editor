@@ -16,7 +16,7 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 package antafes.vampireEditor;
@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +51,7 @@ import java.util.logging.Logger;
 public class VampireEditor extends Application
 {
     private static final boolean DEBUG = false;
+    private static final String DATA_PATH = "data/";
 
     /**
      * @param args the command line arguments
@@ -88,7 +90,7 @@ public class VampireEditor extends Application
      *
      * @param lines The lines to log
      */
-    public static void log(ArrayList<String> lines) {
+    public static void log(List<String> lines) {
         if (!VampireEditor.DEBUG) {
             return;
         }
@@ -148,7 +150,7 @@ public class VampireEditor extends Application
      * @return Path to the data directory
      */
     public static String getDataPath() {
-        return "data/";
+        return DATA_PATH;
     }
 
     /**

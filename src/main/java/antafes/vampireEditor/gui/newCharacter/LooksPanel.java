@@ -22,11 +22,13 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.storage.*;
+import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
@@ -517,7 +519,7 @@ public class LooksPanel extends javax.swing.JPanel {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
             Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
-            this.parent.setClanDisciplines(clan);
+            VampireEditor.getDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
     }

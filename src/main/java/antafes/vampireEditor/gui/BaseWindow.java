@@ -33,6 +33,7 @@ import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
 import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
 import antafes.vampireEditor.gui.event.listener.CloseProgrammeListener;
 import antafes.vampireEditor.gui.event.listener.SaveAllCharactersListener;
+import antafes.vampireEditor.gui.exception.SaveCancelledException;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;

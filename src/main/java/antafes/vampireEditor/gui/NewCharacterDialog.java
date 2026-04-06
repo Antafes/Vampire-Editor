@@ -25,9 +25,13 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
+import antafes.vampireEditor.gui.event.listener.UpdateFreeAdditionalPointsListener;
+import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
 import lombok.Getter;
@@ -39,6 +43,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +64,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private LastStepsPanel lastStepsPanel;
     @Setter
     private BaseWindow parent;
+    private final HashMap<String, Integer> groupOverflows = new HashMap<>();
 
     // List of created fields
     private javax.swing.JButton cancelButton;
@@ -110,6 +116,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.add(this.abilitiesPanel);
         this.advantagesPanel = new AdvantagesPanel(this);
         JScrollPane advantagesScrollPane = new JScrollPane(this.advantagesPanel);
+        try {
+            this.advantagesPanel.start();
+            this.advantagesPanel.build();
+        } catch (TypeNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         advantagesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(advantagesScrollPane);
         this.lastStepsPanel = new LastStepsPanel(this);
@@ -182,7 +194,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     public void setAttributeMaximum(int maximum) {
         this.attributesPanel.setSpinnerMaximum(maximum);
         this.abilitiesPanel.setSpinnerMaximum(maximum);
-        this.advantagesPanel.setSpinnerMaximum(maximum);
+//        this.advantagesPanel.setSpinnerMaximum(maximum);
     }
 
     /**
@@ -197,6 +209,13 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         }
 
         BaseWindow.installEscapeCloseOperation(this);
+        VampireEditor.getDispatcher().addListener(
+            UpdateFreeAdditionalPointsEvent.class,
+            new UpdateFreeAdditionalPointsListener(event -> {
+                this.groupOverflows.put(event.getGroupLabel(), event.getPointsOverMax());
+                this.calculateUsedFreeAdditionalPoints();
+            })
+        );
         this.setFieldTexts();
     }
 
@@ -368,75 +387,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Calculate and return the sum of points spent for backgrounds.
-     */
-    private int getBackgroundPointsSum() {
-        return this.advantagesPanel.getBackgroundPointsSum();
-    }
-
-    /**
-     * Check if the spent points for backgrounds is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    private boolean checkBackgroundPoints() {
-        return this.advantagesPanel.checkBackgroundPoints();
-    }
-
-    /**
-     * Get the maximum points available for backgrounds.
-     */
-    private int getBackgroundMaxPoints() {
-        return this.advantagesPanel.getBackgroundMaxPoints();
-    }
-
-    /**
-     * Calculate and return the sum of points spent for disciplines.
-     */
-    private int getDisciplinePointsSum() {
-        return this.advantagesPanel.getDisciplinePointsSum();
-    }
-
-    /**
-     * Check if the spent points for disciplines is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    private boolean checkDisciplinePoints() {
-        return this.advantagesPanel.checkDisciplinePoints();
-    }
-
-    /**
-     * Get the maximum points available for disciplines.
-     */
-    private int getDisciplineMaxPoints() {
-        return this.advantagesPanel.getDisciplineMaxPoints();
-    }
-
-    /**
-     * Calculate and return the sum of points spent for virtues.
-     */
-    private int getVirtuePointsSum() {
-        return this.advantagesPanel.getVirtuePointsSum();
-    }
-
-    /**
-     * Check if the spent points for virtues is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    private boolean checkVirtuePoints() {
-        return this.advantagesPanel.checkVirtuePoints();
-    }
-
-    /**
-     * Get the maximum points available for virtues.
-     */
-    private int getVirtueMaxPoints() {
-        return this.advantagesPanel.getVirtueMaxPoints();
-    }
-
-    /**
      * Calculate the used free additional points.
      */
     public void calculateUsedFreeAdditionalPoints() {
@@ -468,17 +418,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         freeSum += this.getAbilityPointsOverMax() * 2;
 
-        if (this.checkBackgroundPoints()) {
-            freeSum += (this.getBackgroundPointsSum() - this.getBackgroundMaxPoints());
-        }
-
-        if (this.checkDisciplinePoints()) {
-            freeSum += (this.getDisciplinePointsSum() - this.getDisciplineMaxPoints()) * 7;
-        }
-
-        if (this.checkVirtuePoints()) {
-            freeSum += (this.getVirtuePointsSum() - this.getVirtueMaxPoints()) * 2;
-        }
+        freeSum += this.groupOverflows.getOrDefault(
+            AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), 0);
+        freeSum += this.groupOverflows.getOrDefault(
+            AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), 0) * 7;
+        freeSum += this.groupOverflows.getOrDefault(
+            AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(), 0) * 2;
 
         freeSum += this.lastStepsPanel.getMeritPoints();
 
@@ -513,13 +458,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set the clan disciplines on the advantages panel.
-     */
-    public void setClanDisciplines(Clan clan) {
-        this.advantagesPanel.setDisciplines(clan);
-    }
-
-    /**
      * Finish the character and send the new character object over to the BaseWindow.
      */
     public void finishCharacter() {
@@ -534,7 +472,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
         this.abilitiesPanel.fillCharacter(builder);
-        this.advantagesPanel.fillCharacter(builder);
+//        this.advantagesPanel.fillCharacter(builder);
         this.lastStepsPanel.fillCharacter(builder);
 
         ShowWaitAction waitAction = new ShowWaitAction(this);

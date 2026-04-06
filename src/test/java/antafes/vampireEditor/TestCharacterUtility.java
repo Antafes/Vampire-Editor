@@ -25,7 +25,16 @@ package antafes.vampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
-import antafes.vampireEditor.entity.storage.*;
+import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.AttributeStorage;
+import antafes.vampireEditor.entity.storage.ClanStorage;
+import antafes.vampireEditor.entity.storage.FlawStorage;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
+import antafes.vampireEditor.entity.storage.MeritStorage;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.RoadStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 
 import java.util.GregorianCalendar;
