@@ -47,9 +47,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 abstract public class BaseColumnListPanel extends JPanel implements antafes.vampireEditor.gui.TranslatableComponent
@@ -59,8 +61,9 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
     private final LanguageInterface language;
     private final WeightingService weightingService;
     private GridBagLayout layout;
-    private Vector<Component> order;
-    private HashMap<Integer, HashMap<String, HashMap<String, ElementType>>> columns;
+    private final List<Component> extraFocusOrder = new ArrayList<>();
+    private LinkedHashMap<String, List<Component>> groupFocusComponents;
+    private TreeMap<Integer, HashMap<String, HashMap<String, ElementType>>> columns;
     private HashMap<Integer, HashMap<String, Boolean>> useWeightings;
     private HashMap<Integer, HashMap<String, Boolean>> useFreeAdditionalPoints;
     private HashMap<String, HashMap<String, JComboBox<BaseTranslatedEntity>>> comboBoxes;
@@ -117,7 +120,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         @NonNull Boolean useFreeAdditionalPoints
     ) {
         if (!this.columns.containsKey(column)) {
-            this.columns.put(column, new HashMap<>());
+            this.columns.put(column, new LinkedHashMap<>());
         }
 
         if (!this.columns.get(column).containsKey(groupLabel)) {
@@ -191,7 +194,15 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
     }
 
     protected void createFocusTraversalPolicy() {
-        this.setFocusTraversalPolicy(new NewCharacterFocusTraversalPolicy(this.order));
+        Vector<Component> fullOrder = new Vector<>();
+        this.groupFocusComponents.values().stream()
+            .flatMap(List::stream)
+            .filter(Component::isEnabled)
+            .forEach(fullOrder::add);
+        this.extraFocusOrder.stream()
+            .filter(Component::isEnabled)
+            .forEach(fullOrder::add);
+        this.setFocusTraversalPolicy(new NewCharacterFocusTraversalPolicy(fullOrder));
         this.setFocusTraversalPolicyProvider(true);
     }
 
@@ -205,11 +216,11 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
     private void initComponents()
     {
         this.layout = new GridBagLayout();
-        this.columns = new HashMap<>();
+        this.columns = new TreeMap<>();
+        this.groupFocusComponents = new LinkedHashMap<>();
         this.useWeightings = new HashMap<>();
         this.useFreeAdditionalPoints = new HashMap<>();
         this.freeAdditionalPointsElements = new HashMap<>();
-        this.order = new Vector<>();
         this.elements = new HashMap<>();
         this.comboBoxes = new HashMap<>();
         this.weightingElements = new HashMap<>();
@@ -273,6 +284,11 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         groupConstraints.insets.set(2, 2, 2, 2);
         groupConstraints.fill = GridBagConstraints.BOTH;
         groupConstraints.anchor = GridBagConstraints.NORTHWEST;
+
+        // Register this group in focus-order map immediately (preserves column ordering).
+        if (groupLabelText != null) {
+            this.groupFocusComponents.putIfAbsent(groupLabelText, new ArrayList<>());
+        }
 
         if (groupLabelText != null) {
             groupConstraints.gridwidth = 4;
@@ -387,7 +403,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
 
         element.setName(label);
         groupPanel.add(element, groupConstraints);
-        this.order.add(element);
+        this.groupFocusComponents.computeIfAbsent(groupLabel, k -> new ArrayList<>()).add(element);
 
         if (elementType == ElementType.SPINNER && groupLabel != null) {
             this.groupSpinners.computeIfAbsent(groupLabel, k -> new HashMap<>()).put(label, (JSpinner) element);
@@ -437,6 +453,9 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             comboBoxLabel.addActionListener(e -> this.onEditableComboBoxSelected(groupLabel, comboBoxLabel));
 
             groupPanel.add(comboBoxLabel, groupConstraints);
+            if (groupLabel != null) {
+                this.groupFocusComponents.computeIfAbsent(groupLabel, k -> new ArrayList<>()).add(comboBoxLabel);
+            }
         }
 
         groupConstraints.gridx += 2;
@@ -491,7 +510,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
      */
     protected void addToFocusTraversalOrder(Component component)
     {
-        this.order.add(component);
+        this.extraFocusOrder.add(component);
     }
 
     protected int getGroupSpinnerSum(String groupLabel)
@@ -588,6 +607,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         comboBoxLabel.putClientProperty("dynamicRowAdded", false);
         comboBoxLabel.addActionListener(e -> this.onEditableComboBoxSelected(groupLabel, comboBoxLabel));
         groupPanel.add(comboBoxLabel, labelConstraints);
+        this.groupFocusComponents.computeIfAbsent(groupLabel, k -> new ArrayList<>()).add(comboBoxLabel);
 
         this.comboBoxes.computeIfAbsent(groupLabel, k -> new HashMap<>()).put(uniqueLabel, comboBoxLabel);
         this.editableElementLabels.put(uniqueLabel, true);
@@ -607,7 +627,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         spinner.setModel(new SpinnerNumberModel(0, 0, spinnerMax, 1));
         spinner.setName(uniqueLabel);
         groupPanel.add(spinner, spinnerConstraints);
-        this.order.add(spinner);
+        this.groupFocusComponents.computeIfAbsent(groupLabel, k -> new ArrayList<>()).add(spinner);
         this.groupSpinners.computeIfAbsent(groupLabel, k -> new HashMap<>()).put(uniqueLabel, spinner);
         spinner.addChangeListener(e -> this.updateFreeAdditionalPoints(groupLabel));
 
@@ -617,6 +637,8 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         groupPanel.repaint();
         this.revalidate();
         this.repaint();
+
+        this.createFocusTraversalPolicy();
 
         return comboBoxLabel;
     }
@@ -686,11 +708,14 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             groupComboBoxes.clear();
         }
 
-        // Remove spinners belonging to this group from the focus-traversal order.
+        // Remove all focus-traversal components belonging to this group (combo boxes and spinners).
         HashMap<String, JSpinner> groupSpinnersMap = this.groupSpinners.get(groupLabel);
         if (groupSpinnersMap != null) {
-            this.order.removeAll(new ArrayList<>(groupSpinnersMap.values()));
             groupSpinnersMap.clear();
+        }
+        List<Component> groupComponents = this.groupFocusComponents.get(groupLabel);
+        if (groupComponents != null) {
+            groupComponents.clear();
         }
 
         // Collect and remove all non-preserved components.
@@ -730,6 +755,8 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             maxConstraints.anchor = GridBagConstraints.LINE_START;
             groupLayout.setConstraints(fields.getMaxFreeAdditionalPointsField(), maxConstraints);
         }
+
+        this.createFocusTraversalPolicy();
 
         groupPanel.revalidate();
         groupPanel.repaint();
