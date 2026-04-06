@@ -29,7 +29,6 @@ import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.newCharacter.AdvantagesPanel;
-import antafes.vampireEditor.gui.newCharacter.LooksPanel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -64,8 +63,8 @@ public class AdvantagesComboBoxItemListener implements ItemListener
                             break;
                         }
                     }
-                    ((LooksPanel) this.panel.getParentComponent().getCharacterTabPane().getComponentAt(0))
-                        .adjustGeneration(0);
+//                    ((LooksPanel) this.panel.getParentComponent().getCharacterTabPane().getComponentAt(0))
+//                        .adjustGeneration(0);
                 }
             }
         } catch (EntityStorageException ex) {

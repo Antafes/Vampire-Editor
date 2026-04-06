@@ -16,12 +16,21 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2022, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor.gui;
+package antafes.vampireEditor.gui.event;
 
-public class SaveCancelledException extends Exception
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import scripts.laniax.framework.event_dispatcher.Event;
+
+@Getter
+@AllArgsConstructor
+public class UpdateFreeAdditionalPointsEvent extends Event
 {
+    private String groupLabel;
+    private String parent;
+    private int pointsOverMax;
 }

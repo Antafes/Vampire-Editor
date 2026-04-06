@@ -16,7 +16,7 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2022, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
@@ -32,7 +32,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
-abstract public class BaseCharacterPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface
+abstract public class BaseCharacterPanel extends BasePanel implements TranslatableComponent, antafes.vampireEditor.gui.character.CharacterPanelInterface
 {
     @Getter
     @Setter
@@ -51,7 +51,7 @@ abstract public class BaseCharacterPanel extends BasePanel implements Translatab
 
     private ComponentDocumentListener createDocumentListener(JComponent component)
     {
-        CharacterComponentDocumentListener listener = new CharacterComponentDocumentListener();
+        antafes.vampireEditor.gui.character.CharacterComponentDocumentListener listener = new antafes.vampireEditor.gui.character.CharacterComponentDocumentListener();
         listener.setCharacter(this.character);
         listener.setComponent(component);
 
@@ -60,7 +60,7 @@ abstract public class BaseCharacterPanel extends BasePanel implements Translatab
 
     private ChangeListener createChangeListener(JComponent component)
     {
-        CharacterComponentChangeListener listener = new CharacterComponentChangeListener();
+        antafes.vampireEditor.gui.character.CharacterComponentChangeListener listener = new antafes.vampireEditor.gui.character.CharacterComponentChangeListener();
         listener.setCharacter(this.character);
         listener.setComponent(component);
 
