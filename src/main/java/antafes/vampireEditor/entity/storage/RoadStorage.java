@@ -25,10 +25,17 @@ package antafes.vampireEditor.entity.storage;
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Road;
+import org.w3c.dom.Element;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for roads.
@@ -50,6 +57,8 @@ public class RoadStorage extends BaseStorage<Road> {
         XMLParser xp = new XMLParser();
 
         if (xp.parse(is)) {
+            AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+
             XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
                 HashMap<Configuration.Language, String> names = new HashMap<>();
 
@@ -58,11 +67,27 @@ public class RoadStorage extends BaseStorage<Road> {
                     name.getFirstChild().getNodeValue()
                 ));
 
+                List<Advantage> merits = new ArrayList<>();
+                Element advantagesElement = XMLParser.getTagElement("advantages", element);
+                if (advantagesElement != null) {
+                    XMLParser.getAllChildren(advantagesElement).forEach((advantageNode) -> {
+                        String key = advantageNode.getFirstChild().getNodeValue();
+                        try {
+                            merits.add(advantageStorage.getEntity(key));
+                        } catch (EntityStorageException e) {
+                            Logger.getLogger(RoadStorage.class.getName()).log(Level.WARNING,
+                                "Advantage key ''{0}'' not found for road ''{1}''",
+                                new Object[]{key, element.getAttribute("key")});
+                        }
+                    });
+                }
+
                     this.getList().put(
                         element.getAttribute("key"),
                         Road.builder()
                             .setNames(names)
                             .setKey(element.getAttribute("key"))
+                            .setMerits(merits)
                             .build()
                     );
             });

@@ -29,13 +29,16 @@ import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseColumnListPanel;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
+import antafes.vampireEditor.gui.event.RoadSelectedEvent;
 import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
+import antafes.vampireEditor.gui.event.listener.RoadSelectedListener;
 import antafes.vampireEditor.gui.exception.ElementAlreadyExistsException;
 import antafes.vampireEditor.gui.exception.LabelEmptyException;
 import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
@@ -48,6 +51,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -57,6 +61,8 @@ public class AdvantagesPanel extends BaseColumnListPanel
 {
     private final NewCharacterDialog parent;
     private final HashMap<String, Integer> dynamicRowCounters = new HashMap<>();
+    /** Maps advantage key (e.g. "conscience") to the translated label used as the spinner map key, in sorted order. */
+    private final LinkedHashMap<String, String> virtueKeyToLabel = new LinkedHashMap<>();
     private JButton backButton;
     private JButton nextButton;
 
@@ -86,6 +92,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
         VampireEditor.getDispatcher().addListener(
             ClanSelectedEvent.class,
             new ClanSelectedListener(event -> this.onClanSelected(event.getClan()))
+        );
+        VampireEditor.getDispatcher().addListener(
+            RoadSelectedEvent.class,
+            new RoadSelectedListener(event -> this.onRoadSelected(event.getRoad()))
         );
     }
 
@@ -152,10 +162,38 @@ public class AdvantagesPanel extends BaseColumnListPanel
                     ElementType.SPINNER,
                     5
                 );
+                this.virtueKeyToLabel.put(key, background.getName());
             } catch (ElementAlreadyExistsException | LabelEmptyException e) {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    /**
+     * Called when a road is selected. Clears the virtue group and re-adds only the virtue spinners
+     * that belong to the road's merits list; courage is always included.
+     * Pass {@code null} to show all virtues.
+     *
+     * @param road The selected road, or {@code null} when the selection is cleared
+     */
+    private void onRoadSelected(Road road)
+    {
+        String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
+        this.clearDynamicRows(virtueGroup);
+
+        HashSet<String> allowedKeys;
+        if (road == null || road.getMerits() == null || road.getMerits().isEmpty()) {
+            allowedKeys = new HashSet<>(this.virtueKeyToLabel.keySet());
+        } else {
+            allowedKeys = new HashSet<>();
+            allowedKeys.add("courage");
+            road.getMerits().forEach(merit -> allowedKeys.add(merit.getKey()));
+        }
+
+        this.virtueKeyToLabel.entrySet().stream()
+            .filter(e -> allowedKeys.contains(e.getKey()))
+            .sorted(Map.Entry.comparingByValue())
+            .forEach(e -> this.addDynamicLabelSpinnerRow(virtueGroup, e.getValue(), e.getValue(), 5));
     }
 
     /**
@@ -332,11 +370,13 @@ public class AdvantagesPanel extends BaseColumnListPanel
     protected void enableNextButton()
     {
         this.nextButton.setEnabled(true);
+        this.createFocusTraversalPolicy();
     }
 
     protected void disableNextButton()
     {
         this.nextButton.setEnabled(false);
+        this.createFocusTraversalPolicy();
     }
 
     /**

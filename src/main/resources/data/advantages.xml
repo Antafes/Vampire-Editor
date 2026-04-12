@@ -294,12 +294,26 @@
             <German>Gewissen</German>
         </name>
 	</advantage>
+	<advantage key="conviction">
+		<type>VIRTUE</type>
+		<name>
+			<English>Conviction</English>
+			<German>Überzeugung</German>
+		</name>
+	</advantage>
 	<advantage key="courage">
 		<type>VIRTUE</type>
 		<name>
             <English>Courage</English>
             <German>Mut</German>
         </name>
+	</advantage>
+	<advantage key="instinct">
+		<type>VIRTUE</type>
+		<name>
+			<English>Instinct</English>
+			<German>Instinkt</German>
+		</name>
 	</advantage>
 	<advantage key="self-control">
 		<type>VIRTUE</type>
