@@ -466,6 +466,11 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         return this.comboBoxes.getOrDefault(groupLabel, new HashMap<>());
     }
 
+    protected HashMap<String, JSpinner> getSpinnersForGroup(String groupLabel)
+    {
+        return new HashMap<>(this.groupSpinners.getOrDefault(groupLabel, new HashMap<>()));
+    }
+
     protected FreeAdditionalPointsFields getFreeAdditionalPointsElementsForGroup(String groupLabel)
     {
         return this.freeAdditionalPointsElements.get(groupLabel);
@@ -510,7 +515,9 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
      */
     protected void addToFocusTraversalOrder(Component component)
     {
-        this.extraFocusOrder.add(component);
+        if (!this.extraFocusOrder.contains(component)) {
+            this.extraFocusOrder.add(component);
+        }
     }
 
     protected int getGroupSpinnerSum(String groupLabel)
@@ -666,6 +673,86 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             comboBox.setSelectedItem(preSelected);
         }
         return comboBox;
+    }
+
+    /**
+     * Dynamically adds a new row with a static label and spinner to an existing group, shifting any
+     * free-additional-points fields down to make room.
+     *
+     * @param groupLabel  The group to add the row to
+     * @param uniqueLabel A unique key for the spinner in {@code groupSpinners}
+     * @param rowLabel    The text to display in the row label
+     * @param spinnerMax  Maximum value for the spinner
+     */
+    protected void addDynamicLabelSpinnerRow(String groupLabel, String uniqueLabel, String rowLabel, int spinnerMax)
+    {
+        JPanel groupPanel = this.groupPanels.get(groupLabel);
+        if (groupPanel == null) {
+            return;
+        }
+
+        int insertRow = this.groupNextDynamicRow.getOrDefault(groupLabel, 0);
+        GridBagLayout groupLayout = (GridBagLayout) groupPanel.getLayout();
+
+        if (this.freeAdditionalPointsElements.containsKey(groupLabel)) {
+            FreeAdditionalPointsFields fields = this.freeAdditionalPointsElements.get(groupLabel);
+
+            GridBagConstraints newFreeConstraints = new GridBagConstraints();
+            newFreeConstraints.gridwidth = 1;
+            newFreeConstraints.gridx = 1;
+            newFreeConstraints.gridy = insertRow + 1;
+            newFreeConstraints.ipady = 5;
+            newFreeConstraints.insets = new Insets(2, 2, 2, 2);
+            newFreeConstraints.fill = GridBagConstraints.BOTH;
+            newFreeConstraints.anchor = GridBagConstraints.LINE_END;
+            groupLayout.setConstraints(fields.getFreeAdditionalPointsField(), newFreeConstraints);
+
+            GridBagConstraints newMaxConstraints = new GridBagConstraints();
+            newMaxConstraints.gridwidth = 1;
+            newMaxConstraints.gridx = 2;
+            newMaxConstraints.gridy = insertRow + 1;
+            newMaxConstraints.ipady = 5;
+            newMaxConstraints.insets = new Insets(2, 2, 2, 2);
+            newMaxConstraints.fill = GridBagConstraints.BOTH;
+            newMaxConstraints.anchor = GridBagConstraints.LINE_START;
+            groupLayout.setConstraints(fields.getMaxFreeAdditionalPointsField(), newMaxConstraints);
+        }
+
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridwidth = 2;
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = insertRow;
+        labelConstraints.ipady = 5;
+        labelConstraints.insets = new Insets(2, 2, 2, 2);
+        labelConstraints.fill = GridBagConstraints.BOTH;
+        labelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        groupPanel.add(new JLabel(rowLabel), labelConstraints);
+
+        GridBagConstraints spinnerConstraints = new GridBagConstraints();
+        spinnerConstraints.gridwidth = 2;
+        spinnerConstraints.gridx = 2;
+        spinnerConstraints.gridy = insertRow;
+        spinnerConstraints.ipady = 5;
+        spinnerConstraints.insets = new Insets(2, 2, 2, 2);
+        spinnerConstraints.fill = GridBagConstraints.BOTH;
+        spinnerConstraints.anchor = GridBagConstraints.NORTHWEST;
+
+        JSpinner spinner = new JSpinner();
+        spinner.setModel(new SpinnerNumberModel(0, 0, spinnerMax, 1));
+        spinner.setName(uniqueLabel);
+        groupPanel.add(spinner, spinnerConstraints);
+        this.groupFocusComponents.computeIfAbsent(groupLabel, k -> new ArrayList<>()).add(spinner);
+        this.groupSpinners.computeIfAbsent(groupLabel, k -> new HashMap<>()).put(uniqueLabel, spinner);
+        spinner.addChangeListener(e -> this.updateFreeAdditionalPoints(groupLabel));
+
+        this.groupNextDynamicRow.put(groupLabel, insertRow + 1);
+
+        groupPanel.revalidate();
+        groupPanel.repaint();
+        this.revalidate();
+        this.repaint();
+
+        this.createFocusTraversalPolicy();
     }
 
     /**

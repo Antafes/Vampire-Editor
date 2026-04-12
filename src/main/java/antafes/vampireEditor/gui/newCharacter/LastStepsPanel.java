@@ -29,9 +29,6 @@ import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
-import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
-import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
-import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
@@ -51,8 +48,6 @@ import java.util.Objects;
  */
 public class LastStepsPanel extends BasePanel {
     private JLabel flawInfoLabel;
-    private JComboBox<BaseTranslatedEntity> roadComboBox;
-    private JLabel roadLabel;
 
     /**
      * Create the last steps panel.
@@ -69,7 +64,6 @@ public class LastStepsPanel extends BasePanel {
     @Override
     protected void init() {
         this.addMeritAndFlawFields();
-        this.addRoadFields();
         this.adjustNextButton();
 
         super.init();
@@ -103,116 +97,10 @@ public class LastStepsPanel extends BasePanel {
     }
 
     /**
-     * Add all road fields sorted by the translated name.
-     */
-    private void addRoadFields() {
-        this.addFields("road");
-
-        VampireEditor.getDispatcher().addListener(
-            VirtueValueSetEvent.class,
-            new VirtueValueSetListener(lastStepsHeadlineCreatedEvent -> {
-                LanguageInterface language = this.getConfiguration().getLanguageObject();
-                String text = language.translate("road")
-                    + " (" + language.translate("roadScore") + ": "
-                    + Road.calculateRoadScore(lastStepsHeadlineCreatedEvent.getVirtues()) + ')';
-                this.roadLabel.setText(text);
-            })
-        );
-    }
-
-    /**
-     * Add fields by the given list and under the given headline.
-     * This is going to be used to add the road and humanity fields.
-     *
-     * @param headline The headline of the element group
-     */
-    protected void addFields(String headline) {
-        this.addFields(headline, new HashMap<>());
-    }
-
-    /**
-     * Add labels and spinners by the given list and under the given headline.
-     * This will use 0 as minimum value for the spinners.
-     *
-     * @param headline The headline of the element group
-     * @param addHeadline Whether to add a headline
-     * @param elementList List of elements
+     * Not used in this panel.
      */
     @Override
     protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
-        if (!this.getFields().containsKey(headline)) {
-            this.getFields().put(headline, new ArrayList<>());
-        }
-
-        GroupLayout layout = (GroupLayout) this.getLayout();
-        JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
-        groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        if (headline.equals("road")) {
-            this.roadLabel = groupLabel;
-        }
-
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
-            .addComponent(
-                groupLabel,
-                GroupLayout.Alignment.LEADING,
-                GroupLayout.PREFERRED_SIZE,
-                GroupLayout.PREFERRED_SIZE,
-                Short.MAX_VALUE
-            );
-        this.getOuterSequentialHorizontalGroup()
-            .addGroup(
-                layout.createSequentialGroup()
-                    .addGap(11, 11, 11)
-                    .addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel);
-
-        listVerticalGroup.addGap(11, 11, 11);
-        GroupLayout.SequentialGroup listOuterVerticalGroup = layout.createSequentialGroup();
-        listVerticalGroup.addGroup(listOuterVerticalGroup);
-        this.getOuterParallelVerticalGroup()
-            .addGroup(listVerticalGroup);
-
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-
-        this.roadComboBox = new JComboBox<>();
-        DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
-        roadModel.addElement(this.getEmptyEntity());
-        this.roadComboBox.setModel(roadModel);
-        this.getRoadValues().forEach(roadModel::addElement);
-        this.roadComboBox.addItemListener((ItemEvent e) -> {
-            if (Objects.equals(this.roadComboBox.getSelectedItem(), "")) {
-                this.disableNextButton();
-            } else {
-                this.enableNextButton();
-            }
-        });
-        this.roadComboBox.setMaximumRowCount(Math.min(this.roadComboBox.getModel().getSize(), 20));
-
-        comboBoxHorizontalGroup.addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
-        listOuterVerticalGroup
-            .addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
-
-        outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
-    }
-
-    /**
-     * Get the values for the road combo box.
-     */
-    protected ArrayList<Road> getRoadValues() {
-        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        ArrayList<Road> list = new ArrayList<>();
-        roadStorage.getList().forEach((String key, Road road) -> list.add(road));
-        list.sort(new StringComparator());
-
-        return list;
     }
 
     /**
@@ -454,6 +342,5 @@ public class LastStepsPanel extends BasePanel {
         this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .forEachOrdered((comboBox) -> builder.addFlaw((Flaw) comboBox.getSelectedItem()));
-        builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }
