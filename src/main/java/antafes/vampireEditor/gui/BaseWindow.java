@@ -571,6 +571,10 @@ public class BaseWindow extends javax.swing.JFrame {
         this.setFieldTexts();
 
         for (Component component : this.charactersTabPane.getComponents()) {
+            if (!(component instanceof CharacterTabbedPane)) {
+                continue;
+            }
+
             CharacterTabbedPane pane = (CharacterTabbedPane) component;
             pane.updateTexts();
         }
