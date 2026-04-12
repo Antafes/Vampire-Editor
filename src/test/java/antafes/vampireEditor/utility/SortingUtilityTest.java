@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.character.Merit;
@@ -31,9 +32,9 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-@Test
-public class SortingUtilityTest
+public class SortingUtilityTest extends BaseTest
 {
+    @Test
     public void testSortAndStringifyEntityMapWithFiltering()
     {
         Merit m1 = Merit.builder()
@@ -72,6 +73,7 @@ public class SortingUtilityTest
         );
     }
 
+    @Test
     public void testSortAndStringifyEntityMap()
     {
         Merit m1 = Merit.builder()
