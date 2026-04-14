@@ -353,7 +353,8 @@ public class LooksPanel extends javax.swing.JPanel {
         roadLabel.setText("Road*");
         this.enteredFields.put(roadComboBox, Boolean.FALSE);
         DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
-        roadModel.addElement(((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity());
+        EmptyEntity emptyRoad = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        roadModel.addElement(emptyRoad);
         this.getRoadValues().forEach(roadModel::addElement);
         roadComboBox.setModel(roadModel);
         roadComboBox.setName("road"); // NOI18N
@@ -365,6 +366,9 @@ public class LooksPanel extends javax.swing.JPanel {
             } else if (selected instanceof Road) {
                 enteredFields.replace(roadComboBox, Boolean.TRUE);
                 checkFieldsFilled();
+                if (roadModel.getIndexOf(emptyRoad) >= 0) {
+                    roadModel.removeElement(emptyRoad);
+                }
                 VampireEditor.getDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
             }
         });
