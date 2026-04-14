@@ -132,12 +132,14 @@ public class CharacterStorage extends BaseStorage<Character> {
         this.xw.addChild("experience", Integer.toString(character.getExperience()));
         this.xw.addChild(
             "nature",
-            character.getNature().isManual() ? character.getNature().getName() : character.getNature().getKey()
+            character.getNature() == null
+                ? ""
+                : character.getNature().isManual() ? character.getNature().getName() : character.getNature().getKey()
         );
         this.xw.addChild("hideout", character.getHideout());
         this.xw.addChild("player", character.getPlayer());
-        this.xw.addChild("demeanor", character.getDemeanor());
-        this.xw.addChild("concept", character.getConcept());
+        this.xw.addChild("demeanor", character.getDemeanor() == null ? "" : character.getDemeanor());
+        this.xw.addChild("concept", character.getConcept() == null ? "" : character.getConcept());
         this.xw.addChild("sire", character.getSire());
         this.xw.addChild("sect", character.getSect());
 
@@ -222,14 +224,14 @@ public class CharacterStorage extends BaseStorage<Character> {
         try {
             builder.setClan(clanStorage.getEntity(XMLParser.getTagValue("clan", root)));
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
             builder.setGeneration(generationStorage.getEntity(XMLParser.getTagValueInt("generation", root)));
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         builder.setChronicle(XMLParser.getTagValue("chronicle", root));
         builder.setExperience(XMLParser.getTagValueInt("experience", root));
@@ -241,10 +243,13 @@ public class CharacterStorage extends BaseStorage<Character> {
         builder.setSect(XMLParser.getTagValue("sect", root));
 
         NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        try {
-            builder.setNature(natureStorage.getEntity(XMLParser.getTagValue("nature", root)));
-        } catch (EntityStorageException e) {
-            e.printStackTrace();
+        String nature = XMLParser.getTagValue("nature", root);
+        if (!nature.isEmpty()) {
+            try {
+                builder.setNature(natureStorage.getEntity(nature));
+            } catch (EntityStorageException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Element attributes = XMLParser.getTagElement("attributes", root);
@@ -304,7 +309,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                 try {
                     builder.addMerit(meritStorage.getEntity(XMLParser.getElementValue(element)));
                 } catch (EntityStorageException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             });
 
@@ -314,7 +319,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                 try {
                     builder.addFlaw(flawStorage.getEntity(XMLParser.getElementValue(element)));
                 } catch (EntityStorageException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             });
 
@@ -329,7 +334,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                     .build()
             );
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));

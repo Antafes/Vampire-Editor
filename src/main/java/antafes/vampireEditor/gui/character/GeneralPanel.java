@@ -61,7 +61,7 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getGeneration().toString());
                         break;
                     case "nature":
-                        element.setText(this.getCharacter().getNature().toString());
+                        element.setText(this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature().toString());
                         break;
                     case "hideout":
                         element.setText(this.getCharacter().getHideout());
@@ -70,10 +70,10 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getPlayer());
                         break;
                     case "demeanor":
-                        element.setText(this.getCharacter().getDemeanor());
+                        element.setText(this.getCharacter().getDemeanor() == null ? "" : this.getCharacter().getDemeanor());
                         break;
                     case "concept":
-                        element.setText(this.getCharacter().getConcept());
+                        element.setText(this.getCharacter().getConcept() == null ? "" : this.getCharacter().getConcept());
                         break;
                     case "sire":
                         element.setText(this.getCharacter().getSire());

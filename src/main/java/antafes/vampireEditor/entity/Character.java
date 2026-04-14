@@ -219,18 +219,6 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing generation");
             }
 
-            if (this.nature == null) {
-                throw new EntityException("Missing nature");
-            }
-
-            if (this.demeanor == null || this.demeanor.isEmpty()) {
-                throw new EntityException("Missing demeanor");
-            }
-
-            if (this.concept == null || this.concept.isEmpty()) {
-                throw new EntityException("Missing concept");
-            }
-
             this.checkAttributes();
             this.checkAbilities();
             this.checkAdvantages();
