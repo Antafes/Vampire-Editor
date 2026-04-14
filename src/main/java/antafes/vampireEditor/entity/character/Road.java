@@ -50,6 +50,11 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     {
         int roadScore = 0;
 
+        // If there's more than 3 virtues, it probably means the road hasn't been selected.
+        if (virtues.size() > 3) {
+            return 2;
+        }
+
         for (Advantage virtue : virtues) {
             if (virtue.getKey().equals("courage")) {
                 continue;
