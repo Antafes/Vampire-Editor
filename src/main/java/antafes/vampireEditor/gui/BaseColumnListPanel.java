@@ -316,6 +316,10 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             groupConstraints.gridy++;
         }
 
+        // Capture the row immediately after the header/weighting, before any elements are added.
+        // This is the correct base for dynamic-row insertion after clearDynamicRows().
+        int headerEndRow = groupConstraints.gridy;
+
         for (Map.Entry<String, ElementType> entry : elements.entrySet()) {
             BaseTranslatedEntity selected = null;
             if (this.selectedComboBoxValues.containsKey(entry.getKey())) {
@@ -328,7 +332,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         if (groupLabelText != null) {
             this.groupPanels.put(groupLabelText, groupPanel);
             this.groupNextDynamicRow.put(groupLabelText, groupConstraints.gridy);
-            this.groupBaseDynamicRow.put(groupLabelText, groupConstraints.gridy);
+            this.groupBaseDynamicRow.put(groupLabelText, headerEndRow);
         }
 
         if (this.useFreeAdditionalPoints.get(column).get(groupLabelText)) {
