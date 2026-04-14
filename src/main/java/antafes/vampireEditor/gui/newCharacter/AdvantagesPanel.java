@@ -22,6 +22,7 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
@@ -37,11 +38,13 @@ import antafes.vampireEditor.gui.BaseColumnListPanel;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
+import antafes.vampireEditor.gui.event.FillCharacterEvent;
 import antafes.vampireEditor.gui.event.RoadSelectedEvent;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
+import antafes.vampireEditor.gui.event.listener.FillCharacterListener;
 import antafes.vampireEditor.gui.event.listener.RoadSelectedListener;
 import antafes.vampireEditor.gui.exception.ElementAlreadyExistsException;
 import antafes.vampireEditor.gui.exception.LabelEmptyException;
@@ -106,6 +109,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
         VampireEditor.getDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
             new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
+        VampireEditor.getDispatcher().addListener(
+            FillCharacterEvent.class,
+            new FillCharacterListener(event -> this.fillCharacter(event.getBuilder()))
         );
     }
 
@@ -596,5 +603,57 @@ public class AdvantagesPanel extends BaseColumnListPanel
         });
 
         VampireEditor.getDispatcher().dispatch(new VirtueValueSetEvent().setVirtues(virtues));
+    }
+
+    private void fillCharacter(Character.CharacterBuilder<?, ?> builder)
+    {
+        this.fillSelectedAdvantages(builder, AdvantageInterface.AdvantageType.BACKGROUND);
+        this.fillSelectedAdvantages(builder, AdvantageInterface.AdvantageType.DISCIPLINE);
+        this.fillVirtues(builder);
+    }
+
+    private void fillSelectedAdvantages(Character.CharacterBuilder<?, ?> builder, AdvantageInterface.AdvantageType type)
+    {
+        String groupLabel = type.getKeyPlural();
+        HashMap<String, JSpinner> spinners = this.getSpinnersForGroup(groupLabel);
+
+        this.getComboBoxesForGroup(groupLabel).forEach((rowKey, comboBox) -> {
+            Object selectedItem = comboBox.getSelectedItem();
+            if (!(selectedItem instanceof Advantage)) {
+                return;
+            }
+
+            JSpinner spinner = spinners.get(rowKey);
+            if (spinner == null) {
+                return;
+            }
+
+            builder.addAdvantage(
+                ((Advantage) selectedItem).toBuilder()
+                    .setValue(((Number) spinner.getValue()).intValue())
+                    .build()
+            );
+        });
+    }
+
+    private void fillVirtues(Character.CharacterBuilder<?, ?> builder)
+    {
+        HashMap<String, JSpinner> virtueSpinners = this.getSpinnersForGroup(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+        HashMap<String, Advantage> virtueValues = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+
+        this.virtueKeyToLabel.forEach((key, label) -> {
+            JSpinner spinner = virtueSpinners.get(label);
+            Advantage virtue = virtueValues.get(key);
+
+            if (spinner == null || virtue == null) {
+                return;
+            }
+
+            builder.addAdvantage(
+                virtue.toBuilder()
+                    .setValue(((Number) spinner.getValue()).intValue())
+                    .build()
+            );
+        });
     }
 }

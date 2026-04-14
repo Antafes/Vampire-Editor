@@ -31,6 +31,7 @@ import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
 import antafes.vampireEditor.gui.event.listener.UpdateFreeAdditionalPointsListener;
+import antafes.vampireEditor.gui.event.FillCharacterEvent;
 import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -470,7 +471,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
         this.abilitiesPanel.fillCharacter(builder);
-//        this.advantagesPanel.fillCharacter(builder);
+        VampireEditor.getDispatcher().dispatch(new FillCharacterEvent(builder));
         this.lastStepsPanel.fillCharacter(builder);
 
         ShowWaitAction waitAction = new ShowWaitAction(this);
