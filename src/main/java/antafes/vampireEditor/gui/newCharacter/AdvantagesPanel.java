@@ -387,20 +387,15 @@ public class AdvantagesPanel extends BaseColumnListPanel
     }
 
     /**
-     * Enables the next button and unlocks the last-steps tab once all virtue points are spent.
+     * Enables the next button and unlocks the last-steps tab once all advantage points are spent.
      */
     protected void checkFieldsFilled()
     {
-        String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
-        FreeAdditionalPointsFields fields = this.getFreeAdditionalPointsElementsForGroup(virtueGroup);
-        if (fields == null) {
-            return;
-        }
+        boolean allGroupsFilled = this.isGroupFilled(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural())
+            && this.isGroupFilled(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural())
+            && this.isGroupFilled(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
 
-        int used = Integer.parseInt(fields.getFreeAdditionalPointsField().getText());
-        int max  = Integer.parseInt(fields.getMaxFreeAdditionalPointsField().getText());
-
-        if (used >= max) {
+        if (allGroupsFilled) {
             if (this.parent.getMaxActiveTab() < 4) {
                 this.parent.increaseMaxActiveTab();
             }
@@ -409,6 +404,19 @@ public class AdvantagesPanel extends BaseColumnListPanel
         } else if (this.parent.getMaxActiveTab() < 4) {
             this.disableNextButton();
         }
+    }
+
+    private boolean isGroupFilled(String groupLabel)
+    {
+        FreeAdditionalPointsFields fields = this.getFreeAdditionalPointsElementsForGroup(groupLabel);
+        if (fields == null) {
+            return false;
+        }
+
+        int used = Integer.parseInt(fields.getFreeAdditionalPointsField().getText());
+        int max = Integer.parseInt(fields.getMaxFreeAdditionalPointsField().getText());
+
+        return used >= max;
     }
 
     protected void enableNextButton()
