@@ -355,7 +355,7 @@ public class AttributesPanel extends BaseListPanel {
                 ).getMaximumAttributes()
             );
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

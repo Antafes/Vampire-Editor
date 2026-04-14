@@ -138,7 +138,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         try {
             this.setAttributeMaximum(generationStorage.getDefaultGeneration().getMaximumAttributes());
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         characterTabPane.setEnabledAt(1, false);
         characterTabPane.setEnabledAt(2, false);
