@@ -5,53 +5,89 @@
             <English>Road of Beast</English>
             <German>Der Weg des Tiers</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
     </road>
     <road key="roadOfHeaven">
         <name>
             <English>Road of Heaven</English>
             <German>Der Weg des Himmels</German>
         </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
     </road>
     <road key="roadOfHumanity">
         <name>
             <English>Road of Humanity</English>
             <German>Der Weg der Menschlichkeit</German>
         </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
     </road>
     <road key="roadOfKings">
         <name>
             <English>Road of Kings</English>
             <German>Der Weg der Könige</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
     </road>
     <road key="roadOfLilith">
         <name>
             <English>Road of Lilith</English>
             <German>Der Weg der Lilith</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
     </road>
     <road key="roadOfMetamorphosis">
         <name>
             <English>Road of Metamorphosis</English>
             <German>Der Weg der Metamorphose</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
     </road>
     <road key="roadOfSin">
         <name>
             <English>Road of Sin</English>
             <German>Der Weg der Sünde</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
     </road>
     <road key="roadOfBones">
         <name>
             <English>Road of Bones</English>
             <German>Der Weg der Knochen</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
     </road>
     <road key="roadOfYasa">
         <name>
             <English>Road of Yasa</English>
             <German>Der Weg des Jassa</German>
         </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
     </road>
 </roads>

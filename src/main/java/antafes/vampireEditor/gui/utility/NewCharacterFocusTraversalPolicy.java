@@ -58,14 +58,19 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     public Component getComponentAfter(
         Container focusCycleRoot, Component aComponent
     ) {
-        int idx = (order.indexOf(aComponent) + 1) % order.size();
+        Component checkComponent = aComponent;
+        if (aComponent.getParent() instanceof JComboBox) {
+            checkComponent = aComponent.getParent();
+        }
 
-        if (order.indexOf(aComponent) == -1) {
+        int idx = (order.indexOf(checkComponent) + 1) % order.size();
+
+        if (!order.contains(checkComponent)) {
             for (Component component : order) {
                 if (component instanceof JSpinner) {
                     JSpinner element = (JSpinner) component;
 
-                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(aComponent)) {
+                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(checkComponent)) {
                         idx = (order.indexOf(component) + 1) % order.size();
                         Component nextElement = order.get(idx);
 
@@ -98,18 +103,24 @@ public class NewCharacterFocusTraversalPolicy extends FocusTraversalPolicy
     public Component getComponentBefore(
         Container focusCycleRoot, Component aComponent
     ) {
-        int idx = order.indexOf(aComponent) - 1;
+
+        Component checkComponent = aComponent;
+        if (aComponent.getParent() instanceof JComboBox) {
+            checkComponent = aComponent.getParent();
+        }
+
+        int idx = order.indexOf(checkComponent) - 1;
 
         if (idx < 0) {
             idx = order.size() - 1;
         }
 
-        if (order.indexOf(aComponent) == -1) {
+        if (!order.contains(checkComponent)) {
             for (Component component : order) {
                 if (component instanceof JSpinner) {
                     JSpinner element = (JSpinner) component;
 
-                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(aComponent)) {
+                    if (((JSpinner.DefaultEditor) element.getEditor()).getTextField().equals(checkComponent)) {
                         idx = order.indexOf(component) - 1;
 
                         if (idx == -1) {

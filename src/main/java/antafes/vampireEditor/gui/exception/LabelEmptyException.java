@@ -16,38 +16,29 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import java.util.List;
+package antafes.vampireEditor.gui.exception;
 
-/**
- *
- * @author Marian Pollzien
- */
-public interface RoadInterface {
+public class LabelEmptyException extends Exception
+{
+    private static final String message = "Label should not be empty.";
 
-    /**
-     * Get the key of the road.
-     *
-     * @return
-     */
-    public String getKey();
+    public LabelEmptyException()
+    {
+        super(message);
+    }
 
-    /**
-     * Get the name of the road.
-     *
-     * @return
-     */
-    public String getName();
+    public LabelEmptyException(Throwable cause)
+    {
+        super(message, cause);
+    }
 
-    /**
-     * Get the list of merits (advantage objects) associated with this road.
-     *
-     * @return The list of merits
-     */
-    public List<Advantage> getMerits();
-
+    protected LabelEmptyException(Throwable cause, boolean enableSuppression, boolean writableStackTrace
+    )
+    {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

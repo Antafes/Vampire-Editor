@@ -21,7 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
 import lombok.AccessLevel;

@@ -28,7 +28,7 @@ import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.entity.storage.AbilityStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
 import antafes.vampireEditor.utility.SortingUtility;
@@ -85,7 +85,7 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
 
         try {
             return storage.getEntity(element).getName();
@@ -138,7 +138,7 @@ public class AbilitiesPanel extends BaseListPanel {
      * @return List of abilities
      */
     protected HashMap<String, Ability> getValues(AbilityInterface.AbilityType type) {
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         return storage.getEntityMapByType(type);
     }
 
@@ -391,7 +391,7 @@ public class AbilitiesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         this.getFields().forEach((key, fields) -> {
             for (Component field : fields) {
                 JSpinner spinner = (JSpinner) field;

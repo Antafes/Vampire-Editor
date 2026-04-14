@@ -19,35 +19,24 @@
  * @copyright (c) 2018, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
+package antafes.vampireEditor.gui.event.listener;
 
-import java.util.List;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 /**
+ * ChangeListener with the possibility to store the component it is created on.
  *
  * @author Marian Pollzien
  */
-public interface RoadInterface {
+public abstract class ComponentChangeListener implements ChangeListener {
+    private Component component;
 
-    /**
-     * Get the key of the road.
-     *
-     * @return
-     */
-    public String getKey();
+    public Component getComponent() {
+        return component;
+    }
 
-    /**
-     * Get the name of the road.
-     *
-     * @return
-     */
-    public String getName();
-
-    /**
-     * Get the list of merits (advantage objects) associated with this road.
-     *
-     * @return The list of merits
-     */
-    public List<Advantage> getMerits();
-
+    public void setComponent(Component component) {
+        this.component = component;
+    }
 }

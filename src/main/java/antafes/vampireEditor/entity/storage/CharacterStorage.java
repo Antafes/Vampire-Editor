@@ -211,11 +211,11 @@ public class CharacterStorage extends BaseStorage<Character> {
         Element root = this.xp.getRootElement();
         String id = root.getAttribute("id");
 
-        if (id == null || id.equals("")) {
+        if (id.equals("")) {
             return null;
         }
 
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         builder.setId(UUID.fromString(id));
         builder.setName(XMLParser.getTagValue("name", root));
 
@@ -225,7 +225,7 @@ public class CharacterStorage extends BaseStorage<Character> {
             e.printStackTrace();
         }
 
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
             builder.setGeneration(generationStorage.getEntity(XMLParser.getTagValueInt("generation", root)));
         } catch (EntityStorageException e) {
@@ -248,7 +248,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         }
 
         Element attributes = XMLParser.getTagElement("attributes", root);
-        AttributeStorage attributeStorage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage attributeStorage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         XMLParser.getAllChildren(attributes).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
@@ -265,7 +265,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         }).forEachOrdered(builder::addAttribute);
 
         Element abilities = XMLParser.getTagElement("abilities", root);
-        AbilityStorage abilityStorage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage abilityStorage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         XMLParser.getAllChildren(abilities).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
@@ -282,7 +282,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         }).forEachOrdered(builder::addAbility);
 
         Element advantages = XMLParser.getTagElement("advantages", root);
-        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
         XMLParser.getAllChildren(advantages).stream().map((element) -> {
             try {
                 String key = element.getAttribute("key");
@@ -298,7 +298,7 @@ public class CharacterStorage extends BaseStorage<Character> {
             return null;
         }).forEachOrdered(builder::addAdvantage);
 
-        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+        MeritStorage meritStorage = StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
         XMLParser.getAllChildren(XMLParser.getTagElement("merits", root))
             .forEach((element) -> {
                 try {
@@ -308,7 +308,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                 }
             });
 
-        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+        FlawStorage flawStorage = StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
         XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root))
             .forEach((element) -> {
                 try {
@@ -318,7 +318,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                 }
             });
 
-        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         Element road = XMLParser.getTagElement("road", root);
         try {
             builder.setRoad(

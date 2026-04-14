@@ -237,7 +237,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 super.addRow(key, spinnerMinimum, this.getFields(type), groups, layout);
             } else {
                 HashMap<String, Component> newElements = this.addRow(
-                    key, this.getEntity(type, key), type, spinnerMinimum, this.getFields(type), groups, layout
+                    key,
+                    this.getEntity(type, key),
+                    type,
+                    spinnerMinimum,
+                    this.getFields(type),
+                    groups,
+                    layout,
+                    true
                 );
                 this.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
             }
@@ -245,7 +252,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
         if (maxFields == BaseEditableListPanel.UNLIMITEDMAXFIELDS || this.getFields(type).size() < maxFields) {
             HashMap<String, Component> newElements = this.addRow(
-                null, type, spinnerMinimum, this.getFields(type), groups, layout
+                null, type, spinnerMinimum, this.getFields(type), groups, layout, true
             );
             this.addComboBoxItemListener(
                 newElements,
@@ -279,8 +286,36 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @return Map with the label and the element
      */
     @Override
-    protected HashMap<String, Component> addRow(String element, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
-        return this.addRow(element, null, spinnerMinimum, fields, groups, layout);
+    protected HashMap<String, Component> addRow(
+        String element,
+        int spinnerMinimum,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout
+    ) {
+        return this.addRow(element, null, spinnerMinimum, fields, groups, layout, true);
+    }
+
+    /**
+     * Add a single row to the current column.
+     *
+     * @param element The name of the element to add
+     * @param spinnerMinimum Minimum value for the spinner
+     * @param fields List of all fields
+     * @param groups Groups the element should be added to
+     * @param layout GroupLayout object
+     *
+     * @return Map with the label and the element
+     */
+    protected HashMap<String, Component> addRow(
+        String element,
+        int spinnerMinimum,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout,
+        boolean addToOrder
+    ) {
+        return this.addRow(element, null, spinnerMinimum, fields, groups, layout, addToOrder);
     }
 
     /**
@@ -295,8 +330,16 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      *
      * @return Map with the label and the element
      */
-    protected HashMap<String, Component> addRow(String element, String type, int spinnerMinimum, ArrayList<Component> fields, HashMap<String, GroupLayout.Group> groups, GroupLayout layout) {
-        return this.addRow(element, null, type, spinnerMinimum, fields, groups, layout);
+    protected HashMap<String, Component> addRow(
+        String element,
+        String type,
+        int spinnerMinimum,
+        ArrayList<Component> fields,
+        HashMap<String, GroupLayout.Group> groups,
+        GroupLayout layout,
+        boolean addComboBoxToOrder
+    ) {
+        return this.addRow(element, null, type, spinnerMinimum, fields, groups, layout, addComboBoxToOrder);
     }
 
     /**
@@ -310,7 +353,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * @param groups Groups the element should be added to
      * @param layout GroupLayout object
      *
-     * @return Map with the label and the element
+     * @return Map with the comboBox and the spinner
      */
     protected HashMap<String, Component> addRow(
         String element,
@@ -319,7 +362,8 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         int spinnerMinimum,
         ArrayList<Component> fields,
         HashMap<String, GroupLayout.Group> groups,
-        GroupLayout layout
+        GroupLayout layout,
+        boolean addToOrder
     ) {
         JComboBox<BaseTranslatedEntity> elementComboBox = new JComboBox<>();
         DefaultComboBoxModel<BaseTranslatedEntity> model = new DefaultComboBoxModel<>();
@@ -331,6 +375,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
 
         this.getValues(type).forEach((key, value) -> model.addElement((BaseTranslatedEntity) value));
         elementComboBox.setModel(model);
+
+        if (addToOrder) {
+            this.getOrder().add(elementComboBox);
+        }
 
         if (selected != null) {
             elementComboBox.setSelectedItem(this.getValues(type).get(selected.getKey()));
@@ -344,7 +392,11 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
         spinner.setMaximumSize(spinnerDimension);
         spinner.setName(element != null ? element : "new");
         this.addChangeListener(spinner);
-        this.getOrder().add(spinner);
+
+        if (addToOrder) {
+            this.getOrder().add(spinner);
+        }
+
         fields.add(spinner);
         groups.get("labelHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
         groups.get("elementHorizontalGroup").addComponent(spinner);
@@ -386,6 +438,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
             public void itemStateChanged(ItemEvent e) {
                 JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
                 BaseEditableListPanel panel = (BaseEditableListPanel) element.getParent();
+                int orderIndex = getOrder().indexOf(element);
 
                 if (e.getStateChange() != ItemEvent.SELECTED
                     || element.getSelectedItem() == null
@@ -395,8 +448,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 }
 
                 HashMap<String, Component> newElements = panel.addRow(
-                    null, type, spinnerMinimum, fields, groups, layout
+                    null, type, spinnerMinimum, fields, groups, layout, false
                 );
+                getOrder().add(orderIndex + 2, newElements.get("comboBox"));
+                getOrder().add(orderIndex + 3, newElements.get("spinner"));
                 panel.getComboBoxes().get(type).add((JComboBox<BaseTranslatedEntity>) newElements.get("comboBox"));
 
                 if (maxFields == BaseEditableListPanel.UNLIMITEDMAXFIELDS || fields.size() < maxFields) {
@@ -406,6 +461,7 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
                 element.removeItemListener(this);
 
                 // The below method calls are needed to show the newly added components
+                createFocusTraversalPolicy();
                 panel.revalidate();
                 panel.repaint();
             }
@@ -462,16 +518,14 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
     /**
      * Get the values for the element combo box.
      *
-     * @param type Identifier for the group of comboboxes
-     *
-     * @return List of values
+     * @param type Identifier for the group of combo boxes
      */
     abstract protected HashMap<?, ?> getValues(String type);
 
     /**
      * Get an entity of the given type for the given key.
      *
-     * @param type Identifier for the group of comboboxes
+     * @param type Identifier for the group of combo boxes
      * @param key Key for the object to get
      *
      * @return Returns an object if found, otherwise null.

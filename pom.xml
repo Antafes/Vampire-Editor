@@ -41,8 +41,8 @@
     <dependencies>
         <dependency>
             <groupId>antafes</groupId>
-            <artifactId>MyXML</artifactId>
-            <version>3.1.4</version>
+            <artifactId>myxml</artifactId>
+            <version>3.1.8</version>
         </dependency>
         <dependency>
             <groupId>antafes</groupId>

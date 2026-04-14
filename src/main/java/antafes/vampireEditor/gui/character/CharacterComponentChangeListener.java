@@ -27,7 +27,7 @@ import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.ValuedEntityInterface;
 import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.SpecialFeature;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
