@@ -168,7 +168,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             this.setMaxY(this.getMaxY() + 1);
         }
@@ -207,7 +207,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             this.setMaxY(this.getMaxY() + 1);
         }
@@ -222,7 +222,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -236,7 +236,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

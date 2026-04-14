@@ -529,7 +529,7 @@ public class BaseWindow extends javax.swing.JFrame {
         try {
             printerJob.print();
         } catch (PrinterException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
