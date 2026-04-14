@@ -40,6 +40,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -75,25 +76,34 @@ public class LastStepsPanel extends BasePanel {
     private void addMeritAndFlawFields() {
         String headlineMerits = "merits", headlineFlaws = "flaws";
         GroupLayout layout = (GroupLayout) this.getLayout();
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup();
+        GroupLayout.ParallelGroup meritsHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
+        GroupLayout.ParallelGroup flawsHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
+        GroupLayout.SequentialGroup centeredFieldsHorizontalGroup = layout.createSequentialGroup()
+            .addGap(11, 11, 11)
+            .addGroup(meritsHorizontalGroup)
+            .addGap(18, 18, 18)
+            .addGroup(flawsHorizontalGroup)
+            .addGap(11, 11, 11);
         this.getOuterSequentialHorizontalGroup()
-            .addGroup(
-                layout.createSequentialGroup()
-                    .addGap(11, 11, 11)
-                    .addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup();
-        HashMap<String, GroupLayout.Group> groups = new HashMap<>();
-        groups.put("listHorizontalGroup", listHorizontalGroup);
-        groups.put("listVerticalGroup", listVerticalGroup);
-        this.addSpecialFeatureFields(headlineMerits, "merit", groups);
-        this.addSpecialFeatureFields(headlineFlaws, "flaw", groups);
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(centeredFieldsHorizontalGroup)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+
+        HashMap<String, GroupLayout.Group> meritGroups = new HashMap<>();
+        meritGroups.put("listHorizontalGroup", meritsHorizontalGroup);
+        meritGroups.put("listVerticalGroup", layout.createSequentialGroup());
+        this.addSpecialFeatureFields(headlineMerits, "merit", meritGroups);
+
+        HashMap<String, GroupLayout.Group> flawGroups = new HashMap<>();
+        flawGroups.put("listHorizontalGroup", flawsHorizontalGroup);
+        flawGroups.put("listVerticalGroup", layout.createSequentialGroup());
+        this.addSpecialFeatureFields(headlineFlaws, "flaw", flawGroups);
         this.flawInfoLabel = new JLabel();
         this.flawInfoLabel.setText("<html>" + this.getLanguage().translate("flawInfoTooMany") + "</html>");
         this.flawInfoLabel.setVisible(false);
-        listHorizontalGroup.addComponent(this.flawInfoLabel, GroupLayout.PREFERRED_SIZE, 150, 300);
-        listVerticalGroup.addComponent(this.flawInfoLabel);
+        flawsHorizontalGroup.addComponent(this.flawInfoLabel, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        ((GroupLayout.SequentialGroup) flawGroups.get("listVerticalGroup")).addComponent(this.flawInfoLabel);
+        this.linkSpecialFeatureFieldWidths(layout);
     }
 
     /**
@@ -126,8 +136,8 @@ public class LastStepsPanel extends BasePanel {
             .addComponent(
                 groupLabel,
                 GroupLayout.Alignment.LEADING,
-                GroupLayout.PREFERRED_SIZE,
-                GroupLayout.PREFERRED_SIZE,
+                0,
+                GroupLayout.DEFAULT_SIZE,
                 Short.MAX_VALUE
             );
 
@@ -141,8 +151,7 @@ public class LastStepsPanel extends BasePanel {
         this.getOuterParallelVerticalGroup()
             .addGroup(listVerticalGroup);
 
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
         innerGroups.put("comboBoxHorizontalGroup", comboBoxHorizontalGroup);
         innerGroups.put("listOuterVerticalGroup", listOuterVerticalGroup);
 
@@ -153,8 +162,7 @@ public class LastStepsPanel extends BasePanel {
             this.getComboBoxItemListener(type, this.getFields(type), innerGroups)
         );
 
-        outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
+        listHorizontalGroup.addGroup(comboBoxHorizontalGroup);
     }
 
     /**
@@ -176,7 +184,12 @@ public class LastStepsPanel extends BasePanel {
         model.addElement(this.getEmptyEntity());
         this.getSpecialFeatureValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
-        groups.get("comboBoxHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
+        groups.get("comboBoxHorizontalGroup").addComponent(
+            elementComboBox,
+            0,
+            GroupLayout.DEFAULT_SIZE,
+            Short.MAX_VALUE
+        );
         groups.get("listOuterVerticalGroup")
             .addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
             .addGap(6, 6, 6);
@@ -184,8 +197,32 @@ public class LastStepsPanel extends BasePanel {
         HashMap<String, Component> elements = new HashMap<>();
         fields.add(elementComboBox);
         elements.put("comboBox", elementComboBox);
+        this.linkSpecialFeatureFieldWidths((GroupLayout) this.getLayout());
 
         return elements;
+    }
+
+    private void linkSpecialFeatureFieldWidths(GroupLayout layout)
+    {
+        List<Component> components = new ArrayList<>();
+        List<Component> meritFields = this.getFields("merit");
+        List<Component> flawFields = this.getFields("flaw");
+
+        if (meritFields != null) {
+            components.addAll(meritFields);
+        }
+
+        if (flawFields != null) {
+            components.addAll(flawFields);
+        }
+
+        if (this.flawInfoLabel != null) {
+            components.add(this.flawInfoLabel);
+        }
+
+        if (components.size() > 1) {
+            layout.linkSize(SwingConstants.HORIZONTAL, components.toArray(new Component[0]));
+        }
     }
 
     /**
@@ -250,6 +287,7 @@ public class LastStepsPanel extends BasePanel {
     private void adjustNextButton() {
         JButton nextButton = this.getNextButton();
         nextButton.setText(this.getConfiguration().getLanguageObject().translate("finish"));
+        nextButton.setEnabled(true);
 
         for (ActionListener actionListener : nextButton.getActionListeners()) {
             nextButton.removeActionListener(actionListener);

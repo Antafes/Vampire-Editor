@@ -170,7 +170,7 @@
     </ability>
     <ability key="law">
         <name>
-            <English>law</English>
+            <English>Law</English>
             <German>Gesetzeskenntnis</German>
         </name>
         <type>KNOWLEDGE</type>
