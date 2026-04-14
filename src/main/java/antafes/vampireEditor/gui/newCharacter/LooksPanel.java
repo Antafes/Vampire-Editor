@@ -204,7 +204,9 @@ public class LooksPanel extends javax.swing.JPanel {
         weightField.setName("weight"); // NOI18N
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
-        clanComboBox.setModel(this.getClans());
+        DefaultComboBoxModel<BaseEntity> clanModel = this.getClans();
+        clanComboBox.setModel(clanModel);
+        clanComboBox.putClientProperty("emptyEntry", clanModel.getElementAt(0));
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
@@ -569,12 +571,18 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param evt Event object
      */
     private void clanComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        if (Objects.equals(this.clanComboBox.getSelectedItem(), "")) {
+        Object selectedItem = this.clanComboBox.getSelectedItem();
+        if (selectedItem instanceof EmptyEntity || Objects.equals(selectedItem, "")) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
             Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
+            Object emptyEntry = this.clanComboBox.getClientProperty("emptyEntry");
+            DefaultComboBoxModel<BaseEntity> clanModel = (DefaultComboBoxModel<BaseEntity>) this.clanComboBox.getModel();
+            if (emptyEntry != null && clanModel.getIndexOf(emptyEntry) >= 0) {
+                clanModel.removeElement(emptyEntry);
+            }
             VampireEditor.getDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
