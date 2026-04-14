@@ -45,11 +45,6 @@ public class AdvantagesComboBoxItemListener implements ItemListener
     @Override
     public void itemStateChanged(ItemEvent e)
     {
-        if (e.getStateChange() != ItemEvent.SELECTED) {
-            return;
-        }
-
-        JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
         ChangeListener generationChangeListener = (ChangeListener) this.spinner.getClientProperty(GENERATION_CHANGE_LISTENER);
 
         if (generationChangeListener == null) {
@@ -59,26 +54,20 @@ public class AdvantagesComboBoxItemListener implements ItemListener
             this.spinner.putClientProperty(GENERATION_CHANGE_LISTENER, generationChangeListener);
         }
 
-        if (this.isGenerationSelected(element)) {
+        if (e.getStateChange() == ItemEvent.SELECTED && this.isGenerationItem(e.getItem())) {
             if (!Arrays.asList(this.spinner.getChangeListeners()).contains(generationChangeListener)) {
                 this.spinner.addChangeListener(generationChangeListener);
             }
-        } else {
+            VampireEditor.getDispatcher().dispatch(new AddGenerationItemListenerEvent((int) this.spinner.getValue()));
+        } else if (e.getStateChange() == ItemEvent.DESELECTED && this.isGenerationItem(e.getItem())) {
             this.spinner.removeChangeListener(generationChangeListener);
-        }
-
-        if (this.isGenerationSelected(element)) {
-            VampireEditor.getDispatcher()
-                .dispatch(new AddGenerationItemListenerEvent((int) this.spinner.getValue())
-        );
+            VampireEditor.getDispatcher().dispatch(new AddGenerationItemListenerEvent(0));
         }
     }
 
-    private boolean isGenerationSelected(JComboBox<BaseTranslatedEntity> element)
+    private boolean isGenerationItem(Object item)
     {
-        Object selectedItem = element.getSelectedItem();
-
-        return selectedItem instanceof BaseTranslatedEntity
-            && "generation".equals(((BaseTranslatedEntity) selectedItem).getKey());
+        return item instanceof BaseTranslatedEntity
+            && "generation".equals(((BaseTranslatedEntity) item).getKey());
     }
 }
