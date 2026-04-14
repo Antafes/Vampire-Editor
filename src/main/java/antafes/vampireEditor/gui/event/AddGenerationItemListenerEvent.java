@@ -25,15 +25,13 @@ package antafes.vampireEditor.gui.event;
 import lombok.Getter;
 import scripts.laniax.framework.event_dispatcher.Event;
 
-import javax.swing.*;
-
 public class AddGenerationItemListenerEvent extends Event
 {
     @Getter
-    private JSpinner spinner;
+    private final int adjustment;
 
-    public AddGenerationItemListenerEvent(JSpinner spinner)
+    public AddGenerationItemListenerEvent(int adjustment)
     {
-        this.spinner = spinner;
+        this.adjustment = adjustment;
     }
 }

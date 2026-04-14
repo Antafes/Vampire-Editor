@@ -30,8 +30,10 @@ import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.RoadSelectedEvent;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
@@ -374,6 +376,10 @@ public class LooksPanel extends javax.swing.JPanel {
                     + Road.calculateRoadScore(event.getVirtues()) + ')';
                 this.roadLabel.setText(text);
             })
+        );
+        VampireEditor.getDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -801,14 +807,9 @@ public class LooksPanel extends javax.swing.JPanel {
      */
     public void adjustGeneration(int adjustment) {
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        int generation = LooksPanel.DEFAULT_GENERATION;
-        generation -= adjustment;
-
-        this.generationContentLabel.setText(Integer.toString(generation));
         try {
-            this.parent.setAttributeMaximum(
-                Objects.requireNonNull(generationStorage.getEntity(generation)).getMaximumAttributes()
-            );
+            int generation = generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getGeneration();
+            this.generationContentLabel.setText(Integer.toString(generation));
         } catch (EntityStorageException e) {
             e.printStackTrace();
         }

@@ -476,7 +476,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         return this.freeAdditionalPointsElements.get(groupLabel);
     }
 
-    private void updateFreeAdditionalPoints(String groupLabel)
+    protected void updateFreeAdditionalPoints(String groupLabel)
     {
         if (!this.freeAdditionalPointsElements.containsKey(groupLabel)) {
             return;

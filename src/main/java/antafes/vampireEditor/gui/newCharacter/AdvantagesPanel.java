@@ -35,8 +35,11 @@ import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseColumnListPanel;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.RoadSelectedEvent;
+import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
 import antafes.vampireEditor.gui.event.listener.RoadSelectedListener;
 import antafes.vampireEditor.gui.exception.ElementAlreadyExistsException;
@@ -52,7 +55,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Marian Pollzien
@@ -63,6 +65,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
     private final HashMap<String, Integer> dynamicRowCounters = new HashMap<>();
     /** Maps advantage key (e.g. "conscience") to the translated label used as the spinner map key, in sorted order. */
     private final LinkedHashMap<String, String> virtueKeyToLabel = new LinkedHashMap<>();
+    private int generationMaximum;
     private JButton backButton;
     private JButton nextButton;
 
@@ -84,6 +87,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
     @Override
     protected void init()
     {
+        this.generationMaximum = this.getMaximumFromGeneration(0);
         this.addBackgroundFields();
         this.addDisciplineFields();
         this.addVirtueFields();
@@ -97,6 +101,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
             RoadSelectedEvent.class,
             new RoadSelectedListener(event -> this.onRoadSelected(event.getRoad()))
         );
+        VampireEditor.getDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
     }
 
     /**
@@ -106,6 +114,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
     public void build() throws TypeNotSupportedException
     {
         super.build();
+        this.registerGenerationListeners(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
         this.addButtonPanel();
     }
 
@@ -127,7 +136,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
                 AdvantageInterface.AdvantageType.BACKGROUND.name(),
                 ElementType.SPINNER,
                 true,
-                this.getMaximumFromGeneration(),
+                this.generationMaximum,
                 null
             );
         } catch (ElementAlreadyExistsException | LabelEmptyException e) {
@@ -224,7 +233,11 @@ public class AdvantagesPanel extends BaseColumnListPanel
 
         comboBox.putClientProperty("dynamicRowAdded", true);
         int counter = this.dynamicRowCounters.merge(groupLabel, 1, Integer::sum);
-        this.addDynamicRow(groupLabel, type.name() + "_" + counter, type.name(), this.getMaximumFromGeneration());
+        String rowKey = type.name() + "_" + counter;
+        this.addDynamicRow(groupLabel, rowKey, type.name(), this.generationMaximum);
+        if (AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural().equals(groupLabel)) {
+            this.registerGenerationListener(groupLabel, rowKey);
+        }
     }
 
     /**
@@ -239,7 +252,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.clearDynamicRows(disciplineGroup);
         this.dynamicRowCounters.remove(disciplineGroup);
 
-        int max = this.getMaximumFromGeneration();
+        int max = this.generationMaximum;
 
         clan.getAdvantages().stream()
             .filter(a -> a.getType() == AdvantageInterface.AdvantageType.DISCIPLINE)
@@ -473,15 +486,55 @@ public class AdvantagesPanel extends BaseColumnListPanel
         return false;
     }
 
-    private int getMaximumFromGeneration()
+    private int getMaximumFromGeneration(int adjustment)
     {
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         int maximum;
         try {
-            maximum = Objects.requireNonNull(generationStorage.getEntity(12)).getMaximumAttributes();
+            maximum = generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getMaximumAttributes();
         } catch (EntityStorageException e) {
             throw new RuntimeException(e);
         }
         return maximum;
+    }
+
+    private void adjustGeneration(int adjustment)
+    {
+        this.generationMaximum = this.getMaximumFromGeneration(adjustment);
+        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), this.generationMaximum);
+        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), this.generationMaximum);
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural());
+    }
+
+    private void setSpinnerMaximum(String groupLabel, int maximum)
+    {
+        this.getSpinnersForGroup(groupLabel).values().forEach(spinner -> {
+            SpinnerNumberModel currentModel = (SpinnerNumberModel) spinner.getModel();
+            int value = ((Number) spinner.getValue()).intValue();
+            currentModel.setMaximum(maximum);
+            if (value > maximum) {
+                spinner.setValue(maximum);
+            }
+        });
+    }
+
+    private void registerGenerationListeners(String groupLabel)
+    {
+        this.getComboBoxesForGroup(groupLabel).keySet()
+            .forEach(rowKey -> this.registerGenerationListener(groupLabel, rowKey));
+    }
+
+    private void registerGenerationListener(String groupLabel, String rowKey)
+    {
+        JComboBox<BaseTranslatedEntity> comboBox = this.getComboBoxesForGroup(groupLabel).get(rowKey);
+        JSpinner spinner = this.getSpinnersForGroup(groupLabel).get(rowKey);
+
+        if (comboBox == null || spinner == null || Boolean.TRUE.equals(comboBox.getClientProperty("generationListenerRegistered"))) {
+            return;
+        }
+
+        comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner));
+        comboBox.putClientProperty("generationListenerRegistered", true);
     }
 }
