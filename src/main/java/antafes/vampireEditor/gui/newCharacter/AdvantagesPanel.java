@@ -21,7 +21,6 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
@@ -40,6 +39,7 @@ import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.FillCharacterEvent;
 import antafes.vampireEditor.gui.event.RoadSelectedEvent;
+import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
 import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
@@ -99,19 +99,19 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.addVirtueFields();
         this.initButtons();
 
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             ClanSelectedEvent.class,
             new ClanSelectedListener(event -> this.onClanSelected(event.getClan()))
         );
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             RoadSelectedEvent.class,
             new RoadSelectedListener(event -> this.onRoadSelected(event.getRoad()))
         );
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
             new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
         );
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             FillCharacterEvent.class,
             new FillCharacterListener(event -> this.fillCharacter(event.getBuilder()))
         );
@@ -576,7 +576,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
             return;
         }
 
-        comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner));
+        comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner, this.parent.getDialogDispatcher()));
         comboBox.putClientProperty("generationListenerRegistered", true);
     }
 
@@ -610,7 +610,13 @@ public class AdvantagesPanel extends BaseColumnListPanel
             virtues.add(virtue.toBuilder().setValue(((Number) spinner.getValue()).intValue()).build());
         });
 
-        VampireEditor.getDispatcher().dispatch(new VirtueValueSetEvent().setVirtues(virtues));
+        this.parent.getDialogDispatcher().dispatch(new VirtueValueSetEvent().setVirtues(virtues));
+    }
+
+    @Override
+    protected void dispatchUpdateFreeAdditionalPointsEvent(UpdateFreeAdditionalPointsEvent event)
+    {
+        this.parent.getDialogDispatcher().dispatch(event);
     }
 
     private void fillCharacter(Character.CharacterBuilder<?, ?> builder)

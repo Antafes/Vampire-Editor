@@ -21,7 +21,6 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
@@ -63,7 +62,7 @@ public class AttributesPanel extends BaseListPanel {
         this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
-        VampireEditor.getDispatcher().addListener(
+        this.getParentComponent().getDialogDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
             new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
         );

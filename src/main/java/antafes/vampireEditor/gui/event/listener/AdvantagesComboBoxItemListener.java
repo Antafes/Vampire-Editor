@@ -22,9 +22,9 @@
 
 package antafes.vampireEditor.gui.event.listener;
 
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import scripts.laniax.framework.event_dispatcher.Dispatcher;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -35,11 +35,13 @@ import java.util.Arrays;
 public class AdvantagesComboBoxItemListener implements ItemListener
 {
     private static final String GENERATION_CHANGE_LISTENER = "generationChangeListener";
+    private final Dispatcher dispatcher;
     private final JSpinner spinner;
 
-    public AdvantagesComboBoxItemListener(JSpinner spinner)
+    public AdvantagesComboBoxItemListener(JSpinner spinner, Dispatcher dispatcher)
     {
         this.spinner = spinner;
+        this.dispatcher = dispatcher;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class AdvantagesComboBoxItemListener implements ItemListener
         ChangeListener generationChangeListener = (ChangeListener) this.spinner.getClientProperty(GENERATION_CHANGE_LISTENER);
 
         if (generationChangeListener == null) {
-            generationChangeListener = changeEvent -> VampireEditor.getDispatcher().dispatch(
+            generationChangeListener = changeEvent -> this.dispatcher.dispatch(
                 new AddGenerationItemListenerEvent((int) this.spinner.getValue())
             );
             this.spinner.putClientProperty(GENERATION_CHANGE_LISTENER, generationChangeListener);
@@ -58,10 +60,10 @@ public class AdvantagesComboBoxItemListener implements ItemListener
             if (!Arrays.asList(this.spinner.getChangeListeners()).contains(generationChangeListener)) {
                 this.spinner.addChangeListener(generationChangeListener);
             }
-            VampireEditor.getDispatcher().dispatch(new AddGenerationItemListenerEvent((int) this.spinner.getValue()));
+            this.dispatcher.dispatch(new AddGenerationItemListenerEvent((int) this.spinner.getValue()));
         } else if (e.getStateChange() == ItemEvent.DESELECTED && this.isGenerationItem(e.getItem())) {
             this.spinner.removeChangeListener(generationChangeListener);
-            VampireEditor.getDispatcher().dispatch(new AddGenerationItemListenerEvent(0));
+            this.dispatcher.dispatch(new AddGenerationItemListenerEvent(0));
         }
     }
 
