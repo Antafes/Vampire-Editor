@@ -398,7 +398,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
             }
             this.parent.getCharacterTabPane().setEnabledAt(this.parent.getMaxActiveTab(), true);
             this.enableNextButton();
-        } else {
+        } else if (this.parent.getMaxActiveTab() < 4) {
             this.disableNextButton();
         }
     }
