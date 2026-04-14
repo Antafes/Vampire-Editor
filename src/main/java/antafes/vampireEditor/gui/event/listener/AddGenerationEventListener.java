@@ -16,12 +16,31 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2022, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor.gui;
+package antafes.vampireEditor.gui.event.listener;
 
-public class SaveCancelledException extends Exception
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
+
+import java.util.function.Consumer;
+
+public class AddGenerationEventListener extends EventListener<AddGenerationItemListenerEvent>
 {
+    public AddGenerationEventListener()
+    {
+        super();
+    }
+
+    public AddGenerationEventListener(Consumer<AddGenerationItemListenerEvent> consumer)
+    {
+        super(consumer);
+    }
+
+    public AddGenerationEventListener(Consumer<AddGenerationItemListenerEvent> consumer, int priority)
+    {
+        super(consumer, priority);
+    }
 }

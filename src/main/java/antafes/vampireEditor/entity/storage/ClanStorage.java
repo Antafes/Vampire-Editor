@@ -93,7 +93,7 @@ public class ClanStorage extends BaseStorage<Clan> {
     private ArrayList<Advantage> getClanDisciplines(Element element) {
         ArrayList<Advantage> advantagesList = new ArrayList<>();
         ArrayList<Element> advantages = XMLParser.getAllChildren(element);
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
 
         advantages.forEach(
             (listElement) -> {
@@ -120,7 +120,7 @@ public class ClanStorage extends BaseStorage<Clan> {
     private ArrayList<Weakness> getWeaknesses(Element element) {
         ArrayList<Weakness> weaknessesList = new ArrayList<>();
         ArrayList<Element> weaknesses = XMLParser.getAllChildren(element);
-        WeaknessStorage storage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
+        WeaknessStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
 
         weaknesses.forEach(
             (listElement) -> {

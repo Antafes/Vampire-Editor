@@ -25,7 +25,16 @@ package antafes.vampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityException;
 import antafes.vampireEditor.entity.EntityStorageException;
-import antafes.vampireEditor.entity.storage.*;
+import antafes.vampireEditor.entity.storage.AbilityStorage;
+import antafes.vampireEditor.entity.storage.AdvantageStorage;
+import antafes.vampireEditor.entity.storage.AttributeStorage;
+import antafes.vampireEditor.entity.storage.ClanStorage;
+import antafes.vampireEditor.entity.storage.FlawStorage;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
+import antafes.vampireEditor.entity.storage.MeritStorage;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.RoadStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 
 import java.util.GregorianCalendar;
@@ -44,11 +53,11 @@ public class TestCharacterUtility {
      */
     public static antafes.vampireEditor.entity.Character createTestCharacter() {
         try {
-            ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-            GenerationStorage generationStorage = (GenerationStorage) StorageFactory
+            ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+            GenerationStorage generationStorage = StorageFactory
                 .getStorage(StorageFactory.StorageType.GENERATION);
-            NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-            RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+            NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+            RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
             GregorianCalendar calendarBirth = new GregorianCalendar(1200, 8, 23);
             GregorianCalendar calendarDeath = new GregorianCalendar(1400, 3, 23);
             Character.CharacterBuilder<?, ?> builder = Character.builder()
@@ -86,7 +95,7 @@ public class TestCharacterUtility {
             TestCharacterUtility.addAttributes(builder);
             TestCharacterUtility.addAbilities(builder);
 
-            AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+            AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
             builder.addAdvantage(advantageStorage.getEntity("allies").toBuilder().setValue(3).build());
             builder.addAdvantage(advantageStorage.getEntity("influence").toBuilder().setValue(2).build());
             builder.addAdvantage(advantageStorage.getEntity("auspex").toBuilder().setValue(2).build());
@@ -96,8 +105,8 @@ public class TestCharacterUtility {
             builder.addAdvantage(advantageStorage.getEntity("courage").toBuilder().setValue(2).build());
             builder.addAdvantage(advantageStorage.getEntity("self-control").toBuilder().setValue(2).build());
 
-            MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
-            FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+            MeritStorage meritStorage = StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+            FlawStorage flawStorage = StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
             builder.addFlaw(flawStorage.getEntity("monstrous"));
             builder.addFlaw(flawStorage.getEntity("deepSleeper"));
             builder.addMerit(meritStorage.getEntity("commonSense"));
@@ -113,7 +122,7 @@ public class TestCharacterUtility {
     }
 
     private static void addAttributes(Character.CharacterBuilder<?, ?> builder) throws EntityException, EntityStorageException {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         builder.addAttribute(storage.getEntity("strength").toBuilder().setValue(3).build());
         builder.addAttribute(storage.getEntity("dexterity").toBuilder().setValue(3).build());
         builder.addAttribute(storage.getEntity("stamina").toBuilder().setValue(3).build());
@@ -126,7 +135,7 @@ public class TestCharacterUtility {
     }
 
     private static void addAbilities(Character.CharacterBuilder<?, ?> builder) {
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
 
         storage.getList().forEach(((s, ability) -> {
                 builder.addAbility((ability).toBuilder().setValue(3).build());

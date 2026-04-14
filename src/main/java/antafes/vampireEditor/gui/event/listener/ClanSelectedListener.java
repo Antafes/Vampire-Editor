@@ -16,38 +16,30 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import java.util.List;
+package antafes.vampireEditor.gui.event.listener;
 
-/**
- *
- * @author Marian Pollzien
- */
-public interface RoadInterface {
+import antafes.vampireEditor.gui.event.ClanSelectedEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
 
-    /**
-     * Get the key of the road.
-     *
-     * @return
-     */
-    public String getKey();
+import java.util.function.Consumer;
 
-    /**
-     * Get the name of the road.
-     *
-     * @return
-     */
-    public String getName();
+public class ClanSelectedListener extends EventListener<ClanSelectedEvent>
+{
+    public ClanSelectedListener()
+    {
+    }
 
-    /**
-     * Get the list of merits (advantage objects) associated with this road.
-     *
-     * @return The list of merits
-     */
-    public List<Advantage> getMerits();
+    public ClanSelectedListener(Consumer<ClanSelectedEvent> consumer)
+    {
+        super(consumer);
+    }
 
+    public ClanSelectedListener(Consumer<ClanSelectedEvent> consumer, int priority)
+    {
+        super(consumer, priority);
+    }
 }

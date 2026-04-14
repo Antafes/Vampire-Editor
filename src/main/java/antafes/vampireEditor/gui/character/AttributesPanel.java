@@ -24,7 +24,7 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.SortingUtility;
 

@@ -25,14 +25,23 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.*;
-import antafes.vampireEditor.gui.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.ClanSelectedEvent;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import antafes.vampireEditor.gui.event.RoadSelectedEvent;
+import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.ClanComparator;
+import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -50,7 +59,6 @@ import java.util.*;
  * @author Marian Pollzien
  */
 public class LooksPanel extends javax.swing.JPanel {
-    static final int DEFAULT_GENERATION = 12;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
@@ -104,6 +112,8 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel skinColorLabel;
     private javax.swing.JTextField weightField;
     private javax.swing.JLabel weightLabel;
+    private javax.swing.JComboBox<BaseTranslatedEntity> roadComboBox;
+    private javax.swing.JLabel roadLabel;
 
     /**
      * Creates new form looksPanel
@@ -193,7 +203,9 @@ public class LooksPanel extends javax.swing.JPanel {
         weightField.setName("weight"); // NOI18N
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
-        clanComboBox.setModel(this.getClans());
+        DefaultComboBoxModel<BaseEntity> clanModel = this.getClans();
+        clanComboBox.setModel(clanModel);
+        clanComboBox.putClientProperty("emptyEntry", clanModel.getElementAt(0));
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
@@ -238,7 +250,7 @@ public class LooksPanel extends javax.swing.JPanel {
         hairColorField.setName("hairColor"); // NOI18N
 
         this.generationContentLabel.setName("generation");
-        this.generationContentLabel.setText(Integer.toString(LooksPanel.DEFAULT_GENERATION));
+        this.generationContentLabel.setText(Integer.toString(this.getDefaultGeneration().getGeneration()));
 
         sexLabel.setLabelFor(sexField);
         sexLabel.setText("Sex");
@@ -336,6 +348,47 @@ public class LooksPanel extends javax.swing.JPanel {
         nationalityLabel.setLabelFor(nationalityField);
         nationalityLabel.setText("Nationality");
 
+        roadComboBox = new javax.swing.JComboBox<>();
+        roadLabel = new javax.swing.JLabel();
+        roadLabel.setLabelFor(roadComboBox);
+        roadLabel.setText("Road*");
+        this.enteredFields.put(roadComboBox, Boolean.FALSE);
+        DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyRoad = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        roadModel.addElement(emptyRoad);
+        this.getRoadValues().forEach(roadModel::addElement);
+        roadComboBox.setModel(roadModel);
+        roadComboBox.setName("road"); // NOI18N
+        roadComboBox.addActionListener(evt -> {
+            Object selected = roadComboBox.getSelectedItem();
+            if (selected instanceof EmptyEntity) {
+                enteredFields.replace(roadComboBox, Boolean.FALSE);
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+            } else if (selected instanceof Road) {
+                enteredFields.replace(roadComboBox, Boolean.TRUE);
+                checkFieldsFilled();
+                if (roadModel.getIndexOf(emptyRoad) >= 0) {
+                    roadModel.removeElement(emptyRoad);
+                }
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
+            }
+        });
+        this.parent.getDialogDispatcher().addListener(
+            VirtueValueSetEvent.class,
+            new VirtueValueSetListener(event -> {
+                String text = "<html>"
+                    + language.translate("road") + "*<br>("
+                    + language.translate("roadScore") + ": "
+                    + Road.calculateRoadScore(event.getVirtues())
+                    + ")</html>";
+                this.roadLabel.setText(text);
+            })
+        );
+        this.parent.getDialogDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -343,8 +396,8 @@ public class LooksPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chronicleLabel)
                     .addComponent(nameLabel)
+                    .addComponent(chronicleLabel)
                     .addComponent(generationLabel)
                     .addComponent(natureLabel)
                     .addComponent(hideoutLabel)
@@ -353,7 +406,8 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(conceptLabel)
                     .addComponent(sireLabel)
                     .addComponent(clanLabel)
-                    .addComponent(sectLabel))
+                    .addComponent(sectLabel)
+                    .addComponent(roadLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(hideoutField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -366,11 +420,12 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(natureField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chronicleField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(apparentAgeLabel)
                     .addComponent(ageLabel)
+                    .addComponent(apparentAgeLabel)
                     .addComponent(dayOfBirthLabel)
                     .addComponent(dayOfDeathLabel)
                     .addComponent(hairColorLabel)
@@ -495,7 +550,11 @@ public class LooksPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sectLabel)
-                            .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(roadLabel)
+                            .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -511,13 +570,19 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param evt Event object
      */
     private void clanComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        if (Objects.equals(this.clanComboBox.getSelectedItem(), "")) {
+        Object selectedItem = this.clanComboBox.getSelectedItem();
+        if (selectedItem instanceof EmptyEntity || Objects.equals(selectedItem, "")) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
             Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
-            this.parent.setClanDisciplines(clan);
+            Object emptyEntry = this.clanComboBox.getClientProperty("emptyEntry");
+            DefaultComboBoxModel<BaseEntity> clanModel = (DefaultComboBoxModel<BaseEntity>) this.clanComboBox.getModel();
+            if (emptyEntry != null && clanModel.getIndexOf(emptyEntry) >= 0) {
+                clanModel.removeElement(emptyEntry);
+            }
+            this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
     }
@@ -547,6 +612,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.sireLabel.setText(this.language.translate("sire"));
         this.clanLabel.setText(this.language.translate("clan") + "*");
         this.sectLabel.setText(this.language.translate("sect"));
+        this.roadLabel.setText(this.language.translate("road") + "*");
 
         this.ageLabel.setText(this.language.translate("age"));
         this.apparentAgeLabel.setText(this.language.translate("apparentAge"));
@@ -613,7 +679,7 @@ public class LooksPanel extends javax.swing.JPanel {
      * Get the generations for showing them in the form.
      */
     public DefaultComboBoxModel<BaseEntity> getClans() {
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
         EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
         model.addElement(emptyEntity);
@@ -627,7 +693,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
     private DefaultComboBoxModel<BaseEntity> getNatures()
     {
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
         EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
         model.addElement(emptyEntity);
@@ -669,6 +735,7 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.sireField);
         order.add(this.clanComboBox);
         order.add(this.sectField);
+        order.add(this.roadComboBox);
         order.add(this.ageField);
         order.add(this.apparentAgeField);
         order.add(this.dayOfBirthField);
@@ -683,6 +750,18 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.nextButton);
         this.setFocusTraversalPolicy(new NewCharacterFocusTraversalPolicy(order));
         this.setFocusTraversalPolicyProvider(true);
+    }
+
+    /**
+     * Get the values for the road combo box.
+     */
+    private ArrayList<Road> getRoadValues() {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        ArrayList<Road> list = new ArrayList<>();
+        roadStorage.getList().forEach((String key, Road road) -> list.add(road));
+        list.sort(new StringComparator());
+
+        return list;
     }
 
     /**
@@ -701,8 +780,8 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param builder Character builder object
      */
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         builder.setName(this.nameField.getText())
             .setChronicle(this.chronicleField.getText());
         try {
@@ -730,7 +809,8 @@ public class LooksPanel extends javax.swing.JPanel {
             .setNationality(this.nationalityField.getText())
             .setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0)
             .setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0)
-            .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
+            .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
+            .setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 
     /**
@@ -739,17 +819,23 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param adjustment Generation adjustment
      */
     public void adjustGeneration(int adjustment) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        int generation = LooksPanel.DEFAULT_GENERATION;
-        generation -= adjustment;
-
-        this.generationContentLabel.setText(Integer.toString(generation));
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
-            this.parent.setAttributeMaximum(
-                Objects.requireNonNull(generationStorage.getEntity(generation)).getMaximumAttributes()
-            );
+            int generation = generationStorage.clampGeneration(this.getDefaultGeneration().getGeneration() - adjustment)
+                .getGeneration();
+            this.generationContentLabel.setText(Integer.toString(generation));
         } catch (EntityStorageException e) {
             e.printStackTrace();
+        }
+    }
+
+    private Generation getDefaultGeneration()
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            return generationStorage.getDefaultGeneration();
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
         }
     }
 }

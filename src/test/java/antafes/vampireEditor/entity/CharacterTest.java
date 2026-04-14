@@ -84,12 +84,12 @@ public class CharacterTest extends BaseTest
     }
 
     public void testGetClan() throws EntityStorageException {
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         Assert.assertEquals(this.character.getClan(), clanStorage.getEntity("brujah"));
     }
 
     public void testGetGeneration() throws EntityStorageException {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         Assert.assertEquals(this.character.getGeneration(), generationStorage.getEntity(4));
     }
 
@@ -248,7 +248,7 @@ public class CharacterTest extends BaseTest
     }
 
     public void testGetRoad() throws EntityStorageException {
-        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         final Road expected =roadStorage.getEntity("roadOfHumanity").toBuilder()
             .setValue(5)
             .build();
@@ -446,7 +446,7 @@ public class CharacterTest extends BaseTest
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many attributes")
     public void testBuilderTooManyAttributes() throws EntityStorageException {
         HashMap<String, Attribute> map = this.character.getAttributes();
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         map.put("test", storage.getEntity("strength"));
         this.character.toBuilder()
             .setAttributes(map)
@@ -456,7 +456,7 @@ public class CharacterTest extends BaseTest
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many abilities")
     public void testBuilderTooManyAbilities() throws EntityStorageException {
         HashMap<String, Ability> map = this.character.getAbilities();
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
         map.put("test", storage.getEntity("alertness"));
         this.character.toBuilder()
             .setAbilities(map)

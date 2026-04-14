@@ -16,7 +16,7 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 package antafes.vampireEditor.gui.character;
@@ -24,7 +24,7 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.SortingUtility;
 
@@ -37,7 +37,9 @@ import java.util.Objects;
  *
  * @author Marian Pollzien
  */
-public class AbilitiesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
+public class AbilitiesPanel extends antafes.vampireEditor.gui.character.BaseCharacterListPanel
+    implements TranslatableComponent, antafes.vampireEditor.gui.character.CharacterPanelInterface
+{
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields(AbilityInterface.AbilityType.TALENT.getKeyPlural()).stream().map((component) -> (JSpinner) component)

@@ -27,6 +27,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Road object.
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
+    private final List<Advantage> merits;
+
     @Override
     public String toString()
     {
@@ -46,6 +49,11 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     public static int calculateRoadScore(ArrayList<Advantage> virtues)
     {
         int roadScore = 0;
+
+        // If there's more than 3 virtues, it probably means the road hasn't been selected.
+        if (virtues.size() > 3) {
+            return 2;
+        }
 
         for (Advantage virtue : virtues) {
             if (virtue.getKey().equals("courage")) {

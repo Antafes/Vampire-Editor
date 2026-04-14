@@ -16,38 +16,21 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import java.util.List;
+package antafes.vampireEditor.gui.utility;
 
-/**
- *
- * @author Marian Pollzien
- */
-public interface RoadInterface {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    /**
-     * Get the key of the road.
-     *
-     * @return
-     */
-    public String getKey();
+import javax.swing.*;
 
-    /**
-     * Get the name of the road.
-     *
-     * @return
-     */
-    public String getName();
-
-    /**
-     * Get the list of merits (advantage objects) associated with this road.
-     *
-     * @return The list of merits
-     */
-    public List<Advantage> getMerits();
-
+@Getter
+@AllArgsConstructor
+public class FreeAdditionalPointsFields
+{
+    private JTextField freeAdditionalPointsField;
+    private JTextField maxFreeAdditionalPointsField;
 }

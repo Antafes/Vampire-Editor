@@ -16,38 +16,23 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity.character;
 
-import java.util.List;
+package antafes.vampireEditor.gui.event;
 
-/**
- *
- * @author Marian Pollzien
- */
-public interface RoadInterface {
+import antafes.vampireEditor.entity.Character;
+import lombok.Getter;
+import scripts.laniax.framework.event_dispatcher.Event;
 
-    /**
-     * Get the key of the road.
-     *
-     * @return
-     */
-    public String getKey();
+public class FillCharacterEvent extends Event
+{
+    @Getter
+    private final Character.CharacterBuilder<?, ?> builder;
 
-    /**
-     * Get the name of the road.
-     *
-     * @return
-     */
-    public String getName();
-
-    /**
-     * Get the list of merits (advantage objects) associated with this road.
-     *
-     * @return The list of merits
-     */
-    public List<Advantage> getMerits();
-
+    public FillCharacterEvent(Character.CharacterBuilder<?, ?> builder)
+    {
+        this.builder = builder;
+    }
 }

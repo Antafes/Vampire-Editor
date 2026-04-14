@@ -26,9 +26,12 @@ import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.AttributeStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
 import antafes.vampireEditor.utility.SortingUtility;
@@ -59,6 +62,10 @@ public class AttributesPanel extends BaseListPanel {
         this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
+        this.getParentComponent().getDialogDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
 
         super.init();
     }
@@ -72,7 +79,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
 
         try {
             return storage.getEntity(element).getName();
@@ -125,7 +132,7 @@ public class AttributesPanel extends BaseListPanel {
      * @return List of attribute objects
      */
     protected HashMap<String, Attribute> getValues(AttributeInterface.AttributeType type) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         return storage.getEntityMapByType(type);
     }
 
@@ -337,6 +344,21 @@ public class AttributesPanel extends BaseListPanel {
         });
     }
 
+    private void adjustGeneration(int adjustment)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+
+        try {
+            this.getParentComponent().setAttributeMaximum(
+                generationStorage.clampGeneration(
+                    generationStorage.getDefaultGeneration().getGeneration() - adjustment
+                ).getMaximumAttributes()
+            );
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method checks every input made by the user for duplicate entries or other inconsistencies.
      *
@@ -362,7 +384,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());
