@@ -358,39 +358,44 @@ public class CharacterTest extends BaseTest
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
     public void testBuilderNullNature() {
-        this.character.toBuilder()
+        Character character = this.character.toBuilder()
             .setNature(null)
             .build();
+
+        Assert.assertNull(character.getNature());
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
     public void testBuilderEmptyDemeanor() {
-        this.character.toBuilder()
+        Character character = this.character.toBuilder()
             .setDemeanor("")
             .build();
+
+        Assert.assertEquals(character.getDemeanor(), "");
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
     public void testBuilderNullDemeanor() {
-        this.character.toBuilder()
+        Character character = this.character.toBuilder()
             .setDemeanor(null)
             .build();
+
+        Assert.assertNull(character.getDemeanor());
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
     public void testBuilderEmptyConcept() {
-        this.character.toBuilder()
+        Character character = this.character.toBuilder()
             .setConcept("")
             .build();
+
+        Assert.assertEquals(character.getConcept(), "");
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
     public void testBuilderNullConcept() {
-        this.character.toBuilder()
+        Character character = this.character.toBuilder()
             .setConcept(null)
             .build();
+
+        Assert.assertNull(character.getConcept());
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Attributes are empty")

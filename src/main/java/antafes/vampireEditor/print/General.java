@@ -118,9 +118,9 @@ public class General extends PrintBase {
             this.getLanguage().translate("name") + ": " + this.getCharacter().getName(),
             this.getLanguage().translate("player") + ": " + this.getCharacter().getPlayer(),
             this.getLanguage().translate("chronicle") + ": " + this.getCharacter().getChronicle(),
-            this.getLanguage().translate("nature") + ": " + this.getCharacter().getNature(),
-            this.getLanguage().translate("demeanor") + ": " + this.getCharacter().getDemeanor(),
-            this.getLanguage().translate("concept") + ": " + this.getCharacter().getConcept(),
+            this.getLanguage().translate("nature") + ": " + (this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature()),
+            this.getLanguage().translate("demeanor") + ": " + (this.getCharacter().getDemeanor() == null ? "" : this.getCharacter().getDemeanor()),
+            this.getLanguage().translate("concept") + ": " + (this.getCharacter().getConcept() == null ? "" : this.getCharacter().getConcept()),
             this.getLanguage().translate("clan") + ": " + this.getCharacter().getClan().getName(),
             this.getLanguage().translate("generation") + ": " + this.getCharacter().getGeneration().toString(),
             this.getLanguage().translate("sire") + ": " + this.getCharacter().getSire()

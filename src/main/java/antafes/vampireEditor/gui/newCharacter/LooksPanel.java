@@ -256,22 +256,18 @@ public class LooksPanel extends javax.swing.JPanel {
         sexLabel.setText("Sex");
 
         natureLabel.setLabelFor(natureField);
-        natureLabel.setText("Nature*");
+        natureLabel.setText("Nature");
 
         eyeColorLabel.setLabelFor(eyeColorField);
         eyeColorLabel.setText("Eye color");
 
-        this.enteredFields.put(natureField, Boolean.FALSE);
         ComponentDocumentListener documentListener = this.createDocumentListener();
         documentListener.setComponent(natureField);
         natureField.setModel(this.getNatures());
         natureField.setEditable(true);
         natureField.setName("nature"); // NOI18N
         natureField.addActionListener(evt -> {
-            if (Objects.equals(natureField.getSelectedItem(), "")) {
-                enteredFields.replace(natureField, Boolean.FALSE);
-            } else {
-                enteredFields.replace(natureField, Boolean.TRUE);
+            if (natureField.getSelectedItem() instanceof Nature) {
                 checkFieldsFilled();
             }
         });
@@ -298,18 +294,16 @@ public class LooksPanel extends javax.swing.JPanel {
         ageField.setName("age"); // NOI18N
 
         demeanorLabel.setLabelFor(demeanorField);
-        demeanorLabel.setText("Demeanor*");
+        demeanorLabel.setText("Demeanor");
 
         ageLabel.setLabelFor(ageField);
         ageLabel.setText("Age");
 
-        this.enteredFields.put(demeanorField, Boolean.FALSE);
         documentListener = this.createDocumentListener();
         documentListener.setComponent(demeanorField);
         demeanorField.getDocument().addDocumentListener(documentListener);
         demeanorField.setName("demeanor"); // NOI18N
 
-        this.enteredFields.put(conceptField, Boolean.FALSE);
         documentListener = this.createDocumentListener();
         documentListener.setComponent(conceptField);
         conceptField.getDocument().addDocumentListener(documentListener);
@@ -337,7 +331,7 @@ public class LooksPanel extends javax.swing.JPanel {
         apparentAgeField.setName("apparentAge"); // NOI18N
 
         conceptLabel.setLabelFor(conceptField);
-        conceptLabel.setText("Concept*");
+        conceptLabel.setText("Concept");
 
         dayOfBirthLabel.setLabelFor(dayOfBirthField);
         dayOfBirthLabel.setText("Day of birth");
@@ -604,11 +598,11 @@ public class LooksPanel extends javax.swing.JPanel {
         this.nameLabel.setText(this.language.translate("name") + "*");
         this.chronicleLabel.setText(this.language.translate("chronicle"));
         this.generationLabel.setText(this.language.translate("generation"));
-        this.natureLabel.setText(this.language.translate("nature") + "*");
+        this.natureLabel.setText(this.language.translate("nature"));
         this.hideoutLabel.setText(this.language.translate("hideout"));
         this.playerLabel.setText(this.language.translate("player"));
-        this.demeanorLabel.setText(this.language.translate("demeanor") + "*");
-        this.conceptLabel.setText(this.language.translate("concept") + "*");
+        this.demeanorLabel.setText(this.language.translate("demeanor"));
+        this.conceptLabel.setText(this.language.translate("concept"));
         this.sireLabel.setText(this.language.translate("sire"));
         this.clanLabel.setText(this.language.translate("clan") + "*");
         this.sectLabel.setText(this.language.translate("sect"));
@@ -653,7 +647,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
             public void changed() {
                 if (this.getComponent() instanceof JTextComponent
-                    && ((JTextComponent) this.getComponent()).getText().equals("")
+                    && ((JTextComponent) this.getComponent()).getText().isEmpty()
                 ) {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
                 } else if (this.getComponent() instanceof JComboBox
@@ -785,12 +779,16 @@ public class LooksPanel extends javax.swing.JPanel {
         builder.setName(this.nameField.getText())
             .setChronicle(this.chronicleField.getText());
         try {
-            builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()))
-                .setNature(
-                    natureStorage.getEntity(((Nature) Objects.requireNonNull(this.natureField.getSelectedItem())).getKey())
+            builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()));
+            if (this.natureField.getSelectedItem() instanceof Nature) {
+                builder.setNature(
+                    natureStorage.getEntity(((Nature) this.natureField.getSelectedItem()).getKey())
                 );
+            } else {
+                builder.setNature(null);
+            }
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         builder.setHideout(this.hideoutField.getText())
             .setPlayer(this.playerField.getText())
@@ -807,8 +805,8 @@ public class LooksPanel extends javax.swing.JPanel {
             .setEyeColor(this.eyeColorField.getText())
             .setSkinColor(this.skinColorField.getText())
             .setNationality(this.nationalityField.getText())
-            .setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0)
-            .setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0)
+            .setHeight(!this.heightField.getText().isEmpty() ? Integer.parseInt(this.heightField.getText()) : 0)
+            .setWeight(!this.weightField.getText().isEmpty() ? Integer.parseInt(this.weightField.getText()) : 0)
             .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
             .setRoad((Road) this.roadComboBox.getSelectedItem());
     }
@@ -825,7 +823,7 @@ public class LooksPanel extends javax.swing.JPanel {
                 .getGeneration();
             this.generationContentLabel.setText(Integer.toString(generation));
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

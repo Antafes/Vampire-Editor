@@ -102,7 +102,7 @@ public class ClanStorage extends BaseStorage<Clan> {
                         storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
                     );
                 } catch (EntityStorageException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         );
@@ -129,7 +129,7 @@ public class ClanStorage extends BaseStorage<Clan> {
                         storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
                     );
                 } catch (EntityStorageException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         );
