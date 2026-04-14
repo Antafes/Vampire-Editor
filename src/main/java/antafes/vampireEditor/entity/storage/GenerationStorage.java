@@ -77,4 +77,18 @@ public class GenerationStorage extends BaseStorage<Generation> {
     public Generation getEntity(int key) throws EntityStorageException {
         return this.getEntity(Integer.toString(key));
     }
+
+    public Generation clampGeneration(int generation) throws EntityStorageException
+    {
+        int minimum = this.getList().values().stream()
+            .mapToInt(Generation::getGeneration)
+            .min()
+            .orElse(generation);
+        int maximum = this.getList().values().stream()
+            .mapToInt(Generation::getGeneration)
+            .max()
+            .orElse(generation);
+
+        return this.getEntity(Math.max(minimum, Math.min(generation, maximum)));
+    }
 }

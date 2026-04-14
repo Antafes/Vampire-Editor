@@ -21,13 +21,17 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.AttributeStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
@@ -59,6 +63,10 @@ public class AttributesPanel extends BaseListPanel {
         this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
+        VampireEditor.getDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
 
         super.init();
     }
@@ -335,6 +343,19 @@ public class AttributesPanel extends BaseListPanel {
                 )
             );
         });
+    }
+
+    private void adjustGeneration(int adjustment)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+
+        try {
+            this.getParentComponent().setAttributeMaximum(
+                generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getMaximumAttributes()
+            );
+        } catch (EntityStorageException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
