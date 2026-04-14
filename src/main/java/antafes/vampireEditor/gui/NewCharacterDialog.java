@@ -65,6 +65,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     @Setter
     private BaseWindow parent;
     private final HashMap<String, Integer> groupOverflows = new HashMap<>();
+    private UpdateFreeAdditionalPointsListener updateFreeAdditionalPointsListener;
 
     // List of created fields
     private javax.swing.JButton cancelButton;
@@ -208,14 +209,27 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         }
 
         BaseWindow.installEscapeCloseOperation(this);
+        this.updateFreeAdditionalPointsListener = new UpdateFreeAdditionalPointsListener(event -> {
+            this.groupOverflows.put(event.getGroupLabel(), event.getPointsOverMax());
+            this.calculateUsedFreeAdditionalPoints();
+        });
         VampireEditor.getDispatcher().addListener(
             UpdateFreeAdditionalPointsEvent.class,
-            new UpdateFreeAdditionalPointsListener(event -> {
-                this.groupOverflows.put(event.getGroupLabel(), event.getPointsOverMax());
-                this.calculateUsedFreeAdditionalPoints();
-            })
+            this.updateFreeAdditionalPointsListener
         );
         this.setFieldTexts();
+    }
+
+    @Override
+    public void dispose()
+    {
+        if (this.updateFreeAdditionalPointsListener != null) {
+            VampireEditor.getDispatcher().removeListener(
+                UpdateFreeAdditionalPointsEvent.class,
+                this.updateFreeAdditionalPointsListener
+            );
+        }
+        super.dispose();
     }
 
     /**
