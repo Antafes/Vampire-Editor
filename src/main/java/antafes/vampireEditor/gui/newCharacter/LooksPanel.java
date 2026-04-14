@@ -26,6 +26,7 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.storage.*;
@@ -59,7 +60,6 @@ import java.util.*;
  * @author Marian Pollzien
  */
 public class LooksPanel extends javax.swing.JPanel {
-    static final int DEFAULT_GENERATION = 12;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
@@ -249,7 +249,7 @@ public class LooksPanel extends javax.swing.JPanel {
         hairColorField.setName("hairColor"); // NOI18N
 
         this.generationContentLabel.setName("generation");
-        this.generationContentLabel.setText(Integer.toString(LooksPanel.DEFAULT_GENERATION));
+        this.generationContentLabel.setText(Integer.toString(this.getDefaultGeneration().getGeneration()));
 
         sexLabel.setLabelFor(sexField);
         sexLabel.setText("Sex");
@@ -810,10 +810,21 @@ public class LooksPanel extends javax.swing.JPanel {
     public void adjustGeneration(int adjustment) {
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
-            int generation = generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getGeneration();
+            int generation = generationStorage.clampGeneration(this.getDefaultGeneration().getGeneration() - adjustment)
+                .getGeneration();
             this.generationContentLabel.setText(Integer.toString(generation));
         } catch (EntityStorageException e) {
             e.printStackTrace();
+        }
+    }
+
+    private Generation getDefaultGeneration()
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            return generationStorage.getDefaultGeneration();
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
         }
     }
 }

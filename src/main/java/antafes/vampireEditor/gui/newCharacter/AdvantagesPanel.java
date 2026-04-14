@@ -172,7 +172,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
                     AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(),
                     background.getName(),
                     ElementType.SPINNER,
-                    5
+                    this.generationMaximum
                 );
                 this.virtueKeyToLabel.put(key, background.getName());
             } catch (ElementAlreadyExistsException | LabelEmptyException e) {
@@ -205,7 +205,12 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.virtueKeyToLabel.entrySet().stream()
             .filter(e -> allowedKeys.contains(e.getKey()))
             .sorted(Map.Entry.comparingByValue())
-            .forEach(e -> this.addDynamicLabelSpinnerRow(virtueGroup, e.getValue(), e.getValue(), 5));
+            .forEach(e -> this.addDynamicLabelSpinnerRow(
+                virtueGroup,
+                e.getValue(),
+                e.getValue(),
+                this.generationMaximum
+            ));
         this.configureVirtueSpinners();
     }
 
@@ -509,7 +514,9 @@ public class AdvantagesPanel extends BaseColumnListPanel
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         int maximum;
         try {
-            maximum = generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getMaximumAttributes();
+            maximum = generationStorage.clampGeneration(
+                generationStorage.getDefaultGeneration().getGeneration() - adjustment
+            ).getMaximumAttributes();
         } catch (EntityStorageException e) {
             throw new RuntimeException(e);
         }
@@ -521,8 +528,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.generationMaximum = this.getMaximumFromGeneration(adjustment);
         this.setSpinnerMaximum(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), this.generationMaximum);
         this.setSpinnerMaximum(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), this.generationMaximum);
+        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(), this.generationMaximum);
         this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
         this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural());
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
     }
 
     private void setSpinnerMaximum(String groupLabel, int maximum)
