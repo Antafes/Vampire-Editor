@@ -66,6 +66,7 @@ import java.util.Map;
  */
 public class AdvantagesPanel extends BaseColumnListPanel
 {
+    private static final int VIRTUE_MAXIMUM = 5;
     private final NewCharacterDialog parent;
     private final HashMap<String, Integer> dynamicRowCounters = new HashMap<>();
     /** Maps advantage key (e.g. "conscience") to the translated label used as the spinner map key, in sorted order. */
@@ -179,7 +180,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
                     AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(),
                     background.getName(),
                     ElementType.SPINNER,
-                    this.generationMaximum
+                    VIRTUE_MAXIMUM
                 );
                 this.virtueKeyToLabel.put(key, background.getName());
             } catch (ElementAlreadyExistsException | LabelEmptyException e) {
@@ -216,7 +217,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
                 virtueGroup,
                 e.getValue(),
                 e.getValue(),
-                this.generationMaximum
+                VIRTUE_MAXIMUM
             ));
         this.configureVirtueSpinners();
     }
@@ -535,7 +536,6 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.generationMaximum = this.getMaximumFromGeneration(adjustment);
         this.setSpinnerMaximum(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), this.generationMaximum);
         this.setSpinnerMaximum(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), this.generationMaximum);
-        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(), this.generationMaximum);
         this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
         this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural());
         this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
