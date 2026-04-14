@@ -22,7 +22,6 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.character.Clan;
@@ -364,17 +363,17 @@ public class LooksPanel extends javax.swing.JPanel {
             Object selected = roadComboBox.getSelectedItem();
             if (selected instanceof EmptyEntity) {
                 enteredFields.replace(roadComboBox, Boolean.FALSE);
-                VampireEditor.getDispatcher().dispatch(new RoadSelectedEvent(null));
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
             } else if (selected instanceof Road) {
                 enteredFields.replace(roadComboBox, Boolean.TRUE);
                 checkFieldsFilled();
                 if (roadModel.getIndexOf(emptyRoad) >= 0) {
                     roadModel.removeElement(emptyRoad);
                 }
-                VampireEditor.getDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
             }
         });
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             VirtueValueSetEvent.class,
             new VirtueValueSetListener(event -> {
                 String text = "<html>"
@@ -385,7 +384,7 @@ public class LooksPanel extends javax.swing.JPanel {
                 this.roadLabel.setText(text);
             })
         );
-        VampireEditor.getDispatcher().addListener(
+        this.parent.getDialogDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
             new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
         );
@@ -583,7 +582,7 @@ public class LooksPanel extends javax.swing.JPanel {
             if (emptyEntry != null && clanModel.getIndexOf(emptyEntry) >= 0) {
                 clanModel.removeElement(emptyEntry);
             }
-            VampireEditor.getDispatcher().dispatch(new ClanSelectedEvent(clan));
+            this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
     }

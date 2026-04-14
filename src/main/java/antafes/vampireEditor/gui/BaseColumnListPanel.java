@@ -494,11 +494,16 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             .getFreeAdditionalPointsField()
             .setText(Integer.toString(displayed));
 
-        VampireEditor.getDispatcher().dispatch(
+        this.dispatchUpdateFreeAdditionalPointsEvent(
             new UpdateFreeAdditionalPointsEvent(groupLabel, this.getName(), Math.max(0, total - max))
         );
 
         this.afterFreeAdditionalPointsUpdated(groupLabel);
+    }
+
+    protected void dispatchUpdateFreeAdditionalPointsEvent(UpdateFreeAdditionalPointsEvent event)
+    {
+        VampireEditor.getDispatcher().dispatch(event);
     }
 
     /**

@@ -29,14 +29,15 @@ import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.event.FillCharacterEvent;
 import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
 import antafes.vampireEditor.gui.event.listener.UpdateFreeAdditionalPointsListener;
-import antafes.vampireEditor.gui.event.FillCharacterEvent;
 import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
 import lombok.Getter;
 import lombok.Setter;
+import scripts.laniax.framework.event_dispatcher.Dispatcher;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,6 +56,8 @@ import java.util.logging.Logger;
 public class NewCharacterDialog extends javax.swing.JDialog {
 
     private final LanguageInterface language;
+    @Getter
+    private final Dispatcher dialogDispatcher;
     @Getter
     private int maxActiveTab = 0;
     private LooksPanel looksPanel;
@@ -87,6 +90,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         Configuration configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
+        this.dialogDispatcher = Dispatcher.getInstance();
 
         this.initComponents();
         this.init();
@@ -213,7 +217,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             this.groupOverflows.put(event.getGroupLabel(), event.getPointsOverMax());
             this.calculateUsedFreeAdditionalPoints();
         });
-        VampireEditor.getDispatcher().addListener(
+        this.dialogDispatcher.addListener(
             UpdateFreeAdditionalPointsEvent.class,
             this.updateFreeAdditionalPointsListener
         );
@@ -224,11 +228,12 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     public void dispose()
     {
         if (this.updateFreeAdditionalPointsListener != null) {
-            VampireEditor.getDispatcher().removeListener(
+            this.dialogDispatcher.removeListener(
                 UpdateFreeAdditionalPointsEvent.class,
                 this.updateFreeAdditionalPointsListener
             );
         }
+        this.dialogDispatcher.destroy();
         super.dispose();
     }
 
@@ -485,7 +490,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
         this.abilitiesPanel.fillCharacter(builder);
-        VampireEditor.getDispatcher().dispatch(new FillCharacterEvent(builder));
+        this.dialogDispatcher.dispatch(new FillCharacterEvent(builder));
         this.lastStepsPanel.fillCharacter(builder);
 
         ShowWaitAction waitAction = new ShowWaitAction(this);

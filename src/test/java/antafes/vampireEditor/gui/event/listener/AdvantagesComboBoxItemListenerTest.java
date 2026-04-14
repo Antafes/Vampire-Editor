@@ -24,16 +24,16 @@ package antafes.vampireEditor.gui.event.listener;
 
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import scripts.laniax.framework.event_dispatcher.Dispatcher;
 
 import javax.swing.*;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,16 +48,8 @@ public class AdvantagesComboBoxItemListenerTest extends BaseTest
     private BaseTranslatedEntity generation;
     private BaseTranslatedEntity allies;
     private JComboBox<BaseTranslatedEntity> comboBox;
+    private Dispatcher dispatcher;
     private JSpinner spinner;
-
-    @BeforeClass
-    public void classSetUp()
-    {
-        VampireEditor.getDispatcher().addListener(
-            AddGenerationItemListenerEvent.class,
-            new AddGenerationEventListener(capturedEvents::add)
-        );
-    }
 
     @BeforeMethod
     @Override
@@ -72,9 +64,14 @@ public class AdvantagesComboBoxItemListenerTest extends BaseTest
             .setKey("allies")
             .addName(Configuration.Language.ENGLISH, "Allies")
             .build();
+        this.dispatcher = this.createDispatcher();
+        this.dispatcher.addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(capturedEvents::add)
+        );
         this.spinner = new JSpinner(new SpinnerNumberModel(0, 0, 5, 1));
         this.comboBox = new JComboBox<>(new BaseTranslatedEntity[] {this.allies, this.generation});
-        this.comboBox.addItemListener(new AdvantagesComboBoxItemListener(this.spinner));
+        this.comboBox.addItemListener(new AdvantagesComboBoxItemListener(this.spinner, this.dispatcher));
         this.capturedEvents.clear();
     }
 
@@ -114,5 +111,17 @@ public class AdvantagesComboBoxItemListenerTest extends BaseTest
     private int getLastAdjustment()
     {
         return this.capturedEvents.get(this.capturedEvents.size() - 1).getAdjustment();
+    }
+
+    private Dispatcher createDispatcher()
+    {
+        try {
+            Constructor<Dispatcher> constructor = Dispatcher.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+
+            return constructor.newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Unable to create test dispatcher", e);
+        }
     }
 }
