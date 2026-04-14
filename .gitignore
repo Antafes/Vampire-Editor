@@ -28,6 +28,7 @@ hs_err_pid*
 /resources
 /target
 /Vampire Editor.iml
+/vampire-editor.iml
 
 # CI variables file
 ci/variables.yml
