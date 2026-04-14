@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -131,7 +130,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
 
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
-            this.setAttributeMaximum(Objects.requireNonNull(generationStorage.getEntity(12)).getMaximumAttributes());
+            this.setAttributeMaximum(generationStorage.getDefaultGeneration().getMaximumAttributes());
         } catch (EntityStorageException e) {
             e.printStackTrace();
         }
@@ -194,7 +193,6 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     public void setAttributeMaximum(int maximum) {
         this.attributesPanel.setSpinnerMaximum(maximum);
         this.abilitiesPanel.setSpinnerMaximum(maximum);
-//        this.advantagesPanel.setSpinnerMaximum(maximum);
     }
 
     /**

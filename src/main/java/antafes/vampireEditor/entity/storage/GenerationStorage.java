@@ -35,6 +35,8 @@ import java.util.ArrayList;
  * Storage for generations.
  */
 public class GenerationStorage extends BaseStorage<Generation> {
+    private static final int DEFAULT_GENERATION = 12;
+
     /**
      * Initializes the storage and pre-loads available data.
      */
@@ -76,6 +78,11 @@ public class GenerationStorage extends BaseStorage<Generation> {
      */
     public Generation getEntity(int key) throws EntityStorageException {
         return this.getEntity(Integer.toString(key));
+    }
+
+    public Generation getDefaultGeneration() throws EntityStorageException
+    {
+        return this.getEntity(DEFAULT_GENERATION);
     }
 
     public Generation clampGeneration(int generation) throws EntityStorageException

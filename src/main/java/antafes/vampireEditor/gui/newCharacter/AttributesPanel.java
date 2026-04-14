@@ -351,7 +351,9 @@ public class AttributesPanel extends BaseListPanel {
 
         try {
             this.getParentComponent().setAttributeMaximum(
-                generationStorage.clampGeneration(LooksPanel.DEFAULT_GENERATION - adjustment).getMaximumAttributes()
+                generationStorage.clampGeneration(
+                    generationStorage.getDefaultGeneration().getGeneration() - adjustment
+                ).getMaximumAttributes()
             );
         } catch (EntityStorageException e) {
             e.printStackTrace();
