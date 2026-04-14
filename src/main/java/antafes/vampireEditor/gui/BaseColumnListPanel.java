@@ -482,7 +482,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             return;
         }
 
-        int total = this.getGroupSpinnerSum(groupLabel);
+        int total = this.getUsedGroupSpinnerSum(groupLabel);
         int max = this.getGroupMax(groupLabel);
         int displayed = Math.min(total, max);
 
@@ -526,6 +526,11 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
             .values().stream()
             .mapToInt(spinner -> (int) spinner.getValue())
             .sum();
+    }
+
+    protected int getUsedGroupSpinnerSum(String groupLabel)
+    {
+        return this.getGroupSpinnerSum(groupLabel);
     }
 
     protected int getGroupMax(String groupLabel)

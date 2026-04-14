@@ -38,6 +38,7 @@ import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.RoadSelectedEvent;
+import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
 import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
@@ -51,6 +52,7 @@ import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -114,6 +116,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
     public void build() throws TypeNotSupportedException
     {
         super.build();
+        this.configureVirtueSpinners();
         this.registerGenerationListeners(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
         this.addButtonPanel();
     }
@@ -203,6 +206,7 @@ public class AdvantagesPanel extends BaseColumnListPanel
             .filter(e -> allowedKeys.contains(e.getKey()))
             .sorted(Map.Entry.comparingByValue())
             .forEach(e -> this.addDynamicLabelSpinnerRow(virtueGroup, e.getValue(), e.getValue(), 5));
+        this.configureVirtueSpinners();
     }
 
     /**
@@ -352,7 +356,21 @@ public class AdvantagesPanel extends BaseColumnListPanel
     @Override
     protected void afterFreeAdditionalPointsUpdated(String groupLabel)
     {
+        if (AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural().equals(groupLabel)) {
+            this.dispatchVirtueValues();
+        }
         this.checkFieldsFilled();
+    }
+
+    @Override
+    protected int getUsedGroupSpinnerSum(String groupLabel)
+    {
+        if (!AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural().equals(groupLabel)) {
+            return super.getUsedGroupSpinnerSum(groupLabel);
+        }
+
+        int baseVirtuePoints = this.getSpinnersForGroup(groupLabel).size();
+        return Math.max(0, super.getGroupSpinnerSum(groupLabel) - baseVirtuePoints);
     }
 
     /**
@@ -536,5 +554,38 @@ public class AdvantagesPanel extends BaseColumnListPanel
 
         comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner));
         comboBox.putClientProperty("generationListenerRegistered", true);
+    }
+
+    private void configureVirtueSpinners()
+    {
+        String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
+        this.getSpinnersForGroup(virtueGroup).values().forEach(spinner -> {
+            SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
+            model.setMinimum(1);
+            if (((Number) spinner.getValue()).intValue() < 1) {
+                spinner.setValue(1);
+            }
+        });
+        this.updateFreeAdditionalPoints(virtueGroup);
+    }
+
+    private void dispatchVirtueValues()
+    {
+        HashMap<String, JSpinner> virtueSpinners = this.getSpinnersForGroup(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+        HashMap<String, Advantage> virtueValues = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+        ArrayList<Advantage> virtues = new ArrayList<>();
+
+        this.virtueKeyToLabel.forEach((key, label) -> {
+            JSpinner spinner = virtueSpinners.get(label);
+            Advantage virtue = virtueValues.get(key);
+
+            if (spinner == null || virtue == null) {
+                return;
+            }
+
+            virtues.add(virtue.toBuilder().setValue(((Number) spinner.getValue()).intValue()).build());
+        });
+
+        VampireEditor.getDispatcher().dispatch(new VirtueValueSetEvent().setVirtues(virtues));
     }
 }

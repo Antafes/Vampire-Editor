@@ -371,9 +371,11 @@ public class LooksPanel extends javax.swing.JPanel {
         VampireEditor.getDispatcher().addListener(
             VirtueValueSetEvent.class,
             new VirtueValueSetListener(event -> {
-                String text = language.translate("road") + "*"
-                    + " (" + language.translate("roadScore") + ": "
-                    + Road.calculateRoadScore(event.getVirtues()) + ')';
+                String text = "<html>"
+                    + language.translate("road") + "*<br>("
+                    + language.translate("roadScore") + ": "
+                    + Road.calculateRoadScore(event.getVirtues())
+                    + ")</html>";
                 this.roadLabel.setText(text);
             })
         );
