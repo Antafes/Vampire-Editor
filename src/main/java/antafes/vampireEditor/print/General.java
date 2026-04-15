@@ -121,7 +121,7 @@ public class General extends PrintBase {
             this.getLanguage().translate("nature") + ": " + (this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature()),
             this.getLanguage().translate("demeanor") + ": " + (this.getCharacter().getDemeanor() == null ? "" : this.getCharacter().getDemeanor()),
             this.getLanguage().translate("concept") + ": " + (this.getCharacter().getConcept() == null ? "" : this.getCharacter().getConcept()),
-            this.getLanguage().translate("clan") + ": " + this.getCharacter().getClan().getName(),
+            this.getLanguage().translate("clan") + ": " + (this.getCharacter().getClan() == null ? "" : this.getCharacter().getClan().getName()),
             this.getLanguage().translate("generation") + ": " + this.getCharacter().getGeneration().toString(),
             this.getLanguage().translate("sire") + ": " + this.getCharacter().getSire()
         };
@@ -291,8 +291,13 @@ public class General extends PrintBase {
         }
 
         this.addHeadline(this.getLanguage().translate("road"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
-        this.addText(this.getCharacter().getRoad().getName(), PositionX.MIDDLE1.getPosition(), yMiddle++, 2);
-        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getRoad().getValue(), 2);
+        this.addText(
+            this.getCharacter().getRoad() == null ? "" : this.getCharacter().getRoad().getName(),
+            PositionX.MIDDLE1.getPosition(),
+            yMiddle++,
+            2
+        );
+        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getRoad() == null ? 2 : this.getCharacter().getRoad().getValue(), 2);
         this.addHeadline(this.getLanguage().translate("willpower"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getWillpower(), 2);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getUsedWillpower(), 2, Dot.SQUARE);
