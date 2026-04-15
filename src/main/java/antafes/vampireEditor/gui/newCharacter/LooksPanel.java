@@ -217,7 +217,6 @@ public class LooksPanel extends javax.swing.JPanel {
         sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
         sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
         sexLabel.setIconTextGap(4);
-        sexLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         sectLabel.setLabelFor(sectField);
         sectLabel.setText("Sect");
