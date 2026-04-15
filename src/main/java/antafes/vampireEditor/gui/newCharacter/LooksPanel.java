@@ -725,6 +725,10 @@ public class LooksPanel extends javax.swing.JPanel {
         }
     }
 
+    public void applyNpcCreationMode() {
+        this.nextButton.setEnabled(true);
+    }
+
     /**
      * Create the focus traversal policy for the looks tab.
      */
@@ -777,6 +781,14 @@ public class LooksPanel extends javax.swing.JPanel {
      */
     public boolean checkAllFields() {
         return false;
+    }
+
+    public boolean hasName() {
+        return !this.nameField.getText().trim().isEmpty();
+    }
+
+    public void focusNameField() {
+        this.nameField.requestFocusInWindow();
     }
 
     /**

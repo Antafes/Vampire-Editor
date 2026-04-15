@@ -168,6 +168,8 @@ public class German extends Language {
         this.getTranslations().put("otherTraits", "Andere Eigenschaften");
         this.getTranslations().put("experience", "Erfahrung");
         this.getTranslations().put("roadScore", "Wert");
+        this.getTranslations().put("nameRequiredTitle", "Name fehlt");
+        this.getTranslations().put("nameRequiredMessage", "Der Charakter braucht einen Namen.");
     }
 
     /**

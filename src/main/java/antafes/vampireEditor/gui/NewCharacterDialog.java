@@ -55,6 +55,7 @@ import java.util.logging.Logger;
  */
 public class NewCharacterDialog extends javax.swing.JDialog {
 
+    @Getter
     private final boolean npcCreation;
     private final LanguageInterface language;
     @Getter
@@ -146,6 +147,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         characterTabPane.setEnabledAt(2, false);
         characterTabPane.setEnabledAt(3, false);
         characterTabPane.setEnabledAt(4, false);
+
+        if (this.npcCreation) {
+            this.applyNpcCreationMode();
+        }
 
         freeAdditionalPointsTextField.setEnabled(false);
 
@@ -252,6 +257,19 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.characterTabPane.setTitleAt(2, this.language.translate("abilities"));
         this.characterTabPane.setTitleAt(3, this.language.translate("advantages"));
         this.characterTabPane.setTitleAt(4, this.language.translate("lastSteps"));
+    }
+
+    private void applyNpcCreationMode() {
+        this.maxActiveTab = this.characterTabPane.getTabCount() - 1;
+        for (int i = 1; i < this.characterTabPane.getTabCount(); i++) {
+            this.characterTabPane.setEnabledAt(i, true);
+        }
+
+        this.looksPanel.applyNpcCreationMode();
+        this.attributesPanel.applyNpcCreationMode();
+        this.abilitiesPanel.applyNpcCreationMode();
+        this.advantagesPanel.applyNpcCreationMode();
+        this.lastStepsPanel.applyNpcCreationMode();
     }
 
     /**
@@ -462,6 +480,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return True if the used points are higher than the maximum
      */
     public boolean checkFreeAdditionalPoints() {
+        if (this.npcCreation) {
+            return false;
+        }
+
         int usedPoints = Integer.parseInt(this.freeAdditionalPointsTextField.getText());
         int maxPoints = Integer.parseInt(this.freeAdditionalMaxPointsTextField.getText());
 
@@ -481,6 +503,18 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * Finish the character and send the new character object over to the BaseWindow.
      */
     public void finishCharacter() {
+        if (!this.looksPanel.hasName()) {
+            this.characterTabPane.setSelectedIndex(0);
+            this.looksPanel.focusNameField();
+            JOptionPane.showMessageDialog(
+                this,
+                this.language.translate("nameRequiredMessage"),
+                this.language.translate("nameRequiredTitle"),
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         if (this.checkAllInputs()) {
             return;
         }
@@ -513,6 +547,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @return Returns true if a duplicate entry has been found.
      */
     private boolean checkAllInputs() {
+        if (this.npcCreation) {
+            return false;
+        }
+
         VampireEditor.log(new ArrayList<>(
                 Arrays.asList(
                     Boolean.toString(this.looksPanel.checkAllFields()),

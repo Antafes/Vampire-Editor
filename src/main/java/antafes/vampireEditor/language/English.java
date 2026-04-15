@@ -168,6 +168,8 @@ public class English extends Language {
         this.getTranslations().put("otherTraits", "Other traits");
         this.getTranslations().put("experience", "Experience");
         this.getTranslations().put("roadScore", "Score");
+        this.getTranslations().put("nameRequiredTitle", "Missing name");
+        this.getTranslations().put("nameRequiredMessage", "The character needs a name.");
     }
 
     /**

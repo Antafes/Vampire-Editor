@@ -162,6 +162,19 @@ public class AdvantagesPanel extends BaseColumnListPanel
     private void addDisciplineFields()
     {
         this.addGroup(2, AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), false, true);
+        try {
+            this.addRow(
+                2,
+                AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(),
+                AdvantageInterface.AdvantageType.DISCIPLINE.name(),
+                ElementType.SPINNER,
+                true,
+                this.generationMaximum,
+                null
+            );
+        } catch (ElementAlreadyExistsException | LabelEmptyException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -391,6 +404,11 @@ public class AdvantagesPanel extends BaseColumnListPanel
      */
     protected void checkFieldsFilled()
     {
+        if (this.parent.isNpcCreation()) {
+            this.enableNextButton();
+            return;
+        }
+
         boolean allGroupsFilled = this.isGroupFilled(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural())
             && this.isGroupFilled(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural())
             && this.isGroupFilled(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
@@ -429,6 +447,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
     {
         this.nextButton.setEnabled(false);
         this.createFocusTraversalPolicy();
+    }
+
+    public void applyNpcCreationMode() {
+        this.enableNextButton();
     }
 
     /**
