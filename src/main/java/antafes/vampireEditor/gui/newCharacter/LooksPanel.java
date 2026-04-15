@@ -37,6 +37,7 @@ import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -48,7 +49,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -213,7 +213,7 @@ public class LooksPanel extends javax.swing.JPanel {
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
 
-        sexLabel.setIcon(this.createHelpIcon());
+        sexLabel.setIcon(new HelpIcon());
         sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
         sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
         sexLabel.setIconTextGap(4);
@@ -631,26 +631,6 @@ public class LooksPanel extends javax.swing.JPanel {
         this.requiredLabel.setText(this.language.translate("required"));
         this.nextButton.setText(this.language.translate("next"));
         this.backButton.setText(this.language.translate("back"));
-    }
-
-    private Icon createHelpIcon() {
-        final int size = 14;
-        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = image.createGraphics();
-        Color foreground = UIManager.getColor("Label.foreground");
-
-        if (foreground == null) {
-            foreground = Color.DARK_GRAY;
-        }
-
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setColor(foreground);
-        graphics.drawOval(1, 1, size - 3, size - 3);
-        graphics.setFont(graphics.getFont().deriveFont(Font.BOLD, 10f));
-        graphics.drawString("?", 4, 10);
-        graphics.dispose();
-
-        return new ImageIcon(image);
     }
 
     /**
