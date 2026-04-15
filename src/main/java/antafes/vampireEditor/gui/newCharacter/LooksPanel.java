@@ -213,7 +213,7 @@ public class LooksPanel extends javax.swing.JPanel {
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
 
-        sexLabel.setIcon(new HelpIcon());
+        sexLabel.setIcon(HelpIcon.getInstance());
         sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
         sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
         sexLabel.setIconTextGap(4);

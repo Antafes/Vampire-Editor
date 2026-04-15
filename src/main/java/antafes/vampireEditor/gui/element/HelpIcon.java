@@ -27,9 +27,14 @@ import java.awt.image.BufferedImage;
 
 public class HelpIcon extends ImageIcon {
     private static final int SIZE = 14;
+    private static final HelpIcon INSTANCE = new HelpIcon();
 
-    public HelpIcon() {
+    private HelpIcon() {
         super(createImage());
+    }
+
+    public static HelpIcon getInstance() {
+        return INSTANCE;
     }
 
     private static Image createImage() {
