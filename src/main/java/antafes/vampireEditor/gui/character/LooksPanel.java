@@ -98,7 +98,7 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
 
                     break;
                 case "sex":
-                    element.setText(this.character.getSex().toString());
+                    element.setText(this.character.getSex() != null ? this.character.getSex().toString() : "");
                     break;
                 default:
                     break;
