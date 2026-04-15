@@ -818,7 +818,7 @@ public class LooksPanel extends javax.swing.JPanel {
             .setDemeanor(this.demeanorField.getText())
             .setConcept(this.conceptField.getText())
             .setSire(this.sireField.getText())
-            .setClan((Clan) this.clanComboBox.getSelectedItem())
+            .setClan(getClan())
             .setSect(this.sectField.getText())
             .setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0)
             .setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0)
@@ -831,7 +831,19 @@ public class LooksPanel extends javax.swing.JPanel {
             .setHeight(!this.heightField.getText().isEmpty() ? Integer.parseInt(this.heightField.getText()) : 0)
             .setWeight(!this.weightField.getText().isEmpty() ? Integer.parseInt(this.weightField.getText()) : 0)
             .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
-            .setRoad((Road) this.roadComboBox.getSelectedItem());
+            .setRoad(getRoad());
+    }
+
+    private Road getRoad()
+    {
+        Object selectedItem = this.roadComboBox.getSelectedItem();
+        return selectedItem instanceof Road ? (Road) selectedItem : null;
+    }
+
+    private Clan getClan()
+    {
+        Object selectedItem = this.clanComboBox.getSelectedItem();
+        return selectedItem instanceof Clan ? (Clan) selectedItem : null;
     }
 
     /**
