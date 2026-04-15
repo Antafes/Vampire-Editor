@@ -78,6 +78,8 @@ public class German extends Language {
         this.getTranslations().put("aboutMnemonic", "b");
         this.getTranslations().put("new", "Neu");
         this.getTranslations().put("newMnemonic", "N");
+        this.getTranslations().put("newNpc", "Neuer NSC");
+        this.getTranslations().put("newNpcMnemonic", "e");
         this.getTranslations().put("open", "Öffnen");
         this.getTranslations().put("openMnemonic", "f");
         this.getTranslations().put("save", "Speichern");

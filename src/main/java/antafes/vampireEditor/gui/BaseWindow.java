@@ -78,6 +78,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private ButtonGroup languageGroup;
     private JMenu languageMenu;
     private JMenuItem newMenuItem;
+    private JMenuItem newNpcMenuItem;
     private JFileChooser openFileChooser;
     private JFileChooser saveFileChooser;
     private JMenuItem saveMenuItem;
@@ -134,6 +135,7 @@ public class BaseWindow extends javax.swing.JFrame {
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
+        newNpcMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         printMenuItem = new JMenuItem();
@@ -158,6 +160,11 @@ public class BaseWindow extends javax.swing.JFrame {
         newMenuItem.setText("New");
         newMenuItem.addActionListener(this::newMenuItemActionPerformed);
         fileMenu.add(newMenuItem);
+
+        newNpcMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+        newNpcMenuItem.setText("New NPC");
+        newNpcMenuItem.setMnemonic(this.language.translate("newNpcMnemonic").charAt(0));
+        fileMenu.add(newNpcMenuItem);
 
         openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         openMenuItem.setText("Open");
@@ -627,6 +634,8 @@ public class BaseWindow extends javax.swing.JFrame {
         this.aboutTextPane.setText(this.language.translate("aboutText"));
         this.newMenuItem.setText(this.language.translate("new"));
         this.newMenuItem.setMnemonic(this.language.translate("newMnemonic").charAt(0));
+        this.newNpcMenuItem.setText(this.language.translate("newNpc"));
+        this.newNpcMenuItem.setMnemonic(this.language.translate("newNpcMnemonic").charAt(0));
         this.openMenuItem.setText(this.language.translate("open"));
         this.openMenuItem.setMnemonic(this.language.translate("openMnemonic").charAt(0));
         this.saveMenuItem.setText(this.language.translate("save"));
