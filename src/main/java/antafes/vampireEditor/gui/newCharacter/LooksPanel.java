@@ -37,6 +37,7 @@ import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -211,6 +212,11 @@ public class LooksPanel extends javax.swing.JPanel {
 
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
+
+        sexLabel.setIcon(HelpIcon.getInstance());
+        sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
+        sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        sexLabel.setIconTextGap(4);
 
         sectLabel.setLabelFor(sectField);
         sectLabel.setText("Sect");
@@ -619,6 +625,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.heightLabel.setText(this.language.translate("height"));
         this.weightLabel.setText(this.language.translate("weight"));
         this.sexLabel.setText(this.language.translate("sex"));
+        this.sexLabel.setToolTipText(this.language.translate("sexInfo"));
 
         this.requiredLabel.setText(this.language.translate("required"));
         this.nextButton.setText(this.language.translate("next"));
@@ -666,7 +673,11 @@ public class LooksPanel extends javax.swing.JPanel {
      * Get the sexes for showing them in the form.
      */
     public DefaultComboBoxModel<Character.Sex> getSexes() {
-        return new DefaultComboBoxModel<>(antafes.vampireEditor.entity.Character.Sex.values());
+        DefaultComboBoxModel<Character.Sex> model = new DefaultComboBoxModel<>();
+        model.addElement(null);
+        Arrays.stream(antafes.vampireEditor.entity.Character.Sex.values()).forEach(model::addElement);
+
+        return model;
     }
 
     /**
