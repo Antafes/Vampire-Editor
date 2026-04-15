@@ -96,12 +96,10 @@ public class CharacterStorageTest extends BaseTest
         File file = new File(this.saveDir + "/" + this.filename);
 
         Assert.assertTrue(file.exists());
-        if (file.exists()) {
-            final Character actual = this.characterStorage.load(this.filename);
+        final Character actual = this.characterStorage.load(this.filename);
 
-            Assert.assertEquals(actual, expected);
-            Assert.assertNull(actual.getSex());
-        }
+        Assert.assertEquals(actual, expected);
+        Assert.assertNull(actual.getSex());
     }
 
     @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
