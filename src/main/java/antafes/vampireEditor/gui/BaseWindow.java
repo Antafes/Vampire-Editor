@@ -377,20 +377,7 @@ public class BaseWindow extends javax.swing.JFrame {
      * @param evt Event object
      */
     private void newMenuItemActionPerformed(ActionEvent evt) {
-        int x, y, width, height;
-
-        // Add the new character dialog.
-        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, false);
-        newDialog.setVisible(false);
-        newDialog.setParent(this);
-
-        width = newDialog.getWidth();
-        height = newDialog.getHeight();
-        x = this.configuration.getWindowLocation().x + (this.getWidth() / 2 - width / 2);
-        y = this.configuration.getWindowLocation().y + (this.getHeight() / 2 - height / 2);
-
-        newDialog.setBounds(x, y, width, height);
-        newDialog.setVisible(true);
+        this.showNewCharacterDialog(false);
     }
 
     /**
@@ -399,10 +386,14 @@ public class BaseWindow extends javax.swing.JFrame {
      * @param evt Event object
      */
     private void newNpcMenuItemActionPerformed(ActionEvent evt) {
+        this.showNewCharacterDialog(true);
+    }
+
+    private void showNewCharacterDialog(boolean npcCreation) {
         int x, y, width, height;
 
         // Add the new character dialog.
-        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, true);
+        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, npcCreation);
         newDialog.setVisible(false);
         newDialog.setParent(this);
 
