@@ -88,6 +88,20 @@ public class CharacterStorageTest extends BaseTest
         }
     }
 
+    public void testLoadWithoutSex() throws Exception {
+        final Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setSex(null)
+            .build();
+        this.characterStorage.save(expected, this.filename);
+        File file = new File(this.saveDir + "/" + this.filename);
+
+        Assert.assertTrue(file.exists());
+        final Character actual = this.characterStorage.load(this.filename);
+
+        Assert.assertEquals(actual, expected);
+        Assert.assertNull(actual.getSex());
+    }
+
     @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
     public void testLoadFailed() throws Exception {
         this.characterStorage.load("path/to/not/existing/file.xml");

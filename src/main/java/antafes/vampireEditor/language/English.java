@@ -127,6 +127,7 @@ public class English extends Language {
         this.getTranslations().put("height", "Height");
         this.getTranslations().put("weight", "Weight");
         this.getTranslations().put("sex", "Sex");
+        this.getTranslations().put("sexInfo", "This only describes the character's physical sex, not their social gender.");
         this.getTranslations().put("MALE", "male");
         this.getTranslations().put("FEMALE", "female");
         this.getTranslations().put("required", "Fields marked with * are required.");
@@ -240,11 +241,6 @@ public class English extends Language {
         this.getTranslations().put("unsavedCharacters", "There are unsaved characters open. Do you want to save them now?");
     }
 
-    /**
-     * Get the language.
-     *
-     * @return
-     */
     @Override
     public String getLanguage() {
         return "English";
