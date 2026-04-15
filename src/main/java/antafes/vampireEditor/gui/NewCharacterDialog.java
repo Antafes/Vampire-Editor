@@ -55,6 +55,7 @@ import java.util.logging.Logger;
  */
 public class NewCharacterDialog extends javax.swing.JDialog {
 
+    private final boolean npcCreation;
     private final LanguageInterface language;
     @Getter
     private final Dispatcher dialogDispatcher;
@@ -85,9 +86,10 @@ public class NewCharacterDialog extends javax.swing.JDialog {
      * @param parent Parent element
      * @param modal Whether the dialog should be modal or not
      */
-    public NewCharacterDialog(java.awt.Frame parent, boolean modal) {
+    public NewCharacterDialog(java.awt.Frame parent, boolean modal, boolean npcCreation) {
         super(parent, modal);
 
+        this.npcCreation = npcCreation;
         Configuration configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
         this.dialogDispatcher = Dispatcher.getInstance();

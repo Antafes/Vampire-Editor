@@ -164,6 +164,7 @@ public class BaseWindow extends javax.swing.JFrame {
         newNpcMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
         newNpcMenuItem.setText("New NPC");
         newNpcMenuItem.setMnemonic(this.language.translate("newNpcMnemonic").charAt(0));
+        newNpcMenuItem.addActionListener(this::newNpcMenuItemActionPerformed);
         fileMenu.add(newNpcMenuItem);
 
         openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
@@ -379,7 +380,29 @@ public class BaseWindow extends javax.swing.JFrame {
         int x, y, width, height;
 
         // Add the new character dialog.
-        NewCharacterDialog newDialog = new NewCharacterDialog(this, true);
+        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, false);
+        newDialog.setVisible(false);
+        newDialog.setParent(this);
+
+        width = newDialog.getWidth();
+        height = newDialog.getHeight();
+        x = this.configuration.getWindowLocation().x + (this.getWidth() / 2 - width / 2);
+        y = this.configuration.getWindowLocation().y + (this.getHeight() / 2 - height / 2);
+
+        newDialog.setBounds(x, y, width, height);
+        newDialog.setVisible(true);
+    }
+
+    /**
+     * Action performed event for the create new npc menu entry.
+     *
+     * @param evt Event object
+     */
+    private void newNpcMenuItemActionPerformed(ActionEvent evt) {
+        int x, y, width, height;
+
+        // Add the new character dialog.
+        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, true);
         newDialog.setVisible(false);
         newDialog.setParent(this);
 
