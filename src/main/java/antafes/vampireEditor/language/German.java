@@ -127,6 +127,7 @@ public class German extends Language {
         this.getTranslations().put("height", "Größe");
         this.getTranslations().put("weight", "Gewicht");
         this.getTranslations().put("sex", "Geschlecht");
+        this.getTranslations().put("sexInfo", "Dies beschreibt nur das körperliche Geschlecht des Charakters, nicht das soziale Geschlecht.");
         this.getTranslations().put("MALE", "männlich");
         this.getTranslations().put("FEMALE", "weiblich");
         this.getTranslations().put("required", "Felder mit * sind Pflichtfelder.");

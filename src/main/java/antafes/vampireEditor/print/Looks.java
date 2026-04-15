@@ -183,7 +183,7 @@ public class Looks extends PrintBase {
             PositionX.LEFT1.getPosition(),
             yLeft,
             PositionX.LEFT2.getPosition(),
-            this.getCharacter().getSex().toString()
+            this.getCharacter().getSex() != null ? this.getCharacter().getSex().toString() : ""
         );
 
         for (int i = 0; i < 11; i++) {

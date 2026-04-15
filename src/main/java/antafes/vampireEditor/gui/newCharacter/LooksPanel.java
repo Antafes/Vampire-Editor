@@ -48,6 +48,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -211,6 +212,12 @@ public class LooksPanel extends javax.swing.JPanel {
 
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
+
+        sexLabel.setIcon(this.createHelpIcon());
+        sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
+        sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        sexLabel.setIconTextGap(4);
+        sexLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         sectLabel.setLabelFor(sectField);
         sectLabel.setText("Sect");
@@ -619,10 +626,31 @@ public class LooksPanel extends javax.swing.JPanel {
         this.heightLabel.setText(this.language.translate("height"));
         this.weightLabel.setText(this.language.translate("weight"));
         this.sexLabel.setText(this.language.translate("sex"));
+        this.sexLabel.setToolTipText(this.language.translate("sexInfo"));
 
         this.requiredLabel.setText(this.language.translate("required"));
         this.nextButton.setText(this.language.translate("next"));
         this.backButton.setText(this.language.translate("back"));
+    }
+
+    private Icon createHelpIcon() {
+        final int size = 14;
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        Color foreground = UIManager.getColor("Label.foreground");
+
+        if (foreground == null) {
+            foreground = Color.DARK_GRAY;
+        }
+
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setColor(foreground);
+        graphics.drawOval(1, 1, size - 3, size - 3);
+        graphics.setFont(graphics.getFont().deriveFont(Font.BOLD, 10f));
+        graphics.drawString("?", 4, 10);
+        graphics.dispose();
+
+        return new ImageIcon(image);
     }
 
     /**
@@ -666,7 +694,11 @@ public class LooksPanel extends javax.swing.JPanel {
      * Get the sexes for showing them in the form.
      */
     public DefaultComboBoxModel<Character.Sex> getSexes() {
-        return new DefaultComboBoxModel<>(antafes.vampireEditor.entity.Character.Sex.values());
+        DefaultComboBoxModel<Character.Sex> model = new DefaultComboBoxModel<>();
+        model.addElement(null);
+        Arrays.stream(antafes.vampireEditor.entity.Character.Sex.values()).forEach(model::addElement);
+
+        return model;
     }
 
     /**

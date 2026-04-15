@@ -197,7 +197,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         this.xw.addChild("nationality", character.getNationality());
         this.xw.addChild("height", Integer.toString(character.getHeight()));
         this.xw.addChild("weight", Integer.toString(character.getWeight()));
-        this.xw.addChild("sex", character.getSex().name());
+        this.xw.addChild("sex", character.getSex() != null ? character.getSex().name() : "");
         this.xw.addChild("story", character.getStory());
         this.xw.addChild("description", character.getDescription());
     }
@@ -375,7 +375,12 @@ public class CharacterStorage extends BaseStorage<Character> {
         builder.setNationality(XMLParser.getTagValue("nationality", root));
         builder.setHeight(XMLParser.getTagValueInt("height", root));
         builder.setWeight(XMLParser.getTagValueInt("weight", root));
-        builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
+        if (XMLParser.tagExists("sex", root)
+            && XMLParser.getTagValue("sex", root) != null
+            && !XMLParser.getTagValue("sex", root).isEmpty()
+        ) {
+            builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
+        }
         builder.setStory(XMLParser.getTagValue("story", root));
         builder.setDescription(XMLParser.getTagValue("description", root));
 
