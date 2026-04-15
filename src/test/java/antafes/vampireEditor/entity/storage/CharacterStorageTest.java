@@ -95,6 +95,7 @@ public class CharacterStorageTest extends BaseTest
         this.characterStorage.save(expected, this.filename);
         File file = new File(this.saveDir + "/" + this.filename);
 
+        Assert.assertTrue(file.exists());
         if (file.exists()) {
             final Character actual = this.characterStorage.load(this.filename);
 
