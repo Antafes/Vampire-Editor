@@ -213,7 +213,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         Element root = this.xp.getRootElement();
         String id = root.getAttribute("id");
 
-        if (id.equals("")) {
+        if (id.isEmpty()) {
             return null;
         }
 
@@ -347,23 +347,19 @@ public class CharacterStorage extends BaseStorage<Character> {
         builder.setAge(XMLParser.getTagValueInt("age", root));
         builder.setApparentAge(XMLParser.getTagValueInt("apparentAge", root));
 
-        if (XMLParser.tagExists("dayOfBirth", root)
-            && XMLParser.getTagValue("dayOfBirth", root) != null
-            && !XMLParser.getTagValue("dayOfBirth", root).equals("")
-        ) {
+        String dayOfBirthTagValue = XMLParser.getTagValue("dayOfBirth", root);
+        if (XMLParser.tagExists("dayOfBirth", root) && dayOfBirthTagValue != null && !dayOfBirthTagValue.isEmpty()) {
             try {
-                builder.setDayOfBirth(format.parse(XMLParser.getTagValue("dayOfBirth", root)));
+                builder.setDayOfBirth(format.parse(dayOfBirthTagValue));
             } catch (ParseException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        if (XMLParser.tagExists("dayOfDeath", root)
-            && XMLParser.getTagValue("dayOfDeath", root) != null
-            && !XMLParser.getTagValue("dayOfDeath", root).equals("")
-        ) {
+        String dayOfDeathTagValue = XMLParser.getTagValue("dayOfDeath", root);
+        if (XMLParser.tagExists("dayOfDeath", root) && dayOfDeathTagValue != null && !dayOfDeathTagValue.isEmpty()) {
             try {
-                builder.setDayOfDeath(format.parse(XMLParser.getTagValue("dayOfDeath", root)));
+                builder.setDayOfDeath(format.parse(dayOfDeathTagValue));
             } catch (ParseException ex) {
                 Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -375,11 +371,9 @@ public class CharacterStorage extends BaseStorage<Character> {
         builder.setNationality(XMLParser.getTagValue("nationality", root));
         builder.setHeight(XMLParser.getTagValueInt("height", root));
         builder.setWeight(XMLParser.getTagValueInt("weight", root));
-        if (XMLParser.tagExists("sex", root)
-            && XMLParser.getTagValue("sex", root) != null
-            && !XMLParser.getTagValue("sex", root).isEmpty()
-        ) {
-            builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(XMLParser.getTagValue("sex", root)));
+        String sexTagValue = XMLParser.getTagValue("sex", root);
+        if (XMLParser.tagExists("sex", root) && sexTagValue != null && !sexTagValue.isEmpty()) {
+            builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(sexTagValue));
         }
         builder.setStory(XMLParser.getTagValue("story", root));
         builder.setDescription(XMLParser.getTagValue("description", root));
