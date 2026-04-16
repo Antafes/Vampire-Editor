@@ -100,7 +100,7 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setValue(this.getCharacter().getBloodPool());
                         break;
                     default:
-                        element.setValue(this.getCharacter().getRoad() == null ? "" : this.getCharacter().getRoad().getValue());
+                        element.setValue(this.getCharacter().getRoad() == null ? 2 : this.getCharacter().getRoad().getValue());
                         break;
                 }
             }
