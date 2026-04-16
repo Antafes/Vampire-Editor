@@ -144,7 +144,7 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                 case "willpower":
                     characterBuilder.setWillpower((int) element.getValue());
                     break;
-                case "bloodStock":
+                case "bloodPool":
                     characterBuilder.setBloodPool((int) element.getValue());
                     break;
                 default:
