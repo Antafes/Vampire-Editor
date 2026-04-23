@@ -31,9 +31,12 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.character.CharacterPanelInterface;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
+import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
 import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import antafes.vampireEditor.gui.event.CloseSelectedCharacterTabEvent;
 import antafes.vampireEditor.gui.event.OpenCharacterEvent;
 import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
+import antafes.vampireEditor.gui.event.listener.CharacterTabClosedListener;
 import antafes.vampireEditor.gui.event.listener.CloseProgrammeListener;
 import antafes.vampireEditor.gui.event.listener.OpenCharacterListener;
 import antafes.vampireEditor.gui.event.listener.SaveAllCharactersListener;
@@ -240,7 +243,29 @@ public class BaseWindow extends javax.swing.JFrame {
             .addComponent(charactersTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
         );
 
+        this.installCloseCurrentCharacterShortcut();
         pack();
+    }
+
+    private void installCloseCurrentCharacterShortcut()
+    {
+        KeyStroke closeCurrentCharacterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK);
+        String actionKey = "closeCurrentCharacter";
+        JRootPane rootPane = this.getRootPane();
+
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeCurrentCharacterStroke, actionKey);
+        rootPane.getActionMap().put(actionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                closeCurrentCharacterTab();
+            }
+        });
+    }
+
+    private void closeCurrentCharacterTab()
+    {
+        VampireEditor.getDispatcher().dispatch(new CloseSelectedCharacterTabEvent());
     }
 
     private void createAboutDialog()
@@ -809,6 +834,18 @@ public class BaseWindow extends javax.swing.JFrame {
             OpenCharacterEvent.class,
             new OpenCharacterListener((event) -> this.openCharacter(event.getFilePath()))
         );
+        VampireEditor.getDispatcher().addListener(
+            CharacterTabClosedEvent.class,
+            new CharacterTabClosedListener((event) -> this.handleCharacterTabClosed())
+        );
+    }
+
+    private void handleCharacterTabClosed()
+    {
+        if (this.isNoCharacterLoaded()) {
+            this.disablePrintMenuItem();
+            this.disableSaveMenuItem();
+        }
     }
 
     /**
