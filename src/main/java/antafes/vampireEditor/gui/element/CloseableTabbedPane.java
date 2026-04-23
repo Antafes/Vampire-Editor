@@ -146,9 +146,9 @@ public class CloseableTabbedPane extends JTabbedPane {
 
             BaseWindow window = (BaseWindow) containingWindow;
 
-            if (window.isNoCharacterLoaded()) {
-                window.disablePrintMenuItem();
-                window.disableSaveMenuItem();
+            if (window instanceof BaseWindow && ((BaseWindow) window).isNoCharacterLoaded()) {
+                ((BaseWindow) window).disablePrintMenuItem();
+                ((BaseWindow) window).disableSaveMenuItem();
             }
         }
     }

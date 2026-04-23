@@ -101,13 +101,23 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
                 this.isCharacterChanged = event.isChanged();
                 CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
                     .getAncestorOfClass(CloseableTabbedPane.class, this);
+
+                if (tabbedPane == null) {
+                    return;
+                }
+
+                int tabIndex = tabbedPane.indexOfComponent(this);
+                if (tabIndex < 0) {
+                    return;
+                }
+
                 String tabName = this.getCharacter().getName();
 
                 if (this.isCharacterChanged) {
                     tabName += "*";
                 }
 
-                tabbedPane.setTitleAt(tabbedPane.indexOfComponent(this), tabName);
+                tabbedPane.setTitleAt(tabIndex, tabName);
                 tabbedPane.revalidate();
                 tabbedPane.repaint();
             })
