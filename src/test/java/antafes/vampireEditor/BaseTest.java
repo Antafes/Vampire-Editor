@@ -35,6 +35,7 @@ public abstract class BaseTest
     public void setUp()
     {
         this.configuration = Configuration.getInstance();
+        this.configuration.clearRecentFiles();
         this.configuration.setOpenDirPath("test/open/dir/path");
         this.configuration.setSaveDirPath("test/save/dir/path");
         this.configuration.setLanguage(Configuration.Language.ENGLISH);

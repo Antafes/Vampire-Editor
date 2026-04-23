@@ -32,6 +32,10 @@ import org.testng.annotations.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Properties;
 
 @Test
 public class ConfigurationTest extends BaseTest
@@ -166,5 +170,99 @@ public class ConfigurationTest extends BaseTest
 
         Assert.assertNotEquals(actual, notExpected);
         Assert.assertEquals(actual, expected);
+    }
+
+    public void testAddRecentFile() {
+        this.configuration.addRecentFile("C:/characters/lucita.xml", "Lucita");
+
+        List<Configuration.RecentFileEntry> actual = this.configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), 1);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/lucita.xml");
+        Assert.assertEquals(actual.get(0).getCharacterName(), "Lucita");
+    }
+
+    public void testAddRecentFileMovesDuplicateToTop() {
+        this.configuration.addRecentFile("C:/characters/lucita.xml", "Lucita");
+        this.configuration.addRecentFile("C:/characters/beckett.xml", "Beckett");
+        this.configuration.addRecentFile("C:/characters/lucita.xml", "Lucita Updated");
+
+        List<Configuration.RecentFileEntry> actual = this.configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), 2);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/lucita.xml");
+        Assert.assertEquals(actual.get(0).getCharacterName(), "Lucita Updated");
+        Assert.assertEquals(actual.get(1).getPath(), "C:/characters/beckett.xml");
+    }
+
+    public void testAddRecentFileKeepsAtMostTenEntries() {
+        for (int i = 0; i < 12; i++) {
+            this.configuration.addRecentFile("C:/characters/character-" + i + ".xml", "Character " + i);
+        }
+
+        List<Configuration.RecentFileEntry> actual = this.configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), Configuration.MAX_RECENT_FILES);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/character-11.xml");
+        Assert.assertEquals(actual.get(actual.size() - 1).getPath(), "C:/characters/character-2.xml");
+    }
+
+    public void testAddRecentFileIgnoresNullAndEmptyPaths() {
+        this.configuration.addRecentFile(null, "Null Path");
+        this.configuration.addRecentFile("", "Empty Path");
+        this.configuration.addRecentFile("   ", "Blank Path");
+
+        Assert.assertTrue(this.configuration.getRecentFiles().isEmpty());
+    }
+
+    public void testLoadPropertiesIgnoresMalformedRecentFiles() throws Exception {
+        File propertiesFile = this.createTempPropertiesFile();
+        Properties properties = new Properties();
+        properties.setProperty("openDirPath", "test/open/dir/path");
+        properties.setProperty("saveDirPath", "test/save/dir/path");
+        properties.setProperty("language", Configuration.Language.ENGLISH.toString());
+        properties.setProperty("recentFiles.0.path", "C:/characters/lucita.xml");
+        properties.setProperty("recentFiles.0.name", "Lucita");
+        properties.setProperty("recentFiles.1.name", "Missing Path");
+        properties.setProperty("recentFiles.foo.path", "C:/characters/invalid.xml");
+        properties.storeToXML(Files.newOutputStream(propertiesFile.toPath()), null);
+
+        Configuration configuration = new Configuration(propertiesFile);
+        configuration.loadProperties();
+
+        List<Configuration.RecentFileEntry> actual = configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), 1);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/lucita.xml");
+        Assert.assertEquals(actual.get(0).getCharacterName(), "Lucita");
+    }
+
+    public void testSaveAndLoadRecentFilesRoundTrip() throws Exception {
+        File propertiesFile = this.createTempPropertiesFile();
+        Configuration configuration = new Configuration(propertiesFile);
+        configuration.setOpenDirPath("test/open/dir/path");
+        configuration.setSaveDirPath("test/save/dir/path");
+        configuration.setLanguage(Configuration.Language.ENGLISH);
+        configuration.addRecentFile("C:/characters/lucita.xml", "Lucita");
+        configuration.addRecentFile("C:/characters/beckett.xml", "Beckett");
+        configuration.saveProperties();
+
+        Configuration reloadedConfiguration = new Configuration(propertiesFile);
+        reloadedConfiguration.loadProperties();
+
+        List<Configuration.RecentFileEntry> actual = reloadedConfiguration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), 2);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/beckett.xml");
+        Assert.assertEquals(actual.get(0).getCharacterName(), "Beckett");
+        Assert.assertEquals(actual.get(1).getPath(), "C:/characters/lucita.xml");
+        Assert.assertEquals(actual.get(1).getCharacterName(), "Lucita");
+    }
+
+    private File createTempPropertiesFile() throws IOException {
+        File propertiesFile = Files.createTempFile("vampire-editor-configuration-test", ".xml").toFile();
+        propertiesFile.deleteOnExit();
+
+        return propertiesFile;
     }
 }
