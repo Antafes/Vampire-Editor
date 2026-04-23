@@ -26,9 +26,11 @@ import antafes.myXML.XMLValidator;
 import antafes.myXML.XMLWriter;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.*;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.exception.MissingClanException;
+import antafes.vampireEditor.entity.exception.MissingRoadException;
 import org.w3c.dom.Element;
 
 import java.text.ParseException;
@@ -104,7 +106,7 @@ public class CharacterStorage extends BaseStorage<Character> {
                 return character;
             }
         }
-
+VampireEditor.log("Something stupid happened...");
         EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
 
         this.xp.getExceptionList().forEach(ex::addSuppressed);
@@ -124,9 +126,16 @@ public class CharacterStorage extends BaseStorage<Character> {
         HashMap<String, String> rootAttributes = new HashMap<>();
         rootAttributes.put("id", character.getId().toString());
 
+        if (character.isNpc()) {
+            rootAttributes.put("isNpc", "true");
+        }
+
         this.xw.addRootNodeAttributes(rootAttributes);
         this.xw.addChild("name", character.getName());
-        this.xw.addChild("clan", character.getClan().getKey());
+
+        if (character.getClan() != null) {
+            this.xw.addChild("clan", character.getClan().getKey());
+        }
         this.xw.addChild("generation", character.getGeneration().toString());
         this.xw.addChild("chronicle", character.getChronicle());
         this.xw.addChild("experience", Integer.toString(character.getExperience()));
@@ -170,9 +179,12 @@ public class CharacterStorage extends BaseStorage<Character> {
         Element flaws = this.xw.addChild("flaws");
         character.getFlaws().forEach((key, flaw) -> this.xw.addChild(flaws, "flaw", key));
 
-        HashMap<String, String> roadAttributes = new HashMap<>();
-        roadAttributes.put("key", character.getRoad().getKey());
-        this.xw.addChild("road", Integer.toString(character.getRoad().getValue()), roadAttributes);
+        if (character.getRoad() != null) {
+            HashMap<String, String> roadAttributes = new HashMap<>();
+            roadAttributes.put("key", character.getRoad().getKey());
+            this.xw.addChild("road", Integer.toString(character.getRoad().getValue()), roadAttributes);
+        }
+
         this.xw.addChild("willpower", Integer.toString(character.getWillpower()));
         this.xw.addChild("usedWillpower", Integer.toString(character.getUsedWillpower()));
         this.xw.addChild("bloodPool", Integer.toString(character.getBloodPool()));
@@ -207,24 +219,35 @@ public class CharacterStorage extends BaseStorage<Character> {
      *
      * @return The newly created character
      */
-    private antafes.vampireEditor.entity.Character fillValues() {
+    private antafes.vampireEditor.entity.Character fillValues() throws EntityStorageException
+    {
         antafes.vampireEditor.entity.Character.CharacterBuilder<?, ?> builder = antafes.vampireEditor.entity.Character.builder();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Element root = this.xp.getRootElement();
         String id = root.getAttribute("id");
+        boolean isNpc = root.hasAttribute("isNpc") && root.getAttribute("isNpc").equals("true");
 
         if (id.isEmpty()) {
             return null;
         }
 
         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-        builder.setId(UUID.fromString(id));
-        builder.setName(XMLParser.getTagValue("name", root));
+        builder.setId(UUID.fromString(id))
+            .setNpc(isNpc)
+            .setName(XMLParser.getTagValue("name", root));
 
-        try {
-            builder.setClan(clanStorage.getEntity(XMLParser.getTagValue("clan", root)));
-        } catch (EntityStorageException e) {
-            throw new RuntimeException(e);
+        if (!isNpc && !XMLParser.tagExists("clan", root)) {
+            throw new MissingClanException("Missing clan for non-NPC character!");
+        }
+
+        String clanValue = XMLParser.tagExists("clan", root) ? XMLParser.getTagValue("clan", root) : null;
+
+        if (clanValue != null && !clanValue.isEmpty()) {
+            try {
+                builder.setClan(clanStorage.getEntity(clanValue));
+            } catch (EntityStorageException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
@@ -233,16 +256,16 @@ public class CharacterStorage extends BaseStorage<Character> {
         } catch (EntityStorageException e) {
             throw new RuntimeException(e);
         }
-        builder.setChronicle(XMLParser.getTagValue("chronicle", root));
-        builder.setExperience(XMLParser.getTagValueInt("experience", root));
-        builder.setHideout(XMLParser.getTagValue("hideout", root));
-        builder.setPlayer(XMLParser.getTagValue("player", root));
-        builder.setDemeanor(XMLParser.getTagValue("demeanor", root));
-        builder.setConcept(XMLParser.getTagValue("concept", root));
-        builder.setSire(XMLParser.getTagValue("sire", root));
-        builder.setSect(XMLParser.getTagValue("sect", root));
+        builder.setChronicle(XMLParser.getTagValue("chronicle", root))
+            .setExperience(XMLParser.getTagValueInt("experience", root))
+            .setHideout(XMLParser.getTagValue("hideout", root))
+            .setPlayer(XMLParser.getTagValue("player", root))
+            .setDemeanor(XMLParser.getTagValue("demeanor", root))
+            .setConcept(XMLParser.getTagValue("concept", root))
+            .setSire(XMLParser.getTagValue("sire", root))
+            .setSect(XMLParser.getTagValue("sect", root));
 
-        NatureStorage natureStorage = (NatureStorage) StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         String nature = XMLParser.getTagValue("nature", root);
         if (!nature.isEmpty()) {
             try {
@@ -323,18 +346,21 @@ public class CharacterStorage extends BaseStorage<Character> {
                 }
             });
 
-        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        Element road = XMLParser.getTagElement("road", root);
-        try {
-            builder.setRoad(
-                roadStorage
-                    .getEntity(road.getAttribute("key"))
+        if (!XMLParser.tagExists("road", root) && !isNpc) {
+            throw new MissingRoadException("Missing road for non-NPC character!");
+        }
+
+        if (XMLParser.tagExists("road", root)) {
+            RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+            Element road = XMLParser.getTagElement("road", root);
+            try {
+                builder.setRoad(roadStorage.getEntity(road.getAttribute("key"))
                     .toBuilder()
                     .setValue(XMLParser.getTagValueInt("road", root))
-                    .build()
-            );
-        } catch (EntityStorageException e) {
-            throw new RuntimeException(e);
+                    .build());
+            } catch (EntityStorageException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
@@ -343,9 +369,9 @@ public class CharacterStorage extends BaseStorage<Character> {
             builder.setUsedWillpower(XMLParser.getTagValueInt("usedWillpower", root));
         }
 
-        builder.setBloodPool(XMLParser.getTagValueInt("bloodPool", root));
-        builder.setAge(XMLParser.getTagValueInt("age", root));
-        builder.setApparentAge(XMLParser.getTagValueInt("apparentAge", root));
+        builder.setBloodPool(XMLParser.getTagValueInt("bloodPool", root))
+            .setAge(XMLParser.getTagValueInt("age", root))
+            .setApparentAge(XMLParser.getTagValueInt("apparentAge", root));
 
         String dayOfBirthTagValue = XMLParser.getTagValue("dayOfBirth", root);
         if (XMLParser.tagExists("dayOfBirth", root) && dayOfBirthTagValue != null && !dayOfBirthTagValue.isEmpty()) {

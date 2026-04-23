@@ -24,7 +24,7 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

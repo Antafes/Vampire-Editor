@@ -28,12 +28,18 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.MissingClanException;
+import antafes.vampireEditor.entity.exception.MissingRoadException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Test
 public class CharacterStorageTest extends BaseTest
@@ -105,5 +111,48 @@ public class CharacterStorageTest extends BaseTest
     @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
     public void testLoadFailed() throws Exception {
         this.characterStorage.load("path/to/not/existing/file.xml");
+    }
+
+    @Test(expectedExceptions = MissingRoadException.class, expectedExceptionsMessageRegExp = "Missing road for non-NPC character!")
+    public void testLoadFailedMissingRoad() throws Exception {
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        String xml = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+        String xmlWithoutRoad = xml.replaceFirst("(?s)<road[^>]*>.*?</road>\\s*", "");
+
+        Assert.assertNotEquals(xmlWithoutRoad, xml, "Test fixture corruption failed: road tag was not removed.");
+        Files.write(filePath, xmlWithoutRoad.getBytes(StandardCharsets.UTF_8));
+
+        this.characterStorage.load(this.filename);
+    }
+
+    @Test(expectedExceptions = MissingClanException.class, expectedExceptionsMessageRegExp = "Missing clan for non-NPC character!")
+    public void testLoadFailedMissingClan() throws Exception {
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        String xml = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+        String xmlWithoutClan = xml.replaceFirst("(?s)<clan>.*?</clan>\\s*", "");
+
+        Assert.assertNotEquals(xmlWithoutClan, xml, "Test fixture corruption failed: clan tag was not removed.");
+        Files.write(filePath, xmlWithoutClan.getBytes(StandardCharsets.UTF_8));
+
+        this.characterStorage.load(this.filename);
+    }
+
+    public void testLoadNpcWithoutClanAndRoad() throws Exception {
+        Character npc = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setNpc(true)
+            .setClan(null)
+            .setRoad(null)
+            .build();
+        this.characterStorage.save(npc, this.filename);
+
+        Character actual = this.characterStorage.load(this.filename);
+
+        Assert.assertTrue(actual.isNpc());
+        Assert.assertNull(actual.getClan());
+        Assert.assertNull(actual.getRoad());
     }
 }

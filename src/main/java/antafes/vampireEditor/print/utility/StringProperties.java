@@ -22,7 +22,7 @@
 package antafes.vampireEditor.print.utility;
 
 import antafes.vampireEditor.entity.BaseEntity;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.gui.utility.Font;
 
 import javax.swing.*;
@@ -96,7 +96,7 @@ public class StringProperties {
          * Build a new StringProperties object with the given values.
          *
          * @return The created StringProperties object
-         * @throws antafes.vampireEditor.entity.EntityException Thrown if a required field is not set
+         * @throws EntityException Thrown if a required field is not set
          */
         public StringProperties build() throws EntityException {
             List<Integer> styleList = Arrays.asList(java.awt.Font.BOLD, java.awt.Font.ITALIC, java.awt.Font.PLAIN);

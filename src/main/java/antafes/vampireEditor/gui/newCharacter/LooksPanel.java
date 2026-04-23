@@ -28,6 +28,7 @@ import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
@@ -725,6 +726,10 @@ public class LooksPanel extends javax.swing.JPanel {
         }
     }
 
+    public void applyNpcCreationMode() {
+        this.nextButton.setEnabled(true);
+    }
+
     /**
      * Create the focus traversal policy for the looks tab.
      */
@@ -779,6 +784,14 @@ public class LooksPanel extends javax.swing.JPanel {
         return false;
     }
 
+    public boolean hasName() {
+        return !this.nameField.getText().trim().isEmpty();
+    }
+
+    public void focusNameField() {
+        this.nameField.requestFocusInWindow();
+    }
+
     /**
      * Get a list with all field values.
      *
@@ -806,7 +819,7 @@ public class LooksPanel extends javax.swing.JPanel {
             .setDemeanor(this.demeanorField.getText())
             .setConcept(this.conceptField.getText())
             .setSire(this.sireField.getText())
-            .setClan((Clan) this.clanComboBox.getSelectedItem())
+            .setClan(getClan())
             .setSect(this.sectField.getText())
             .setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0)
             .setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0)
@@ -819,7 +832,19 @@ public class LooksPanel extends javax.swing.JPanel {
             .setHeight(!this.heightField.getText().isEmpty() ? Integer.parseInt(this.heightField.getText()) : 0)
             .setWeight(!this.weightField.getText().isEmpty() ? Integer.parseInt(this.weightField.getText()) : 0)
             .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
-            .setRoad((Road) this.roadComboBox.getSelectedItem());
+            .setRoad(getRoad());
+    }
+
+    private Road getRoad()
+    {
+        Object selectedItem = this.roadComboBox.getSelectedItem();
+        return selectedItem instanceof Road ? (Road) selectedItem : null;
+    }
+
+    private Clan getClan()
+    {
+        Object selectedItem = this.clanComboBox.getSelectedItem();
+        return selectedItem instanceof Clan ? (Clan) selectedItem : null;
     }
 
     /**

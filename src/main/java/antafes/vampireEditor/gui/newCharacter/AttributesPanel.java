@@ -22,7 +22,7 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.entity.character.Clan;

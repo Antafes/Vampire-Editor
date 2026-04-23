@@ -16,32 +16,16 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
 
-import antafes.vampireEditor.entity.exception.EntityException;
-import lombok.Data;
-import lombok.SneakyThrows;
-import lombok.experimental.SuperBuilder;
+package antafes.vampireEditor.entity.exception;
 
-/**
- * A base entity.
- */
-@Data
-@SuperBuilder(setterPrefix = "set", toBuilder = true)
-public abstract class BaseEntity {
-    @SneakyThrows(EntityException.class)
-    protected BaseEntity(BaseEntityBuilder<?, ?> b)
+public class MissingRoadException extends EntityStorageException
+{
+    public MissingRoadException(String message)
     {
-        b.checkValues();
-        b.executeAdditionalCalculations();
-    }
-
-    public static abstract class BaseEntityBuilder<C extends BaseEntity, B extends BaseEntityBuilder<C, B>>
-    {
-        protected abstract void checkValues() throws EntityException;
-        protected abstract void executeAdditionalCalculations();
+        super(message);
     }
 }

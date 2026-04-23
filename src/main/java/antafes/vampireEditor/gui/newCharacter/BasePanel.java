@@ -141,6 +141,10 @@ abstract public class BasePanel extends antafes.vampireEditor.gui.BasePanel {
         this.getNextButton().setEnabled(false);
     }
 
+    public void applyNpcCreationMode() {
+        this.enableNextButton();
+    }
+
     /**
      * Get the parent component.
      */

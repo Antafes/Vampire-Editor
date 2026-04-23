@@ -322,6 +322,14 @@ public class LastStepsPanel extends BasePanel {
             .map((comboBox) -> ((Flaw) Objects.requireNonNull(comboBox.getSelectedItem())).getCost())
             .reduce(sum, Integer::sum);
 
+        if (this.getParentComponent().isNpcCreation()) {
+            this.flawInfoLabel.setVisible(false);
+            this.getParentComponent().getFreeAdditionalMaxPointsTextField().setText(Integer.toString(sum + 15));
+            this.getParentComponent().calculateUsedFreeAdditionalPoints();
+            this.getNextButton().setEnabled(true);
+            return;
+        }
+
         if (sum > 7) {
             this.flawInfoLabel.setVisible(true);
             this.getNextButton().setEnabled(false);
