@@ -28,6 +28,7 @@ import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.event.ClanSelectedEvent;
 import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;

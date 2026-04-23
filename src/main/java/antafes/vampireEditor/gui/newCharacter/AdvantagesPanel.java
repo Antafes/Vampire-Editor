@@ -25,7 +25,7 @@ import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;

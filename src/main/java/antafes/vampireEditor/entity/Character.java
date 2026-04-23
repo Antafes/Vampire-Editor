@@ -23,6 +23,7 @@ package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.utility.StringComparator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
 public class Character extends BaseEntity {
     private final UUID id;
+    private final boolean npc;
     private final String name;
     private final Clan clan;
     private final Generation generation;
@@ -211,12 +213,16 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing name");
             }
 
-            if (this.clan == null) {
+            if (!this.npc && this.clan == null) {
                 throw new EntityException("Missing clan");
             }
 
             if (this.generation == null) {
                 throw new EntityException("Missing generation");
+            }
+
+            if (!this.npc && this.road == null) {
+                throw new EntityException("Missing road");
             }
 
             this.checkAttributes();
@@ -227,7 +233,9 @@ public class Character extends BaseEntity {
         @Override
         protected void executeAdditionalCalculations()
         {
-            this.calculateRoadScore();
+            if (this.road != null) {
+                this.calculateRoadScore();
+            }
         }
 
         /**

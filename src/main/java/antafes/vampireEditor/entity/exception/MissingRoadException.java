@@ -16,34 +16,16 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
 
-/**
- * Exceptions thrown for or in Entities.
- *
- * @author Marian Pollzien
- */
-public class EntityException extends Exception {
+package antafes.vampireEditor.entity.exception;
 
-    public EntityException() {
-    }
-
-    public EntityException(String message) {
+public class MissingRoadException extends EntityStorageException
+{
+    public MissingRoadException(String message)
+    {
         super(message);
-    }
-
-    public EntityException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public EntityException(Throwable cause) {
-        super(cause);
-    }
-
-    public EntityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

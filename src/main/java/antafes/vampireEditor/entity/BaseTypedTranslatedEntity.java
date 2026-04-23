@@ -22,6 +22,7 @@
 package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.entity.character.EntityTypeInterface;
+import antafes.vampireEditor.entity.exception.EntityException;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

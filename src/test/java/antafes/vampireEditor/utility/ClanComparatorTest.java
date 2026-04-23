@@ -24,8 +24,8 @@ package antafes.vampireEditor.utility;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;

@@ -24,7 +24,7 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
@@ -523,6 +523,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
             Collections.singletonList("finishing character")
         ));
         Character.CharacterBuilder<?, ?> builder = Character.builder();
+        builder.setNpc(this.npcCreation);
         this.looksPanel.fillCharacter(builder);
         this.attributesPanel.fillCharacter(builder);
         this.abilitiesPanel.fillCharacter(builder);

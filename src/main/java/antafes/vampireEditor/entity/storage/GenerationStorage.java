@@ -24,7 +24,7 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.myXML.XMLParser;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Generation;
 import org.w3c.dom.Element;
 

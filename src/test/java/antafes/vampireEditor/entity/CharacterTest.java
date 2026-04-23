@@ -27,6 +27,8 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -83,7 +85,8 @@ public class CharacterTest extends BaseTest
         Assert.assertEquals(this.character.getName(), "Test Character");
     }
 
-    public void testGetClan() throws EntityStorageException {
+    public void testGetClan() throws EntityStorageException
+    {
         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         Assert.assertEquals(this.character.getClan(), clanStorage.getEntity("brujah"));
     }
@@ -356,6 +359,25 @@ public class CharacterTest extends BaseTest
         this.character.toBuilder()
             .setGeneration(null)
             .build();
+    }
+
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing road")
+    public void testBuilderEmptyRoadForNonNpc() {
+        this.character.toBuilder()
+            .setRoad(null)
+            .build();
+    }
+
+    public void testBuilderNpcWithoutClanAndRoad() {
+        Character npc = this.character.toBuilder()
+            .setNpc(true)
+            .setClan(null)
+            .setRoad(null)
+            .build();
+
+        Assert.assertTrue(npc.isNpc());
+        Assert.assertNull(npc.getClan());
+        Assert.assertNull(npc.getRoad());
     }
 
     public void testBuilderNullNature() {

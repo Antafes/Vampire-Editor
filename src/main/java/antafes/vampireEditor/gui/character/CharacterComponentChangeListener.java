@@ -70,6 +70,8 @@ public class CharacterComponentChangeListener extends ComponentChangeListener
                 value = ((ValuedEntityInterface) returnValue).getValue();
             } else if (returnValue instanceof SpecialFeature) {
                 value = ((SpecialFeature) returnValue).getCost();
+            } else if (returnValue == null) {
+                value = 0;
             } else {
                 value = (int) returnValue;
             }

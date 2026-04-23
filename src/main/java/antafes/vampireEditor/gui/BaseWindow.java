@@ -24,6 +24,7 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.character.CharacterPanelInterface;
@@ -499,7 +500,7 @@ public class BaseWindow extends javax.swing.JFrame {
                     Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(
                         this,
-                        this.language.translate("couldNotLoadCharacter"),
+                        getCouldNotLoadCharacterMessage(this.language, ex),
                         this.language.translate("couldNotLoad"),
                         JOptionPane.ERROR_MESSAGE
                     );
@@ -517,6 +518,17 @@ public class BaseWindow extends javax.swing.JFrame {
                 return null;
             });
         }
+    }
+
+    static String getCouldNotLoadCharacterMessage(LanguageInterface language, Exception ex)
+    {
+        String message = language.translate("couldNotLoadCharacter");
+
+        if (ex instanceof MissingRoadException) {
+            return message + "\n" + ex.getMessage();
+        }
+
+        return message;
     }
 
     /**

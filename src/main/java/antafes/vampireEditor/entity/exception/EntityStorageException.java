@@ -16,32 +16,34 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
-
-import antafes.vampireEditor.entity.exception.EntityException;
-import lombok.Data;
-import lombok.SneakyThrows;
-import lombok.experimental.SuperBuilder;
+package antafes.vampireEditor.entity.exception;
 
 /**
- * A base entity.
+ * Exceptions thrown for or in entity storages.
+ *
+ * @author Marian Pollzien
  */
-@Data
-@SuperBuilder(setterPrefix = "set", toBuilder = true)
-public abstract class BaseEntity {
-    @SneakyThrows(EntityException.class)
-    protected BaseEntity(BaseEntityBuilder<?, ?> b)
-    {
-        b.checkValues();
-        b.executeAdditionalCalculations();
+public class EntityStorageException extends Exception {
+
+    public EntityStorageException() {
     }
 
-    public static abstract class BaseEntityBuilder<C extends BaseEntity, B extends BaseEntityBuilder<C, B>>
-    {
-        protected abstract void checkValues() throws EntityException;
-        protected abstract void executeAdditionalCalculations();
+    public EntityStorageException(String message) {
+        super(message);
+    }
+
+    public EntityStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public EntityStorageException(Throwable cause) {
+        super(cause);
+    }
+
+    public EntityStorageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

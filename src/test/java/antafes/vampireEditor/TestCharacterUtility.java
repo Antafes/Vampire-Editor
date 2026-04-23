@@ -23,8 +23,8 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AbilityStorage;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.AttributeStorage;
