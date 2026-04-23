@@ -277,7 +277,10 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         road.setModel(new SpinnerNumberModel(0, 0, 10, 1));
         road.setSize(spinnerDimension);
         road.setName("road");
-        elementList.put(this.getCharacter().getRoad() == null ? "" : this.getCharacter().getRoad().getName(), road);
+        elementList.put(
+            this.getCharacter().getRoad() == null ? this.getLanguage().translate("road") : this.getCharacter().getRoad().getName(),
+            road
+        );
         this.addChangeListenerForCharacterChanged(road);
 
         JSpinner willpower = new JSpinner();
