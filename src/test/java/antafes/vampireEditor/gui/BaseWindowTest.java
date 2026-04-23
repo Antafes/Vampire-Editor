@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.language.English;
 import org.testng.Assert;
@@ -46,6 +47,17 @@ public class BaseWindowTest
                 new MissingRoadException("Missing road for non-NPC character!")
             ),
             "Could not load the character.\nMissing road for non-NPC character!"
+        );
+    }
+
+    public void testGetCouldNotLoadCharacterMessageWithMissingClan()
+    {
+        Assert.assertEquals(
+            BaseWindow.getCouldNotLoadCharacterMessage(
+                new English(),
+                new MissingClanException("Missing clan for non-NPC character!")
+            ),
+            "Could not load the character.\nMissing clan for non-NPC character!"
         );
     }
 }

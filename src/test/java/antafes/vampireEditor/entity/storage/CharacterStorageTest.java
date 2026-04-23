@@ -28,7 +28,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -127,7 +127,7 @@ public class CharacterStorageTest extends BaseTest
         this.characterStorage.load(this.filename);
     }
 
-    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Missing clan for non-NPC character!")
+    @Test(expectedExceptions = MissingClanException.class, expectedExceptionsMessageRegExp = "Missing clan for non-NPC character!")
     public void testLoadFailedMissingClan() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         Path filePath = Paths.get(this.saveDir, this.filename);

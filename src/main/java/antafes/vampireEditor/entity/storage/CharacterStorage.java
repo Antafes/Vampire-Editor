@@ -29,6 +29,7 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import org.w3c.dom.Element;
 
@@ -236,7 +237,7 @@ VampireEditor.log("Something stupid happened...");
             .setName(XMLParser.getTagValue("name", root));
 
         if (!isNpc && !XMLParser.tagExists("clan", root)) {
-            throw new EntityStorageException("Missing clan for non-NPC character!");
+            throw new MissingClanException("Missing clan for non-NPC character!");
         }
 
         String clanValue = XMLParser.tagExists("clan", root) ? XMLParser.getTagValue("clan", root) : null;

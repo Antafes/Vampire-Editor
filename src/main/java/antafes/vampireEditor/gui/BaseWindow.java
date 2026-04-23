@@ -24,6 +24,7 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
@@ -524,7 +525,7 @@ public class BaseWindow extends javax.swing.JFrame {
     {
         String message = language.translate("couldNotLoadCharacter");
 
-        if (ex instanceof MissingRoadException) {
+        if (ex instanceof MissingRoadException || ex instanceof MissingClanException) {
             return message + "\n" + ex.getMessage();
         }
 
