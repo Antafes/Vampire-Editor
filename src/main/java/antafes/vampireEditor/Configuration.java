@@ -287,9 +287,9 @@ public class Configuration
         this.properties.setProperty("language", language.toString());
     }
 
-    public void addRecentFile(@NonNull String path, @NonNull String characterName)
+    public void addRecentFile(String path, @NonNull String characterName)
     {
-        if (path.trim().isEmpty()) {
+        if (path == null || path.trim().isEmpty()) {
             return;
         }
 

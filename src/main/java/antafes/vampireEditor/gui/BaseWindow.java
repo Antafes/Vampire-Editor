@@ -32,8 +32,10 @@ import antafes.vampireEditor.gui.character.CharacterPanelInterface;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import antafes.vampireEditor.gui.event.OpenCharacterEvent;
 import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
 import antafes.vampireEditor.gui.event.listener.CloseProgrammeListener;
+import antafes.vampireEditor.gui.event.listener.OpenCharacterListener;
 import antafes.vampireEditor.gui.event.listener.SaveAllCharactersListener;
 import antafes.vampireEditor.gui.exception.SaveCancelledException;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -86,6 +88,9 @@ public class BaseWindow extends javax.swing.JFrame {
     private JMenuItem saveMenuItem;
     private JMenuItem openMenuItem;
     private JMenuItem printMenuItem;
+    private JSeparator recentFilesTopSeparator;
+    private JSeparator recentFilesBottomSeparator;
+    private final java.util.List<JMenuItem> recentFileMenuItems = new java.util.ArrayList<>();
 
     /**
      * Creates new form BaseWindow
@@ -477,47 +482,8 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            ShowWaitAction waitAction = new ShowWaitAction(this);
-            waitAction.show(aVoid -> {
-                this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
-                this.configuration.saveProperties();
-                CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
-
-                try {
-                    Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
-
-                    int characterTab = this.isCharacterLoaded(character);
-                    if (characterTab != -1) {
-                        this.charactersTabPane.setSelectedIndex(characterTab);
-                        VampireEditor.log("Character was already open, switched to tab.");
-                        return null;
-                    }
-
-                    this.addCharacter(character);
-                    this.printMenuItem.setEnabled(true);
-                    this.saveMenuItem.setEnabled(true);
-                    VampireEditor.log("Loaded character " + character.getName());
-                } catch (Exception ex) {
-                    Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(
-                        this,
-                        getCouldNotLoadCharacterMessage(this.language, ex),
-                        this.language.translate("couldNotLoad"),
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                    ArrayList<String> list = new ArrayList<>(
-                        Collections.singletonList(ex.getMessage())
-                    );
-
-                    for (Throwable throwable : ex.getSuppressed()) {
-                        list.add(throwable.getMessage());
-                    }
-
-                    VampireEditor.log(list);
-                }
-
-                return null;
-            });
+            File selectedFile = this.openFileChooser.getSelectedFile();
+            VampireEditor.getDispatcher().dispatch(new OpenCharacterEvent(selectedFile.getAbsolutePath()));
         }
     }
 
@@ -669,7 +635,76 @@ public class BaseWindow extends javax.swing.JFrame {
         this.saveMenuItem.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
         this.printMenuItem.setText(this.language.translate("print"));
         this.printMenuItem.setMnemonic(this.language.translate("printMnemonic").charAt(0));
+        this.refreshRecentFilesMenu();
     }
+
+    /**
+     * Rebuild the recent files section in the File menu.
+     * The section is placed between the Print and Quit menu items.
+     * When the list is empty the section (including separators) is hidden.
+     */
+    private void refreshRecentFilesMenu() {
+        // Remove previously added dynamic items and separators
+        if (recentFilesTopSeparator != null) {
+            fileMenu.remove(recentFilesTopSeparator);
+        }
+        for (JMenuItem item : recentFileMenuItems) {
+            fileMenu.remove(item);
+        }
+        if (recentFilesBottomSeparator != null) {
+            fileMenu.remove(recentFilesBottomSeparator);
+        }
+        recentFileMenuItems.clear();
+
+        java.util.ArrayList<Configuration.RecentFileEntry> recentFiles = this.configuration.getRecentFiles();
+        if (recentFiles.isEmpty()) {
+            return;
+        }
+
+        // Determine the index of the Quit menu item so we can insert before it
+        int quitIndex = -1;
+        for (int i = 0; i < fileMenu.getPopupMenu().getComponentCount(); i++) {
+            if (fileMenu.getPopupMenu().getComponent(i) == closeMenuItem) {
+                quitIndex = i;
+                break;
+            }
+        }
+        if (quitIndex == -1) {
+            quitIndex = fileMenu.getPopupMenu().getComponentCount();
+        }
+
+        // Build label map to detect duplicate character names (show parent folder then)
+        java.util.Map<String, Long> nameCount = new java.util.HashMap<>();
+        for (Configuration.RecentFileEntry entry : recentFiles) {
+            String name = entry.getCharacterName().isEmpty() ? new File(entry.getPath()).getName() : entry.getCharacterName();
+            nameCount.merge(name, 1L, Long::sum);
+        }
+
+        recentFilesTopSeparator = new JSeparator();
+        fileMenu.getPopupMenu().insert(recentFilesTopSeparator, quitIndex);
+
+        for (int i = 0; i < recentFiles.size(); i++) {
+            Configuration.RecentFileEntry entry = recentFiles.get(i);
+            String displayName = entry.getCharacterName().isEmpty()
+                ? new File(entry.getPath()).getName()
+                : entry.getCharacterName();
+
+            if (nameCount.getOrDefault(displayName, 0L) > 1) {
+                displayName += " (" + new File(entry.getPath()).getParent() + ")";
+            }
+
+            JMenuItem item = new JMenuItem((i + 1) + "  " + displayName);
+            item.setToolTipText(entry.getPath());
+            final String filePath = entry.getPath();
+            item.addActionListener(e -> VampireEditor.getDispatcher().dispatch(new OpenCharacterEvent(filePath)));
+            recentFileMenuItems.add(item);
+            fileMenu.insert(item, quitIndex + 1 + i);
+        }
+
+        recentFilesBottomSeparator = new JSeparator();
+        fileMenu.getPopupMenu().insert(recentFilesBottomSeparator, quitIndex + 1 + recentFiles.size());
+    }
+
 
     /**
      * Install a dialog wide escape handler.
@@ -770,6 +805,72 @@ public class BaseWindow extends javax.swing.JFrame {
             SaveAllCharactersEvent.class,
             new SaveAllCharactersListener((event) -> this.saveAllCharacters())
         );
+        VampireEditor.getDispatcher().addListener(
+            OpenCharacterEvent.class,
+            new OpenCharacterListener((event) -> this.openCharacter(event.getFilePath()))
+        );
+    }
+
+    /**
+     * Handle an OpenCharacterEvent by loading the character file, updating the MRU list
+     * and refreshing the recent-files menu.
+     *
+     * @param filePath Absolute path to the character XML file
+     */
+    private void openCharacter(String filePath)
+    {
+        File file = new File(filePath);
+
+        ShowWaitAction waitAction = new ShowWaitAction(this);
+        waitAction.show(aVoid -> {
+            CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+
+            try {
+                if (!file.exists()) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                this.configuration.setOpenDirPath(file.getParent());
+                this.configuration.saveProperties();
+                Character character = storage.load(file.getName());
+
+                int characterTab = this.isCharacterLoaded(character);
+                if (characterTab != -1) {
+                    this.charactersTabPane.setSelectedIndex(characterTab);
+                    VampireEditor.log("Character was already open, switched to tab.");
+                    return null;
+                }
+
+                this.addCharacter(character);
+                this.configuration.addRecentFile(filePath, character.getName());
+                this.configuration.saveProperties();
+                this.refreshRecentFilesMenu();
+                this.printMenuItem.setEnabled(true);
+                this.saveMenuItem.setEnabled(true);
+                VampireEditor.log("Loaded character " + character.getName());
+            } catch (Exception ex) {
+                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(
+                    this,
+                    getCouldNotLoadCharacterMessage(this.language, ex),
+                    this.language.translate("couldNotLoad"),
+                    JOptionPane.ERROR_MESSAGE
+                );
+                this.configuration.removeRecentFile(filePath);
+                this.configuration.saveProperties();
+                this.refreshRecentFilesMenu();
+
+                ArrayList<String> list = new ArrayList<>(
+                    Collections.singletonList(ex.getMessage())
+                );
+                for (Throwable throwable : ex.getSuppressed()) {
+                    list.add(throwable.getMessage());
+                }
+                VampireEditor.log(list);
+            }
+
+            return null;
+        });
     }
 
     private void closeProgramme()
