@@ -259,6 +259,42 @@ public class ConfigurationTest extends BaseTest
         Assert.assertEquals(actual.get(1).getCharacterName(), "Lucita");
     }
 
+    public void testRemoveRecentFile() {
+        this.configuration.addRecentFile("C:/characters/lucita.xml", "Lucita");
+        this.configuration.addRecentFile("C:/characters/beckett.xml", "Beckett");
+
+        this.configuration.removeRecentFile("C:/characters/lucita.xml");
+
+        List<Configuration.RecentFileEntry> actual = this.configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), 1);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/beckett.xml");
+    }
+
+    public void testLoadPropertiesTruncatesRecentFilesToTenEntries() throws Exception {
+        File propertiesFile = this.createTempPropertiesFile();
+        Properties properties = new Properties();
+        properties.setProperty("openDirPath", "test/open/dir/path");
+        properties.setProperty("saveDirPath", "test/save/dir/path");
+        properties.setProperty("language", Configuration.Language.ENGLISH.toString());
+
+        for (int i = 0; i < 15; i++) {
+            properties.setProperty("recentFiles." + i + ".path", "C:/characters/character-" + i + ".xml");
+            properties.setProperty("recentFiles." + i + ".name", "Character " + i);
+        }
+
+        properties.storeToXML(Files.newOutputStream(propertiesFile.toPath()), null);
+
+        Configuration configuration = new Configuration(propertiesFile);
+        configuration.loadProperties();
+
+        List<Configuration.RecentFileEntry> actual = configuration.getRecentFiles();
+
+        Assert.assertEquals(actual.size(), Configuration.MAX_RECENT_FILES);
+        Assert.assertEquals(actual.get(0).getPath(), "C:/characters/character-0.xml");
+        Assert.assertEquals(actual.get(actual.size() - 1).getPath(), "C:/characters/character-9.xml");
+    }
+
     private File createTempPropertiesFile() throws IOException {
         File propertiesFile = Files.createTempFile("vampire-editor-configuration-test", ".xml").toFile();
         propertiesFile.deleteOnExit();

@@ -819,6 +819,10 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     private void openCharacter(String filePath)
     {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            return;
+        }
+
         File file = new File(filePath);
 
         ShowWaitAction waitAction = new ShowWaitAction(this);
@@ -833,6 +837,9 @@ public class BaseWindow extends javax.swing.JFrame {
                 this.configuration.setOpenDirPath(file.getParent());
                 this.configuration.saveProperties();
                 Character character = storage.load(file.getName());
+                this.configuration.addRecentFile(filePath, character.getName());
+                this.configuration.saveProperties();
+                this.refreshRecentFilesMenu();
 
                 int characterTab = this.isCharacterLoaded(character);
                 if (characterTab != -1) {
@@ -842,9 +849,6 @@ public class BaseWindow extends javax.swing.JFrame {
                 }
 
                 this.addCharacter(character);
-                this.configuration.addRecentFile(filePath, character.getName());
-                this.configuration.saveProperties();
-                this.refreshRecentFilesMenu();
                 this.printMenuItem.setEnabled(true);
                 this.saveMenuItem.setEnabled(true);
                 VampireEditor.log("Loaded character " + character.getName());
