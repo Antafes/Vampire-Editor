@@ -58,6 +58,13 @@ At that point the version should also be raised (see [Deployment](#deployment)).
 If a new version should be released, adjust the version in the VERSION file first and commit it accordingly into the master branch.
 The build pipeline will automatically check if the version has been changed and thus will create a new release.
 
+### Windows Executable
+
+To build the Windows executable (`.exe`) locally, a JRE 25 must be placed under `resources/jre` in the project root.
+The executable is only built on Windows (the `windows-exe` Maven profile activates automatically).
+
+The JRE can be downloaded from [Eclipse Temurin](https://adoptium.net/temurin/releases/?version=25) — choose the **JRE**, **Windows**, **x64**, **zip** distribution, extract it, and place the contents into `resources/jre` so that `resources/jre/bin/java.exe` exists.
+
 ## Copyright and Trademark
 
 <img src="src/main/resources/images/darkPackLogo.png" width="100" />

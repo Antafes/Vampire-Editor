@@ -198,7 +198,7 @@
                                     <headerType>gui</headerType>
                                     <outfile>${project.build.directory}/Vampire-Editor.exe</outfile>
                                     <jar>${project.build.directory}/Vampire-Editor.jar</jar>
-                                    <icon>${project.basedir}/resources/logo_64.ico</icon>
+                                    <icon>${project.basedir}/src/main/resources/images/logo_64.ico</icon>
                                     <errTitle>App Error</errTitle>
                                     <classPath>
                                         <mainClass>antafes.vampireEditor.VampireEditor</mainClass>
