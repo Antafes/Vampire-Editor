@@ -116,7 +116,6 @@ public class Configuration
      */
     public void saveProperties()
     {
-        BufferedOutputStream outputStream;
         try
         {
             if (!this.propertiesFile.exists())
@@ -127,8 +126,9 @@ public class Configuration
             }
 
             this.storeRecentFilesToProperties();
-            outputStream = new BufferedOutputStream(Files.newOutputStream(this.propertiesFile.toPath()));
-            this.properties.storeToXML(outputStream, null);
+            try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(this.propertiesFile.toPath()))) {
+                this.properties.storeToXML(outputStream, null);
+            }
         }
         catch (IOException ignored)
         {}
