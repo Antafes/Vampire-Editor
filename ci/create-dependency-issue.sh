@@ -91,12 +91,30 @@ COMMENT_BODY="Automated dependency scan found updates at ${TIMESTAMP}.\n\n${REPO
 ESCAPED_COMMENT_BODY="$(printf '%s' "${COMMENT_BODY}" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')"
 ESCAPED_ISSUE_BODY="$(printf '%s' "${REPORT_CONTENT}" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')"
 
-EXISTING_ISSUES_RESPONSE="$(curl -s -G \
+SEARCH_RESPONSE_FILE="$(mktemp)"
+HTTP_CODE="$(curl -sS \
+    -o "${SEARCH_RESPONSE_FILE}" \
+    -w "%{http_code}" \
+    -G \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${GITHUB_TOKEN}" \
     --data-urlencode "q=repo:${GITHUB_OWNER}/${GITHUB_REPO} is:issue is:open label:\"type:dependencies\" in:title \"${ISSUE_TITLE_PREFIX}\"" \
     --data-urlencode "per_page=1" \
     "${GITHUB_SEARCH_API_BASE}")"
+
+case "${HTTP_CODE}" in
+    2*)
+        EXISTING_ISSUES_RESPONSE="$(cat "${SEARCH_RESPONSE_FILE}")"
+        ;;
+    *)
+        echo "GitHub Search API request failed with HTTP ${HTTP_CODE}" >&2
+        cat "${SEARCH_RESPONSE_FILE}" >&2
+        rm -f "${SEARCH_RESPONSE_FILE}"
+        exit 1
+        ;;
+esac
+
+rm -f "${SEARCH_RESPONSE_FILE}"
 
 EXISTING_ISSUE_NUMBER="$(printf '%s' "${EXISTING_ISSUES_RESPONSE}" | grep -o -m1 '"number":[[:space:]]*[0-9]\+' | sed 's/[^0-9]//g')"
 
