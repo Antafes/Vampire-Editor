@@ -39,6 +39,13 @@ resources:
     release: true
     drafts: false
     access_token: ((acccess_token))
+- name: dependency-scan-schedule
+  type: time
+  source:
+    start: 6:00 AM
+    stop: 7:00 AM
+    days: [Monday]
+    location: UTC
 
 jobs:
 - name: vampire-editor-pr
@@ -151,3 +158,45 @@ jobs:
       tag: dist/tag
       globs:
       - dist/*.zip
+
+- name: vampire-editor-dependency-scan
+  plan:
+  - get: dependency-scan-schedule
+    trigger: true
+  - get: vampire-editor-repo
+  - task: check-dependency-updates
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3-eclipse-temurin-25
+      inputs:
+      - name: vampire-editor-repo
+      outputs:
+      - name: target
+      run:
+        path: ci/check-dependency-updates.sh
+        args: ["((maven_access_token))"]
+        dir: vampire-editor-repo
+      caches:
+        - path: maven
+  - task: create-dependency-issue
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: debian
+          tag: stable-slim
+      inputs:
+      - name: vampire-editor-repo
+      - name: target
+      run:
+        path: sh
+        args:
+          - -c
+          - apt-get update -qq && apt-get install -y -qq curl && ci/create-dependency-issue.sh "((github_access_token))"
+        dir: vampire-editor-repo
+
