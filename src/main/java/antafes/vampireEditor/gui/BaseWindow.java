@@ -57,6 +57,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -876,30 +877,34 @@ public class BaseWindow extends javax.swing.JFrame {
                 Character character = storage.load(file.getName());
                 this.configuration.addRecentFile(filePath, character.getName());
                 this.configuration.saveProperties();
-                this.refreshRecentFilesMenu();
+                this.runOnEdtAndWait(() -> {
+                    this.refreshRecentFilesMenu();
 
-                int characterTab = this.isCharacterLoaded(character);
-                if (characterTab != -1) {
-                    this.charactersTabPane.setSelectedIndex(characterTab);
-                    VampireEditor.log("Character was already open, switched to tab.");
-                    return null;
-                }
+                    int characterTab = this.isCharacterLoaded(character);
+                    if (characterTab != -1) {
+                        this.charactersTabPane.setSelectedIndex(characterTab);
+                        VampireEditor.log("Character was already open, switched to tab.");
+                        return;
+                    }
 
-                this.addCharacter(character);
-                this.printMenuItem.setEnabled(true);
-                this.saveMenuItem.setEnabled(true);
-                VampireEditor.log("Loaded character " + character.getName());
+                    this.addCharacter(character);
+                    this.printMenuItem.setEnabled(true);
+                    this.saveMenuItem.setEnabled(true);
+                    VampireEditor.log("Loaded character " + character.getName());
+                });
             } catch (Exception ex) {
                 Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(
-                    this,
-                    getCouldNotLoadCharacterMessage(this.language, ex),
-                    this.language.translate("couldNotLoad"),
-                    JOptionPane.ERROR_MESSAGE
-                );
                 this.configuration.removeRecentFile(filePath);
                 this.configuration.saveProperties();
-                this.refreshRecentFilesMenu();
+                this.runOnEdt(() -> {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        getCouldNotLoadCharacterMessage(this.language, ex),
+                        this.language.translate("couldNotLoad"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    this.refreshRecentFilesMenu();
+                });
 
                 ArrayList<String> list = new ArrayList<>(
                     Collections.singletonList(ex.getMessage())
@@ -912,6 +917,33 @@ public class BaseWindow extends javax.swing.JFrame {
 
             return null;
         });
+    }
+
+    private void runOnEdtAndWait(Runnable runnable)
+    {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        try {
+            SwingUtilities.invokeAndWait(runnable);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
+
+    private void runOnEdt(Runnable runnable)
+    {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        SwingUtilities.invokeLater(runnable);
     }
 
     private void closeProgramme()
