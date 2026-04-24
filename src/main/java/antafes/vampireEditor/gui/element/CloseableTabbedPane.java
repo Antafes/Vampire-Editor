@@ -70,18 +70,17 @@ public class CloseableTabbedPane extends JTabbedPane {
     @Override
     public void setTitleAt(int index, String title)
     {
+        super.setTitleAt(index, title);
+
         Component tabComponent = this.getTabComponentAt(index);
 
         if (tabComponent instanceof JPanel) {
             for (Component child : ((JPanel) tabComponent).getComponents()) {
                 if (child instanceof JLabel) {
                     ((JLabel) child).setText(title);
-                    return;
                 }
             }
         }
-
-        super.setTitleAt(index, title);
     }
 
     /**
