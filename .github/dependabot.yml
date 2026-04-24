@@ -5,12 +5,18 @@ registries:
     url: https://maven.pkg.github.com/antafes/MyXML
     username: antafes
     password: ${{secrets.DEPENDABOT_GITHUB_ACCESS_TOKEN}}
+  github-antafes-eventdispatcher-maven:
+    type: maven-repository
+    url: https://maven.pkg.github.com/antafes/eventdispatcher
+    username: antafes
+    password: ${{secrets.DEPENDABOT_GITHUB_ACCESS_TOKEN}}
 
 updates:
   - package-ecosystem: maven
     directory: "/"
     registries:
       - github-antafes-maven
+      - github-antafes-eventdispatcher-maven
     schedule:
       interval: weekly
       day: monday
