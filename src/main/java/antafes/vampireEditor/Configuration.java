@@ -114,12 +114,30 @@ public class Configuration
 
             this.loadRecentFilesFromProperties();
         }
-        else
-        {
-            this.properties.setProperty("openDirPath", new File(PATH + "../Documents/").getPath());
-            this.properties.setProperty("saveDirPath", new File(PATH + "../Documents/").getPath());
+
+        this.restoreMissingDefaults();
+    }
+
+    private void restoreMissingDefaults()
+    {
+        String defaultDocumentsPath = new File(PATH + "../Documents/").getPath();
+
+        if (isNullOrEmpty(this.properties.getProperty("openDirPath"))) {
+            this.properties.setProperty("openDirPath", defaultDocumentsPath);
+        }
+
+        if (isNullOrEmpty(this.properties.getProperty("saveDirPath"))) {
+            this.properties.setProperty("saveDirPath", defaultDocumentsPath);
+        }
+
+        if (isNullOrEmpty(this.properties.getProperty("language"))) {
             this.properties.setProperty("language", Language.ENGLISH.toString());
         }
+    }
+
+    private static boolean isNullOrEmpty(String value)
+    {
+        return value == null || value.trim().isEmpty();
     }
 
     /**

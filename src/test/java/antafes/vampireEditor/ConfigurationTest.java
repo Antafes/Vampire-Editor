@@ -300,6 +300,21 @@ public class ConfigurationTest extends BaseTest
         Assert.assertEquals(actual.get(actual.size() - 1).getPath(), "C:/characters/character-9.xml");
     }
 
+    public void testLoadPropertiesRestoresDefaultsWhenFileIsCorrupt() throws Exception {
+        File propertiesFile = this.createTempPropertiesFile();
+        Files.write(propertiesFile.toPath(), "not-xml".getBytes());
+
+        Configuration configuration = new Configuration(propertiesFile);
+        configuration.loadProperties();
+
+        File defaultDocumentsPath = new File(Configuration.PATH + "../Documents/");
+
+        Assert.assertEquals(configuration.getOpenDirPath(), defaultDocumentsPath);
+        Assert.assertEquals(configuration.getSaveDirPath(), defaultDocumentsPath);
+        Assert.assertEquals(configuration.getLanguage(), Configuration.Language.ENGLISH);
+        Assert.assertTrue(configuration.getRecentFiles().isEmpty());
+    }
+
     private File createTempPropertiesFile() throws IOException {
         File propertiesFile = Files.createTempFile("vampire-editor-configuration-test", ".xml").toFile();
         propertiesFile.deleteOnExit();
