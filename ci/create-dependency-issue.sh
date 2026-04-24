@@ -31,7 +31,8 @@ ISSUE_TITLE_PREFIX="Dependency updates:"
 
 GITHUB_OWNER="${GITHUB_OWNER:-Antafes}"
 GITHUB_REPO="${GITHUB_REPO:-Vampire-Editor}"
-GITHUB_API_BASE="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}"
+GITHUB_API_BASE="${GITHUB_API_BASE:-https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}}"
+GITHUB_SEARCH_API_BASE="${GITHUB_SEARCH_API_BASE:-https://api.github.com/search/issues}"
 
 if [ -z "${GITHUB_TOKEN}" ]
 then
@@ -61,15 +62,16 @@ COMMENT_BODY="Automated dependency scan found updates at ${TIMESTAMP}.\n\n${REPO
 ESCAPED_COMMENT_BODY="$(printf '%s' "${COMMENT_BODY}" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')"
 ESCAPED_ISSUE_BODY="$(printf '%s' "${REPORT_CONTENT}" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')"
 
-OPEN_ISSUES_RESPONSE="$(curl -s \
+EXISTING_ISSUES_RESPONSE="$(curl -s -G \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-    "${GITHUB_API_BASE}/issues?state=open&labels=type:dependencies&per_page=10")"
+    --data-urlencode "q=repo:${GITHUB_OWNER}/${GITHUB_REPO} is:issue is:open label:\"type:dependencies\" in:title \"${ISSUE_TITLE_PREFIX}\"" \
+    --data-urlencode "per_page=1" \
+    "${GITHUB_SEARCH_API_BASE}")"
 
-EXISTING_ISSUE_NUMBER="$(printf '%s' "${OPEN_ISSUES_RESPONSE}" | grep -m1 '"number":' | sed 's/[^0-9]//g')"
-EXISTING_ISSUE_TITLE="$(printf '%s' "${OPEN_ISSUES_RESPONSE}" | grep -m1 '"title":' | sed 's/.*"title": "//; s/",$//')"
+EXISTING_ISSUE_NUMBER="$(printf '%s' "${EXISTING_ISSUES_RESPONSE}" | grep -o -m1 '"number":[[:space:]]*[0-9]\+' | sed 's/[^0-9]//g')"
 
-if [ -n "${EXISTING_ISSUE_NUMBER}" ] && printf '%s' "${EXISTING_ISSUE_TITLE}" | grep -q "^${ISSUE_TITLE_PREFIX}"
+if [ -n "${EXISTING_ISSUE_NUMBER}" ]
 then
     echo "Updating existing dependency issue #${EXISTING_ISSUE_NUMBER}."
     curl -s \
