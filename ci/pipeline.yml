@@ -43,7 +43,7 @@ resources:
   type: time
   source:
     start: 6:00 AM
-    stop: 7:00 AM
+    stop: 6:01 AM
     days: [Monday]
     location: UTC
 
