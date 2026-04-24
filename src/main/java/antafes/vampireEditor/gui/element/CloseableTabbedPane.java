@@ -31,11 +31,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
 public class CloseableTabbedPane extends JTabbedPane {
-    private final HashMap<Integer, JLabel> titleList;
-
     public CloseableTabbedPane() {
         this(TOP);
     }
@@ -46,7 +43,6 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy) {
         super(tabPlacement, tabLayoutPolicy);
-        this.titleList = new HashMap<>();
 
         VampireEditor.getDispatcher().addListener(
             CloseSelectedCharacterTabEvent.class,
@@ -74,7 +70,18 @@ public class CloseableTabbedPane extends JTabbedPane {
     @Override
     public void setTitleAt(int index, String title)
     {
-        this.titleList.get(index).setText(title);
+        Component tabComponent = this.getTabComponentAt(index);
+
+        if (tabComponent instanceof JPanel) {
+            for (Component child : ((JPanel) tabComponent).getComponents()) {
+                if (child instanceof JLabel) {
+                    ((JLabel) child).setText(title);
+                    return;
+                }
+            }
+        }
+
+        super.setTitleAt(index, title);
     }
 
     /**
@@ -100,7 +107,6 @@ public class CloseableTabbedPane extends JTabbedPane {
         constraints.weightx = 1;
 
         panelTab.add(labelTitle, constraints);
-        this.titleList.put(index, labelTitle);
 
         constraints.gridx++;
         constraints.weightx = 0;
