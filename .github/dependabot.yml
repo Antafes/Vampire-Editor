@@ -1,7 +1,16 @@
 version: 2
+registries:
+  github-antafes-maven:
+    type: maven-repository
+    url: https://maven.pkg.github.com/antafes/MyXML
+    username: antafes
+    password: ${{secrets.DEPENDABOT_GITHUB_ACCESS_TOKEN}}
+
 updates:
   - package-ecosystem: maven
     directory: "/"
+    registries:
+      - github-antafes-maven
     schedule:
       interval: weekly
       day: monday
