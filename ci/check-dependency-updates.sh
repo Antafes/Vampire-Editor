@@ -48,8 +48,16 @@ fi
 mkdir -p "${OUTPUT_DIR}"
 
 # Collect dependency and plugin update information.
-mvn -B versions:display-dependency-updates > "${DEP_LOG}"
-mvn -B versions:display-plugin-updates > "${PLUGIN_LOG}"
+mvn -B versions:display-dependency-updates > "${DEP_LOG}" 2>&1
+DEP_SCAN_EXIT_CODE=$?
+mvn -B versions:display-plugin-updates > "${PLUGIN_LOG}" 2>&1
+PLUGIN_SCAN_EXIT_CODE=$?
+
+SCAN_FAILED=false
+if [ ${DEP_SCAN_EXIT_CODE} -ne 0 ] || [ ${PLUGIN_SCAN_EXIT_CODE} -ne 0 ]
+then
+    SCAN_FAILED=true
+fi
 
 DEPENDENCY_UPDATES="$(grep " -> " "${DEP_LOG}" || true)"
 PLUGIN_UPDATES="$(grep " -> " "${PLUGIN_LOG}" || true)"
@@ -65,6 +73,18 @@ fi
     echo
     echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
     echo
+    if [ "${SCAN_FAILED}" = true ]
+    then
+        echo "## Scan status"
+        echo "- Dependency scan failed with exit code: ${DEP_SCAN_EXIT_CODE}"
+        echo "- Plugin scan failed with exit code: ${PLUGIN_SCAN_EXIT_CODE}"
+        echo
+        echo "See logs for details:"
+        echo "- Dependency log: ${DEP_LOG}"
+        echo "- Plugin log: ${PLUGIN_LOG}"
+        echo
+    fi
+
     echo "## Dependency updates"
     if [ -n "${DEPENDENCY_UPDATES}" ]
     then
@@ -84,10 +104,20 @@ fi
 
 {
     echo "{"
+    echo "  \"scanFailed\": ${SCAN_FAILED},"
+    echo "  \"dependencyScanExitCode\": ${DEP_SCAN_EXIT_CODE},"
+    echo "  \"pluginScanExitCode\": ${PLUGIN_SCAN_EXIT_CODE},"
     echo "  \"hasUpdates\": ${HAS_UPDATES},"
     echo "  \"reportFile\": \"${REPORT_FILE}\""
     echo "}"
 } > "${SUMMARY_FILE}"
+
+if [ "${SCAN_FAILED}" = true ]
+then
+    rm -f "${OUTPUT_DIR}/dependency-updates-found"
+    echo "Dependency scan failed. See logs for details."
+    exit 1
+fi
 
 if [ "${HAS_UPDATES}" = true ]
 then
@@ -98,5 +128,4 @@ else
     echo "No updates found."
 fi
 
-# Always return success for scheduled scans; issue creation job decides next actions.
 exit 0
