@@ -14,7 +14,7 @@ fi
 mkdir -p "${M2_HOME}"
 
 echo "Write m2 settings"
-cat > ${M2_HOME}/settings.xml <<EOF
+cat > "${M2_HOME}/settings.xml" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
