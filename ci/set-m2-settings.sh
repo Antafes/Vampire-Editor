@@ -11,6 +11,8 @@ then
     ln -s "${M2_CACHE}" "${M2_HOME}"
 fi
 
+mkdir -p "${M2_HOME}"
+
 echo "Write m2 settings"
 cat > ${M2_HOME}/settings.xml <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -31,9 +33,18 @@ cat > ${M2_HOME}/settings.xml <<EOF
                     <snapshots><enabled>true</enabled></snapshots>
                 </repository>
                 <repository>
-                    <id>github</id>
-                    <name>GitHub Antafes Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/antafes/MyXML</url>
+                    <id>github-myxml</id>
+                    <name>GitHub Antafes Apache Maven Packages - MyXML</name>
+                    <url>https://maven.pkg.github.com/antafes/myxml</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+                <repository>
+                    <id>github-event-dispatcher</id>
+                    <name>GitHub Antafes Apache Maven Packages - Event Dispatcher</name>
+                    <url>https://maven.pkg.github.com/antafes/eventdispatcher</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
                 </repository>
             </repositories>
         </profile>
@@ -50,7 +61,12 @@ cat > ${M2_HOME}/settings.xml <<EOF
 
     <servers>
         <server>
-            <id>github</id>
+            <id>github-myxml</id>
+            <username>antafes</username>
+            <password>${ACCESS_TOKEN}</password>
+        </server>
+        <server>
+            <id>github-event-dispatcher</id>
             <username>antafes</username>
             <password>${ACCESS_TOKEN}</password>
         </server>
