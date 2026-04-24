@@ -61,6 +61,14 @@ Dependabot is configured (`.github/dependabot.yml`) to scan Maven dependencies w
 It opens pull requests for outdated dependencies and plugins, labels them with `type:dependencies` and `dependencies`, and assigns them to `Antafes`.
 The open-pull-request limit is set to **5**.
 
+For Dependabot to access dependencies hosted on GitHub Packages, a repository secret named `DEPENDABOT_GITHUB_ACCESS_TOKEN` must be configured.
+The token stored in that secret should be a GitHub personal access token with at least the following scopes:
+
+- `read:packages` – required to authenticate to GitHub Packages and read Maven artifacts
+- `repo` – required so Dependabot can work with private repository contents and manifests
+
+If this secret is missing or does not have the required scopes, Dependabot update runs may fail when resolving packages from GitHub registries.
+
 ### Concourse Dependency Scan
 
 A scheduled Concourse job (`vampire-editor-dependency-scan`) runs every **Monday at 06:00 UTC**.
