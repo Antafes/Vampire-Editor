@@ -85,7 +85,7 @@ TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 ISSUE_TITLE="${ISSUE_TITLE_PREFIX} ${TIMESTAMP}"
 
 REPORT_CONTENT="$(cat "${REPORT_FILE}")"
-COMMENT_BODY="Automated dependency scan found updates at ${TIMESTAMP}.\n\n${REPORT_CONTENT}"
+COMMENT_BODY="$(printf 'Automated dependency scan found updates at %s.\n\n%s' "${TIMESTAMP}" "${REPORT_CONTENT}")"
 
 # JSON escaping for API payloads.
 ESCAPED_COMMENT_BODY="$(printf '%s' "${COMMENT_BODY}" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')"
