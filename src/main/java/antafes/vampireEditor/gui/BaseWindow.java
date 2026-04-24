@@ -889,7 +889,6 @@ public class BaseWindow extends javax.swing.JFrame {
                 }
 
                 this.configuration.setOpenDirPath(parentDir.getPath());
-                this.configuration.saveProperties();
                 Character character = storage.load(file.getName());
                 this.configuration.addRecentFile(filePath, character.getName());
                 this.configuration.saveProperties();
