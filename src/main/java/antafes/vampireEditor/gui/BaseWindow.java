@@ -60,6 +60,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -142,6 +143,7 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         };
         openFileChooser = new javax.swing.JFileChooser();
+        openFileChooser.setAcceptAllFileFilterUsed(false);
         charactersTabPane = new CloseableTabbedPane();
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -873,11 +875,20 @@ public class BaseWindow extends javax.swing.JFrame {
             CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
             try {
-                if (!file.exists()) {
+                if (!file.getName().toLowerCase(Locale.ROOT).endsWith(".xml")) {
                     throw new java.io.FileNotFoundException(filePath);
                 }
 
-                this.configuration.setOpenDirPath(file.getParent());
+                if (!file.exists() || !file.isFile() || !file.canRead()) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                File parentDir = file.getAbsoluteFile().getParentFile();
+                if (parentDir == null) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                this.configuration.setOpenDirPath(parentDir.getPath());
                 this.configuration.saveProperties();
                 Character character = storage.load(file.getName());
                 this.configuration.addRecentFile(filePath, character.getName());
