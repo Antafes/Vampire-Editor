@@ -716,7 +716,12 @@ public class BaseWindow extends javax.swing.JFrame {
                 : entry.getCharacterName();
 
             if (nameCount.getOrDefault(displayName, 0L) > 1) {
-                displayName += " (" + new File(entry.getPath()).getParent() + ")";
+                File entryFile = new File(entry.getPath());
+                String parent = entryFile.getParent();
+                String disambiguator = (parent == null || parent.trim().isEmpty())
+                    ? entry.getPath()
+                    : parent;
+                displayName += " (" + disambiguator + ")";
             }
 
             JMenuItem item = new JMenuItem((i + 1) + "  " + displayName);
