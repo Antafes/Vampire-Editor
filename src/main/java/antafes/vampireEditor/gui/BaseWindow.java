@@ -682,7 +682,7 @@ public class BaseWindow extends javax.swing.JFrame {
         }
         recentFileMenuItems.clear();
 
-        java.util.ArrayList<Configuration.RecentFileEntry> recentFiles = this.configuration.getRecentFiles();
+        java.util.List<Configuration.RecentFileEntry> recentFiles = this.configuration.getRecentFiles();
         if (recentFiles.isEmpty()) {
             return;
         }

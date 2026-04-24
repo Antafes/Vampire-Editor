@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -51,8 +52,18 @@ public class Configuration
     public static final int MAX_RECENT_FILES = 10;
     private final Properties properties;
     private final File propertiesFile;
-    @Getter
     private final ArrayList<RecentFileEntry> recentFiles;
+
+    /**
+     * Returns an unmodifiable view of the recent files list.
+     * Use {@link #addRecentFile}, {@link #removeRecentFile}, or {@link #clearRecentFiles} to mutate the list.
+     *
+     * @return Unmodifiable list of recent file entries
+     */
+    public java.util.List<RecentFileEntry> getRecentFiles()
+    {
+        return Collections.unmodifiableList(this.recentFiles);
+    }
 
     /**
      * constructor
