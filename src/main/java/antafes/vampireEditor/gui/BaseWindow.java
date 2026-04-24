@@ -57,6 +57,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -519,8 +520,16 @@ public class BaseWindow extends javax.swing.JFrame {
     {
         String message = language.translate("couldNotLoadCharacter");
 
-        if (ex instanceof MissingRoadException || ex instanceof MissingClanException) {
-            return message + "\n" + ex.getMessage();
+        if (
+            ex instanceof MissingRoadException
+                || ex instanceof MissingClanException
+                || ex instanceof FileNotFoundException
+        ) {
+            String details = ex.getMessage();
+
+            if (details != null && !details.trim().isEmpty()) {
+                return message + "\n" + details;
+            }
         }
 
         return message;

@@ -28,6 +28,8 @@ import antafes.vampireEditor.language.English;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.FileNotFoundException;
+
 @Test
 public class BaseWindowTest
 {
@@ -58,6 +60,17 @@ public class BaseWindowTest
                 new MissingClanException("Missing clan for non-NPC character!")
             ),
             "Could not load the character.\nMissing clan for non-NPC character!"
+        );
+    }
+
+    public void testGetCouldNotLoadCharacterMessageWithFileNotFound()
+    {
+        Assert.assertEquals(
+            BaseWindow.getCouldNotLoadCharacterMessage(
+                new English(),
+                new FileNotFoundException("C:/tmp/missing-character.xml")
+            ),
+            "Could not load the character.\nC:/tmp/missing-character.xml"
         );
     }
 }
