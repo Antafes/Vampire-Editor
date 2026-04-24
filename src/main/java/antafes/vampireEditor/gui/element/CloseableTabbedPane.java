@@ -23,17 +23,16 @@
 package antafes.vampireEditor.gui.element;
 
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.gui.BaseWindow;
+import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
+import antafes.vampireEditor.gui.event.CloseSelectedCharacterTabEvent;
+import antafes.vampireEditor.gui.event.listener.CloseSelectedCharacterTabListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
 public class CloseableTabbedPane extends JTabbedPane {
-    private HashMap<Integer, JLabel> titleList;
-
     public CloseableTabbedPane() {
         this(TOP);
     }
@@ -44,7 +43,11 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy) {
         super(tabPlacement, tabLayoutPolicy);
-        this.titleList = new HashMap<>();
+
+        VampireEditor.getDispatcher().addListener(
+            CloseSelectedCharacterTabEvent.class,
+            new CloseSelectedCharacterTabListener((event) -> this.closeSelectedTab())
+        );
     }
 
     /**
@@ -67,7 +70,17 @@ public class CloseableTabbedPane extends JTabbedPane {
     @Override
     public void setTitleAt(int index, String title)
     {
-        this.titleList.get(index).setText(title);
+        super.setTitleAt(index, title);
+
+        Component tabComponent = this.getTabComponentAt(index);
+
+        if (tabComponent instanceof JPanel) {
+            for (Component child : ((JPanel) tabComponent).getComponents()) {
+                if (child instanceof JLabel) {
+                    ((JLabel) child).setText(title);
+                }
+            }
+        }
     }
 
     /**
@@ -93,7 +106,6 @@ public class CloseableTabbedPane extends JTabbedPane {
         constraints.weightx = 1;
 
         panelTab.add(labelTitle, constraints);
-        this.titleList.put(index, labelTitle);
 
         constraints.gridx++;
         constraints.weightx = 0;
@@ -111,10 +123,26 @@ public class CloseableTabbedPane extends JTabbedPane {
         closeButton.addActionListener(handler);
     }
 
+    public void closeSelectedTab()
+    {
+        int selectedIndex = this.getSelectedIndex();
+        if (selectedIndex < 0) {
+            return;
+        }
+
+        this.closeTab(this.getComponentAt(selectedIndex));
+    }
+
+    private void closeTab(Component tab)
+    {
+        this.remove(tab);
+        VampireEditor.getDispatcher().dispatch(new CharacterTabClosedEvent());
+    }
+
     /**
      * Close action handler.
      */
-    private class TabCloseActionHandler implements ActionListener {
+    private static class TabCloseActionHandler implements ActionListener {
         private final Component tab;
         private final CloseableTabbedPane pane;
 
@@ -137,19 +165,7 @@ public class CloseableTabbedPane extends JTabbedPane {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            this.pane.remove(this.tab);
-            Window containingWindow = SwingUtilities.getWindowAncestor(this.pane);
-
-            if (!(containingWindow instanceof BaseWindow)) {
-                return;
-            }
-
-            BaseWindow window = (BaseWindow) containingWindow;
-
-            if (window.isNoCharacterLoaded()) {
-                window.disablePrintMenuItem();
-                window.disableSaveMenuItem();
-            }
+            this.pane.closeTab(this.tab);
         }
     }
 }

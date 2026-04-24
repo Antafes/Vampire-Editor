@@ -22,12 +22,20 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.language.LanguageInterface;
+import lombok.Getter;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,16 +49,35 @@ public class Configuration
 {
     private static Configuration instance;
     public static final String PATH = System.getProperty("user.home") + "/.vampire/";
+    public static final int MAX_RECENT_FILES = 10;
     private final Properties properties;
     private final File propertiesFile;
+    private final ArrayList<RecentFileEntry> recentFiles;
+
+    /**
+     * Returns an unmodifiable view of the recent files list.
+     * Use {@link #addRecentFile}, {@link #removeRecentFile}, or {@link #clearRecentFiles} to mutate the list.
+     *
+     * @return Unmodifiable list of recent file entries
+     */
+    public java.util.List<RecentFileEntry> getRecentFiles()
+    {
+        return Collections.unmodifiableList(this.recentFiles);
+    }
 
     /**
      * constructor
      */
     private Configuration()
     {
-        this.propertiesFile = new File(PATH + "gui.xml");
+        this(new File(PATH + "gui.xml"));
+    }
+
+    Configuration(File propertiesFile)
+    {
+        this.propertiesFile = propertiesFile;
         this.properties = new Properties();
+        this.recentFiles = new ArrayList<>();
     }
 
     /**
@@ -71,6 +98,9 @@ public class Configuration
      */
     public void loadProperties()
     {
+        this.properties.clear();
+        this.clearRecentFiles();
+
         if (this.propertiesFile.exists())
         {
             try
@@ -81,13 +111,33 @@ public class Configuration
             }
             catch (IOException ignored)
             {}
+
+            this.loadRecentFilesFromProperties();
         }
-        else
-        {
-            this.properties.setProperty("openDirPath", new File(PATH + "../Documents/").getPath());
-            this.properties.setProperty("saveDirPath", new File(PATH + "../Documents/").getPath());
+
+        this.restoreMissingDefaults();
+    }
+
+    private void restoreMissingDefaults()
+    {
+        String defaultDocumentsPath = new File(PATH + "../Documents/").getPath();
+
+        if (isNullOrEmpty(this.properties.getProperty("openDirPath"))) {
+            this.properties.setProperty("openDirPath", defaultDocumentsPath);
+        }
+
+        if (isNullOrEmpty(this.properties.getProperty("saveDirPath"))) {
+            this.properties.setProperty("saveDirPath", defaultDocumentsPath);
+        }
+
+        if (isNullOrEmpty(this.properties.getProperty("language"))) {
             this.properties.setProperty("language", Language.ENGLISH.toString());
         }
+    }
+
+    private static boolean isNullOrEmpty(String value)
+    {
+        return value == null || value.trim().isEmpty();
     }
 
     /**
@@ -95,7 +145,6 @@ public class Configuration
      */
     public void saveProperties()
     {
-        BufferedOutputStream outputStream;
         try
         {
             if (!this.propertiesFile.exists())
@@ -105,8 +154,10 @@ public class Configuration
                 this.propertiesFile.createNewFile();
             }
 
-            outputStream = new BufferedOutputStream(Files.newOutputStream(this.propertiesFile.toPath()));
-            this.properties.storeToXML(outputStream, null);
+            this.storeRecentFilesToProperties();
+            try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(this.propertiesFile.toPath()))) {
+                this.properties.storeToXML(outputStream, null);
+            }
         }
         catch (IOException ignored)
         {}
@@ -174,7 +225,7 @@ public class Configuration
      */
     public int getExtendedState()
     {
-        if (this.properties.getProperty("extendedState") == null || this.properties.getProperty("extendedState").equals("")) {
+        if (this.properties.getProperty("extendedState") == null || this.properties.getProperty("extendedState").isEmpty()) {
             return JFrame.NORMAL;
         }
 
@@ -265,9 +316,99 @@ public class Configuration
         this.properties.setProperty("language", language.toString());
     }
 
+    public void addRecentFile(String path, @NonNull String characterName)
+    {
+        if (path == null || path.trim().isEmpty()) {
+            return;
+        }
+
+        String normalizedPath = path.trim();
+        String normalizedCharacterName = characterName.trim();
+
+        this.recentFiles.removeIf((recentFile) -> recentFile.getPath().equals(normalizedPath));
+        this.recentFiles.add(0, new RecentFileEntry(normalizedPath, normalizedCharacterName));
+
+        while (this.recentFiles.size() > MAX_RECENT_FILES) {
+            this.recentFiles.remove(this.recentFiles.size() - 1);
+        }
+    }
+
+    public void removeRecentFile(@NonNull String path)
+    {
+        if (path.trim().isEmpty()) {
+            return;
+        }
+
+        String normalizedPath = path.trim();
+        this.recentFiles.removeIf((recentFile) -> recentFile.getPath().equals(normalizedPath));
+    }
+
+    public void clearRecentFiles()
+    {
+        this.recentFiles.clear();
+    }
+
+    private void loadRecentFilesFromProperties()
+    {
+        ArrayList<Integer> indices = new ArrayList<>();
+
+        this.properties.stringPropertyNames().stream()
+            .filter((key) -> key.startsWith("recentFiles.") && key.endsWith(".path"))
+            .forEach((key) -> {
+                String indexValue = key.substring("recentFiles.".length(), key.length() - ".path".length());
+
+                try {
+                    indices.add(Integer.parseInt(indexValue));
+                } catch (NumberFormatException ignored) {
+                }
+            });
+
+        indices.sort(Comparator.reverseOrder());
+
+        indices.forEach(index -> {
+            String path = this.properties.getProperty("recentFiles." + index + ".path");
+            if (path == null || path.trim().isEmpty()) {
+                return;
+            }
+            String characterName = this.properties.getProperty("recentFiles." + index + ".name", "");
+            this.addRecentFile(path, characterName);
+        });
+    }
+
+    private void storeRecentFilesToProperties()
+    {
+        ArrayList<String> keysToRemove = new ArrayList<>();
+
+        this.properties.stringPropertyNames().stream()
+            .filter((key) -> key.startsWith("recentFiles."))
+            .forEach(keysToRemove::add);
+
+        keysToRemove.forEach(this.properties::remove);
+
+        for (int i = 0; i < this.recentFiles.size(); i++) {
+            RecentFileEntry recentFile = this.recentFiles.get(i);
+            this.properties.setProperty("recentFiles." + i + ".path", recentFile.getPath());
+            this.properties.setProperty("recentFiles." + i + ".name", recentFile.getCharacterName());
+        }
+    }
+
+    @Getter
+    public static class RecentFileEntry
+    {
+        private final String path;
+        private final String characterName;
+
+        public RecentFileEntry(String path, String characterName)
+        {
+            this.path = path;
+            this.characterName = characterName;
+        }
+    }
+
     /**
      * A list of available languages.
      */
+    @Getter
     public enum Language {
         ENGLISH ("antafes.vampireEditor.language.English", "English", "images/english.png"),
         GERMAN ("antafes.vampireEditor.language.German", "German", "images/german.png");
@@ -292,33 +433,6 @@ public class Configuration
                 this.getClass().getClassLoader().getResource(path)
             );
             this.icon = new ImageIcon(img);
-        }
-
-        /**
-         * Get the language string, which is needed to create the language object.
-         *
-         * @return Language identifier
-         */
-        public String getLanguageString() {
-            return languageString;
-        }
-
-        /**
-         * Get the language name.
-         *
-         * @return Language name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Get the image icon for the language.
-         *
-         * @return Language icon
-         */
-        public ImageIcon getIcon() {
-            return icon;
         }
     }
 }

@@ -16,30 +16,15 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2022, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor;
+package antafes.vampireEditor.gui.event;
 
-import org.testng.annotations.BeforeMethod;
+import scripts.laniax.framework.event_dispatcher.Event;
 
-import javax.swing.*;
-import java.awt.*;
-
-public abstract class BaseTest
+public class CloseSelectedCharacterTabEvent extends Event
 {
-    Configuration configuration;
-
-    @BeforeMethod
-    public void setUp()
-    {
-        this.configuration = Configuration.getInstance();
-        this.configuration.clearRecentFiles();
-        this.configuration.setOpenDirPath("test/open/dir/path");
-        this.configuration.setSaveDirPath("test/save/dir/path");
-        this.configuration.setLanguage(Configuration.Language.ENGLISH);
-        this.configuration.setWindowLocation(new Point(10, 10));
-        this.configuration.setExtendedState(JFrame.NORMAL);
-    }
 }
+

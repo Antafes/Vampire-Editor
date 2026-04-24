@@ -31,9 +31,14 @@ import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.character.CharacterPanelInterface;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
+import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
 import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import antafes.vampireEditor.gui.event.CloseSelectedCharacterTabEvent;
+import antafes.vampireEditor.gui.event.OpenCharacterEvent;
 import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
+import antafes.vampireEditor.gui.event.listener.CharacterTabClosedListener;
 import antafes.vampireEditor.gui.event.listener.CloseProgrammeListener;
+import antafes.vampireEditor.gui.event.listener.OpenCharacterListener;
 import antafes.vampireEditor.gui.event.listener.SaveAllCharactersListener;
 import antafes.vampireEditor.gui.exception.SaveCancelledException;
 import antafes.vampireEditor.language.LanguageInterface;
@@ -52,8 +57,11 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +94,9 @@ public class BaseWindow extends javax.swing.JFrame {
     private JMenuItem saveMenuItem;
     private JMenuItem openMenuItem;
     private JMenuItem printMenuItem;
+    private JSeparator recentFilesTopSeparator;
+    private JSeparator recentFilesBottomSeparator;
+    private final java.util.List<JMenuItem> recentFileMenuItems = new java.util.ArrayList<>();
 
     /**
      * Creates new form BaseWindow
@@ -133,6 +144,7 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         };
         openFileChooser = new javax.swing.JFileChooser();
+        openFileChooser.setAcceptAllFileFilterUsed(false);
         charactersTabPane = new CloseableTabbedPane();
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -235,7 +247,29 @@ public class BaseWindow extends javax.swing.JFrame {
             .addComponent(charactersTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
         );
 
+        this.installCloseCurrentCharacterShortcut();
         pack();
+    }
+
+    private void installCloseCurrentCharacterShortcut()
+    {
+        KeyStroke closeCurrentCharacterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK);
+        String actionKey = "closeCurrentCharacter";
+        JRootPane rootPane = this.getRootPane();
+
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeCurrentCharacterStroke, actionKey);
+        rootPane.getActionMap().put(actionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                closeCurrentCharacterTab();
+            }
+        });
+    }
+
+    private void closeCurrentCharacterTab()
+    {
+        VampireEditor.getDispatcher().dispatch(new CloseSelectedCharacterTabEvent());
     }
 
     private void createAboutDialog()
@@ -477,47 +511,8 @@ public class BaseWindow extends javax.swing.JFrame {
         int result = this.openFileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            ShowWaitAction waitAction = new ShowWaitAction(this);
-            waitAction.show(aVoid -> {
-                this.configuration.setOpenDirPath(this.openFileChooser.getSelectedFile().getParent());
-                this.configuration.saveProperties();
-                CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
-
-                try {
-                    Character character = storage.load(this.openFileChooser.getSelectedFile().getName());
-
-                    int characterTab = this.isCharacterLoaded(character);
-                    if (characterTab != -1) {
-                        this.charactersTabPane.setSelectedIndex(characterTab);
-                        VampireEditor.log("Character was already open, switched to tab.");
-                        return null;
-                    }
-
-                    this.addCharacter(character);
-                    this.printMenuItem.setEnabled(true);
-                    this.saveMenuItem.setEnabled(true);
-                    VampireEditor.log("Loaded character " + character.getName());
-                } catch (Exception ex) {
-                    Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(
-                        this,
-                        getCouldNotLoadCharacterMessage(this.language, ex),
-                        this.language.translate("couldNotLoad"),
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                    ArrayList<String> list = new ArrayList<>(
-                        Collections.singletonList(ex.getMessage())
-                    );
-
-                    for (Throwable throwable : ex.getSuppressed()) {
-                        list.add(throwable.getMessage());
-                    }
-
-                    VampireEditor.log(list);
-                }
-
-                return null;
-            });
+            File selectedFile = this.openFileChooser.getSelectedFile();
+            VampireEditor.getDispatcher().dispatch(new OpenCharacterEvent(selectedFile.getAbsolutePath()));
         }
     }
 
@@ -525,8 +520,16 @@ public class BaseWindow extends javax.swing.JFrame {
     {
         String message = language.translate("couldNotLoadCharacter");
 
-        if (ex instanceof MissingRoadException || ex instanceof MissingClanException) {
-            return message + "\n" + ex.getMessage();
+        if (
+            ex instanceof MissingRoadException
+                || ex instanceof MissingClanException
+                || ex instanceof FileNotFoundException
+        ) {
+            String details = ex.getMessage();
+
+            if (details != null && !details.trim().isEmpty()) {
+                return message + "\n" + details;
+            }
         }
 
         return message;
@@ -669,7 +672,81 @@ public class BaseWindow extends javax.swing.JFrame {
         this.saveMenuItem.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
         this.printMenuItem.setText(this.language.translate("print"));
         this.printMenuItem.setMnemonic(this.language.translate("printMnemonic").charAt(0));
+        this.refreshRecentFilesMenu();
     }
+
+    /**
+     * Rebuild the recent files section in the File menu.
+     * The section is placed between the Print and Quit menu items.
+     * When the list is empty the section (including separators) is hidden.
+     */
+    private void refreshRecentFilesMenu() {
+        // Remove previously added dynamic items and separators
+        if (recentFilesTopSeparator != null) {
+            fileMenu.remove(recentFilesTopSeparator);
+        }
+        for (JMenuItem item : recentFileMenuItems) {
+            fileMenu.remove(item);
+        }
+        if (recentFilesBottomSeparator != null) {
+            fileMenu.remove(recentFilesBottomSeparator);
+        }
+        recentFileMenuItems.clear();
+
+        java.util.List<Configuration.RecentFileEntry> recentFiles = this.configuration.getRecentFiles();
+        if (recentFiles.isEmpty()) {
+            return;
+        }
+
+        // Determine the index of the Quit menu item so we can insert before it
+        int quitIndex = -1;
+        for (int i = 0; i < fileMenu.getPopupMenu().getComponentCount(); i++) {
+            if (fileMenu.getPopupMenu().getComponent(i) == closeMenuItem) {
+                quitIndex = i;
+                break;
+            }
+        }
+        if (quitIndex == -1) {
+            quitIndex = fileMenu.getPopupMenu().getComponentCount();
+        }
+
+        // Build label map to detect duplicate character names (show parent folder then)
+        java.util.Map<String, Long> nameCount = new java.util.HashMap<>();
+        for (Configuration.RecentFileEntry entry : recentFiles) {
+            String name = entry.getCharacterName().isEmpty() ? new File(entry.getPath()).getName() : entry.getCharacterName();
+            nameCount.merge(name, 1L, Long::sum);
+        }
+
+        recentFilesTopSeparator = new JSeparator();
+        fileMenu.getPopupMenu().insert(recentFilesTopSeparator, quitIndex);
+
+        for (int i = 0; i < recentFiles.size(); i++) {
+            Configuration.RecentFileEntry entry = recentFiles.get(i);
+            String displayName = entry.getCharacterName().isEmpty()
+                ? new File(entry.getPath()).getName()
+                : entry.getCharacterName();
+
+            if (nameCount.getOrDefault(displayName, 0L) > 1) {
+                File entryFile = new File(entry.getPath());
+                String parent = entryFile.getParent();
+                String disambiguator = (parent == null || parent.trim().isEmpty())
+                    ? entry.getPath()
+                    : parent;
+                displayName += " (" + disambiguator + ")";
+            }
+
+            JMenuItem item = new JMenuItem((i + 1) + "  " + displayName);
+            item.setToolTipText(entry.getPath());
+            final String filePath = entry.getPath();
+            item.addActionListener(e -> VampireEditor.getDispatcher().dispatch(new OpenCharacterEvent(filePath)));
+            recentFileMenuItems.add(item);
+            fileMenu.insert(item, quitIndex + 1 + i);
+        }
+
+        recentFilesBottomSeparator = new JSeparator();
+        fileMenu.getPopupMenu().insert(recentFilesBottomSeparator, quitIndex + 1 + recentFiles.size());
+    }
+
 
     /**
      * Install a dialog wide escape handler.
@@ -770,6 +847,127 @@ public class BaseWindow extends javax.swing.JFrame {
             SaveAllCharactersEvent.class,
             new SaveAllCharactersListener((event) -> this.saveAllCharacters())
         );
+        VampireEditor.getDispatcher().addListener(
+            OpenCharacterEvent.class,
+            new OpenCharacterListener((event) -> this.openCharacter(event.getFilePath()))
+        );
+        VampireEditor.getDispatcher().addListener(
+            CharacterTabClosedEvent.class,
+            new CharacterTabClosedListener((event) -> this.handleCharacterTabClosed())
+        );
+    }
+
+    private void handleCharacterTabClosed()
+    {
+        if (this.isNoCharacterLoaded()) {
+            this.disablePrintMenuItem();
+            this.disableSaveMenuItem();
+        }
+    }
+
+    /**
+     * Handle an OpenCharacterEvent by loading the character file, updating the MRU list
+     * and refreshing the recent-files menu.
+     *
+     * @param filePath Absolute path to the character XML file
+     */
+    private void openCharacter(String filePath)
+    {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            return;
+        }
+
+        File file = new File(filePath);
+
+        ShowWaitAction waitAction = new ShowWaitAction(this);
+        waitAction.show(aVoid -> {
+            CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
+
+            try {
+                if (!file.getName().toLowerCase(Locale.ROOT).endsWith(".xml")) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                if (!file.exists() || !file.isFile() || !file.canRead()) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                File parentDir = file.getAbsoluteFile().getParentFile();
+                if (parentDir == null) {
+                    throw new java.io.FileNotFoundException(filePath);
+                }
+
+                this.configuration.setOpenDirPath(parentDir.getPath());
+                Character character = storage.load(file.getName());
+                this.configuration.addRecentFile(filePath, character.getName());
+                this.configuration.saveProperties();
+                this.runOnEdtAndWait(() -> {
+                    this.refreshRecentFilesMenu();
+
+                    int characterTab = this.isCharacterLoaded(character);
+                    if (characterTab != -1) {
+                        this.charactersTabPane.setSelectedIndex(characterTab);
+                        VampireEditor.log("Character was already open, switched to tab.");
+                        return;
+                    }
+
+                    this.addCharacter(character);
+                    this.printMenuItem.setEnabled(true);
+                    this.saveMenuItem.setEnabled(true);
+                    VampireEditor.log("Loaded character " + character.getName());
+                });
+            } catch (Exception ex) {
+                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                this.configuration.removeRecentFile(filePath);
+                this.configuration.saveProperties();
+                this.runOnEdt(() -> {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        getCouldNotLoadCharacterMessage(this.language, ex),
+                        this.language.translate("couldNotLoad"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    this.refreshRecentFilesMenu();
+                });
+
+                ArrayList<String> list = new ArrayList<>(
+                    Collections.singletonList(ex.getMessage())
+                );
+                for (Throwable throwable : ex.getSuppressed()) {
+                    list.add(throwable.getMessage());
+                }
+                VampireEditor.log(list);
+            }
+
+            return null;
+        });
+    }
+
+    private void runOnEdtAndWait(Runnable runnable)
+    {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        try {
+            SwingUtilities.invokeAndWait(runnable);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
+
+    private void runOnEdt(Runnable runnable)
+    {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+            return;
+        }
+
+        SwingUtilities.invokeLater(runnable);
     }
 
     private void closeProgramme()
