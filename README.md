@@ -92,11 +92,16 @@ The following Concourse variables must be set when applying the pipeline (keep a
 | Variable | Purpose |
 |---|---|
 | `acccess_token` | GitHub personal access token for PR/release resources |
-| `github_access_token` | GitHub personal access token with **Issues** write permission (used by dependency scan) |
+| `github_access_token` | GitHub personal access token used by dependency scan issue automation (see exact required scopes/permissions below) |
 | `maven_access_token` | GitHub token for the Apache Maven registry (private packages) |
 | `private_key` | SSH private key for git repo access |
 
 Add new variables to `ci/variables.yml` (based on `ci/variables.yml.dist`) before applying the pipeline.
+
+`github_access_token` requirements:
+
+- **Classic PAT**: `repo` scope (required for private repositories and includes issue read/write access).
+- **Fine-grained PAT**: repository access to `Antafes/Vampire-Editor` with **Issues: Read and write** permission.
 
 ### Applying the Pipeline
 
@@ -113,7 +118,7 @@ fly -t ciwafriv trigger-job --team vampire_editor -j vampire_editor/vampire-edit
 
 ### Troubleshooting
 
-- **API rate limit / auth failures**: Verify that `github_access_token` has the `repo` (Issues write) scope and has not expired.
+- **API rate limit / auth failures**: Verify that `github_access_token` matches the requirements above (Classic PAT: `repo`; Fine-grained PAT: `Issues` read/write for `Antafes/Vampire-Editor`) and has not expired.
 - **No updates reported but outdated packages exist**: Run `mvn versions:display-dependency-updates` locally to validate. SNAPSHOT or non-release versions may be filtered.
 - **False positives (major version bumps)**: Review the reported versions before acting; the scan includes all available versions without distinction between major/minor/patch.
 - **`curl` not installed**: The `create-dependency-issue` task installs `curl` at runtime via `apt-get`. If the Concourse worker has no internet access, pre-bake `curl` into a custom image.
