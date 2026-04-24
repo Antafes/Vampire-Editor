@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
@@ -225,7 +226,9 @@ public class ConfigurationTest extends BaseTest
         properties.setProperty("recentFiles.0.name", "Lucita");
         properties.setProperty("recentFiles.1.name", "Missing Path");
         properties.setProperty("recentFiles.foo.path", "C:/characters/invalid.xml");
-        properties.storeToXML(Files.newOutputStream(propertiesFile.toPath()), null);
+        try (OutputStream outputStream = Files.newOutputStream(propertiesFile.toPath())) {
+            properties.storeToXML(outputStream, null);
+        }
 
         Configuration configuration = new Configuration(propertiesFile);
         configuration.loadProperties();
@@ -283,7 +286,9 @@ public class ConfigurationTest extends BaseTest
             properties.setProperty("recentFiles." + i + ".name", "Character " + i);
         }
 
-        properties.storeToXML(Files.newOutputStream(propertiesFile.toPath()), null);
+        try (OutputStream outputStream = Files.newOutputStream(propertiesFile.toPath())) {
+            properties.storeToXML(outputStream, null);
+        }
 
         Configuration configuration = new Configuration(propertiesFile);
         configuration.loadProperties();
