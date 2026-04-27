@@ -62,6 +62,8 @@ public final class JaxbBindingSupport {
     private static Schema buildSchema(InputStream schemaStream) {
         try (InputStream is = schemaStream) {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             return schemaFactory.newSchema(new javax.xml.transform.stream.StreamSource(is));
         } catch (Exception ex) {
             throw new JaxbBindingException("Could not create XML schema", ex);
