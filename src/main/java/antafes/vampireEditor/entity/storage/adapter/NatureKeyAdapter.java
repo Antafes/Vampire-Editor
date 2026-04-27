@@ -35,7 +35,7 @@ public class NatureKeyAdapter extends XmlAdapter<String, Nature> {
 
     @Override
     public Nature unmarshal(String key) {
-        if (key == null || key.isEmpty()) return null;
+        if (key == null || key.isBlank()) return null;
         NatureStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         try {
             return storage.getEntity(key);

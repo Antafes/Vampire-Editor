@@ -29,17 +29,12 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
+import antafes.vampireEditor.xml.validation.XsdValidator;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -78,20 +73,14 @@ public class CharacterStorageTest extends BaseTest
         this.characterStorage = null;
     }
 
-    public void testSave() throws SAXException {
+    public void testSave() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         File file = new File(this.saveDir + "/" + this.filename);
 
         Assert.assertTrue(file.exists());
 
-        // Validate against XSD using JDK javax.xml.validation API
-        InputStream schemaInputStream = VampireEditor.getFileInJar("character.xsd");
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(new StreamSource(schemaInputStream));
-        Validator validator = schema.newValidator();
-
-        try {
-            validator.validate(new StreamSource(file));
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(file, schemaInputStream);
             Assert.assertTrue(true);
         } catch (Exception e) {
             Assert.fail("XML validation failed: " + e.getMessage());
@@ -122,6 +111,22 @@ public class CharacterStorageTest extends BaseTest
 
         Assert.assertEquals(actual, expected);
         Assert.assertNull(actual.getSex());
+    }
+
+    public void testSaveNpcWithoutNatureIsXsdValid() throws Exception {
+        Character npcWithoutNature = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setNpc(true)
+            .setNature(null)
+            .setClan(null)
+            .setRoad(null)
+            .build();
+
+        this.characterStorage.save(npcWithoutNature, this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(filePath.toFile(), schemaInputStream);
+        }
     }
 
     public void testSaveUsesDirectoryPreparedByTest() {
