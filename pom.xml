@@ -34,14 +34,21 @@
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
         <lombok.version>1.18.46</lombok.version>
+        <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
+        <jaxb.runtime.version>4.0.5</jaxb.runtime.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>antafes</groupId>
-            <artifactId>myxml</artifactId>
-            <version>3.1.8</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta.xml.bind-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb.runtime.version}</version>
         </dependency>
         <dependency>
             <groupId>antafes</groupId>

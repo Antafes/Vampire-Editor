@@ -22,14 +22,22 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Merit;
-import antafes.vampireEditor.entity.character.SpecialFeatureInterface;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for merits.
@@ -48,27 +56,21 @@ public class MeritStorage extends BaseStorage<Merit> {
      */
     private void loadData() {
         InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "merits.xml");
-        XMLParser xp = new XMLParser();
+        try {
+            JAXBContext context = JaxbBindingSupport.createContext(MeritsDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            MeritsDocument doc = (MeritsDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Merit.builder()
-                        .setNames(names)
-                        .setKey(element.getAttribute("key"))
-                        .setCost(XMLParser.getTagValueInt("cost", element))
-                        .setType(SpecialFeatureInterface.SpecialFeatureType.valueOf(XMLParser.getTagValue("type", element)))
-                        .build()
-                );
-            });
+            doc.merits.forEach((merit) -> this.getList().put(merit.getKey(), merit));
+        } catch (JAXBException e) {
+            Logger.getLogger(MeritStorage.class.getName()).log(Level.SEVERE, "Could not load merits", e);
         }
+    }
+
+    @XmlRootElement(name = "merits")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class MeritsDocument {
+        @XmlElement(name = "merit")
+        public List<Merit> merits = new ArrayList<>();
     }
 }

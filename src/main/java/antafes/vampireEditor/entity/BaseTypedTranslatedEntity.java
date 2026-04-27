@@ -23,6 +23,9 @@ package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.entity.character.EntityTypeInterface;
 import antafes.vampireEditor.entity.exception.EntityException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -34,14 +37,31 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class BaseTypedTranslatedEntity extends BaseTranslatedEntity {
-    private final EntityTypeInterface type;
+    private EntityTypeInterface type;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected BaseTypedTranslatedEntity() { super(); }
 
     @Override
     public String toString()
     {
         return super.toString();
     }
+
+    @XmlElement(name = "type")
+    protected String getJaxbType()
+    {
+        return this.type == null ? null : ((Enum<?>) this.type).name();
+    }
+
+    protected void setJaxbType(String type)
+    {
+        this.type = type == null ? null : this.parseJaxbType(type);
+    }
+
+    protected abstract EntityTypeInterface parseJaxbType(String type);
 
     public static abstract class BaseTypedTranslatedEntityBuilder<C extends BaseTypedTranslatedEntity, B extends BaseTypedTranslatedEntityBuilder<C, B>> extends BaseTranslatedEntityBuilder<C, B> {
         @Override

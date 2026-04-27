@@ -22,6 +22,12 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseValuedTranslatedEntity;
+import antafes.vampireEditor.entity.storage.adapter.AdvantageListAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -37,8 +43,17 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "road")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
-    private final List<Advantage> merits;
+    @XmlElement(name = "advantages")
+    @XmlJavaTypeAdapter(AdvantageListAdapter.class)
+    private List<Advantage> merits;
+
+    protected Road()
+    {
+        super();
+    }
 
     @Override
     public String toString()

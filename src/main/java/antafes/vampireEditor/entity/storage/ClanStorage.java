@@ -22,18 +22,22 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
-import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.character.Weakness;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for clans.
@@ -52,88 +56,21 @@ public class ClanStorage extends BaseStorage<Clan> {
      */
     private void loadData() {
         InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "clans.xml");
-        XMLParser xp = new XMLParser();
+        try {
+            JAXBContext context = JaxbBindingSupport.createContext(ClansDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            ClansDocument doc = (ClansDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                HashMap<Configuration.Language, String> nicknames = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("nickname", element)).forEach((name) -> nicknames.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Clan.builder()
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .setNicknames(nicknames)
-                        .setAdvantages(this.getClanDisciplines(XMLParser.getTagElement("advantages", element)))
-                        .setWeaknesses(this.getWeaknesses(XMLParser.getTagElement("weaknesses", element)))
-                        .build()
-                );
-            });
+            doc.clans.forEach((clan) -> this.getList().put(clan.getKey(), clan));
+        } catch (JAXBException e) {
+            Logger.getLogger(ClanStorage.class.getName()).log(Level.SEVERE, "Could not load clans", e);
         }
     }
 
-    /**
-     * Get the disciplines of the given clan element.
-     *
-     * @param element XML element
-     *
-     * @return List of advantage objects
-     */
-    private ArrayList<Advantage> getClanDisciplines(Element element) {
-        ArrayList<Advantage> advantagesList = new ArrayList<>();
-        ArrayList<Element> advantages = XMLParser.getAllChildren(element);
-        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-
-        advantages.forEach(
-            (listElement) -> {
-                try {
-                    advantagesList.add(
-                        storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
-                    );
-                } catch (EntityStorageException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        );
-
-        return advantagesList;
-    }
-
-    /**
-     * Get the weaknesses of the given clan element.
-     *
-     * @param element XML element
-     *
-     * @return List of weakness objects
-     */
-    private ArrayList<Weakness> getWeaknesses(Element element) {
-        ArrayList<Weakness> weaknessesList = new ArrayList<>();
-        ArrayList<Element> weaknesses = XMLParser.getAllChildren(element);
-        WeaknessStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
-
-        weaknesses.forEach(
-            (listElement) -> {
-                try {
-                    weaknessesList.add(
-                        storage.getEntity(listElement.getChildNodes().item(0).getNodeValue())
-                    );
-                } catch (EntityStorageException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        );
-
-        return weaknessesList;
+    @XmlRootElement(name = "clans")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class ClansDocument {
+        @XmlElement(name = "clan")
+        public List<Clan> clans = new ArrayList<>();
     }
 }

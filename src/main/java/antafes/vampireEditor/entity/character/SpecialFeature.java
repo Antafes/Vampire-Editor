@@ -22,6 +22,9 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -35,9 +38,14 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class SpecialFeature extends BaseTypedTranslatedEntity implements SpecialFeatureInterface {
     @ToString.Include
-    private final int cost;
+    @XmlElement(name = "cost")
+    private int cost;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected SpecialFeature() { super(); }
 
     @Override
     public String toString()
@@ -49,5 +57,11 @@ public abstract class SpecialFeature extends BaseTypedTranslatedEntity implement
     public SpecialFeatureType getType()
     {
         return (SpecialFeatureType) super.getType();
+    }
+
+    @Override
+    protected EntityTypeInterface parseJaxbType(String type)
+    {
+        return SpecialFeatureType.valueOf(type);
     }
 }

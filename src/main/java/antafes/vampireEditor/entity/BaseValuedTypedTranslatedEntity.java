@@ -22,6 +22,8 @@
 
 package antafes.vampireEditor.entity;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -29,9 +31,13 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
+@XmlAccessorType(XmlAccessType.NONE)
 abstract public class BaseValuedTypedTranslatedEntity extends BaseTypedTranslatedEntity implements ValuedEntityInterface
 {
-    private final int value;
+    private int value;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected BaseValuedTypedTranslatedEntity() { super(); }
 
     @Override
     public String toString()

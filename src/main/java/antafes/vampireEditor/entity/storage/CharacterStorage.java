@@ -21,24 +21,19 @@
  */
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.myXML.XMLValidator;
-import antafes.myXML.XMLWriter;
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.HashMap;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for characters
@@ -47,30 +42,20 @@ import java.util.logging.Logger;
  */
 public class CharacterStorage extends BaseStorage<Character> {
     private final Configuration configuration;
-    private final XMLWriter xw;
-    private final XMLParser xp;
-    private final XMLValidator xv;
+    private final JAXBContext jaxbContext;
 
     /**
      * Create a new character storage.
      */
     CharacterStorage() {
         super();
-
-        HashMap<String, String> rootAttributes = new HashMap<>();
-        rootAttributes.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
         this.configuration = Configuration.getInstance();
-        String characterSchemaPath = "character.xsd";
-        this.xw = new XMLWriter("character");
-        this.xw.addRootNodeAttributes(rootAttributes);
-        this.xp = new XMLParser(VampireEditor.getFileInJar(characterSchemaPath));
-        this.xv = new XMLValidator(VampireEditor.getFileInJar(characterSchemaPath));
+        this.jaxbContext = JaxbBindingSupport.createContext(Character.class);
     }
 
     /**
      * Initializes the storage and pre-loads available data.
-     *
-     * @TODO This might be used in the future to preload previously opened characters.
+     * TODO This might be used in the future to preload previously opened characters.
      */
     @Override
     public void init() {
@@ -82,10 +67,14 @@ public class CharacterStorage extends BaseStorage<Character> {
      * @param character The character to save
      * @param filename The filename to use for saving
      */
-    public void save(antafes.vampireEditor.entity.Character character, String filename) {
-        this.addRequiredFields(character);
-        this.xw.write(this.configuration.getSaveDirPath(filename));
-        this.getList().put(character.getId().toString(), character);
+    public void save(Character character, String filename) {
+        try {
+            Marshaller marshaller = JaxbBindingSupport.createMarshaller(jaxbContext);
+            marshaller.marshal(character, this.configuration.getSaveDirPath(filename));
+            this.getList().put(character.getId().toString(), character);
+        } catch (JAXBException e) {
+            throw new RuntimeException("Could not save character '" + filename + "'", e);
+        }
     }
 
     /**
@@ -96,314 +85,75 @@ public class CharacterStorage extends BaseStorage<Character> {
      * @return The loaded character
      * @throws EntityStorageException Thrown if character couldn't be loaded
      */
-    public antafes.vampireEditor.entity.Character load(String filename) throws EntityStorageException  {
-        if (this.xp.parse(this.configuration.getOpenDirPath() + "/" + filename)) {
-            Character character = this.fillValues();
+    public Character load(String filename) throws EntityStorageException {
+        try {
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
+            Character character = (Character) unmarshaller.unmarshal(
+                new File(this.configuration.getOpenDirPath(), filename)
+            );
 
-            if (character != null) {
-                this.getList().put(character.getId().toString(), character);
-
-                return character;
-            }
+            this.normalizeLoadedCollections(character);
+            this.validateLoadedCharacter(character);
+            character = this.rebuildLoadedCharacter(character);
+            this.getList().put(character.getId().toString(), character);
+            return character;
+        } catch (JAXBException | IllegalArgumentException e) {
+            EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
+            ex.addSuppressed(e);
+            throw ex;
         }
-VampireEditor.log("Something stupid happened...");
-        EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
-
-        this.xp.getExceptionList().forEach(ex::addSuppressed);
-
-        throw ex;
     }
 
-    /**
-     * Add all fields that are required to generate a new character object out of the stored data.
-     *
-     * @param character The character to get the data from
-     */
-    private void addRequiredFields(antafes.vampireEditor.entity.Character character) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        HashMap<String, String> dateNilAttributes = new HashMap<>();
-        dateNilAttributes.put("xsi:nil", "true");
-        HashMap<String, String> rootAttributes = new HashMap<>();
-        rootAttributes.put("id", character.getId().toString());
-
-        if (character.isNpc()) {
-            rootAttributes.put("isNpc", "true");
-        }
-
-        this.xw.addRootNodeAttributes(rootAttributes);
-        this.xw.addChild("name", character.getName());
-
-        if (character.getClan() != null) {
-            this.xw.addChild("clan", character.getClan().getKey());
-        }
-        this.xw.addChild("generation", character.getGeneration().toString());
-        this.xw.addChild("chronicle", character.getChronicle());
-        this.xw.addChild("experience", Integer.toString(character.getExperience()));
-        this.xw.addChild(
-            "nature",
-            character.getNature() == null
-                ? ""
-                : character.getNature().isManual() ? character.getNature().getName() : character.getNature().getKey()
-        );
-        this.xw.addChild("hideout", character.getHideout());
-        this.xw.addChild("player", character.getPlayer());
-        this.xw.addChild("demeanor", character.getDemeanor() == null ? "" : character.getDemeanor());
-        this.xw.addChild("concept", character.getConcept() == null ? "" : character.getConcept());
-        this.xw.addChild("sire", character.getSire());
-        this.xw.addChild("sect", character.getSect());
-
-        Element attributes = this.xw.addChild("attributes");
-        character.getAttributes().forEach((key, attribute) -> {
-            HashMap<String, String> attributeList = new HashMap<>();
-            attributeList.put("key", key);
-            this.xw.addChild(attributes, "attribute", Integer.toString(attribute.getValue()), attributeList);
-        });
-
-        Element abilities = this.xw.addChild("abilities");
-        character.getAbilities().forEach((key, ability) -> {
-            HashMap<String, String> abilitiesList = new HashMap<>();
-            abilitiesList.put("key", key);
-            this.xw.addChild(abilities, "ability", Integer.toString(ability.getValue()), abilitiesList);
-        });
-
-        Element advantages = this.xw.addChild("advantages");
-        character.getAdvantages().forEach((key, advantage) -> {
-            HashMap<String, String> advantagesList = new HashMap<>();
-            advantagesList.put("key", key);
-            this.xw.addChild(advantages, "advantage", Integer.toString(advantage.getValue()), advantagesList);
-        });
-
-        Element merits = this.xw.addChild("merits");
-        character.getMerits().forEach((key, merit) -> this.xw.addChild(merits, "merit", key));
-
-        Element flaws = this.xw.addChild("flaws");
-        character.getFlaws().forEach((key, flaw) -> this.xw.addChild(flaws, "flaw", key));
-
-        if (character.getRoad() != null) {
-            HashMap<String, String> roadAttributes = new HashMap<>();
-            roadAttributes.put("key", character.getRoad().getKey());
-            this.xw.addChild("road", Integer.toString(character.getRoad().getValue()), roadAttributes);
-        }
-
-        this.xw.addChild("willpower", Integer.toString(character.getWillpower()));
-        this.xw.addChild("usedWillpower", Integer.toString(character.getUsedWillpower()));
-        this.xw.addChild("bloodPool", Integer.toString(character.getBloodPool()));
-        this.xw.addChild("age", Integer.toString(character.getAge()));
-        this.xw.addChild("apparentAge", Integer.toString(character.getApparentAge()));
-
-        if (character.getDayOfBirth() != null) {
-            this.xw.addChild("dayOfBirth",format.format(character.getDayOfBirth()));
-        } else {
-            this.xw.addChild("dayOfBirth", dateNilAttributes);
-        }
-
-        if (character.getDayOfDeath() != null) {
-            this.xw.addChild("dayOfDeath", format.format(character.getDayOfDeath()));
-        } else {
-            this.xw.addChild("dayOfDeath", dateNilAttributes);
-        }
-
-        this.xw.addChild("hairColor", character.getHairColor());
-        this.xw.addChild("eyeColor", character.getEyeColor());
-        this.xw.addChild("skinColor", character.getSkinColor());
-        this.xw.addChild("nationality", character.getNationality());
-        this.xw.addChild("height", Integer.toString(character.getHeight()));
-        this.xw.addChild("weight", Integer.toString(character.getWeight()));
-        this.xw.addChild("sex", character.getSex() != null ? character.getSex().name() : "");
-        this.xw.addChild("story", character.getStory());
-        this.xw.addChild("description", character.getDescription());
-    }
-
-    /**
-     * Create a new character object and fill it with values.
-     *
-     * @return The newly created character
-     */
-    private antafes.vampireEditor.entity.Character fillValues() throws EntityStorageException
+    private void normalizeLoadedCollections(Character character)
     {
-        antafes.vampireEditor.entity.Character.CharacterBuilder<?, ?> builder = antafes.vampireEditor.entity.Character.builder();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Element root = this.xp.getRootElement();
-        String id = root.getAttribute("id");
-        boolean isNpc = root.hasAttribute("isNpc") && root.getAttribute("isNpc").equals("true");
-
-        if (id.isEmpty()) {
-            return null;
+        if (character.getAttributes() == null) {
+            character.setAttributes(new HashMap<>());
         }
 
-        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-        builder.setId(UUID.fromString(id))
-            .setNpc(isNpc)
-            .setName(XMLParser.getTagValue("name", root));
+        if (character.getAbilities() == null) {
+            character.setAbilities(new HashMap<>());
+        }
 
-        if (!isNpc && !XMLParser.tagExists("clan", root)) {
+        if (character.getAdvantages() == null) {
+            character.setAdvantages(new HashMap<>());
+        }
+
+        if (character.getMerits() == null) {
+            character.setMerits(new HashMap<>());
+        }
+
+        if (character.getFlaws() == null) {
+            character.setFlaws(new HashMap<>());
+        }
+    }
+
+    private void validateLoadedCharacter(Character character) throws EntityStorageException
+    {
+        if (character == null || character.getId() == null) {
+            throw new EntityStorageException("Character document has no id");
+        }
+
+        if (!character.isNpc() && character.getClan() == null) {
             throw new MissingClanException("Missing clan for non-NPC character!");
         }
 
-        String clanValue = XMLParser.tagExists("clan", root) ? XMLParser.getTagValue("clan", root) : null;
-
-        if (clanValue != null && !clanValue.isEmpty()) {
-            try {
-                builder.setClan(clanStorage.getEntity(clanValue));
-            } catch (EntityStorageException e) {
-                throw new RuntimeException(e);
-            }
+        if (character.getGeneration() == null) {
+            throw new EntityStorageException("Missing generation for character!");
         }
 
-        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        try {
-            builder.setGeneration(generationStorage.getEntity(XMLParser.getTagValueInt("generation", root)));
-        } catch (EntityStorageException e) {
-            throw new RuntimeException(e);
-        }
-        builder.setChronicle(XMLParser.getTagValue("chronicle", root))
-            .setExperience(XMLParser.getTagValueInt("experience", root))
-            .setHideout(XMLParser.getTagValue("hideout", root))
-            .setPlayer(XMLParser.getTagValue("player", root))
-            .setDemeanor(XMLParser.getTagValue("demeanor", root))
-            .setConcept(XMLParser.getTagValue("concept", root))
-            .setSire(XMLParser.getTagValue("sire", root))
-            .setSect(XMLParser.getTagValue("sect", root));
-
-        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        String nature = XMLParser.getTagValue("nature", root);
-        if (!nature.isEmpty()) {
-            try {
-                builder.setNature(natureStorage.getEntity(nature));
-            } catch (EntityStorageException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        Element attributes = XMLParser.getTagElement("attributes", root);
-        AttributeStorage attributeStorage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
-        XMLParser.getAllChildren(attributes).stream().map((element) -> {
-            try {
-                String key = element.getAttribute("key");
-                Attribute attribute = attributeStorage.getEntity(key);
-
-                return attribute.toBuilder()
-                    .setValue(XMLParser.getElementValueInt(element))
-                    .build();
-            } catch (EntityStorageException ex) {
-                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            return null;
-        }).forEachOrdered(builder::addAttribute);
-
-        Element abilities = XMLParser.getTagElement("abilities", root);
-        AbilityStorage abilityStorage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
-        XMLParser.getAllChildren(abilities).stream().map((element) -> {
-            try {
-                String key = element.getAttribute("key");
-                Ability ability = abilityStorage.getEntity(key);
-
-                return ability.toBuilder()
-                    .setValue(XMLParser.getElementValueInt(element))
-                    .build();
-            } catch (EntityStorageException ex) {
-                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            return null;
-        }).forEachOrdered(builder::addAbility);
-
-        Element advantages = XMLParser.getTagElement("advantages", root);
-        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        XMLParser.getAllChildren(advantages).stream().map((element) -> {
-            try {
-                String key = element.getAttribute("key");
-                Advantage advantage = advantageStorage.getEntity(key);
-
-                return advantage.toBuilder()
-                    .setValue(XMLParser.getElementValueInt(element))
-                    .build();
-            } catch (EntityStorageException ex) {
-                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            return null;
-        }).forEachOrdered(builder::addAdvantage);
-
-        MeritStorage meritStorage = StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
-        XMLParser.getAllChildren(XMLParser.getTagElement("merits", root))
-            .forEach((element) -> {
-                try {
-                    builder.addMerit(meritStorage.getEntity(XMLParser.getElementValue(element)));
-                } catch (EntityStorageException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-        FlawStorage flawStorage = StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
-        XMLParser.getAllChildren(XMLParser.getTagElement("flaws", root))
-            .forEach((element) -> {
-                try {
-                    builder.addFlaw(flawStorage.getEntity(XMLParser.getElementValue(element)));
-                } catch (EntityStorageException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-        if (!XMLParser.tagExists("road", root) && !isNpc) {
+        if (!character.isNpc() && character.getRoad() == null) {
             throw new MissingRoadException("Missing road for non-NPC character!");
         }
+    }
 
-        if (XMLParser.tagExists("road", root)) {
-            RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-            Element road = XMLParser.getTagElement("road", root);
-            try {
-                builder.setRoad(roadStorage.getEntity(road.getAttribute("key"))
-                    .toBuilder()
-                    .setValue(XMLParser.getTagValueInt("road", root))
-                    .build());
-            } catch (EntityStorageException e) {
-                throw new RuntimeException(e);
-            }
+    private Character rebuildLoadedCharacter(Character character) throws EntityStorageException
+    {
+        try {
+            return character.toBuilder().build();
+        } catch (Exception e) {
+            EntityStorageException ex = new EntityStorageException("Could not rebuild loaded character '" + character.getId() + "'!");
+            ex.addSuppressed(e);
+            throw ex;
         }
-
-        builder.setWillpower(XMLParser.getTagValueInt("willpower", root));
-
-        if (XMLParser.tagExists("usedWillpower", root) && XMLParser.getTagValue("usedWillpower", root) != null) {
-            builder.setUsedWillpower(XMLParser.getTagValueInt("usedWillpower", root));
-        }
-
-        builder.setBloodPool(XMLParser.getTagValueInt("bloodPool", root))
-            .setAge(XMLParser.getTagValueInt("age", root))
-            .setApparentAge(XMLParser.getTagValueInt("apparentAge", root));
-
-        String dayOfBirthTagValue = XMLParser.getTagValue("dayOfBirth", root);
-        if (XMLParser.tagExists("dayOfBirth", root) && dayOfBirthTagValue != null && !dayOfBirthTagValue.isEmpty()) {
-            try {
-                builder.setDayOfBirth(format.parse(dayOfBirthTagValue));
-            } catch (ParseException ex) {
-                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        String dayOfDeathTagValue = XMLParser.getTagValue("dayOfDeath", root);
-        if (XMLParser.tagExists("dayOfDeath", root) && dayOfDeathTagValue != null && !dayOfDeathTagValue.isEmpty()) {
-            try {
-                builder.setDayOfDeath(format.parse(dayOfDeathTagValue));
-            } catch (ParseException ex) {
-                Logger.getLogger(CharacterStorage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        builder.setHairColor(XMLParser.getTagValue("hairColor", root));
-        builder.setEyeColor(XMLParser.getTagValue("eyeColor", root));
-        builder.setSkinColor(XMLParser.getTagValue("skinColor", root));
-        builder.setNationality(XMLParser.getTagValue("nationality", root));
-        builder.setHeight(XMLParser.getTagValueInt("height", root));
-        builder.setWeight(XMLParser.getTagValueInt("weight", root));
-        String sexTagValue = XMLParser.getTagValue("sex", root);
-        if (XMLParser.tagExists("sex", root) && sexTagValue != null && !sexTagValue.isEmpty()) {
-            builder.setSex(antafes.vampireEditor.entity.Character.Sex.valueOf(sexTagValue));
-        }
-        builder.setStory(XMLParser.getTagValue("story", root));
-        builder.setDescription(XMLParser.getTagValue("description", root));
-
-        return builder.build();
     }
 }
