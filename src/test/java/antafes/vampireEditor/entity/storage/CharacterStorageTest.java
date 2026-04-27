@@ -63,6 +63,13 @@ public class CharacterStorageTest extends BaseTest
         configuration.loadProperties();
         configuration.setSaveDirPath(this.saveDir);
         configuration.setOpenDirPath(this.saveDir);
+
+        try {
+            Files.createDirectories(Paths.get(this.saveDir));
+        } catch (Exception e) {
+            Assert.fail("Could not create test save directory", e);
+        }
+
         this.characterStorage = new CharacterStorage();
     }
 
@@ -115,6 +122,25 @@ public class CharacterStorageTest extends BaseTest
 
         Assert.assertEquals(actual, expected);
         Assert.assertNull(actual.getSex());
+    }
+
+    public void testSaveUsesDirectoryPreparedByTest() {
+        Path missingSaveDir = Paths.get(this.saveDir, "missing-" + System.nanoTime());
+        Configuration configuration = Configuration.getInstance();
+        configuration.setSaveDirPath(missingSaveDir.toString());
+        configuration.setOpenDirPath(missingSaveDir.toString());
+
+        Assert.assertFalse(Files.exists(missingSaveDir));
+        try {
+            Files.createDirectories(missingSaveDir);
+        } catch (Exception e) {
+            Assert.fail("Could not create dedicated test save directory", e);
+        }
+
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+
+        Assert.assertTrue(Files.isDirectory(missingSaveDir));
+        Assert.assertTrue(Files.exists(missingSaveDir.resolve(this.filename)));
     }
 
     @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
