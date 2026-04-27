@@ -163,7 +163,7 @@ jobs:
   plan:
   - get: dependency-scan-schedule
     trigger: true
-  - get: vampire-editor-repo
+  - get: vampire-editor-repo-dev
   - task: check-dependency-updates
     config:
       platform: linux
@@ -173,13 +173,13 @@ jobs:
           repository: maven
           tag: 3-eclipse-temurin-25
       inputs:
-      - name: vampire-editor-repo
+      - name: vampire-editor-repo-dev
       outputs:
       - name: target
       run:
         path: ci/check-dependency-updates.sh
         args: ["((maven_access_token))"]
-        dir: vampire-editor-repo
+        dir: vampire-editor-repo-dev
       caches:
         - path: maven
   - task: create-dependency-issue
@@ -191,12 +191,12 @@ jobs:
           repository: debian
           tag: stable-slim
       inputs:
-      - name: vampire-editor-repo
+      - name: vampire-editor-repo-dev
       - name: target
       run:
         path: sh
         args:
           - -c
           - apt-get update -qq && apt-get install -y -qq curl && ci/create-dependency-issue.sh "((github_access_token))"
-        dir: vampire-editor-repo
+        dir: vampire-editor-repo-dev
 
