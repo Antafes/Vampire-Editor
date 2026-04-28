@@ -26,7 +26,7 @@
            elementFormDefault="qualified"
            xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
            vc:minVersion="1.1">
-    <!-- XSD 1.1 STRICT SCHEMA - Requires Saxon-HE validator for full validation -->
+    <!-- XSD 1.1 STRICT SCHEMA - Requires Xerces XMLSchema11Factory for full validation -->
     <!-- Includes xsd:assert rules for conditional business logic validation -->
     <xsd:element name="character">
         <xsd:complexType>
