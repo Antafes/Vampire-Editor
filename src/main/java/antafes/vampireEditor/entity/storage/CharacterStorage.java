@@ -32,6 +32,7 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,13 +87,15 @@ public class CharacterStorage extends BaseStorage<Character> {
      */
     public Character load(String filename) throws EntityStorageException {
         File characterFile = new File(this.configuration.getOpenDirPath(), filename);
+        XMLStreamReader xsr = null;
+
         try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
-            XMLStreamReader xsr = JaxbBindingSupport.createSecureStreamReader(fis);
+            xsr = JaxbBindingSupport.createSecureStreamReader(fis);
             Character character = (Character) unmarshaller.unmarshal(xsr);
 
-            this.normalizeLoadedCollections(character);
             this.validateLoadedCharacter(character);
+            this.normalizeLoadedCollections(character);
             character = this.rebuildLoadedCharacter(character);
             this.getList().put(character.getId().toString(), character);
             return character;
@@ -100,6 +103,13 @@ public class CharacterStorage extends BaseStorage<Character> {
             EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
             ex.addSuppressed(e);
             throw ex;
+        } finally {
+            if (xsr != null) {
+                try {
+                    xsr.close();
+                } catch (XMLStreamException ignored) {
+                }
+            }
         }
     }
 
