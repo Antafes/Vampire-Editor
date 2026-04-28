@@ -1,23 +1,27 @@
-# XSD Validation System - Strict XSD 1.1 Only
+# XSD Validation System - Strict XSD 1.1 (Test Verification)
 
 ## ✅ Setup Summary
 
-The validation path now exclusively uses the strict schema `character-strict.xsd`.
+Strict XSD 1.1 validation currently runs in tests and uses the strict schema `character-strict.xsd`.
 
 ### 1. ✅ Strict XSD 1.1 validator as test dependency
 - **File:** `pom.xml`
 - **Dependency:** `org.opengis.cite.xerces:xercesImpl-xsd11:2.12-beta-r1667115`
 - **Scope:** `test`
-- **Purpose:** real XSD 1.1 validator with `xsd:assert` support
+- **Purpose:** real XSD 1.1 validator with `xsd:assert` support for test verification
 
-### 2. ✅ No fallback anymore
+### 2. ✅ No fallback in test validator
 - **File:** `src/test/java/antafes/vampireEditor/xml/validation/XsdValidator.java`
-- **Behavior:**
+- **Behavior in test scope:**
   - uses only `org.apache.xerces.jaxp.validation.XMLSchema11Factory`
   - no fallback to JDK/XSD 1.0
   - fails hard if no XSD 1.1 validator is available
 
-### 3. ✅ Only one schema remains
+### 3. ⚠ Runtime note
+- Production `CharacterStorage` JAXB loading (`src/main/java/.../entity/storage/CharacterStorage.java`) does **not** currently invoke `XsdValidator`.
+- Strict XSD 1.1 assertion enforcement is therefore test-time verification unless validator + dependency are moved to main/runtime.
+
+### 4. ✅ Only one strict schema is used for verification
 
 #### `character-strict.xsd` - STRICT SCHEMA (XSD 1.1)
 - **File:** `src/main/resources/character-strict.xsd`
@@ -27,7 +31,7 @@ The validation path now exclusively uses the strict schema `character-strict.xsd
   - `generation` must be between `1` and `15`
 - **Mechanism:** `xsd:assert`
 
-### 4. ✅ Verification
+### 5. ✅ Verification
 The relevant strict tests were executed successfully.
 
 ```text
@@ -39,7 +43,7 @@ BUILD SUCCESS
 
 ## 🔄 Usage in Code
 
-### Strict validation
+### Strict validation in tests
 ```java
 try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
     XsdValidator.validate(xmlFile, schemaInputStream);
@@ -76,9 +80,9 @@ String implementation = XsdValidator.getValidatorImplementation();
 
 ## ✅ Final Checklist
 
-- [✅] old XSD 1.0 path removed
-- [✅] only `character-strict.xsd` remains in the active validation path
-- [✅] XSD 1.1 validator hard-wired
+- [✅] old XSD 1.0 test path removed
+- [✅] strict verification uses `character-strict.xsd`
+- [✅] test validator is hard-wired to XSD 1.1
 - [✅] relevant tests successfully verified
 
-**Status: ✅ STRICT-SCHEMA-ONLY ACTIVE**
+**Status: ✅ Strict XSD 1.1 verification active in tests**
