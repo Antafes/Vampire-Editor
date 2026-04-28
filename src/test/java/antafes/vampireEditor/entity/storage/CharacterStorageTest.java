@@ -73,7 +73,7 @@ public class CharacterStorageTest extends BaseTest
         this.characterStorage = null;
     }
 
-    public void testSave() throws Exception {
+    public void testSave() {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         File file = new File(this.saveDir + "/" + this.filename);
 
@@ -81,7 +81,6 @@ public class CharacterStorageTest extends BaseTest
 
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(file, schemaInputStream);
-            Assert.assertTrue(true);
         } catch (Exception e) {
             Assert.fail("XML validation failed: " + e.getMessage());
         }
