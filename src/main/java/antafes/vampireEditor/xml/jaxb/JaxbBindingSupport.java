@@ -17,6 +17,22 @@ import java.io.InputStream;
  * Central JAXB bootstrap for marshaller/unmarshaller configuration.
  */
 public final class JaxbBindingSupport {
+    /**
+     * Shared, pre-configured {@link XMLInputFactory}.
+     * <p>
+     * {@link XMLInputFactory} is thread-safe once configured and should be reused rather than
+     * created on every call. DOCTYPE declarations and external entity resolution are disabled
+     * here once at class-load time to prevent XXE attacks.
+     */
+    private static final XMLInputFactory XML_INPUT_FACTORY;
+
+    static {
+        XMLInputFactory xif = XMLInputFactory.newInstance();
+        xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        XML_INPUT_FACTORY = xif;
+    }
+
     private JaxbBindingSupport() {
     }
 
@@ -73,10 +89,7 @@ public final class JaxbBindingSupport {
      */
     public static XMLStreamReader createSecureStreamReader(InputStream inputStream) {
         try {
-            XMLInputFactory xif = XMLInputFactory.newInstance();
-            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
-            xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-            return xif.createXMLStreamReader(inputStream);
+            return XML_INPUT_FACTORY.createXMLStreamReader(inputStream);
         } catch (XMLStreamException ex) {
             throw new JaxbBindingException("Could not create secure XML stream reader", ex);
         }

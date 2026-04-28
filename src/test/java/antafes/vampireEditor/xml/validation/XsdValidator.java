@@ -107,14 +107,14 @@ public final class XsdValidator {
         Class<?> factoryClass = Class.forName(STRICT_SCHEMA_FACTORY_CLASS);
         SchemaFactory factory = (SchemaFactory) factoryClass.getDeclaredConstructor().newInstance();
         try {
-            factory.setFeature(XMLConstants.ACCESS_EXTERNAL_DTD, false);
-        } catch (Exception e) {
-            System.err.println("Note: ACCESS_EXTERNAL_DTD not supported by strict validator - this is normal");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        } catch (Exception ignored) {
+            // Xerces XMLSchema11Factory does not support this property - safe to skip
         }
         try {
-            factory.setFeature(XMLConstants.ACCESS_EXTERNAL_SCHEMA, false);
-        } catch (Exception e) {
-            System.err.println("Note: ACCESS_EXTERNAL_SCHEMA not supported by strict validator - this is normal");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        } catch (Exception ignored) {
+            // Xerces XMLSchema11Factory does not support this property - safe to skip
         }
         return factory;
     }
