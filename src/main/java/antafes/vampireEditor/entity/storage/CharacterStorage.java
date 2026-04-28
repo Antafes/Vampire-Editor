@@ -87,29 +87,25 @@ public class CharacterStorage extends BaseStorage<Character> {
      */
     public Character load(String filename) throws EntityStorageException {
         File characterFile = new File(this.configuration.getOpenDirPath(), filename);
-        XMLStreamReader xsr = null;
 
         try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
-            xsr = JaxbBindingSupport.createSecureStreamReader(fis);
-            Character character = (Character) unmarshaller.unmarshal(xsr);
+            XMLStreamReader xsr = JaxbBindingSupport.createSecureStreamReader(fis);
+            try {
+                Character character = (Character) unmarshaller.unmarshal(xsr);
 
-            this.validateLoadedCharacter(character);
-            this.normalizeLoadedCollections(character);
-            character = this.rebuildLoadedCharacter(character);
-            this.getList().put(character.getId().toString(), character);
-            return character;
-        } catch (JAXBException | IllegalArgumentException | IOException e) {
+                this.validateLoadedCharacter(character);
+                this.normalizeLoadedCollections(character);
+                character = this.rebuildLoadedCharacter(character);
+                this.getList().put(character.getId().toString(), character);
+                return character;
+            } finally {
+                xsr.close();
+            }
+        } catch (JAXBException | IllegalArgumentException | IOException | XMLStreamException e) {
             EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
             ex.addSuppressed(e);
             throw ex;
-        } finally {
-            if (xsr != null) {
-                try {
-                    xsr.close();
-                } catch (XMLStreamException ignored) {
-                }
-            }
         }
     }
 
