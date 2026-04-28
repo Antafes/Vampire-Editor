@@ -91,6 +91,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
             XMLStreamReader xsr = JaxbBindingSupport.createSecureStreamReader(fis);
+            Throwable primaryFailure = null;
             try {
                 Character character = (Character) unmarshaller.unmarshal(xsr);
 
@@ -99,8 +100,19 @@ public class CharacterStorage extends BaseStorage<Character> {
                 character = this.rebuildLoadedCharacter(character);
                 this.getList().put(character.getId().toString(), character);
                 return character;
+            } catch (Throwable t) {
+                primaryFailure = t;
+                throw t;
             } finally {
-                xsr.close();
+                try {
+                    xsr.close();
+                } catch (XMLStreamException closeException) {
+                    if (primaryFailure != null) {
+                        primaryFailure.addSuppressed(closeException);
+                    } else {
+                        throw closeException;
+                    }
+                }
             }
         } catch (JAXBException | IllegalArgumentException | IOException | XMLStreamException e) {
             EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
