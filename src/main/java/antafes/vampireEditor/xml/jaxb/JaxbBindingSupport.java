@@ -18,20 +18,18 @@ import java.io.InputStream;
  */
 public final class JaxbBindingSupport {
     /**
-     * Shared, pre-configured {@link XMLInputFactory}.
+     * Per-thread, pre-configured {@link XMLInputFactory}.
      * <p>
-     * {@link XMLInputFactory} is thread-safe once configured and should be reused rather than
-     * created on every call. DOCTYPE declarations and external entity resolution are disabled
-     * here once at class-load time to prevent XXE attacks.
+     * StAX factories are not specified as thread-safe, so each thread gets its own hardened
+     * factory instance with DOCTYPE declarations and external entity resolution disabled to
+     * prevent XXE attacks.
      */
-    private static final XMLInputFactory XML_INPUT_FACTORY;
-
-    static {
+    private static final ThreadLocal<XMLInputFactory> XML_INPUT_FACTORY = ThreadLocal.withInitial(() -> {
         XMLInputFactory xif = XMLInputFactory.newInstance();
         xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
         xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-        XML_INPUT_FACTORY = xif;
-    }
+        return xif;
+    });
 
     private JaxbBindingSupport() {
     }
@@ -89,7 +87,7 @@ public final class JaxbBindingSupport {
      */
     public static XMLStreamReader createSecureStreamReader(InputStream inputStream) {
         try {
-            return XML_INPUT_FACTORY.createXMLStreamReader(inputStream);
+            return XML_INPUT_FACTORY.get().createXMLStreamReader(inputStream);
         } catch (XMLStreamException ex) {
             throw new JaxbBindingException("Could not create secure XML stream reader", ex);
         }
