@@ -6,6 +6,9 @@ import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 
 import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.InputStream;
@@ -56,6 +59,26 @@ public final class JaxbBindingSupport {
             return marshaller;
         } catch (Exception ex) {
             throw new JaxbBindingException("Could not create JAXB marshaller", ex);
+        }
+    }
+
+    /**
+     * Create a securely configured {@link XMLStreamReader} for the given input stream.
+     * <p>
+     * The reader has DOCTYPE declarations and external entity resolution disabled to prevent
+     * XXE (XML External Entity) attacks. Use this when unmarshalling user-provided XML files.
+     *
+     * @param inputStream The input stream to read from
+     * @return A hardened {@link XMLStreamReader}
+     */
+    public static XMLStreamReader createSecureStreamReader(InputStream inputStream) {
+        try {
+            XMLInputFactory xif = XMLInputFactory.newInstance();
+            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+            return xif.createXMLStreamReader(inputStream);
+        } catch (XMLStreamException ex) {
+            throw new JaxbBindingException("Could not create secure XML stream reader", ex);
         }
     }
 

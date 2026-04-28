@@ -32,7 +32,10 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 
+import javax.xml.stream.XMLStreamReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -53,10 +56,6 @@ public class CharacterStorage extends BaseStorage<Character> {
         this.jaxbContext = JaxbBindingSupport.createContext(Character.class);
     }
 
-    /**
-     * Initializes the storage and pre-loads available data.
-     * TODO This might be used in the future to preload previously opened characters.
-     */
     @Override
     public void init() {
     }
@@ -86,18 +85,18 @@ public class CharacterStorage extends BaseStorage<Character> {
      * @throws EntityStorageException Thrown if character couldn't be loaded
      */
     public Character load(String filename) throws EntityStorageException {
-        try {
+        File characterFile = new File(this.configuration.getOpenDirPath(), filename);
+        try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
-            Character character = (Character) unmarshaller.unmarshal(
-                new File(this.configuration.getOpenDirPath(), filename)
-            );
+            XMLStreamReader xsr = JaxbBindingSupport.createSecureStreamReader(fis);
+            Character character = (Character) unmarshaller.unmarshal(xsr);
 
             this.normalizeLoadedCollections(character);
             this.validateLoadedCharacter(character);
             character = this.rebuildLoadedCharacter(character);
             this.getList().put(character.getId().toString(), character);
             return character;
-        } catch (JAXBException | IllegalArgumentException e) {
+        } catch (JAXBException | IllegalArgumentException | IOException e) {
             EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
             ex.addSuppressed(e);
             throw ex;
