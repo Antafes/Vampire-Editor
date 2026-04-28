@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Tests for guaranteed XSD 1.1 validation with xsd:assert rules.
@@ -126,7 +127,7 @@ public class XsdValidatorTest extends BaseTest {
             """;
 
         java.nio.file.Path tmpFile = java.nio.file.Paths.get(System.getProperty("java.io.tmpdir"), "test-invalid.xml");
-        java.nio.file.Files.write(tmpFile, invalidXml.getBytes());
+        java.nio.file.Files.write(tmpFile, invalidXml.getBytes(StandardCharsets.UTF_8));
 
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
@@ -215,7 +216,7 @@ public class XsdValidatorTest extends BaseTest {
             """;
 
         java.nio.file.Path tmpFile = java.nio.file.Paths.get(System.getProperty("java.io.tmpdir"), "test-gen-invalid.xml");
-        java.nio.file.Files.write(tmpFile, invalidXml.getBytes());
+        java.nio.file.Files.write(tmpFile, invalidXml.getBytes(StandardCharsets.UTF_8));
 
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
@@ -299,7 +300,7 @@ public class XsdValidatorTest extends BaseTest {
             """;
 
         java.nio.file.Path tmpFile = java.nio.file.Paths.get(System.getProperty("java.io.tmpdir"), "test-npc-valid.xml");
-        java.nio.file.Files.write(tmpFile, validXml.getBytes());
+        java.nio.file.Files.write(tmpFile, validXml.getBytes(StandardCharsets.UTF_8));
 
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
