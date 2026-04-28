@@ -45,15 +45,14 @@ public final class XsdValidator {
     /**
      * Validates an XML file against an XSD schema.
      * Uses Xerces XMLSchema11Factory for XSD 1.1 validation.
+     * The caller owns {@code schemaInputStream} and is responsible for closing it.
      *
      * @param xmlFile the XML file to validate
      * @param schemaInputStream the XSD schema as input stream
      * @throws Exception if validation fails or schema is invalid
      */
     public static void validate(File xmlFile, InputStream schemaInputStream) throws Exception {
-        try (InputStream schemaIs = schemaInputStream) {
-            validate(new StreamSource(xmlFile), schemaIs);
-        }
+        validate(new StreamSource(xmlFile), schemaInputStream);
     }
 
     /**
