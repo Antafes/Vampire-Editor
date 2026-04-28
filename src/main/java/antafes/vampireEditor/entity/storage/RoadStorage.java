@@ -25,7 +25,6 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -52,14 +51,13 @@ public class RoadStorage extends BaseStorage<Road> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(RoadsDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             RoadsDocument doc = (RoadsDocument) unmarshaller.unmarshal(is);
 
             doc.roads.forEach((road) -> this.getList().put(road.getKey(), road));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Could not load roads data", e);
         }
     }

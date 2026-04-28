@@ -26,7 +26,6 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -55,14 +54,13 @@ public class ClanStorage extends BaseStorage<Clan> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "clans.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "clans.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(ClansDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             ClansDocument doc = (ClansDocument) unmarshaller.unmarshal(is);
 
             doc.clans.forEach((clan) -> this.getList().put(clan.getKey(), clan));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(ClanStorage.class.getName()).log(Level.SEVERE, "Could not load clans", e);
         }
     }

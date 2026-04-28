@@ -27,7 +27,6 @@ import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -56,14 +55,13 @@ public class AttributeStorage extends BaseTypedStorage<Attribute, AttributeInter
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "attributes.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "attributes.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(AttributesDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             AttributesDocument doc = (AttributesDocument) unmarshaller.unmarshal(is);
 
             doc.attributes.forEach((attribute) -> this.getList().put(attribute.getKey(), attribute));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(AttributeStorage.class.getName()).log(Level.SEVERE, "Could not load attributes", e);
         }
     }

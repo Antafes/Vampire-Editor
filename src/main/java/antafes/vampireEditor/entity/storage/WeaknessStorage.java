@@ -26,7 +26,6 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Weakness;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -55,14 +54,13 @@ public class WeaknessStorage extends BaseStorage<Weakness> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "weaknesses.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "weaknesses.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(WeaknessesDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             WeaknessesDocument doc = (WeaknessesDocument) unmarshaller.unmarshal(is);
 
             doc.weaknesses.forEach((weakness) -> this.getList().put(weakness.getKey(), weakness));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(WeaknessStorage.class.getName()).log(Level.SEVERE, "Could not load weaknesses", e);
         }
     }

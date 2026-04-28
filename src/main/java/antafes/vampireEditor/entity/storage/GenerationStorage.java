@@ -22,11 +22,10 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Generation;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -55,14 +54,13 @@ public class GenerationStorage extends BaseStorage<Generation> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "generations.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "generations.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(GenerationsDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             GenerationsDocument doc = (GenerationsDocument) unmarshaller.unmarshal(is);
 
             doc.generations.forEach((generation) -> this.getList().put(Integer.toString(generation.getGeneration()), generation));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Could not load generations data", e);
         }
     }
@@ -94,7 +92,7 @@ public class GenerationStorage extends BaseStorage<Generation> {
             .max()
             .orElse(generation);
 
-        return this.getEntity(Math.max(minimum, Math.min(generation, maximum)));
+        return this.getEntity(Math.clamp(generation, minimum, maximum));
     }
 
     @XmlRootElement(name = "generations")

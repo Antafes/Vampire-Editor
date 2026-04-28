@@ -27,7 +27,6 @@ import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -57,14 +56,13 @@ public class AbilityStorage extends BaseTypedStorage<Ability, AbilityInterface.A
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "abilities.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "abilities.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(AbilitiesDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             AbilitiesDocument doc = (AbilitiesDocument) unmarshaller.unmarshal(is);
 
             doc.abilities.forEach((ability) -> this.getList().put(ability.getKey(), ability));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(AbilityStorage.class.getName()).log(Level.SEVERE, "Could not load abilities", e);
         }
     }

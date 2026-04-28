@@ -26,7 +26,6 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Merit;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -55,14 +54,13 @@ public class MeritStorage extends BaseStorage<Merit> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "merits.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "merits.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(MeritsDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             MeritsDocument doc = (MeritsDocument) unmarshaller.unmarshal(is);
 
             doc.merits.forEach((merit) -> this.getList().put(merit.getKey(), merit));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(MeritStorage.class.getName()).log(Level.SEVERE, "Could not load merits", e);
         }
     }

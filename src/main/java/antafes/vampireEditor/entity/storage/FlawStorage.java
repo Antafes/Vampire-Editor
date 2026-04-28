@@ -26,7 +26,6 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -55,14 +54,13 @@ public class FlawStorage extends BaseStorage<Flaw> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "flaws.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "flaws.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(FlawsDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             FlawsDocument doc = (FlawsDocument) unmarshaller.unmarshal(is);
 
             doc.flaws.forEach((flaw) -> this.getList().put(flaw.getKey(), flaw));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(FlawStorage.class.getName()).log(Level.SEVERE, "Could not load flaws", e);
         }
     }

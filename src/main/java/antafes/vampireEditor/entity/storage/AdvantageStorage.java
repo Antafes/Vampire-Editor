@@ -27,7 +27,6 @@ import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -56,14 +55,13 @@ public class AdvantageStorage extends BaseTypedStorage<Advantage, AdvantageInter
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "advantages.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "advantages.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(AdvantagesDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             AdvantagesDocument doc = (AdvantagesDocument) unmarshaller.unmarshal(is);
 
             doc.advantages.forEach((advantage) -> this.getList().put(advantage.getKey(), advantage));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(AdvantageStorage.class.getName()).log(Level.SEVERE, "Could not load advantages", e);
         }
     }

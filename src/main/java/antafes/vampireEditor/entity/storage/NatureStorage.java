@@ -24,12 +24,11 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.utility.StringUtility;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -82,14 +81,13 @@ public class NatureStorage extends BaseStorage<Nature> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "natures.xml");
-        try {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "natures.xml")) {
             JAXBContext context = JaxbBindingSupport.createContext(NaturesDocument.class);
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             NaturesDocument doc = (NaturesDocument) unmarshaller.unmarshal(is);
 
             doc.natures.forEach((nature) -> this.getList().put(nature.getKey(), nature));
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             Logger.getLogger(NatureStorage.class.getName()).log(Level.SEVERE, "Could not load natures", e);
         }
     }
