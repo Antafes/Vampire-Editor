@@ -96,7 +96,6 @@ public class CharacterStorage extends BaseStorage<Character> {
                 Character character = (Character) unmarshaller.unmarshal(xsr);
 
                 this.validateLoadedCharacter(character);
-                this.normalizeLoadedCollections(character);
                 character = this.rebuildLoadedCharacter(character);
                 this.getList().put(character.getId().toString(), character);
                 return character;
@@ -118,29 +117,6 @@ public class CharacterStorage extends BaseStorage<Character> {
             EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
             ex.addSuppressed(e);
             throw ex;
-        }
-    }
-
-    private void normalizeLoadedCollections(Character character)
-    {
-        if (character.getAttributes() == null) {
-            character.setAttributes(new HashMap<>());
-        }
-
-        if (character.getAbilities() == null) {
-            character.setAbilities(new HashMap<>());
-        }
-
-        if (character.getAdvantages() == null) {
-            character.setAdvantages(new HashMap<>());
-        }
-
-        if (character.getMerits() == null) {
-            character.setMerits(new HashMap<>());
-        }
-
-        if (character.getFlaws() == null) {
-            character.setFlaws(new HashMap<>());
         }
     }
 
@@ -166,7 +142,29 @@ public class CharacterStorage extends BaseStorage<Character> {
     private Character rebuildLoadedCharacter(Character character) throws EntityStorageException
     {
         try {
-            return character.toBuilder().build();
+            Character.CharacterBuilder<?, ?> builder = character.toBuilder();
+
+            if (character.getAttributes() == null) {
+                builder.setAttributes(new HashMap<>());
+            }
+
+            if (character.getAbilities() == null) {
+                builder.setAbilities(new HashMap<>());
+            }
+
+            if (character.getAdvantages() == null) {
+                builder.setAdvantages(new HashMap<>());
+            }
+
+            if (character.getMerits() == null) {
+                builder.setMerits(new HashMap<>());
+            }
+
+            if (character.getFlaws() == null) {
+                builder.setFlaws(new HashMap<>());
+            }
+
+            return builder.build();
         } catch (Exception e) {
             EntityStorageException ex = new EntityStorageException("Could not rebuild loaded character '" + character.getId() + "'!");
             ex.addSuppressed(e);
