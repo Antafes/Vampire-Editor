@@ -28,15 +28,19 @@ import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 
 @Test
 public class XmlStorageRegressionTest extends BaseTest {
     private Configuration configuration;
+    private Path tempDir;
 
     @BeforeMethod
     public void setUp() {
@@ -44,6 +48,23 @@ public class XmlStorageRegressionTest extends BaseTest {
         new VampireEditor();
         this.configuration = Configuration.getInstance();
         this.configuration.loadProperties();
+    }
+
+    @AfterMethod
+    public void tearDown() throws IOException {
+        if (this.tempDir != null && Files.exists(this.tempDir)) {
+            try (var paths = Files.walk(this.tempDir)) {
+                paths.sorted(Comparator.reverseOrder())
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            // best-effort cleanup
+                        }
+                    });
+            }
+            this.tempDir = null;
+        }
     }
 
     public void testAllStaticStoragesLoadData() {
@@ -67,9 +88,9 @@ public class XmlStorageRegressionTest extends BaseTest {
     }
 
     public void testPerformanceSmokeStorageWarmupAndCharacterRoundtrip() throws Exception {
-        Path saveDir = Files.createTempDirectory("ve-xml-perf-");
-        this.configuration.setSaveDirPath(saveDir.toString());
-        this.configuration.setOpenDirPath(saveDir.toString());
+        this.tempDir = Files.createTempDirectory("ve-xml-perf-");
+        this.configuration.setSaveDirPath(this.tempDir.toString());
+        this.configuration.setOpenDirPath(this.tempDir.toString());
 
         long warmupStart = System.nanoTime();
         StorageFactory.storageWarmUp();
@@ -97,10 +118,6 @@ public class XmlStorageRegressionTest extends BaseTest {
             warmupMillis,
             saveMillis,
             loadMillis);
-
-        Assert.assertTrue(warmupMillis >= 0);
-        Assert.assertTrue(saveMillis >= 0);
-        Assert.assertTrue(loadMillis >= 0);
     }
 }
 
