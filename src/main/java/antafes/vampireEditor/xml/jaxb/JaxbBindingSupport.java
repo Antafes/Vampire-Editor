@@ -68,6 +68,15 @@ public final class JaxbBindingSupport {
         return createUnmarshaller(context, null);
     }
 
+    /**
+     * Create a new {@link Unmarshaller} for the given context, optionally configured with a schema for validation.
+     * <p>
+     * The caller retains ownership of {@code schemaStream} and is responsible for closing it.
+     *
+     * @param context      The JAXB context to use
+     * @param schemaStream Optional schema stream for validation; the caller must close it
+     * @return A configured {@link Unmarshaller}
+     */
     public static Unmarshaller createUnmarshaller(JAXBContext context, InputStream schemaStream) {
         try {
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -84,6 +93,15 @@ public final class JaxbBindingSupport {
         return createMarshaller(context, null);
     }
 
+    /**
+     * Create a new {@link Marshaller} for the given context, optionally configured with a schema for validation.
+     * <p>
+     * The caller retains ownership of {@code schemaStream} and is responsible for closing it.
+     *
+     * @param context      The JAXB context to use
+     * @param schemaStream Optional schema stream for validation; the caller must close it
+     * @return A configured {@link Marshaller}
+     */
     public static Marshaller createMarshaller(JAXBContext context, InputStream schemaStream) {
         try {
             Marshaller marshaller = context.createMarshaller();
@@ -115,12 +133,21 @@ public final class JaxbBindingSupport {
         }
     }
 
+    /**
+     * Build a {@link Schema} from the given input stream.
+     * <p>
+     * The caller retains ownership of {@code schemaStream} and is responsible for closing it;
+     * this method does not close the stream.
+     *
+     * @param schemaStream The stream to read the schema from
+     * @return The compiled {@link Schema}
+     */
     private static Schema buildSchema(InputStream schemaStream) {
-        try (InputStream is = schemaStream) {
+        try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            return schemaFactory.newSchema(new javax.xml.transform.stream.StreamSource(is));
+            return schemaFactory.newSchema(new javax.xml.transform.stream.StreamSource(schemaStream));
         } catch (Exception ex) {
             throw new JaxbBindingException("Could not create XML schema", ex);
         }
