@@ -22,24 +22,23 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.entity.BaseEntity;
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.*;
+import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Generation;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
-import antafes.vampireEditor.gui.event.ClanSelectedEvent;
-import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
-import antafes.vampireEditor.gui.event.RoadSelectedEvent;
-import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
-import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
-import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
-import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
+import antafes.vampireEditor.gui.event.*;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.ClanComparator;
@@ -116,6 +115,8 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel weightLabel;
     private javax.swing.JComboBox<BaseTranslatedEntity> roadComboBox;
     private javax.swing.JLabel roadLabel;
+    private javax.swing.JComboBox<BaseTranslatedEntity> pathComboBox;
+    private javax.swing.JLabel pathLabel;
 
     /**
      * Creates new form looksPanel
@@ -365,6 +366,7 @@ public class LooksPanel extends javax.swing.JPanel {
             if (selected instanceof EmptyEntity) {
                 enteredFields.replace(roadComboBox, Boolean.FALSE);
                 this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+                this.clearPathComboBox();
             } else if (selected instanceof Road) {
                 enteredFields.replace(roadComboBox, Boolean.TRUE);
                 checkFieldsFilled();
@@ -372,8 +374,25 @@ public class LooksPanel extends javax.swing.JPanel {
                     roadModel.removeElement(emptyRoad);
                 }
                 this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
+                this.populatePathComboBox((Road) selected);
             }
         });
+
+        pathComboBox = new javax.swing.JComboBox<>();
+        pathLabel = new javax.swing.JLabel();
+        pathLabel.setLabelFor(pathComboBox);
+        pathLabel.setText("Path");
+        pathComboBox.setName("path"); // NOI18N
+        pathComboBox.setEnabled(false);
+        pathComboBox.addActionListener(evt -> {
+            Object selected = pathComboBox.getSelectedItem();
+            if (selected instanceof EmptyEntity) {
+                this.parent.getDialogDispatcher().dispatch(new PathSelectedEvent(null));
+            } else if (selected instanceof Road) {
+                this.parent.getDialogDispatcher().dispatch(new PathSelectedEvent((Road) selected));
+            }
+        });
+
         this.parent.getDialogDispatcher().addListener(
             VirtueValueSetEvent.class,
             new VirtueValueSetListener(event -> {
@@ -403,12 +422,13 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(natureLabel)
                     .addComponent(hideoutLabel)
                     .addComponent(playerLabel)
-                    .addComponent(demeanorLabel)
-                    .addComponent(conceptLabel)
-                    .addComponent(sireLabel)
-                    .addComponent(clanLabel)
-                    .addComponent(sectLabel)
-                    .addComponent(roadLabel))
+                .addComponent(demeanorLabel)
+                .addComponent(conceptLabel)
+                .addComponent(sireLabel)
+                .addComponent(clanLabel)
+                .addComponent(sectLabel)
+                .addComponent(roadLabel)
+                .addComponent(pathLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(hideoutField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,7 +442,8 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chronicleField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pathComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ageLabel)
@@ -555,7 +576,11 @@ public class LooksPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(roadLabel)
-                            .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(roadComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(pathLabel)
+                            .addComponent(pathComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -746,6 +771,9 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.clanComboBox);
         order.add(this.sectField);
         order.add(this.roadComboBox);
+        if (this.pathComboBox != null && this.pathComboBox.isEnabled()) {
+            order.add(this.pathComboBox);
+        }
         order.add(this.ageField);
         order.add(this.apparentAgeField);
         order.add(this.dayOfBirthField);
@@ -767,8 +795,7 @@ public class LooksPanel extends javax.swing.JPanel {
      */
     private ArrayList<Road> getRoadValues() {
         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        ArrayList<Road> list = new ArrayList<>();
-        roadStorage.getList().forEach((String key, Road road) -> list.add(road));
+        ArrayList<Road> list = roadStorage.getRoads();
         list.sort(new StringComparator());
 
         return list;
@@ -832,7 +859,8 @@ public class LooksPanel extends javax.swing.JPanel {
             .setHeight(!this.heightField.getText().isEmpty() ? Integer.parseInt(this.heightField.getText()) : 0)
             .setWeight(!this.weightField.getText().isEmpty() ? Integer.parseInt(this.weightField.getText()) : 0)
             .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
-            .setRoad(getRoad());
+            .setRoad(getRoad())
+            .setPath(getPath());
     }
 
     private Road getRoad()
@@ -841,10 +869,58 @@ public class LooksPanel extends javax.swing.JPanel {
         return selectedItem instanceof Road ? (Road) selectedItem : null;
     }
 
+    private Road getPath()
+    {
+        Object selectedItem = this.pathComboBox.getSelectedItem();
+        return selectedItem instanceof Road ? (Road) selectedItem : null;
+    }
+
     private Clan getClan()
     {
         Object selectedItem = this.clanComboBox.getSelectedItem();
         return selectedItem instanceof Clan ? (Clan) selectedItem : null;
+    }
+
+    /**
+     * Populate the path combo box with child roads of the selected road.
+     *
+     * @param selectedRoad The selected road whose children should be displayed
+     */
+    private void populatePathComboBox(Road selectedRoad) {
+        DefaultComboBoxModel<BaseTranslatedEntity> pathModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyPath = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        pathModel.addElement(emptyPath);
+        pathComboBox.putClientProperty("emptyEntry", emptyPath);
+
+        // Get all roads that have selectedRoad as their parent
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        ArrayList<Road> childPaths = new ArrayList<>();
+        roadStorage.getList().forEach((String key, Road road) -> {
+            if (road.getParent() != null && road.getParent().getKey().equals(selectedRoad.getKey())) {
+                childPaths.add(road);
+            }
+        });
+
+        childPaths.sort(new StringComparator());
+        childPaths.forEach(pathModel::addElement);
+
+        pathComboBox.setModel(pathModel);
+        pathComboBox.setEnabled(!childPaths.isEmpty());
+        pathComboBox.setSelectedItem(emptyPath);
+        this.createFocusTraversalPolicy();
+    }
+
+    /**
+     * Clear the path combo box and reset it to empty/disabled state.
+     */
+    private void clearPathComboBox() {
+        DefaultComboBoxModel<BaseTranslatedEntity> pathModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyPath = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        pathModel.addElement(emptyPath);
+        pathComboBox.setModel(pathModel);
+        pathComboBox.setEnabled(false);
+        pathComboBox.setSelectedItem(emptyPath);
+        this.createFocusTraversalPolicy();
     }
 
     /**

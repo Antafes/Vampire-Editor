@@ -30,12 +30,14 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.NonNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Storage for roads.
@@ -128,6 +130,32 @@ public class RoadStorage extends BaseStorage<Road> {
         visited.add(road.getKey());
         this.validateNoCircularParent(parent, visited);
         visited.remove(road.getKey());
+    }
+
+    /**
+     * Returns all top-level roads that can be selected as a primary road.
+     * Paths (roads with a parent) are excluded.
+     *
+     * @return list of roads without parent reference
+     */
+    public ArrayList<Road> getRoads() {
+        return this.getList().values().stream()
+            .filter(road -> road.getParent() == null)
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Returns all child paths for the given parent road.
+     *
+     * @param parentRoad selected parent road, must not be null
+     * @return list of roads whose parent is the given road
+     * @throws NullPointerException if parentRoad is null
+     */
+    public ArrayList<Road> getPathsForRoad(@NonNull Road parentRoad) {
+        return this.getList().values().stream()
+            .filter(road -> road.getParent() != null)
+            .filter(road -> parentRoad.getKey().equals(road.getParent().getKey()))
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @XmlRootElement(name = "roads")

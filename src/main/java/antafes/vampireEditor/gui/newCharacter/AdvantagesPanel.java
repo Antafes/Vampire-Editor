@@ -21,31 +21,22 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseColumnListPanel;
 import antafes.vampireEditor.gui.NewCharacterDialog;
-import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
-import antafes.vampireEditor.gui.event.ClanSelectedEvent;
-import antafes.vampireEditor.gui.event.FillCharacterEvent;
-import antafes.vampireEditor.gui.event.RoadSelectedEvent;
-import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
-import antafes.vampireEditor.gui.event.VirtueValueSetEvent;
-import antafes.vampireEditor.gui.event.listener.AdvantagesComboBoxItemListener;
-import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
-import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
-import antafes.vampireEditor.gui.event.listener.FillCharacterListener;
-import antafes.vampireEditor.gui.event.listener.RoadSelectedListener;
+import antafes.vampireEditor.gui.event.*;
+import antafes.vampireEditor.gui.event.listener.*;
 import antafes.vampireEditor.gui.exception.ElementAlreadyExistsException;
 import antafes.vampireEditor.gui.exception.LabelEmptyException;
 import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
@@ -55,11 +46,7 @@ import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Marian Pollzien
@@ -72,6 +59,8 @@ public class AdvantagesPanel extends BaseColumnListPanel
     /** Maps advantage key (e.g. "conscience") to the translated label used as the spinner map key, in sorted order. */
     private final LinkedHashMap<String, String> virtueKeyToLabel = new LinkedHashMap<>();
     private int generationMaximum;
+    private Road selectedRoad;
+    private Road selectedPath;
     private JButton backButton;
     private JButton nextButton;
 
@@ -106,6 +95,10 @@ public class AdvantagesPanel extends BaseColumnListPanel
         this.parent.getDialogDispatcher().addListener(
             RoadSelectedEvent.class,
             new RoadSelectedListener(event -> this.onRoadSelected(event.getRoad()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            PathSelectedEvent.class,
+            new PathSelectedListener(event -> this.onPathSelected(event.getPath()))
         );
         this.parent.getDialogDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
@@ -204,23 +197,49 @@ public class AdvantagesPanel extends BaseColumnListPanel
 
     /**
      * Called when a road is selected. Clears the virtue group and re-adds only the virtue spinners
-     * that belong to the road's merits list; courage is always included.
+     * that belong to the effective selection (path if set, otherwise road); courage is always included.
      * Pass {@code null} to show all virtues.
      *
      * @param road The selected road, or {@code null} when the selection is cleared
      */
     private void onRoadSelected(Road road)
     {
+        this.selectedRoad = road;
+        this.selectedPath = null;
+        this.updateVirtueDisplay();
+    }
+
+    /**
+     * Called when a path is selected. Updates the virtue display to use the path's merits if set,
+     * otherwise falls back to the currently selected road.
+     * Pass {@code null} to revert to road virtues.
+     *
+     * @param path The selected path, or {@code null} when the selection is cleared
+     */
+    private void onPathSelected(Road path)
+    {
+        this.selectedPath = path;
+        this.updateVirtueDisplay();
+    }
+
+    /**
+     * Update the virtue display based on the effective selection.
+     * Priority: selected path, then selected road, otherwise all virtues.
+     */
+    private void updateVirtueDisplay()
+    {
         String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
         this.clearDynamicRows(virtueGroup);
 
+        Road effectiveRoad = this.selectedPath != null ? this.selectedPath : this.selectedRoad;
+
         HashSet<String> allowedKeys;
-        if (road == null || road.getMerits() == null || road.getMerits().isEmpty()) {
+        if (effectiveRoad == null || effectiveRoad.getMerits() == null || effectiveRoad.getMerits().isEmpty()) {
             allowedKeys = new HashSet<>(this.virtueKeyToLabel.keySet());
         } else {
             allowedKeys = new HashSet<>();
             allowedKeys.add("courage");
-            road.getMerits().forEach(merit -> allowedKeys.add(merit.getKey()));
+            effectiveRoad.getMerits().forEach(merit -> allowedKeys.add(merit.getKey()));
         }
 
         this.virtueKeyToLabel.entrySet().stream()
