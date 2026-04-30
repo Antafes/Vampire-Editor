@@ -45,9 +45,8 @@ import java.nio.charset.StandardCharsets;
 public class XsdValidatorTest extends BaseTest {
 
     @BeforeClass
-    public void setUp() {
+    public void beforeClass() {
         try {
-            super.setUp();
             new VampireEditor();
             System.out.println("\n========== XSD Validator Test Suite ==========");
             System.out.println("Using validator implementation: " + XsdValidator.getValidatorImplementation());
