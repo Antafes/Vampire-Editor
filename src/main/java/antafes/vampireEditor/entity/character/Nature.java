@@ -22,17 +22,66 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashMap;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "nature")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Nature extends BaseTranslatedEntity implements NatureInterface
 {
     private boolean manual;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected Nature() { super(); }
+
+    // ── JAXB property bindings ───────────────────────────────────────────────
+
+    @XmlAttribute(name = "key")
+    protected String getJaxbKey() { return getKey(); }
+    protected void setJaxbKey(String k) { setKey(k); }
+
+    @Override
+    @XmlTransient
+    protected HashMap<Configuration.Language, String> getJaxbName()
+    {
+        return super.getJaxbName();
+    }
+
+    @XmlElement(name = "English")
+    protected String getJaxbEnglish() {
+        return getNames() == null ? null : getNames().get(Configuration.Language.ENGLISH);
+    }
+    protected void setJaxbEnglish(String v) {
+        if (v == null) return;
+        if (getNames() == null) setNames(new HashMap<>());
+        getNames().put(Configuration.Language.ENGLISH, v);
+    }
+
+    @XmlElement(name = "German")
+    protected String getJaxbGerman() {
+        return getNames() == null ? null : getNames().get(Configuration.Language.GERMAN);
+    }
+    protected void setJaxbGerman(String v) {
+        if (v == null) return;
+        if (getNames() == null) setNames(new HashMap<>());
+        getNames().put(Configuration.Language.GERMAN, v);
+    }
+
+    // ── domain methods ───────────────────────────────────────────────────────
 
     @Override
     public String toString()

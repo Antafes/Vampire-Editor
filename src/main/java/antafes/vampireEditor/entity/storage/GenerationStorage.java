@@ -19,17 +19,22 @@
  * @copyright (c) 2019, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Generation;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Storage for generations.
@@ -49,23 +54,14 @@ public class GenerationStorage extends BaseStorage<Generation> {
      * Load available data.
      */
     private void loadData() {
-        Element root;
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "generations.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "generations.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(GenerationsDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            GenerationsDocument doc = (GenerationsDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            root = xp.getRootElement();
-            ArrayList<Element> elements = XMLParser.getAllChildren(root);
-            elements.forEach((element) -> {
-                Generation generation = Generation.builder()
-                    .setGeneration(Integer.parseInt(element.getAttribute("value")))
-                    .setMaximumAttributes(XMLParser.getTagValueInt("maximumAttributes", element))
-                    .setMaximumBloodPool(XMLParser.getTagValueInt("maximumBloodPool", element))
-                    .setBloodPerRound(XMLParser.getTagValueInt("bloodPerRound", element))
-                    .build();
-
-                this.getList().put(Integer.toString(generation.getGeneration()), generation);
-            });
+            doc.generations.forEach((generation) -> this.getList().put(Integer.toString(generation.getGeneration()), generation));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load generations data", e);
         }
     }
 
@@ -96,6 +92,13 @@ public class GenerationStorage extends BaseStorage<Generation> {
             .max()
             .orElse(generation);
 
-        return this.getEntity(Math.max(minimum, Math.min(generation, maximum)));
+        return this.getEntity(Math.clamp(generation, minimum, maximum));
+    }
+
+    @XmlRootElement(name = "generations")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class GenerationsDocument {
+        @XmlElement(name = "generation")
+        public List<Generation> generations = new ArrayList<>();
     }
 }

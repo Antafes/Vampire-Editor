@@ -22,13 +22,21 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Weakness;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for weaknesses.
@@ -46,26 +54,21 @@ public class WeaknessStorage extends BaseStorage<Weakness> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "weaknesses.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "weaknesses.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(WeaknessesDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            WeaknessesDocument doc = (WeaknessesDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(element).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Weakness.builder()
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .build()
-                );
-            });
+            doc.weaknesses.forEach((weakness) -> this.getList().put(weakness.getKey(), weakness));
+        } catch (Exception e) {
+            Logger.getLogger(WeaknessStorage.class.getName()).log(Level.SEVERE, "Could not load weaknesses", e);
         }
+    }
+
+    @XmlRootElement(name = "weaknesses")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class WeaknessesDocument {
+        @XmlElement(name = "weakness")
+        public List<Weakness> weaknesses = new ArrayList<>();
     }
 }

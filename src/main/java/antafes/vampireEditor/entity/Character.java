@@ -25,8 +25,25 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.utility.StringComparator;
-import lombok.Data;
+import antafes.vampireEditor.entity.storage.adapter.AbilityMapAdapter;
+import antafes.vampireEditor.entity.storage.adapter.AdvantageMapAdapter;
+import antafes.vampireEditor.entity.storage.adapter.AttributeMapAdapter;
+import antafes.vampireEditor.entity.storage.adapter.ClanKeyAdapter;
+import antafes.vampireEditor.entity.storage.adapter.DateStringAdapter;
+import antafes.vampireEditor.entity.storage.adapter.FlawMapAdapter;
+import antafes.vampireEditor.entity.storage.adapter.GenerationValueAdapter;
+import antafes.vampireEditor.entity.storage.adapter.MeritMapAdapter;
+import antafes.vampireEditor.entity.storage.adapter.NatureKeyAdapter;
+import antafes.vampireEditor.entity.storage.adapter.RoadXmlAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -38,46 +55,144 @@ import java.util.stream.Collectors;
 /**
  * Character object.
  */
-@Data
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "character")
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(propOrder = {
+    "name", "clan", "generation", "chronicle", "experience", "nature",
+    "hideout", "player", "demeanor", "concept", "sire", "sect",
+    "attributes", "abilities", "advantages", "merits", "flaws", "road",
+    "willpower", "usedWillpower", "bloodPool", "age", "apparentAge",
+    "dayOfBirth", "dayOfDeath",
+    "hairColor", "eyeColor", "skinColor", "nationality", "height", "weight",
+    "sex", "story", "description"
+})
 public class Character extends BaseEntity {
-    private final UUID id;
-    private final boolean npc;
-    private final String name;
-    private final Clan clan;
-    private final Generation generation;
-    private final String chronicle;
-    private final int experience;
-    private final Nature nature;
-    private final String hideout;
-    private final String player;
-    private final String demeanor;
-    private final String concept;
-    private final String sire;
-    private final String sect;
-    private final HashMap<String, Attribute> attributes;
-    private final HashMap<String, Ability> abilities;
-    private final HashMap<String, Advantage> advantages;
-    private final HashMap<String, Merit> merits;
-    private final HashMap<String, Flaw> flaws;
-    private final Road road;
-    private final int willpower;
-    private final int usedWillpower;
-    private final int bloodPool;
-    private final int age;
-    private final int apparentAge;
-    private final Date dayOfBirth;
-    private final Date dayOfDeath;
-    private final String hairColor;
-    private final String eyeColor;
-    private final String skinColor;
-    private final String nationality;
-    private final int height;
-    private final int weight;
-    private final Sex sex;
-    private final String story;
-    private final String description;
+    @XmlAttribute(name = "id", required = true)
+    private UUID id;
+
+    @XmlAttribute(name = "isNpc")
+    private boolean npc;
+
+    @XmlElement(name = "name")
+    private String name;
+
+    @XmlElement(name = "clan")
+    @XmlJavaTypeAdapter(ClanKeyAdapter.class)
+    private Clan clan;
+
+    @XmlElement(name = "generation")
+    @XmlJavaTypeAdapter(GenerationValueAdapter.class)
+    private Generation generation;
+
+    @XmlElement(name = "chronicle")
+    private String chronicle;
+
+    @XmlElement(name = "experience")
+    private int experience;
+
+    @XmlElement(name = "nature")
+    @XmlJavaTypeAdapter(NatureKeyAdapter.class)
+    private Nature nature;
+
+    @XmlElement(name = "hideout")
+    private String hideout;
+
+    @XmlElement(name = "player")
+    private String player;
+
+    @XmlElement(name = "demeanor")
+    private String demeanor;
+
+    @XmlElement(name = "concept")
+    private String concept;
+
+    @XmlElement(name = "sire")
+    private String sire;
+
+    @XmlElement(name = "sect")
+    private String sect;
+
+    @XmlElement(name = "attributes")
+    @XmlJavaTypeAdapter(AttributeMapAdapter.class)
+    private HashMap<String, Attribute> attributes;
+
+    @XmlElement(name = "abilities")
+    @XmlJavaTypeAdapter(AbilityMapAdapter.class)
+    private HashMap<String, Ability> abilities;
+
+    @XmlElement(name = "advantages")
+    @XmlJavaTypeAdapter(AdvantageMapAdapter.class)
+    private HashMap<String, Advantage> advantages;
+
+    @XmlElement(name = "merits")
+    @XmlJavaTypeAdapter(MeritMapAdapter.class)
+    private HashMap<String, Merit> merits;
+
+    @XmlElement(name = "flaws")
+    @XmlJavaTypeAdapter(FlawMapAdapter.class)
+    private HashMap<String, Flaw> flaws;
+
+    @XmlElement(name = "road")
+    @XmlJavaTypeAdapter(RoadXmlAdapter.class)
+    private Road road;
+
+    @XmlElement(name = "willpower")
+    private int willpower;
+
+    @XmlElement(name = "usedWillpower")
+    private int usedWillpower;
+
+    @XmlElement(name = "bloodPool")
+    private int bloodPool;
+
+    @XmlElement(name = "age")
+    private int age;
+
+    @XmlElement(name = "apparentAge")
+    private int apparentAge;
+
+    @XmlElement(name = "dayOfBirth", nillable = true)
+    @XmlJavaTypeAdapter(DateStringAdapter.class)
+    private Date dayOfBirth;
+
+    @XmlElement(name = "dayOfDeath", nillable = true)
+    @XmlJavaTypeAdapter(DateStringAdapter.class)
+    private Date dayOfDeath;
+
+    @XmlElement(name = "hairColor")
+    private String hairColor;
+
+    @XmlElement(name = "eyeColor")
+    private String eyeColor;
+
+    @XmlElement(name = "skinColor")
+    private String skinColor;
+
+    @XmlElement(name = "nationality")
+    private String nationality;
+
+    @XmlElement(name = "height")
+    private int height;
+
+    @XmlElement(name = "weight")
+    private int weight;
+
+    @XmlElement(name = "sex")
+    private Sex sex;
+
+    @XmlElement(name = "story")
+    private String story;
+
+    @XmlElement(name = "description")
+    private String description;
+
+    protected Character()
+    {
+        super();
+    }
 
     /**
      * Get a list of attributes by type.

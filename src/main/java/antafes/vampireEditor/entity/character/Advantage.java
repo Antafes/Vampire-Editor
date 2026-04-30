@@ -22,6 +22,9 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,13 +37,26 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "advantage")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Advantage extends BaseValuedTypedTranslatedEntity implements AdvantageInterface {
+    protected Advantage()
+    {
+        super();
+    }
+
     /**
      * Get the type of advantage.
      */
     @Override
     public AdvantageType getType() {
         return (AdvantageType) super.getType();
+    }
+
+    @Override
+    protected EntityTypeInterface parseJaxbType(String type)
+    {
+        return AdvantageType.valueOf(type);
     }
 
     @Override

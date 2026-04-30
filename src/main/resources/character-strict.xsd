@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema version="1.0"
+<!--
+  ~ This file is part of Vampire Editor.
+  ~
+  ~ Vampire Editor is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Vampire Editor is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Vampire Editor. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~ @package Vampire Editor
+  ~ @author Marian Pollzien <map@wafriv.de>
+  ~ @copyright (c) 2026, Marian Pollzien
+  ~ @license https://www.gnu.org/licenses/lgpl.html LGPLv3
+  -->
+
+<xsd:schema version="1.1"
            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified">
+           elementFormDefault="qualified"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           vc:minVersion="1.1">
+    <!-- XSD 1.1 STRICT SCHEMA - Requires Xerces XMLSchema11Factory for full validation -->
+    <!-- Includes xsd:assert rules for conditional business logic validation -->
     <xsd:element name="character">
         <xsd:complexType>
             <xsd:sequence>
@@ -10,11 +36,11 @@
                 <xsd:element name="generation" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="chronicle" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="experience" type="xsd:integer" minOccurs="1" maxOccurs="1" />
-                <xsd:element name="nature" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="nature" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="hideout" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="player" type="xsd:string" minOccurs="0" maxOccurs="1" />
-                <xsd:element name="demeanor" type="xsd:string" minOccurs="1" maxOccurs="1" />
-                <xsd:element name="concept" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                <xsd:element name="demeanor" type="xsd:string" minOccurs="0" maxOccurs="1" />
+                <xsd:element name="concept" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="sire" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="sect" type="xsd:string" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="attributes" minOccurs="1" maxOccurs="1">
@@ -104,6 +130,10 @@
             </xsd:sequence>
             <xsd:attribute name="id" type="xsd:string" use="required" />
             <xsd:attribute name="isNpc" type="xsd:boolean" default="false" />
+            <!-- XSD 1.1 ASSERTIONS - Enforced by strict XSD 1.1 validator -->
+            <xsd:assert test="(@isNpc = true()) or (clan and road)" />
+            <xsd:assert test="(generation &gt;= 1 and generation &lt;= 15)" />
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>
+

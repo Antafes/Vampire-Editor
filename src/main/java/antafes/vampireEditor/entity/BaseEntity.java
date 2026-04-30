@@ -22,6 +22,8 @@
 package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.entity.exception.EntityException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
@@ -31,7 +33,14 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class BaseEntity {
+    /**
+     * No-arg constructor for JAXB deserialisation – bypasses builder validation.
+     * Application code must use the builder instead.
+     */
+    protected BaseEntity() {}
+
     @SneakyThrows(EntityException.class)
     protected BaseEntity(BaseEntityBuilder<?, ?> b)
     {

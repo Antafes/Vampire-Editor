@@ -23,6 +23,11 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseEntity;
 import antafes.vampireEditor.entity.exception.EntityException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -35,11 +40,36 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "generation")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Generation extends BaseEntity implements GenerationInterface {
-    private final int generation;
-    private final int maximumAttributes;
-    private final int maximumBloodPool;
-    private final int bloodPerRound;
+    private int generation;
+    private int maximumAttributes;
+    private int maximumBloodPool;
+    private int bloodPerRound;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected Generation() { super(); }
+
+    // ── JAXB property bindings ───────────────────────────────────────────────
+
+    @XmlAttribute(name = "value")
+    protected int getJaxbGeneration() { return generation; }
+    protected void setJaxbGeneration(int v) { this.generation = v; }
+
+    @XmlElement(name = "maximumAttributes")
+    protected int getJaxbMaximumAttributes() { return maximumAttributes; }
+    protected void setJaxbMaximumAttributes(int v) { this.maximumAttributes = v; }
+
+    @XmlElement(name = "maximumBloodPool")
+    protected int getJaxbMaximumBloodPool() { return maximumBloodPool; }
+    protected void setJaxbMaximumBloodPool(int v) { this.maximumBloodPool = v; }
+
+    @XmlElement(name = "bloodPerRound")
+    protected int getJaxbBloodPerRound() { return bloodPerRound; }
+    protected void setJaxbBloodPerRound(int v) { this.bloodPerRound = v; }
+
+    // ── domain methods ───────────────────────────────────────────────────────
 
     @Override
     public String toString()

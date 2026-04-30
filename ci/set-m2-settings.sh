@@ -33,13 +33,6 @@ cat > "${M2_HOME}/settings.xml" <<EOF
                     <snapshots><enabled>true</enabled></snapshots>
                 </repository>
                 <repository>
-                    <id>github-myxml</id>
-                    <name>GitHub Antafes Apache Maven Packages - MyXML</name>
-                    <url>https://maven.pkg.github.com/antafes/myxml</url>
-                    <releases><enabled>true</enabled></releases>
-                    <snapshots><enabled>true</enabled></snapshots>
-                </repository>
-                <repository>
                     <id>github-event-dispatcher</id>
                     <name>GitHub Antafes Apache Maven Packages - Event Dispatcher</name>
                     <url>https://maven.pkg.github.com/antafes/eventdispatcher</url>
@@ -60,11 +53,6 @@ cat > "${M2_HOME}/settings.xml" <<EOF
     </profiles>
 
     <servers>
-        <server>
-            <id>github-myxml</id>
-            <username>antafes</username>
-            <password>${ACCESS_TOKEN}</password>
-        </server>
         <server>
             <id>github-event-dispatcher</id>
             <username>antafes</username>

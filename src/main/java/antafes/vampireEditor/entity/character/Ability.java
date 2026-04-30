@@ -22,6 +22,9 @@
 package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,11 +37,24 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
+@XmlRootElement(name = "ability")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Ability extends BaseValuedTypedTranslatedEntity implements AbilityInterface {
+    protected Ability()
+    {
+        super();
+    }
+
     @Override
     public AbilityType getType()
     {
         return (AbilityType) super.getType();
+    }
+
+    @Override
+    protected EntityTypeInterface parseJaxbType(String type)
+    {
+        return AbilityType.valueOf(type);
     }
 
     @Override

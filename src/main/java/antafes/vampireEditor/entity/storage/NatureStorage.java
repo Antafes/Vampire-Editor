@@ -22,15 +22,25 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.utility.StringUtility;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for weaknesses.
@@ -71,26 +81,21 @@ public class NatureStorage extends BaseStorage<Nature> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "natures.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "natures.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(NaturesDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            NaturesDocument doc = (NaturesDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(element).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Nature.builder()
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .build()
-                );
-            });
+            doc.natures.forEach((nature) -> this.getList().put(nature.getKey(), nature));
+        } catch (Exception e) {
+            Logger.getLogger(NatureStorage.class.getName()).log(Level.SEVERE, "Could not load natures", e);
         }
+    }
+
+    @XmlRootElement(name = "natures")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class NaturesDocument {
+        @XmlElement(name = "nature")
+        public List<Nature> natures = new ArrayList<>();
     }
 }

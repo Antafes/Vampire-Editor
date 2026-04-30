@@ -23,6 +23,7 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
+import lombok.Getter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import java.util.logging.Logger;
 public class StorageFactory {
     private static final HashMap<StorageType, BaseStorage<?>> storages = new HashMap<>();
 
+    @Getter
     public enum StorageType {
         ABILITY (AbilityStorage.class),
         ADVANTAGE (AdvantageStorage.class),
@@ -51,21 +53,10 @@ public class StorageFactory {
 
         private final Class<?> storageClass;
 
-        /**
-         * Constructor
-         *
-         * @param storageClass The storage class name
-         */
         StorageType(Class<?> storageClass) {
             this.storageClass = storageClass;
         }
 
-        /**
-         * Get the storage class name.
-         */
-        public Class<?> getStorageClass() {
-            return storageClass;
-        }
     }
 
     /**

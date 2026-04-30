@@ -19,23 +19,21 @@
  * @copyright (c) 2019, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
-import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Road;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Storage for roads.
@@ -53,44 +51,21 @@ public class RoadStorage extends BaseStorage<Road> {
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(RoadsDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            RoadsDocument doc = (RoadsDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-
-                XMLParser.getAllChildren(XMLParser.getTagElement("name", element)).forEach((name) -> names.put(
-                    Configuration.Language.valueOf(name.getNodeName().toUpperCase()),
-                    name.getFirstChild().getNodeValue()
-                ));
-
-                List<Advantage> merits = new ArrayList<>();
-                Element advantagesElement = XMLParser.getTagElement("advantages", element);
-                if (advantagesElement != null) {
-                    XMLParser.getAllChildren(advantagesElement).forEach((advantageNode) -> {
-                        String key = advantageNode.getFirstChild().getNodeValue();
-                        try {
-                            merits.add(advantageStorage.getEntity(key));
-                        } catch (EntityStorageException e) {
-                            Logger.getLogger(RoadStorage.class.getName()).log(Level.WARNING,
-                                "Advantage key ''{0}'' not found for road ''{1}''",
-                                new Object[]{key, element.getAttribute("key")});
-                        }
-                    });
-                }
-
-                    this.getList().put(
-                        element.getAttribute("key"),
-                        Road.builder()
-                            .setNames(names)
-                            .setKey(element.getAttribute("key"))
-                            .setMerits(merits)
-                            .build()
-                    );
-            });
+            doc.roads.forEach((road) -> this.getList().put(road.getKey(), road));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load roads data", e);
         }
+    }
+
+    @XmlRootElement(name = "roads")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class RoadsDocument {
+        @XmlElement(name = "road")
+        public List<Road> roads = new ArrayList<>();
     }
 }

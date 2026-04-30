@@ -22,15 +22,22 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for advantages
@@ -48,29 +55,21 @@ public class AdvantageStorage extends BaseTypedStorage<Advantage, AdvantageInter
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "advantages.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "advantages.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(AdvantagesDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            AdvantagesDocument doc = (AdvantagesDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Advantage.builder()
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .setType(AdvantageInterface.AdvantageType.valueOf(
-                            XMLParser.getTagValue("type", element)
-                        ))
-                        .build()
-                );
-            });
+            doc.advantages.forEach((advantage) -> this.getList().put(advantage.getKey(), advantage));
+        } catch (Exception e) {
+            Logger.getLogger(AdvantageStorage.class.getName()).log(Level.SEVERE, "Could not load advantages", e);
         }
+    }
+
+    @XmlRootElement(name = "advantages")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class AdvantagesDocument {
+        @XmlElement(name = "advantage")
+        public List<Advantage> advantages = new ArrayList<>();
     }
 }

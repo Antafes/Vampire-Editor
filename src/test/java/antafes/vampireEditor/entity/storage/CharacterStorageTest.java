@@ -22,7 +22,6 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLValidator;
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
@@ -30,12 +29,14 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
+import antafes.vampireEditor.xml.validation.XsdValidator;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,6 +58,13 @@ public class CharacterStorageTest extends BaseTest
         configuration.loadProperties();
         configuration.setSaveDirPath(this.saveDir);
         configuration.setOpenDirPath(this.saveDir);
+
+        try {
+            Files.createDirectories(Paths.get(this.saveDir));
+        } catch (Exception e) {
+            Assert.fail("Could not create test save directory", e);
+        }
+
         this.characterStorage = new CharacterStorage();
     }
 
@@ -68,18 +76,14 @@ public class CharacterStorageTest extends BaseTest
     public void testSave() {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         File file = new File(this.saveDir + "/" + this.filename);
-        XMLValidator validator = new XMLValidator(VampireEditor.getFileInJar("character.xsd"));
 
         Assert.assertTrue(file.exists());
 
-        // Verbose error, if file couldn't be validated.
-        if (!validator.validate(file)) {
-            for (int i = 0; i < validator.getExceptionList().size(); i++) {
-                System.out.println(validator.getExceptionList().get(i).getMessage());
-            }
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(file, schemaInputStream);
+        } catch (Exception e) {
+            Assert.fail("XML validation failed: " + e.getMessage(), e);
         }
-
-        Assert.assertTrue(validator.validate(file));
     }
 
     public void testLoad() throws Exception {
@@ -106,6 +110,41 @@ public class CharacterStorageTest extends BaseTest
 
         Assert.assertEquals(actual, expected);
         Assert.assertNull(actual.getSex());
+    }
+
+    public void testSaveNpcWithoutNatureIsXsdValid() throws Exception {
+        Character npcWithoutNature = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setNpc(true)
+            .setNature(null)
+            .setClan(null)
+            .setRoad(null)
+            .build();
+
+        this.characterStorage.save(npcWithoutNature, this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(filePath.toFile(), schemaInputStream);
+        }
+    }
+
+    public void testSaveUsesDirectoryPreparedByTest() {
+        Path missingSaveDir = Paths.get(this.saveDir, "missing-" + System.nanoTime());
+        Configuration configuration = Configuration.getInstance();
+        configuration.setSaveDirPath(missingSaveDir.toString());
+        configuration.setOpenDirPath(missingSaveDir.toString());
+
+        Assert.assertFalse(Files.exists(missingSaveDir));
+        try {
+            Files.createDirectories(missingSaveDir);
+        } catch (Exception e) {
+            Assert.fail("Could not create dedicated test save directory", e);
+        }
+
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+
+        Assert.assertTrue(Files.isDirectory(missingSaveDir));
+        Assert.assertTrue(Files.exists(missingSaveDir.resolve(this.filename)));
     }
 
     @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
