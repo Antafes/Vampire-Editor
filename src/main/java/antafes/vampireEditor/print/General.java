@@ -282,6 +282,7 @@ public class General extends PrintBase {
      */
     protected void addAdditionalInformation() {
         int yLeft = this.getMaxY(), yMiddle = this.getMaxY(), yRight = this.getMaxY();
+        Road effectiveRoad = this.getCharacter().getPath() != null ? this.getCharacter().getPath() : this.getCharacter().getRoad();
 
         this.addHeadline(this.getLanguage().translate("otherTraits"), PositionX.LEFT1.getPosition(), yLeft, 20f);
         yLeft++;
@@ -292,12 +293,12 @@ public class General extends PrintBase {
 
         this.addHeadline(this.getLanguage().translate("road"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
         this.addText(
-            this.getCharacter().getRoad() == null ? "" : this.getCharacter().getRoad().getName(),
+            effectiveRoad == null ? "" : effectiveRoad.getName(),
             PositionX.MIDDLE1.getPosition(),
             yMiddle++,
             2
         );
-        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getRoad() == null ? 2 : this.getCharacter().getRoad().getValue(), 2);
+        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, effectiveRoad == null ? 2 : effectiveRoad.getValue(), 2);
         this.addHeadline(this.getLanguage().translate("willpower"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getWillpower(), 2);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getUsedWillpower(), 2, Dot.SQUARE);

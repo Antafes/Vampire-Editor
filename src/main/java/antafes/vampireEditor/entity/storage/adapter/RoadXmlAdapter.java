@@ -56,7 +56,11 @@ public class RoadXmlAdapter extends XmlAdapter<RoadXmlAdapter.RoadXml, Road> {
                     .setValue(v.value != null ? v.value : 0)
                     .build();
         } catch (EntityStorageException e) {
-            throw new RuntimeException("Could not find road with key: " + v.key, e);
+            throw new RuntimeException(
+                "Unknown road key '" + v.key + "' in character XML. "
+                    + "Please select an existing road key in <road key=\"...\"> or update roads data.",
+                e
+            );
         }
     }
 
@@ -69,5 +73,3 @@ public class RoadXmlAdapter extends XmlAdapter<RoadXmlAdapter.RoadXml, Road> {
         return xml;
     }
 }
-
-

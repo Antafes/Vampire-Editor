@@ -57,7 +57,11 @@ public class PathXmlAdapter extends XmlAdapter<PathXmlAdapter.PathXml, Road> {
                     .setValue(v.value != null ? v.value : 0)
                     .build();
         } catch (EntityStorageException e) {
-            throw new RuntimeException("Could not find path with key: " + v.key, e);
+            throw new RuntimeException(
+                "Unknown path key '" + v.key + "' in character XML. "
+                    + "Please select an existing path key in <path key=\"...\"> or update roads data.",
+                e
+            );
         }
     }
 
@@ -70,4 +74,3 @@ public class PathXmlAdapter extends XmlAdapter<PathXmlAdapter.PathXml, Road> {
         return xml;
     }
 }
-

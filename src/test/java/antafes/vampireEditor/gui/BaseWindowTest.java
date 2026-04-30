@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.language.English;
@@ -71,6 +72,17 @@ public class BaseWindowTest
                 new FileNotFoundException("C:/tmp/missing-character.xml")
             ),
             "Could not load the character.\nC:/tmp/missing-character.xml"
+        );
+    }
+
+    public void testGetCouldNotLoadCharacterMessageWithEntityStorageDetails()
+    {
+        EntityStorageException ex = new EntityStorageException("Could not load character 'foo.xml'!");
+        ex.addSuppressed(new RuntimeException("Unknown road key 'invalidRoad' in character XML."));
+
+        Assert.assertEquals(
+            BaseWindow.getCouldNotLoadCharacterMessage(new English(), ex),
+            "Could not load the character.\nUnknown road key 'invalidRoad' in character XML."
         );
     }
 }
