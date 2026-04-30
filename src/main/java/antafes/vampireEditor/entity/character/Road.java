@@ -27,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,6 +50,24 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     @XmlElement(name = "advantages")
     @XmlJavaTypeAdapter(AdvantageListAdapter.class)
     private List<Advantage> merits;
+
+    /**
+     * Parent road key (only set during XML parsing).
+     * Used to resolve the actual parent Road after all roads are loaded.
+     * Not persisted in the final builder output.
+     */
+    @XmlElement(name = "parent")
+    private String parentKey;
+
+    /**
+     * Optional parent road (for paths).
+     * Only set for path entries that inherit from a parent road.
+     * Resolved from parentKey during road data loading and validation.
+     * Field is transient (not included in equals/hashCode/builder).
+     */
+    @XmlTransient
+    @EqualsAndHashCode.Exclude
+    private Road parent;
 
     protected Road()
     {

@@ -111,6 +111,15 @@
                         </xsd:simpleContent>
                     </xsd:complexType>
                 </xsd:element>
+                <xsd:element name="path" minOccurs="0" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:simpleContent>
+                            <xsd:extension base="xsd:integer">
+                                <xsd:attribute name="key" type="xsd:string" use="required" />
+                            </xsd:extension>
+                        </xsd:simpleContent>
+                    </xsd:complexType>
+                </xsd:element>
                 <xsd:element name="willpower" type="xsd:integer" minOccurs="1" maxOccurs="1" />
                 <xsd:element name="usedWillpower" type="xsd:integer" minOccurs="0" maxOccurs="1" />
                 <xsd:element name="bloodPool" type="xsd:integer" minOccurs="1" maxOccurs="1" />
