@@ -82,7 +82,7 @@ public class CharacterStorageTest extends BaseTest
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(file, schemaInputStream);
         } catch (Exception e) {
-            Assert.fail("XML validation failed: " + e.getMessage());
+            Assert.fail("XML validation failed: " + e.getMessage(), e);
         }
     }
 
