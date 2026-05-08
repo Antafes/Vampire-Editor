@@ -109,9 +109,12 @@ public class CharacterStorageTest extends BaseTest
         Path filePath = Paths.get(this.saveDir, this.filename);
         String xml = Files.readString(filePath, StandardCharsets.UTF_8);
         Character actual = this.characterStorage.load(this.filename);
+        int expectedScore = expected.getRoad().getValue();
 
-        Assert.assertTrue(xml.contains("<path key=\"pathOfHunter\">4</path>"));
+        Assert.assertTrue(xml.contains("<road key=\"roadOfBeast\">" + expectedScore + "</road>"));
+        Assert.assertTrue(xml.contains("<path key=\"pathOfHunter\">" + expectedScore + "</path>"));
         Assert.assertNotNull(actual.getPath());
+        Assert.assertEquals(actual.getRoad().getValue(), actual.getPath().getValue());
         Assert.assertEquals(actual, expected);
     }
 

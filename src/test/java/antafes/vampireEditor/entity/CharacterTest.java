@@ -260,6 +260,18 @@ public class CharacterTest extends BaseTest
         Assert.assertEquals(actual, expected);
     }
 
+    public void testBuilderSetsPathValueToComputedRoadScore() throws EntityStorageException {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        Character characterWithPath = this.character.toBuilder()
+            .setRoad(roadStorage.getEntity("roadOfBeast"))
+            .setPath(roadStorage.getEntity("pathOfHunter"))
+            .build();
+
+        Assert.assertNotNull(characterWithPath.getPath());
+        Assert.assertEquals(characterWithPath.getRoad().getValue(), characterWithPath.getPath().getValue());
+        Assert.assertEquals(characterWithPath.getRoad().getValue(), 5);
+    }
+
     public void testGetWillpower() {
         Assert.assertEquals(this.character.getWillpower(), 5);
     }

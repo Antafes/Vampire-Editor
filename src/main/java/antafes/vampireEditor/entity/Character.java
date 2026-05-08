@@ -408,12 +408,20 @@ public class Character extends BaseEntity {
 
         private void calculateRoadScore()
         {
-            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
             ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
                 .filter((advantage) -> (advantage.getType() == AdvantageInterface.AdvantageType.VIRTUE))
                 .collect(Collectors.toList());
-            roadBuilder.setValue(Road.calculateRoadScore(advantages));
+            int roadScore = Road.calculateRoadScore(advantages);
+
+            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
+            roadBuilder.setValue(roadScore);
             this.road = roadBuilder.build();
+
+            if (this.path != null) {
+                Road.RoadBuilder<?, ?> pathBuilder = this.path.toBuilder();
+                pathBuilder.setValue(roadScore);
+                this.path = pathBuilder.build();
+            }
         }
     }
 }
