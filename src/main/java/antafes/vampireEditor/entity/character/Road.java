@@ -52,9 +52,10 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     private List<Advantage> merits;
 
     /**
-     * Parent road key (only set during XML parsing).
-     * Used to resolve the actual parent Road after all roads are loaded.
-     * Not persisted in the final builder output.
+     * Parent road key read from XML (<parent>...</parent>) for path entries.
+     * Used during road loading/validation to resolve the actual parent Road.
+     * Because it is part of the model, it is available to Lombok-generated
+     * builder/toBuilder and may remain populated in-memory after loading.
      */
     @XmlElement(name = "parent")
     private String parentKey;
