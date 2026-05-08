@@ -276,6 +276,29 @@ public class CharacterTest extends BaseTest
         Assert.assertEquals(this.character.getWillpower(), 5);
     }
 
+    public void testInitialWillpowerCanBeDerivedFromCourage() {
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        int courage = builder.getAdvantageValue("courage");
+        Character updatedCharacter = builder
+            .setWillpower(courage)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getWillpower(), courage);
+    }
+
+    public void testInitialWillpowerDefaultsToZeroWhenCourageIsMissing() {
+        HashMap<String, Advantage> advantages = new HashMap<>(this.character.getAdvantages());
+        advantages.remove("courage");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder()
+            .setAdvantages(advantages);
+        Character updatedCharacter = builder
+            .setWillpower(builder.getAdvantageValue("courage"))
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getWillpower(), 0);
+    }
+
     public void testGetUsedWillpower() {
         Assert.assertEquals(this.character.getUsedWillpower(), 1);
     }
