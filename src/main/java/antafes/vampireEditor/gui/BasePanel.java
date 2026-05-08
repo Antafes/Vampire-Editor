@@ -119,7 +119,7 @@ abstract public class BasePanel extends JPanel {
      * @return A list of components
      */
     public ArrayList<Component> getFields(String type) {
-        return this.fields.get(type);
+        return this.fields.getOrDefault(type, new ArrayList<>());
     }
 
     /**

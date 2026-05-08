@@ -35,6 +35,7 @@ import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
+import antafes.vampireEditor.gui.element.WideComboBox;
 import antafes.vampireEditor.gui.event.*;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
@@ -378,7 +379,7 @@ public class LooksPanel extends javax.swing.JPanel {
             }
         });
 
-        pathComboBox = new javax.swing.JComboBox<>();
+        pathComboBox = new WideComboBox<>();
         pathLabel = new javax.swing.JLabel();
         pathLabel.setLabelFor(pathComboBox);
         pathLabel.setText("Path");

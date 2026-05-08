@@ -85,10 +85,15 @@ public class AdvantagesPanel extends BaseCharacterListPanel implements Translata
     public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
     {
         for (AdvantageInterface.AdvantageType advantageType : AdvantageInterface.AdvantageType.values()) {
+            java.util.ArrayList<java.awt.Component> fields = this.getFields(advantageType.getKeyPlural());
+            if (fields == null) {
+                continue;
+            }
+
             //noinspection CodeBlock2Expr
             this.getCharacter().getAdvantagesByType(advantageType)
                 .forEach(advantage -> {
-                    this.getFields(advantageType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                    fields.stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
                         if (!Objects.equals(component.getName(), advantage.getKey())) {
                             return;
                         }
