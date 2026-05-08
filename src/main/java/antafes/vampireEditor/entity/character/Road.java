@@ -63,7 +63,9 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
      * Optional parent road (for paths).
      * Only set for path entries that inherit from a parent road.
      * Resolved from parentKey during road data loading and validation.
-     * Field is transient (not included in equals/hashCode/builder).
+     * Field is excluded from XML serialization (@XmlTransient) and from
+     * equals/hashCode (@EqualsAndHashCode.Exclude), but is included in the
+     * Lombok-generated builder via @SuperBuilder(toBuilder = true).
      */
     @XmlTransient
     @EqualsAndHashCode.Exclude
