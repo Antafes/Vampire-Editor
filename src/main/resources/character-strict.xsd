@@ -141,6 +141,8 @@
             <xsd:attribute name="isNpc" type="xsd:boolean" default="false" />
             <!-- XSD 1.1 ASSERTIONS - Enforced by strict XSD 1.1 validator -->
             <xsd:assert test="(@isNpc = true()) or (clan and road)" />
+            <xsd:assert test="not(path) or road" />
+            <xsd:assert test="not(@isNpc = true() and path)" />
             <xsd:assert test="(generation &gt;= 1 and generation &lt;= 15)" />
         </xsd:complexType>
     </xsd:element>
