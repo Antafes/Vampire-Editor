@@ -640,6 +640,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.clanLabel.setText(this.language.translate("clan") + "*");
         this.sectLabel.setText(this.language.translate("sect"));
         this.roadLabel.setText(this.language.translate("road") + "*");
+        this.pathLabel.setText(this.language.translate("path"));
 
         this.ageLabel.setText(this.language.translate("age"));
         this.apparentAgeLabel.setText(this.language.translate("apparentAge"));
