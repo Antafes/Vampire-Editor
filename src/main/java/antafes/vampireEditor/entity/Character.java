@@ -293,6 +293,12 @@ public class Character extends BaseEntity {
             return this.self();
         }
 
+        public int getAdvantageValue(String key)
+        {
+            Advantage advantage = this.advantages.get(key);
+            return advantage != null ? advantage.getValue() : 0;
+        }
+
         public B addMerit(Merit merit) {
             this.merits.put(merit.getKey(), merit);
 
