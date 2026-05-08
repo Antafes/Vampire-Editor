@@ -85,9 +85,9 @@ public class AttributesPanel extends BaseCharacterListPanel implements Translata
     public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
     {
         for (AttributeInterface.AttributeType attributeType : AttributeInterface.AttributeType.values()) {
-            //noinspection CodeBlock2Expr
             this.getCharacter().getAttributesByType(attributeType)
                 .forEach(attribute -> {
+                    // There's an issue saving a character here, as getFields() is returning null
                     this.getFields(attributeType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
                         if (!Objects.equals(component.getName(), attribute.getKey())) {
                             return;

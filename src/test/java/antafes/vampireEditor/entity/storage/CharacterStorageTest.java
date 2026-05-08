@@ -98,6 +98,38 @@ public class CharacterStorageTest extends BaseTest
         }
     }
 
+    public void testSaveAndLoadWithPath() throws Exception {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setRoad(roadStorage.getEntity("roadOfBeast").toBuilder().setValue(4).build())
+            .setPath(roadStorage.getEntity("pathOfHunter").toBuilder().setValue(4).build())
+            .build();
+
+        this.characterStorage.save(expected, this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+        String xml = Files.readString(filePath, StandardCharsets.UTF_8);
+        Character actual = this.characterStorage.load(this.filename);
+
+        Assert.assertTrue(xml.contains("<path key=\"pathOfHunter\">4</path>"));
+        Assert.assertNotNull(actual.getPath());
+        Assert.assertEquals(actual, expected);
+    }
+
+    public void testSaveWithoutPathOmitsPathElementAndLoads() throws Exception {
+        Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+            .setPath(null)
+            .build();
+
+        this.characterStorage.save(expected, this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+        String xml = Files.readString(filePath, StandardCharsets.UTF_8);
+        Character actual = this.characterStorage.load(this.filename);
+
+        Assert.assertFalse(xml.contains("<path"));
+        Assert.assertNull(actual.getPath());
+        Assert.assertEquals(actual, expected);
+    }
+
     public void testLoadWithoutSex() throws Exception {
         final Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
             .setSex(null)

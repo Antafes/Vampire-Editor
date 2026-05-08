@@ -34,8 +34,10 @@ import lombok.NonNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,87 +51,6 @@ public class RoadStorage extends BaseStorage<Road> {
     @Override
     public void init() {
         this.loadData();
-    }
-
-    /**
-     * Load available data.
-     */
-    private void loadData() {
-        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml")) {
-            JAXBContext context = JaxbBindingSupport.createContext(RoadsDocument.class);
-            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
-            RoadsDocument doc = (RoadsDocument) unmarshaller.unmarshal(is);
-
-            doc.roads.forEach((road) -> this.getList().put(road.getKey(), road));
-
-            // Resolve parent references and validate
-            this.resolveAndValidateParents();
-        } catch (Exception e) {
-            throw new RuntimeException("Could not load roads data", e);
-        }
-    }
-
-    /**
-     * Resolve parent key strings to Road objects and validate parent references.
-     * Checks for:
-     * - Missing parent references (throws exception)
-     * - Self-parent (throws exception)
-     * - Circular parent chains (throws exception)
-     *
-     * @throws RuntimeException if validation fails
-     */
-    private void resolveAndValidateParents() {
-        for (Road road : this.getList().values()) {
-            if (road.getParentKey() == null || road.getParentKey().isEmpty()) {
-                continue;
-            }
-
-            Road parentRoad = this.getList().get(road.getParentKey());
-            if (parentRoad == null) {
-                throw new RuntimeException(
-                    "Road '" + road.getKey() + "' has invalid parent key '" + road.getParentKey() +
-                    "': parent road not found in roads.xml"
-                );
-            }
-
-            if (road.getKey().equals(road.getParentKey())) {
-                throw new RuntimeException(
-                    "Road '" + road.getKey() + "' cannot be its own parent"
-                );
-            }
-
-            this.validateNoCircularParent(road, new HashSet<>());
-
-            Road.RoadBuilder<?, ?> builder = road.toBuilder();
-            builder.setParent(parentRoad);
-            Road updatedRoad = builder.build();
-            this.getList().put(road.getKey(), updatedRoad);
-        }
-    }
-
-    /**
-     * Recursively check for circular parent references.
-     * Throws exception if a cycle is detected.
-     *
-     * @param road The road to check
-     * @param visited Set of already-visited road keys
-     * @throws RuntimeException if a circular parent chain is detected
-     */
-    private void validateNoCircularParent(Road road, Set<String> visited) {
-        if (visited.contains(road.getKey())) {
-            throw new RuntimeException(
-                "Circular parent reference detected involving road '" + road.getKey() + "'"
-            );
-        }
-
-        Road parent = road.getParent();
-        if (parent == null) {
-            return;
-        }
-
-        visited.add(road.getKey());
-        this.validateNoCircularParent(parent, visited);
-        visited.remove(road.getKey());
     }
 
     /**
@@ -156,6 +77,87 @@ public class RoadStorage extends BaseStorage<Road> {
             .filter(road -> road.getParent() != null)
             .filter(road -> parentRoad.getKey().equals(road.getParent().getKey()))
             .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Load available data.
+     */
+    private void loadData() {
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "roads.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(RoadsDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            RoadsDocument doc = (RoadsDocument) unmarshaller.unmarshal(is);
+
+            doc.roads.forEach(road -> this.getList().put(road.getKey(), road));
+            this.resolveAndValidateParents();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load roads data", e);
+        }
+    }
+
+    /**
+     * Resolve parent key strings to Road objects and validate parent references.
+     * Checks for missing parent references, self-parenting, and circular parent chains.
+     */
+    private void resolveAndValidateParents() {
+        this.getList().values().forEach(this::validateParentReference);
+        this.getList().values().forEach(road -> this.validateNoCircularParent(road.getKey(), new HashSet<>()));
+
+        Map<String, Road> resolvedRoads = new HashMap<>();
+        this.getList().values().forEach(road -> resolvedRoads.put(road.getKey(), this.buildResolvedRoad(road, resolvedRoads)));
+
+        this.getList().clear();
+        this.getList().putAll(resolvedRoads);
+    }
+
+    private void validateParentReference(Road road) {
+        if (road.getParentKey() == null || road.getParentKey().isEmpty()) {
+            return;
+        }
+
+        if (!this.getList().containsKey(road.getParentKey())) {
+            throw new RuntimeException(
+                "Road '" + road.getKey() + "' has invalid parent key '" + road.getParentKey() + "': parent road not found in roads.xml"
+            );
+        }
+
+        if (road.getKey().equals(road.getParentKey())) {
+            throw new RuntimeException("Road '" + road.getKey() + "' cannot be its own parent");
+        }
+    }
+
+    /**
+     * Recursively check for circular parent references by following parent keys.
+     *
+     * @param roadKey The road key to check
+     * @param visited Set of already-visited road keys
+     */
+    private void validateNoCircularParent(String roadKey, Set<String> visited) {
+        if (!visited.add(roadKey)) {
+            throw new RuntimeException("Circular parent reference detected involving road '" + roadKey + "'");
+        }
+
+        Road road = this.getList().get(roadKey);
+        if (road != null && road.getParentKey() != null && !road.getParentKey().isEmpty()) {
+            this.validateNoCircularParent(road.getParentKey(), visited);
+        }
+
+        visited.remove(roadKey);
+    }
+
+    private Road buildResolvedRoad(Road road, Map<String, Road> resolvedRoads) {
+        if (resolvedRoads.containsKey(road.getKey())) {
+            return resolvedRoads.get(road.getKey());
+        }
+
+        Road parentRoad = null;
+        if (road.getParentKey() != null && !road.getParentKey().isEmpty()) {
+            parentRoad = this.buildResolvedRoad(this.getList().get(road.getParentKey()), resolvedRoads);
+        }
+
+        Road resolvedRoad = road.toBuilder().setParent(parentRoad).build();
+        resolvedRoads.put(road.getKey(), resolvedRoad);
+        return resolvedRoad;
     }
 
     @XmlRootElement(name = "roads")

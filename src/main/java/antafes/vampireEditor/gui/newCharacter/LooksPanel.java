@@ -892,14 +892,8 @@ public class LooksPanel extends javax.swing.JPanel {
         pathModel.addElement(emptyPath);
         pathComboBox.putClientProperty("emptyEntry", emptyPath);
 
-        // Get all roads that have selectedRoad as their parent
         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        ArrayList<Road> childPaths = new ArrayList<>();
-        roadStorage.getList().forEach((String key, Road road) -> {
-            if (road.getParent() != null && road.getParent().getKey().equals(selectedRoad.getKey())) {
-                childPaths.add(road);
-            }
-        });
+        ArrayList<Road> childPaths = new ArrayList<>(roadStorage.getPathsForRoad(selectedRoad));
 
         childPaths.sort(new StringComparator());
         childPaths.forEach(pathModel::addElement);

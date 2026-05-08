@@ -71,6 +71,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private BaseWindow parent;
     private final HashMap<String, Integer> groupOverflows = new HashMap<>();
     private UpdateFreeAdditionalPointsListener updateFreeAdditionalPointsListener;
+    private boolean disposed;
 
     // List of created fields
     private javax.swing.JButton cancelButton;
@@ -234,6 +235,11 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     @Override
     public void dispose()
     {
+        if (this.disposed) {
+            return;
+        }
+
+        this.disposed = true;
         if (this.updateFreeAdditionalPointsListener != null) {
             this.dialogDispatcher.removeListener(
                 UpdateFreeAdditionalPointsEvent.class,
