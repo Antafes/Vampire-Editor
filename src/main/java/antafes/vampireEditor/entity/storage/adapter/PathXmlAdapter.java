@@ -52,8 +52,14 @@ public class PathXmlAdapter extends XmlAdapter<PathXmlAdapter.PathXml, Road> {
         if (v == null || v.key == null) return null;
         RoadStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         try {
-            return storage.getEntity(v.key)
-                    .toBuilder()
+            Road road = storage.getEntity(v.key);
+            if (road.getParent() == null) {
+                throw new RuntimeException(
+                    "Key '" + v.key + "' refers to a top-level road, not a path. "
+                        + "Only child roads (those with a parent) are valid in <path key=\"...\">."
+                );
+            }
+            return road.toBuilder()
                     .setValue(v.value != null ? v.value : 0)
                     .build();
         } catch (EntityStorageException e) {
