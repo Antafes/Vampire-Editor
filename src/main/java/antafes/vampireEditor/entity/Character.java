@@ -295,6 +295,10 @@ public class Character extends BaseEntity {
 
         public int getAdvantageValue(String key)
         {
+            if (this.advantages == null) {
+                return 0;
+            }
+
             Advantage advantage = this.advantages.get(key);
             return advantage != null ? advantage.getValue() : 0;
         }
