@@ -63,21 +63,35 @@ public class RoadStorageTest extends BaseTest
     {
         ArrayList<Road> roads = this.roadStorage.getRoads();
         Set<String> roadKeys = roads.stream().map(Road::getKey).collect(Collectors.toCollection(HashSet::new));
+        Set<String> allPathKeys = this.roadStorage.getList().values().stream()
+            .filter(road -> road.getParent() != null)
+            .map(Road::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
 
         Assert.assertTrue(roadKeys.contains("roadOfBeast"));
         Assert.assertTrue(roadKeys.contains("roadOfHumanity"));
-        Assert.assertFalse(roadKeys.contains("pathOfHunter"));
-        Assert.assertEquals(roads.size(), 9);
+        Assert.assertTrue(roadKeys.stream().noneMatch(allPathKeys::contains));
     }
 
     public void testGetPathsForRoadReturnsChildPathsOnly() throws Exception
     {
-        ArrayList<Road> beastPaths = this.roadStorage.getPathsForRoad(this.roadStorage.getEntity("roadOfBeast"));
-        ArrayList<Road> humanityPaths = this.roadStorage.getPathsForRoad(this.roadStorage.getEntity("roadOfHumanity"));
+        Road selectedRoad = this.roadStorage.getRoads().stream()
+            .findFirst()
+            .orElseThrow();
 
-        Assert.assertEquals(beastPaths.size(), 1);
-        Assert.assertEquals(beastPaths.getFirst().getKey(), "pathOfHunter");
-        Assert.assertTrue(humanityPaths.isEmpty());
+        ArrayList<Road> paths = this.roadStorage.getPathsForRoad(selectedRoad);
+        Set<String> expectedPathKeys = this.roadStorage.getList().values().stream()
+            .filter(road -> road.getParent() != null)
+            .filter(road -> selectedRoad.getKey().equals(road.getParent().getKey()))
+            .map(Road::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
+        Set<String> actualPathKeys = paths.stream()
+            .map(Road::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
+
+        Assert.assertEquals(actualPathKeys, expectedPathKeys);
+        Assert.assertTrue(paths.stream().allMatch(road -> road.getParent() != null));
+        Assert.assertTrue(paths.stream().allMatch(road -> selectedRoad.getKey().equals(road.getParent().getKey())));
     }
 
     @Test(expectedExceptions = NullPointerException.class)

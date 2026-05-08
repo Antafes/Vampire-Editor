@@ -157,7 +157,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         String groupLabel,
         @NonNull String elementLabel,
         @NonNull ElementType elementType,
-        @NonNull int spinnerMaximum
+        int spinnerMaximum
     ) throws ElementAlreadyExistsException, LabelEmptyException
     {
         return this.addRow(column, groupLabel, elementLabel, elementType, false, spinnerMaximum, null);
@@ -169,7 +169,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         @NonNull String elementLabel,
         @NonNull ElementType elementType,
         @NonNull Boolean editableElementLabel,
-        @NonNull int spinnerMaximum,
+        int spinnerMaximum,
         BaseTranslatedEntity selectedComboBoxValue
     ) throws ElementAlreadyExistsException, LabelEmptyException
     {

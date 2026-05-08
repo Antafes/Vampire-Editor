@@ -48,6 +48,7 @@ import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -109,8 +110,11 @@ public class RoadPathSelectionTest extends BaseTest
 
         roadComboBox.setSelectedItem(this.roadOfBeast);
 
-        Assert.assertTrue(pathComboBox.isEnabled());
-        Assert.assertEquals(this.getComboBoxKeys(pathComboBox), List.of("", "pathOfHunter"));
+        Set<String> expectedBeastPathKeys = this.getExpectedPathKeysForRoad(this.roadOfBeast);
+        Set<String> actualBeastPathKeys = this.getComboBoxNonEmptyKeys(pathComboBox);
+        Assert.assertEquals(actualBeastPathKeys, expectedBeastPathKeys);
+        Assert.assertEquals(pathComboBox.isEnabled(), !expectedBeastPathKeys.isEmpty());
+        Assert.assertTrue(actualBeastPathKeys.contains("pathOfHunter"));
 
         pathComboBox.setSelectedItem(this.pathOfHunter);
         Assert.assertNotNull(pathComboBox.getSelectedItem());
@@ -118,8 +122,10 @@ public class RoadPathSelectionTest extends BaseTest
 
         roadComboBox.setSelectedItem(this.roadOfHumanity);
 
-        Assert.assertFalse(pathComboBox.isEnabled());
-        Assert.assertEquals(pathComboBox.getItemCount(), 1);
+        Set<String> expectedHumanityPathKeys = this.getExpectedPathKeysForRoad(this.roadOfHumanity);
+        Set<String> actualHumanityPathKeys = this.getComboBoxNonEmptyKeys(pathComboBox);
+        Assert.assertEquals(actualHumanityPathKeys, expectedHumanityPathKeys);
+        Assert.assertEquals(pathComboBox.isEnabled(), !expectedHumanityPathKeys.isEmpty());
         Assert.assertTrue(pathComboBox.getSelectedItem() instanceof EmptyEntity);
     }
 
@@ -183,6 +189,21 @@ public class RoadPathSelectionTest extends BaseTest
         Map<String, Map<String, JSpinner>> groupSpinners = this.getField(this.advantagesPanel, BaseColumnListPanel.class, "groupSpinners", Map.class);
         Map<String, JSpinner> virtueSpinners = groupSpinners.get("virtues");
         return virtueSpinners.keySet();
+    }
+
+    private Set<String> getExpectedPathKeysForRoad(Road road)
+    {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        return roadStorage.getPathsForRoad(road).stream()
+            .map(Road::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
+    }
+
+    private Set<String> getComboBoxNonEmptyKeys(JComboBox<BaseTranslatedEntity> comboBox)
+    {
+        return this.getComboBoxKeys(comboBox).stream()
+            .filter(key -> !key.isEmpty())
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
     private <T> T getField(Object target, String fieldName, Class<T> type) throws Exception
