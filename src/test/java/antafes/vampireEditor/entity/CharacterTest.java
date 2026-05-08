@@ -280,7 +280,7 @@ public class CharacterTest extends BaseTest
         Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
         int courage = builder.getAdvantageValue("courage");
         Character updatedCharacter = builder
-            .setWillpower(courage)
+            .initializeWillpowerFromCourage()
             .build();
 
         Assert.assertEquals(updatedCharacter.getWillpower(), courage);
@@ -293,7 +293,7 @@ public class CharacterTest extends BaseTest
         Character.CharacterBuilder<?, ?> builder = this.character.toBuilder()
             .setAdvantages(advantages);
         Character updatedCharacter = builder
-            .setWillpower(builder.getAdvantageValue("courage"))
+            .initializeWillpowerFromCourage()
             .build();
 
         Assert.assertEquals(updatedCharacter.getWillpower(), 0);

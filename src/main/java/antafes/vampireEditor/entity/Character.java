@@ -299,6 +299,12 @@ public class Character extends BaseEntity {
             return advantage != null ? advantage.getValue() : 0;
         }
 
+        public B initializeWillpowerFromCourage()
+        {
+            this.willpower = this.getAdvantageValue("courage");
+            return this.self();
+        }
+
         public B addMerit(Merit merit) {
             this.merits.put(merit.getKey(), merit);
 

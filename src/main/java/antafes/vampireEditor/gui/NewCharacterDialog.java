@@ -535,7 +535,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.abilitiesPanel.fillCharacter(builder);
         this.dialogDispatcher.dispatch(new FillCharacterEvent(builder));
         this.lastStepsPanel.fillCharacter(builder);
-        builder.setWillpower(builder.getAdvantageValue("courage"));
+        builder.initializeWillpowerFromCourage();
 
         ShowWaitAction waitAction = new ShowWaitAction(this);
         waitAction.show(aVoid -> {
