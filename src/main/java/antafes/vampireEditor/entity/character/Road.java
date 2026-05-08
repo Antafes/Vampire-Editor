@@ -27,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,6 +50,27 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     @XmlElement(name = "advantages")
     @XmlJavaTypeAdapter(AdvantageListAdapter.class)
     private List<Advantage> merits;
+
+    /**
+     * Parent road key read from XML (<parent>...</parent>) for path entries.
+     * Used during road loading/validation to resolve the actual parent Road.
+     * Because it is part of the model, it is available to Lombok-generated
+     * builder/toBuilder and may remain populated in-memory after loading.
+     */
+    @XmlElement(name = "parent")
+    private String parentKey;
+
+    /**
+     * Optional parent road (for paths).
+     * Only set for path entries that inherit from a parent road.
+     * Resolved from parentKey during road data loading and validation.
+     * Field is excluded from XML serialization (@XmlTransient) and from
+     * equals/hashCode (@EqualsAndHashCode.Exclude), but is included in the
+     * Lombok-generated builder via @SuperBuilder(toBuilder = true).
+     */
+    @XmlTransient
+    @EqualsAndHashCode.Exclude
+    private Road parent;
 
     protected Road()
     {

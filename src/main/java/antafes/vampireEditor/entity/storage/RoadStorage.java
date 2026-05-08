@@ -30,10 +30,16 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.NonNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Storage for roads.
@@ -48,6 +54,32 @@ public class RoadStorage extends BaseStorage<Road> {
     }
 
     /**
+     * Returns all top-level roads that can be selected as a primary road.
+     * Paths (roads with a parent) are excluded.
+     *
+     * @return list of roads without parent reference
+     */
+    public ArrayList<Road> getRoads() {
+        return this.getList().values().stream()
+            .filter(road -> road.getParent() == null)
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Returns all child paths for the given parent road.
+     *
+     * @param parentRoad selected parent road, must not be null
+     * @return list of roads whose parent is the given road
+     * @throws NullPointerException if parentRoad is null
+     */
+    public ArrayList<Road> getPathsForRoad(@NonNull Road parentRoad) {
+        return this.getList().values().stream()
+            .filter(road -> road.getParent() != null)
+            .filter(road -> parentRoad.getKey().equals(road.getParent().getKey()))
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
      * Load available data.
      */
     private void loadData() {
@@ -56,10 +88,76 @@ public class RoadStorage extends BaseStorage<Road> {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
             RoadsDocument doc = (RoadsDocument) unmarshaller.unmarshal(is);
 
-            doc.roads.forEach((road) -> this.getList().put(road.getKey(), road));
+            doc.roads.forEach(road -> this.getList().put(road.getKey(), road));
+            this.resolveAndValidateParents();
         } catch (Exception e) {
             throw new RuntimeException("Could not load roads data", e);
         }
+    }
+
+    /**
+     * Resolve parent key strings to Road objects and validate parent references.
+     * Checks for missing parent references, self-parenting, and circular parent chains.
+     */
+    private void resolveAndValidateParents() {
+        this.getList().values().forEach(this::validateParentReference);
+        this.getList().values().forEach(road -> this.validateNoCircularParent(road.getKey(), new HashSet<>()));
+
+        Map<String, Road> resolvedRoads = new HashMap<>();
+        this.getList().values().forEach(road -> resolvedRoads.put(road.getKey(), this.buildResolvedRoad(road, resolvedRoads)));
+
+        this.getList().clear();
+        this.getList().putAll(resolvedRoads);
+    }
+
+    private void validateParentReference(Road road) {
+        if (road.getParentKey() == null || road.getParentKey().isEmpty()) {
+            return;
+        }
+
+        if (!this.getList().containsKey(road.getParentKey())) {
+            throw new RuntimeException(
+                "Road '" + road.getKey() + "' has invalid parent key '" + road.getParentKey() + "': parent road not found in roads.xml"
+            );
+        }
+
+        if (road.getKey().equals(road.getParentKey())) {
+            throw new RuntimeException("Road '" + road.getKey() + "' cannot be its own parent");
+        }
+    }
+
+    /**
+     * Recursively check for circular parent references by following parent keys.
+     *
+     * @param roadKey The road key to check
+     * @param visited Set of already-visited road keys
+     */
+    private void validateNoCircularParent(String roadKey, Set<String> visited) {
+        if (!visited.add(roadKey)) {
+            throw new RuntimeException("Circular parent reference detected involving road '" + roadKey + "'");
+        }
+
+        Road road = this.getList().get(roadKey);
+        if (road != null && road.getParentKey() != null && !road.getParentKey().isEmpty()) {
+            this.validateNoCircularParent(road.getParentKey(), visited);
+        }
+
+        visited.remove(roadKey);
+    }
+
+    private Road buildResolvedRoad(Road road, Map<String, Road> resolvedRoads) {
+        if (resolvedRoads.containsKey(road.getKey())) {
+            return resolvedRoads.get(road.getKey());
+        }
+
+        Road parentRoad = null;
+        if (road.getParentKey() != null && !road.getParentKey().isEmpty()) {
+            parentRoad = this.buildResolvedRoad(this.getList().get(road.getParentKey()), resolvedRoads);
+        }
+
+        Road resolvedRoad = road.toBuilder().setParent(parentRoad).build();
+        resolvedRoads.put(road.getKey(), resolvedRoad);
+        return resolvedRoad;
     }
 
     @XmlRootElement(name = "roads")

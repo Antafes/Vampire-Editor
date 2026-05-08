@@ -90,4 +90,246 @@
             <advantage>self-control</advantage>
         </advantages>
     </road>
+    <road key="pathOfHunter">
+        <parent>roadOfBeast</parent>
+        <name>
+            <English>Path of the Hunter</English>
+            <German>Pfad des Jägers</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfJourneys">
+        <parent>roadOfBeast</parent>
+        <name>
+            <English>Path of Journeys</English>
+            <German>Pfad der Reisen</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfLiberation">
+        <parent>roadOfBeast</parent>
+        <name>
+            <English>Path of Liberation</English>
+            <German>Pfad der Befreiung</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfChrist">
+        <parent>roadOfHeaven</parent>
+        <name>
+            <English>Path of Christ (Christianity)</English>
+            <German>Pfad Christi (Christentum)</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfLife">
+        <parent>roadOfHeaven</parent>
+        <name>
+            <English>Derech Chaim - Path of Life (Judaism)</English>
+            <German>Derech Chaim - Pfad des Lebens (Judentum)</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfTheProphet">
+        <parent>roadOfHeaven</parent>
+        <name>
+            <English>Path of the Prophet (Islam)</English>
+            <German>Pfad des Propheten (Islam)</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfBreath">
+        <parent>roadOfHumanity</parent>
+        <name>
+            <English>Path of Breath</English>
+            <German>Pfad des Odems</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfCommunity">
+        <parent>roadOfHumanity</parent>
+        <name>
+            <English>Path of Community</English>
+            <German>Pfad der Gemeinschaft</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfIllumination">
+        <parent>roadOfHumanity</parent>
+        <name>
+            <English>Path of Illumination</English>
+            <German>Pfad der Erleuchtung</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfChivalry">
+        <parent>roadOfKings</parent>
+        <name>
+            <English>Path of Chivalry</English>
+            <German>Pfad der Ritterlichkeit</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfDevaraja">
+        <parent>roadOfKings</parent>
+        <name>
+            <English>Path of Devaraja</English>
+            <German>Pfad des Devaraja</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfDaena">
+        <parent>roadOfKings</parent>
+        <name>
+            <English>Path of Daena</English>
+            <German>Pfad der Daena</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfThorns">
+        <parent>roadOfLilith</parent>
+        <name>
+            <English>Path of Thorns</English>
+            <German>Pfad der Dornen</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfVeils">
+        <parent>roadOfLilith</parent>
+        <name>
+            <English>Path of Veils</English>
+            <German>Pfad der Schleier</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfMaking">
+        <parent>roadOfLilith</parent>
+        <name>
+            <English>Path of Making</English>
+            <German>Pfad der Zeugung</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfFlesh">
+        <parent>roadOfMetamorphosis</parent>
+        <name>
+            <English>Path of Flesh</English>
+            <German>Pfad des Fleisches</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfSpirit">
+        <parent>roadOfMetamorphosis</parent>
+        <name>
+            <English>Path of Spirit</English>
+            <German>Pfad des Geistes</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfPleasure">
+        <parent>roadOfSin</parent>
+        <name>
+            <English>Path of Pleasure</English>
+            <German>Pfad der Lust</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfTheDevil">
+        <parent>roadOfSin</parent>
+        <name>
+            <English>Path of the Devil</English>
+            <German>Pfad des Teufels</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfScreams">
+        <parent>roadOfSin</parent>
+        <name>
+            <English>Path of Screams</English>
+            <German>Pfad der Schreie</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfTheEightfoldWheel">
+        <parent>roadOfHeaven</parent>
+        <name>
+            <English>Path of the Eightfold Wheel</English>
+            <German>Pfad des Achtfachen Rades</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfTheWatchfulGods">
+        <parent>roadOfHeaven</parent>
+        <name>
+            <English>Path of the Watchful Gods</English>
+            <German>Pfad der wachsamen Götter</German>
+        </name>
+        <advantages>
+            <advantage>conscience</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
 </roads>

@@ -87,10 +87,15 @@ public class AbilitiesPanel extends antafes.vampireEditor.gui.character.BaseChar
     public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
     {
         for (AbilityInterface.AbilityType abilityType : AbilityInterface.AbilityType.values()) {
+            java.util.ArrayList<java.awt.Component> fields = this.getFields(abilityType.getKeyPlural());
+            if (fields == null) {
+                continue;
+            }
+
             //noinspection CodeBlock2Expr
             this.getCharacter().getAbilitiesByType(abilityType)
                 .forEach(ability -> {
-                    this.getFields(abilityType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                    fields.stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
                         if (!Objects.equals(component.getName(), ability.getKey())) {
                             return;
                         }

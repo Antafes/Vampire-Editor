@@ -308,6 +308,170 @@ public class XsdValidatorTest extends BaseTest {
     }
 
     /**
+     * Verifies NPC characters cannot contain a path selection.
+     */
+    public void testNpcWithPathViolatesAssertion() throws Exception {
+        if (XsdValidator.getValidatorImplementation().equals("Unavailable")) {
+            throw new SkipException("Strict validation requires an XSD 1.1 validator");
+        }
+
+        String invalidXml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <character id="test-npc-path" isNpc="true">
+                <name>Test NPC</name>
+                <generation>3</generation>
+                <experience>0</experience>
+                <demeanor>Deviant</demeanor>
+                <concept>Soldier</concept>
+                <attributes>
+                    <attribute key="strength">3</attribute>
+                    <attribute key="dexterity">3</attribute>
+                    <attribute key="stamina">3</attribute>
+                    <attribute key="charisma">3</attribute>
+                    <attribute key="manipulation">3</attribute>
+                    <attribute key="appearance">3</attribute>
+                    <attribute key="perception">3</attribute>
+                    <attribute key="intelligence">3</attribute>
+                    <attribute key="wits">3</attribute>
+                </attributes>
+                <abilities>
+                    <ability key="ability1">0</ability>
+                    <ability key="ability2">0</ability>
+                    <ability key="ability3">0</ability>
+                    <ability key="ability4">0</ability>
+                    <ability key="ability5">0</ability>
+                    <ability key="ability6">0</ability>
+                    <ability key="ability7">0</ability>
+                    <ability key="ability8">0</ability>
+                    <ability key="ability9">0</ability>
+                    <ability key="ability10">0</ability>
+                    <ability key="ability11">0</ability>
+                    <ability key="ability12">0</ability>
+                    <ability key="ability13">0</ability>
+                    <ability key="ability14">0</ability>
+                    <ability key="ability15">0</ability>
+                    <ability key="ability16">0</ability>
+                    <ability key="ability17">0</ability>
+                    <ability key="ability18">0</ability>
+                    <ability key="ability19">0</ability>
+                    <ability key="ability20">0</ability>
+                    <ability key="ability21">0</ability>
+                    <ability key="ability22">0</ability>
+                    <ability key="ability23">0</ability>
+                    <ability key="ability24">0</ability>
+                    <ability key="ability25">0</ability>
+                    <ability key="ability26">0</ability>
+                    <ability key="ability27">0</ability>
+                    <ability key="ability28">0</ability>
+                    <ability key="ability29">0</ability>
+                    <ability key="ability30">0</ability>
+                </abilities>
+                <advantages>
+                    <advantage key="advantage1">0</advantage>
+                </advantages>
+                <path key="pathOfBlood">4</path>
+                <willpower>6</willpower>
+                <bloodPool>10</bloodPool>
+            </character>
+            """;
+
+        java.nio.file.Path tmpFile = java.nio.file.Paths.get(System.getProperty("java.io.tmpdir"), "test-npc-path-invalid.xml");
+        java.nio.file.Files.write(tmpFile, invalidXml.getBytes(StandardCharsets.UTF_8));
+
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
+            Assert.fail("Validation should have failed: NPC character contains path");
+        } catch (SAXParseException e) {
+            Assert.assertTrue(
+                e.getMessage().contains("cvc-assertion") ||
+                    e.getMessage().contains("assert") ||
+                    e.getMessage().contains("path") ||
+                    e.getMessage().contains("road"),
+                "Error message should mention the path assertion: " + e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Verifies non-NPC characters may contain a path when road is present.
+     */
+    public void testNonNpcWithRoadAndPathIsValid() throws Exception {
+        if (XsdValidator.getValidatorImplementation().equals("Unavailable")) {
+            throw new SkipException("Strict validation requires an XSD 1.1 validator");
+        }
+
+        String validXml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <character id="test-non-npc-path" isNpc="false">
+                <name>Test Character</name>
+                <clan>Brujah</clan>
+                <generation>3</generation>
+                <experience>0</experience>
+                <demeanor>Deviant</demeanor>
+                <concept>Soldier</concept>
+                <attributes>
+                    <attribute key="strength">3</attribute>
+                    <attribute key="dexterity">3</attribute>
+                    <attribute key="stamina">3</attribute>
+                    <attribute key="charisma">3</attribute>
+                    <attribute key="manipulation">3</attribute>
+                    <attribute key="appearance">3</attribute>
+                    <attribute key="perception">3</attribute>
+                    <attribute key="intelligence">3</attribute>
+                    <attribute key="wits">3</attribute>
+                </attributes>
+                <abilities>
+                    <ability key="ability1">0</ability>
+                    <ability key="ability2">0</ability>
+                    <ability key="ability3">0</ability>
+                    <ability key="ability4">0</ability>
+                    <ability key="ability5">0</ability>
+                    <ability key="ability6">0</ability>
+                    <ability key="ability7">0</ability>
+                    <ability key="ability8">0</ability>
+                    <ability key="ability9">0</ability>
+                    <ability key="ability10">0</ability>
+                    <ability key="ability11">0</ability>
+                    <ability key="ability12">0</ability>
+                    <ability key="ability13">0</ability>
+                    <ability key="ability14">0</ability>
+                    <ability key="ability15">0</ability>
+                    <ability key="ability16">0</ability>
+                    <ability key="ability17">0</ability>
+                    <ability key="ability18">0</ability>
+                    <ability key="ability19">0</ability>
+                    <ability key="ability20">0</ability>
+                    <ability key="ability21">0</ability>
+                    <ability key="ability22">0</ability>
+                    <ability key="ability23">0</ability>
+                    <ability key="ability24">0</ability>
+                    <ability key="ability25">0</ability>
+                    <ability key="ability26">0</ability>
+                    <ability key="ability27">0</ability>
+                    <ability key="ability28">0</ability>
+                    <ability key="ability29">0</ability>
+                    <ability key="ability30">0</ability>
+                </abilities>
+                <advantages>
+                    <advantage key="advantage1">0</advantage>
+                </advantages>
+                <road key="humanity">6</road>
+                <path key="pathOfBlood">4</path>
+                <willpower>6</willpower>
+                <bloodPool>10</bloodPool>
+            </character>
+            """;
+
+        java.nio.file.Path tmpFile = java.nio.file.Paths.get(System.getProperty("java.io.tmpdir"), "test-non-npc-path-valid.xml");
+        java.nio.file.Files.write(tmpFile, validXml.getBytes(StandardCharsets.UTF_8));
+
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
+            System.out.println("Non-NPC with road/path validated successfully (strict schema)");
+        }
+    }
+
+    /**
      * Verifies validator can be identified and logs implementation info.
      */
     public void testValidatorImplementationIdentification() {
@@ -321,8 +485,3 @@ public class XsdValidatorTest extends BaseTest {
         System.out.println("Features: XSD 1.1 strict (xsd:assert enabled)");
     }
 }
-
-
-
-
-

@@ -24,6 +24,7 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
@@ -532,7 +533,39 @@ public class BaseWindow extends javax.swing.JFrame {
             }
         }
 
+        if (ex instanceof EntityStorageException) {
+            String details = findNestedDetailMessage(ex);
+            if (details != null && !details.trim().isEmpty()) {
+                return message + "\n" + details;
+            }
+        }
+
         return message;
+    }
+
+    private static String findNestedDetailMessage(Throwable throwable)
+    {
+        if (throwable == null) {
+            return null;
+        }
+
+        String message = throwable.getMessage();
+        if (message != null
+            && !message.trim().isEmpty()
+            && !message.startsWith("Could not load character '")
+            && !message.startsWith("Could not rebuild loaded character '")
+        ) {
+            return message;
+        }
+
+        for (Throwable suppressed : throwable.getSuppressed()) {
+            String suppressedMessage = findNestedDetailMessage(suppressed);
+            if (suppressedMessage != null && !suppressedMessage.trim().isEmpty()) {
+                return suppressedMessage;
+            }
+        }
+
+        return findNestedDetailMessage(throwable.getCause());
     }
 
     /**

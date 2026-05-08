@@ -24,23 +24,9 @@ package antafes.vampireEditor.entity;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.storage.adapter.*;
 import antafes.vampireEditor.utility.StringComparator;
-import antafes.vampireEditor.entity.storage.adapter.AbilityMapAdapter;
-import antafes.vampireEditor.entity.storage.adapter.AdvantageMapAdapter;
-import antafes.vampireEditor.entity.storage.adapter.AttributeMapAdapter;
-import antafes.vampireEditor.entity.storage.adapter.ClanKeyAdapter;
-import antafes.vampireEditor.entity.storage.adapter.DateStringAdapter;
-import antafes.vampireEditor.entity.storage.adapter.FlawMapAdapter;
-import antafes.vampireEditor.entity.storage.adapter.GenerationValueAdapter;
-import antafes.vampireEditor.entity.storage.adapter.MeritMapAdapter;
-import antafes.vampireEditor.entity.storage.adapter.NatureKeyAdapter;
-import antafes.vampireEditor.entity.storage.adapter.RoadXmlAdapter;
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -63,7 +49,7 @@ import java.util.stream.Collectors;
 @XmlType(propOrder = {
     "name", "clan", "generation", "chronicle", "experience", "nature",
     "hideout", "player", "demeanor", "concept", "sire", "sect",
-    "attributes", "abilities", "advantages", "merits", "flaws", "road",
+    "attributes", "abilities", "advantages", "merits", "flaws", "road", "path",
     "willpower", "usedWillpower", "bloodPool", "age", "apparentAge",
     "dayOfBirth", "dayOfDeath",
     "hairColor", "eyeColor", "skinColor", "nationality", "height", "weight",
@@ -138,6 +124,10 @@ public class Character extends BaseEntity {
     @XmlElement(name = "road")
     @XmlJavaTypeAdapter(RoadXmlAdapter.class)
     private Road road;
+
+    @XmlElement(name = "path")
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
+    private Road path;
 
     @XmlElement(name = "willpower")
     private int willpower;
@@ -418,12 +408,20 @@ public class Character extends BaseEntity {
 
         private void calculateRoadScore()
         {
-            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
             ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
                 .filter((advantage) -> (advantage.getType() == AdvantageInterface.AdvantageType.VIRTUE))
                 .collect(Collectors.toList());
-            roadBuilder.setValue(Road.calculateRoadScore(advantages));
+            int roadScore = Road.calculateRoadScore(advantages);
+
+            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
+            roadBuilder.setValue(roadScore);
             this.road = roadBuilder.build();
+
+            if (this.path != null) {
+                Road.RoadBuilder<?, ?> pathBuilder = this.path.toBuilder();
+                pathBuilder.setValue(roadScore);
+                this.path = pathBuilder.build();
+            }
         }
     }
 }

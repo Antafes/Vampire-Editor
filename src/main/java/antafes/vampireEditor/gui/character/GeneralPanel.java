@@ -100,7 +100,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setValue(this.getCharacter().getBloodPool());
                         break;
                     default:
-                        element.setValue(this.getCharacter().getRoad() == null ? 2 : this.getCharacter().getRoad().getValue());
+                        Road effectiveRoad = this.getEffectiveRoad();
+                        element.setValue(effectiveRoad == null ? 2 : effectiveRoad.getValue());
                         break;
                 }
             }
@@ -148,13 +149,19 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                     characterBuilder.setBloodPool((int) element.getValue());
                     break;
                 default:
-                    if (this.getCharacter().getRoad() == null) {
+                    Road effectiveRoad = this.getEffectiveRoad();
+                    if (effectiveRoad == null) {
                         break;
                     }
 
-                    Road.RoadBuilder<?, ?> roadBuilder = this.getCharacter().getRoad().toBuilder();
+                    Road.RoadBuilder<?, ?> roadBuilder = effectiveRoad.toBuilder();
                     roadBuilder.setValue((int) element.getValue());
-                    characterBuilder.setRoad(roadBuilder.build());
+                    if (this.getCharacter().getPath() != null) {
+                        characterBuilder.setRoad(effectiveRoad.getParent())
+                            .setPath(roadBuilder.build());
+                    } else {
+                        characterBuilder.setRoad(roadBuilder.build());
+                    }
                     break;
             }
         });
@@ -277,8 +284,9 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         road.setModel(new SpinnerNumberModel(0, 0, 10, 1));
         road.setSize(spinnerDimension);
         road.setName("road");
+        Road effectiveRoad = this.getEffectiveRoad();
         elementList.put(
-            this.getCharacter().getRoad() == null ? this.getLanguage().translate("road") : this.getCharacter().getRoad().getName(),
+            effectiveRoad == null ? this.getLanguage().translate("road") : effectiveRoad.getName(),
             road
         );
         this.addChangeListenerForCharacterChanged(road);
@@ -298,5 +306,13 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         this.addChangeListenerForCharacterChanged(bloodPool);
 
         this.addFields("other", false, elementList);
+    }
+
+    private Road getEffectiveRoad() {
+        if (this.getCharacter().getPath() != null) {
+            return this.getCharacter().getPath();
+        }
+
+        return this.getCharacter().getRoad();
     }
 }

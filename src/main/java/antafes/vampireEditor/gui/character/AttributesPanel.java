@@ -85,10 +85,14 @@ public class AttributesPanel extends BaseCharacterListPanel implements Translata
     public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
     {
         for (AttributeInterface.AttributeType attributeType : AttributeInterface.AttributeType.values()) {
-            //noinspection CodeBlock2Expr
+            java.util.ArrayList<java.awt.Component> fields = this.getFields(attributeType.getKeyPlural());
+            if (fields == null) {
+                continue;
+            }
+
             this.getCharacter().getAttributesByType(attributeType)
                 .forEach(attribute -> {
-                    this.getFields(attributeType.toString()).stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
+                    fields.stream().map(component -> (JSpinner) component).forEachOrdered(component -> {
                         if (!Objects.equals(component.getName(), attribute.getKey())) {
                             return;
                         }

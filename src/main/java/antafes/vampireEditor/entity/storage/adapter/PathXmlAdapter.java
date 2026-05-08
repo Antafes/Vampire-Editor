@@ -33,12 +33,13 @@ import jakarta.xml.bind.annotation.XmlValue;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * JAXB adapter: {@code Road} ↔ {@code <road key="...">value</road>} node.
+ * JAXB adapter: {@code Road} (path) ↔ {@code <path key="...">value</path>} node.
+ * Similar to RoadXmlAdapter but for path selection (a child road of the main road).
  */
-public class RoadXmlAdapter extends XmlAdapter<RoadXmlAdapter.RoadXml, Road> {
+public class PathXmlAdapter extends XmlAdapter<PathXmlAdapter.PathXml, Road> {
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class RoadXml {
+    public static class PathXml {
         @XmlAttribute(name = "key")
         public String key;
 
@@ -47,29 +48,35 @@ public class RoadXmlAdapter extends XmlAdapter<RoadXmlAdapter.RoadXml, Road> {
     }
 
     @Override
-    public Road unmarshal(RoadXml v) {
+    public Road unmarshal(PathXml v) {
         if (v == null || v.key == null) return null;
         RoadStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         try {
-            return storage.getEntity(v.key)
-                    .toBuilder()
+            Road road = storage.getEntity(v.key);
+            if (road.getParent() == null) {
+                throw new RuntimeException(
+                    "Key '" + v.key + "' refers to a top-level road, not a path. "
+                        + "Only child roads (those with a parent) are valid in <path key=\"...\">."
+                );
+            }
+            return road.toBuilder()
                     .setValue(v.value != null ? v.value : 0)
                     .build();
         } catch (EntityStorageException e) {
             throw new RuntimeException(
-                "Unknown road key '" + v.key + "' in character XML. "
-                    + "Please select an existing road key in <road key=\"...\"> or update roads data.",
+                "Unknown path key '" + v.key + "' in character XML. "
+                    + "Please select an existing path key in <path key=\"...\"> or update roads data.",
                 e
             );
         }
     }
 
     @Override
-    public RoadXml marshal(Road road) {
-        if (road == null) return null;
-        RoadXml xml = new RoadXml();
-        xml.key = road.getKey();
-        xml.value = road.getValue();
+    public PathXml marshal(Road path) {
+        if (path == null) return null;
+        PathXml xml = new PathXml();
+        xml.key = path.getKey();
+        xml.value = path.getValue();
         return xml;
     }
 }
