@@ -118,6 +118,18 @@ public class ClanTest extends BaseTest
         Assert.assertEquals(actual.size(), 1);
     }
 
+    public void testIsBloodlineDefaultsFalse() {
+        Assert.assertFalse(this.clan.isBloodline());
+    }
+
+    public void testIsBloodlineTrue() throws EntityException {
+        Clan bloodlineClan = this.clan.toBuilder()
+            .setBloodline(true)
+            .build();
+
+        Assert.assertTrue(bloodlineClan.isBloodline());
+    }
+
     public void testToString() {
         final String expected = "Test clan";
         final String actual = this.clan.toString();
