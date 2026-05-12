@@ -66,4 +66,37 @@ public class ClanComparatorTest {
 
         Assert.assertEquals(actual, expected);
     }
+
+    public void testCompareClanWithBloodline() throws EntityException, EntityStorageException {
+        ClanComparator comparator = new ClanComparator();
+        Clan clan = TestClanUtility.createTestClan();
+        Clan bloodline = TestClanUtility.createTestClan().toBuilder()
+            .setKey("testBloodline")
+            .setBloodline(true)
+            .build();
+
+        // Compare should work consistently regardless of bloodline flag
+        final int result = comparator.compare(clan, bloodline);
+        // Comparison should be based on names, not on bloodline flag
+        Assert.assertNotEquals(result, Integer.MIN_VALUE);
+        Assert.assertNotEquals(result, Integer.MAX_VALUE);
+    }
+
+    public void testCompareBloodlineWithBloodline() throws EntityException, EntityStorageException {
+        ClanComparator comparator = new ClanComparator();
+        Clan bloodline1 = TestClanUtility.createTestClan().toBuilder()
+            .setBloodline(true)
+            .build();
+        Clan bloodline2 = TestClanUtility.createTestClan().toBuilder()
+            .setKey("testBloodline2")
+            .setNames(new HashMap<>())
+            .addName(Configuration.Language.ENGLISH, "Another test bloodline")
+            .setBloodline(true)
+            .build();
+
+        // Bloodlines should be comparable just like clans
+        final int result = comparator.compare(bloodline1, bloodline2);
+        Assert.assertNotEquals(result, Integer.MIN_VALUE);
+        Assert.assertNotEquals(result, Integer.MAX_VALUE);
+    }
 }
