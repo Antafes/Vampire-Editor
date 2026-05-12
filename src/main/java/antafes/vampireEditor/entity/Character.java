@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
 
 /**
@@ -306,6 +307,27 @@ public class Character extends BaseEntity {
         public B initializeWillpowerFromCourage()
         {
             this.willpower = this.getAdvantageValue("courage");
+            return this.self();
+        }
+
+        public int calculateInitialBloodPool(int dieRoll)
+        {
+            if (dieRoll < 1 || dieRoll > 6) {
+                throw new IllegalArgumentException("Die roll must be between 1 and 6");
+            }
+
+            int domain = this.getAdvantageValue("domain");
+            int herd = this.getAdvantageValue("herd");
+            int rolledBloodPool = dieRoll + domain + herd;
+            int generationMaximum = this.generation != null ? this.generation.getMaximumBloodPool() : Integer.MAX_VALUE;
+
+            return Math.min(generationMaximum, rolledBloodPool);
+        }
+
+        public B initializeBloodPoolFromRoll(IntSupplier d6Supplier)
+        {
+            this.bloodPool = this.calculateInitialBloodPool(d6Supplier.getAsInt());
+
             return this.self();
         }
 

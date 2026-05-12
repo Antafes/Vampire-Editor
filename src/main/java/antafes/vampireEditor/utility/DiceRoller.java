@@ -16,30 +16,24 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2023, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
+package antafes.vampireEditor.utility;
 
-package antafes.vampireEditor.gui.event.listener;
+import java.util.Random;
 
-import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
-import scripts.laniax.framework.event_dispatcher.EventListener;
-
-import java.util.function.Consumer;
-
-public class UpdateFreeAdditionalPointsListener extends EventListener<UpdateFreeAdditionalPointsEvent>
+public final class DiceRoller
 {
-    public UpdateFreeAdditionalPointsListener()
+    private static final Random RANDOM = new Random();
+
+    private DiceRoller()
     {
     }
 
-    public UpdateFreeAdditionalPointsListener(Consumer<UpdateFreeAdditionalPointsEvent> consumer)
+    public static int rollD6()
     {
-        super(consumer);
-    }
-
-    public UpdateFreeAdditionalPointsListener(Consumer<UpdateFreeAdditionalPointsEvent> consumer, int priority)
-    {
-        super(consumer, priority);
+        return RANDOM.nextInt(6) + 1;
     }
 }
+

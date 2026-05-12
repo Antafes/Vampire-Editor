@@ -35,6 +35,7 @@ import antafes.vampireEditor.gui.event.listener.UpdateFreeAdditionalPointsListen
 import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
 import antafes.vampireEditor.gui.newCharacter.*;
 import antafes.vampireEditor.language.LanguageInterface;
+import antafes.vampireEditor.utility.DiceRoller;
 import lombok.Getter;
 import lombok.Setter;
 import scripts.laniax.framework.event_dispatcher.Dispatcher;
@@ -535,6 +536,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         this.abilitiesPanel.fillCharacter(builder);
         this.dialogDispatcher.dispatch(new FillCharacterEvent(builder));
         this.lastStepsPanel.fillCharacter(builder);
+        builder.initializeBloodPoolFromRoll(DiceRoller::rollD6);
         builder.initializeWillpowerFromCourage();
 
         ShowWaitAction waitAction = new ShowWaitAction(this);

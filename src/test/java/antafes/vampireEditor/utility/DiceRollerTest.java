@@ -16,30 +16,23 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2023, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
+package antafes.vampireEditor.utility;
 
-package antafes.vampireEditor.gui.event.listener;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
-import scripts.laniax.framework.event_dispatcher.EventListener;
-
-import java.util.function.Consumer;
-
-public class UpdateFreeAdditionalPointsListener extends EventListener<UpdateFreeAdditionalPointsEvent>
+public class DiceRollerTest
 {
-    public UpdateFreeAdditionalPointsListener()
+    @Test
+    public void testRollD6Range()
     {
-    }
-
-    public UpdateFreeAdditionalPointsListener(Consumer<UpdateFreeAdditionalPointsEvent> consumer)
-    {
-        super(consumer);
-    }
-
-    public UpdateFreeAdditionalPointsListener(Consumer<UpdateFreeAdditionalPointsEvent> consumer, int priority)
-    {
-        super(consumer, priority);
+        for (int i = 0; i < 1000; i++) {
+            int roll = DiceRoller.rollD6();
+            Assert.assertTrue(roll >= 1 && roll <= 6, "rollD6() must return values in range 1..6");
+        }
     }
 }
+

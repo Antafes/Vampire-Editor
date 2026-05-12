@@ -307,6 +307,78 @@ public class CharacterTest extends BaseTest
         Assert.assertEquals(this.character.getBloodPool(), 3);
     }
 
+    public void testInitialBloodPoolCanBeDerivedFromD6DomainAndHerd() throws EntityStorageException {
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        Character updatedCharacter = this.character.toBuilder()
+            .addAdvantage(advantageStorage.getEntity("domain").toBuilder().setValue(2).build())
+            .addAdvantage(advantageStorage.getEntity("herd").toBuilder().setValue(1).build())
+            .initializeBloodPoolFromRoll(() -> 4)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 7);
+    }
+
+    public void testInitialBloodPoolIsCappedByGenerationMaximum() {
+        Generation lowCapGeneration = Generation.builder()
+            .setGeneration(13)
+            .setMaximumAttributes(5)
+            .setMaximumBloodPool(5)
+            .setBloodPerRound(1)
+            .build();
+
+        Character updatedCharacter = this.character.toBuilder()
+            .setGeneration(lowCapGeneration)
+            .initializeBloodPoolFromRoll(() -> 6)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 5);
+    }
+
+    public void testInitialBloodPoolDefaultsBackgroundBonusesToZeroWhenMissing() {
+        HashMap<String, Advantage> advantages = new HashMap<>(this.character.getAdvantages());
+        advantages.remove("domain");
+        advantages.remove("herd");
+
+        Character updatedCharacter = this.character.toBuilder()
+            .setAdvantages(advantages)
+            .initializeBloodPoolFromRoll(() -> 3)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 3);
+    }
+
+    public void testNpcInitialBloodPoolUsesSameRule() throws EntityStorageException {
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        Character npc = this.character.toBuilder()
+            .setNpc(true)
+            .setClan(null)
+            .setRoad(null)
+            .addAdvantage(advantageStorage.getEntity("domain").toBuilder().setValue(1).build())
+            .addAdvantage(advantageStorage.getEntity("herd").toBuilder().setValue(2).build())
+            .initializeBloodPoolFromRoll(() -> 6)
+            .build();
+
+        Assert.assertTrue(npc.isNpc());
+        Assert.assertEquals(npc.getBloodPool(), 9);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Die roll must be between 1 and 6")
+    public void testInitialBloodPoolRejectsInvalidRoll() {
+        this.character.toBuilder()
+            .initializeBloodPoolFromRoll(() -> 0)
+            .build();
+    }
+
+    public void testBloodPoolAndWillpowerInitializationWorksTogether() {
+        Character updatedCharacter = this.character.toBuilder()
+            .initializeBloodPoolFromRoll(() -> 5)
+            .initializeWillpowerFromCourage()
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 5);
+        Assert.assertEquals(updatedCharacter.getWillpower(), updatedCharacter.getAdvantages().get("courage").getValue());
+    }
+
     public void testGetAge() {
         Assert.assertEquals(this.character.getAge(), 34);
     }
