@@ -56,4 +56,96 @@
         <English>Prey restriction</English>
         <German>Beuteeinschränkung</German>
     </weakness>
+    <weakness key="resistsTiesOfBondage">
+        <English>Resists the ties of bondage</English>
+        <German>Wehrt sich gegen alle Formen von Bindungen</German>
+    </weakness>
+    <weakness key="cutOffFromPeople">
+        <English>Loneliness due to being cut off from their own people</English>
+        <German>Einsamkeit, weil abgeschnitten vom Großteil ihres Volkes</German>
+    </weakness>
+    <weakness key="weakToReligiousSymbols">
+        <English>Weak to religious symbols</English>
+        <German>Schwach gegenüber religiösen Symbolen</German>
+    </weakness>
+    <weakness key="primordialTerror">
+        <English>Inspires primordial terror in mortals</English>
+        <German>Inspiriert in Sterblichen urtümliche Angst</German>
+    </weakness>
+    <weakness key="noEmbrace">
+        <English>Cannot embrace</English>
+        <German>Kann den Kuss nicht weitergeben</German>
+    </weakness>
+    <weakness key="social">
+        <English>Needs social contacts to function</English>
+        <German>Benötigt soziale Kontakte, um zu funktionieren</German>
+    </weakness>
+    <weakness key="susceptibleAgainstControl">
+        <English>Susceptible to mind control and domination</English>
+        <German>Empfänglich für Gedankenkontrolle und Beherrschung</German>
+    </weakness>
+    <weakness key="ashen">
+        <English>Ashen skin</English>
+        <German>Aschfahle Haut</German>
+    </weakness>
+    <weakness key="painfulEmbrace">
+        <English>Painful embrace</English>
+        <German>Schmerzhafter Kuss</German>
+    </weakness>
+    <weakness key="otherwordly">
+        <English>Otherworldly</English>
+        <German>Unheimlich</German>
+    </weakness>
+    <weakness key="coldIron">
+        <English>Vulnerable to cold iron</English>
+        <German>Verwundbar gegenüber Eisen</German>
+    </weakness>
+    <weakness key="seedOfLilith">
+        <English>Seed of Lilith</English>
+        <German>Liliths Saat</German>
+    </weakness>
+    <weakness key="weakeningGeneration">
+        <English>Embracing weakens the generation</English>
+        <German>Der Kuss schwächt die Generation</German>
+    </weakness>
+    <weakness key="natureBound">
+        <English>Nature bound</English>
+        <German>Mit der Natur verbunden</German>
+    </weakness>
+    <weakness key="needsFlesh">
+        <English>Needs to consume raw flesh</English>
+        <German>Benötigt den Verzehr von rohem Fleisch</German>
+    </weakness>
+    <weakness key="malnourished">
+        <English>Blood is malnourishing</English>
+        <German>Blut ist mangelernährend</German>
+    </weakness>
+    <weakness key="poorlyAged">
+        <English>appearance loses to physical every 100 years</English>
+        <German>Das Aussehen verliert alle 100 Jahre gegenüber der physischen Erscheinung</German>
+    </weakness>
+    <weakness key="weakUseOfPresence">
+        <English>Weak use of presence</English>
+        <German>Schwache Präsenz</German>
+    </weakness>
+    <weakness key="easierThirdEye">
+        <English>Will gain the third eye easier</English>
+        <German>Erhält leichter das dritte Auge</German>
+    </weakness>
+    <weakness key="willingPrey">
+        <English>Prefer willing prey when feeding</English>
+        <German>Bevorzugt willige Beute beim Trinken</German>
+    </weakness>
+    <wekaness key="defeatedPrey">
+        <English>Prefer vanquished prey when feeding</English>
+        <German>Bevorzugt besiegte Beute beim Trinken</German>
+    </wekaness>
+    <weakness key="knowledgeSpecialty">
+        <English>Meticulous</English>
+        <German>Detailversessen</German>
+    </weakness>
+    <weakness key="dispassionate">
+        <English>Dispassionate</English>
+        <German>Leidenschaftslos</German>
+    </weakness>
 </weaknesses>

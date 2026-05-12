@@ -18,6 +18,7 @@
 			<weakness>obsession</weakness>
 			<weakness>darkening</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="brujah">
 		<name>
@@ -36,6 +37,7 @@
 		<weaknesses>
 			<weakness>easierFrenzy</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="cappadocian">
 		<name>
@@ -54,6 +56,7 @@
 		<weaknesses>
 			<weakness>corpse-like</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="gangrel">
 		<name>
@@ -72,6 +75,7 @@
 		<weaknesses>
 			<weakness>frenzyTraits</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="lasombra">
 		<name>
@@ -90,6 +94,7 @@
 		<weaknesses>
 			<weakness>noReflection</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="malkavian">
 		<name>
@@ -108,6 +113,7 @@
 		<weaknesses>
 			<weakness>irredeemableDerangement</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="nosferatu">
 		<name>
@@ -126,6 +132,7 @@
 		<weaknesses>
 			<weakness>monstrousAppearance</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="ravnos">
 		<name>
@@ -144,6 +151,7 @@
 		<weaknesses>
 			<weakness>personalTrait</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="setites">
 		<name>
@@ -162,6 +170,7 @@
 		<weaknesses>
 			<weakness>sunlightAllergy</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="toreador">
 		<name>
@@ -180,6 +189,7 @@
 		<weaknesses>
 			<weakness>impressedBeauty</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="tremere">
 		<name>
@@ -198,6 +208,7 @@
 		<weaknesses>
 			<weakness>bloodTie</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="tzimisce">
 		<name>
@@ -216,6 +227,7 @@
 		<weaknesses>
 			<weakness>soilBound</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
 	</clan>
 	<clan key="ventrue">
 		<name>
@@ -234,5 +246,371 @@
 		<weaknesses>
 			<weakness>preyRestriction</weakness>
 		</weaknesses>
+		<bloodline>false</bloodline>
+	</clan>
+	<clan key="ahrimanes">
+		<name>
+			<English>Ahrimanes</English>
+			<German>Ahrimane</German>
+		</name>
+		<nickname>
+			<English>Valkyrjer</English>
+			<German>Walküren</German>
+		</nickname>
+		<advantages>
+			<advantage>animalism</advantage>
+			<advantage>potence</advantage>
+			<advantage>spiritus</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>resistsTiesOfBondage</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="anda">
+		<name>
+			<English>Anda</English>
+			<German>Anda</German>
+		</name>
+		<nickname>
+			<English>Tartars</English>
+			<German>Tartaren</German>
+		</nickname>
+		<advantages>
+			<advantage>animalism</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>protean</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>cutOffFromPeople</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="baali">
+		<name>
+			<English>Baali</English>
+			<German>Baali</German>
+		</name>
+		<nickname>
+			<English>Devils</English>
+			<German>Teufel</German>
+		</nickname>
+		<advantages>
+			<advantage>daimonion</advantage>
+			<advantage>presence</advantage>
+			<advantage>obfuscate</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>weakToReligiousSymbols</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="bonsam">
+		<name>
+			<English>Bonsam</English>
+			<German>Bonsam</German>
+		</name>
+		<nickname>
+			<English>Unseen</English>
+			<German>Unsichtbare</German>
+		</nickname>
+		<advantages>
+			<advantage>abombwe</advantage>
+			<advantage>obfuscate</advantage>
+			<advantage>potence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>primordialTerror</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="childrenOfOsiris">
+		<name>
+			<English>Children of Osiris</English>
+			<German>Kinder des Osiris</German>
+		</name>
+		<nickname>
+			<English>Penitents</English>
+			<German>Büßer</German>
+		</nickname>
+		<advantages>
+			<advantage>bardo</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>noEmbrace</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="danava">
+		<name>
+			<English>Danava</English>
+			<German>Danava</German>
+		</name>
+		<nickname>
+			<English>Children of Danu</English>
+			<German>Kinder Danus</German>
+		</nickname>
+		<advantages>
+			<advantage>dominate</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>thaumaturgy</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>preyRestriction</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="gargoyles">
+		<name>
+			<English>Gargoyles</English>
+			<German>Gargylen</German>
+		</name>
+		<nickname>
+			<English>Grotesques</English>
+			<German>Groteske</German>
+		</nickname>
+		<advantages>
+			<advantage>flight</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>potence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>social</weakness>
+			<weakness>susceptibleAgainstControl</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="giovani">
+		<name>
+			<English>Giovani</English>
+			<German>Giovanni</German>
+		</name>
+		<nickname>
+			<English>The Young Ones</English>
+			<German>Junge</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>necromancy</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>ashen</weakness>
+			<weakness>painfulEmbrace</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="impundulu">
+		<name>
+			<English>Impundulu</English>
+			<German>Impundulu</German>
+		</name>
+		<nickname>
+			<English>Witchkin</English>
+			<German>Hexenbrut</German>
+		</nickname>
+		<advantages>
+			<advantage>necromancy</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>presence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>preyRestriction</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="kiasyd">
+		<name>
+			<English>Kiasyd</English>
+			<German>Kiasyd</German>
+		</name>
+		<nickname>
+			<English>Weirdlings</English>
+			<German>Nornen</German>
+		</nickname>
+		<advantages>
+			<advantage>mytherceria</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>otherwordly</weakness>
+			<weakness>coldIron</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="lamiae">
+		<name>
+			<English>Lamiae</English>
+			<German>Lamien</German>
+		</name>
+		<nickname>
+			<English>Gorgons</English>
+			<German>Gorgonen</German>
+		</nickname>
+		<advantages>
+			<advantage>fortitude</advantage>
+			<advantage>necromancy</advantage>
+			<advantage>potence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>seedOfLilith</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="lhiannan">
+		<name>
+			<English>Lhiannan</English>
+			<German>Lhiannan</German>
+		</name>
+		<nickname>
+			<English>Witches</English>
+			<German>Waldhexen</German>
+		</nickname>
+		<advantages>
+			<advantage>animalism</advantage>
+			<advantage>presence</advantage>
+			<advantage>ogham</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>weakeningGeneration</weakness>
+			<weakness>natureBound</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="nagaraja">
+		<name>
+			<English>Nagaraja</English>
+			<German>Nagaraja</German>
+		</name>
+		<nickname>
+			<English>Flesh-Eaters</English>
+			<German>Fleischfresser</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>dominate</advantage>
+			<advantage>necromancy</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>needsFlesh</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="niktuku">
+		<name>
+			<English>Niktuku</English>
+			<German>Niktuku</German>
+		</name>
+		<nickname>
+			<English>The Hungry</English>
+			<German>Hungernde</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>celerity</advantage>
+			<advantage>potence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>malnourished</weakness>
+			<weakness>poorlyAged</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="ramanga">
+		<name>
+			<English>Ramanga</English>
+			<German>Ramanga</German>
+		</name>
+		<nickname>
+			<English>Puppeteers</English>
+			<German>Puppenspieler</German>
+		</nickname>
+		<advantages>
+			<advantage>obtenebration</advantage>
+			<advantage>obfuscate</advantage>
+			<advantage>presence</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>weakUseOfPresence</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="salubriHealer">
+		<name>
+			<English>Salubri (Healer Caste)</English>
+			<German>Salubri (Heilerkaste)</German>
+		</name>
+		<nickname>
+			<English>Unicorns</English>
+			<German>Einhörner</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>presence</advantage>
+			<advantage>valeren</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>easierThirdEye</weakness>
+			<weakness>willingPrey</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="salubriWarrior">
+		<name>
+			<English>Salubri (Warrior Caste)</English>
+			<German>Salubri (Kriegerkaste)</German>
+		</name>
+		<nickname>
+			<English>Cyclopes</English>
+			<German>Einäugige</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>fortitude</advantage>
+			<advantage>valeren</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>easierThirdEye</weakness>
+			<weakness>defeatedPrey</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="salubriWatcher">
+		<name>
+			<English>Salubri (Watcher Caste)</English>
+			<German>Salubri (Wächterkaste)</German>
+		</name>
+		<nickname>
+			<English>None</English>
+			<German>Keinen</German>
+		</nickname>
+		<advantages>
+			<advantage>auspex</advantage>
+			<advantage>obfuscate</advantage>
+			<advantage>valeren</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>easierThirdEye</weakness>
+			<weakness>knowledgeSpecialty</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
+	</clan>
+	<clan key="trueBrujah">
+		<name>
+			<English>True Brujah</English>
+			<German>Wahre Brujah</German>
+		</name>
+		<nickname>
+			<English>Scholars</English>
+			<German>Scholaren</German>
+		</nickname>
+		<advantages>
+			<advantage>potence</advantage>
+			<advantage>presence</advantage>
+			<advantage>temporis</advantage>
+		</advantages>
+		<weaknesses>
+			<weakness>dispassionate</weakness>
+		</weaknesses>
+		<bloodline>true</bloodline>
 	</clan>
 </clans>
