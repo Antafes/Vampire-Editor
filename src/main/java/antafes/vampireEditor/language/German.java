@@ -118,6 +118,8 @@ public class German extends Language {
         this.getTranslations().put("sire", "Erzeuger");
         this.getTranslations().put("clan", "Clan");
         this.getTranslations().put("sect", "Sekte");
+        this.getTranslations().put("clan.group.clans", "Clans");
+        this.getTranslations().put("clan.group.bloodlines", "Blutlinien");
         this.getTranslations().put("age", "Alter");
         this.getTranslations().put("apparentAge", "Sieht aus wie");
         this.getTranslations().put("dayOfBirth", "Geburtstag");

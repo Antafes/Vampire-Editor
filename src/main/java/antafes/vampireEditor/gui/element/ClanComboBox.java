@@ -25,7 +25,9 @@ import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.ClanInterface;
 import antafes.vampireEditor.entity.character.Weakness;
+import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.ClanComparator;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +44,9 @@ public class ClanComboBox extends JComboBox<ClanInterface>
     private static final String BLOODLINES_HEADER = "Bloodlines";
 
     private ClanInterface lastSelectableItem;
+
+    @Setter
+    private LanguageInterface language;
 
     public ClanComboBox() {
         super();
@@ -71,12 +76,14 @@ public class ClanComboBox extends JComboBox<ClanInterface>
         bloodlines.sort(comparator);
 
         if (!mainClans.isEmpty()) {
-            model.addElement(new ClanGroupHeader(CLANS_HEADER));
+            String clansHeader = this.language != null ? this.language.translate("clan.group.clans") : CLANS_HEADER;
+            model.addElement(new ClanGroupHeader(clansHeader));
             mainClans.forEach(model::addElement);
         }
 
         if (!bloodlines.isEmpty()) {
-            model.addElement(new ClanGroupHeader(BLOODLINES_HEADER));
+            String bloodlinesHeader = this.language != null ? this.language.translate("clan.group.bloodlines") : BLOODLINES_HEADER;
+            model.addElement(new ClanGroupHeader(bloodlinesHeader));
             bloodlines.forEach(model::addElement);
         }
 

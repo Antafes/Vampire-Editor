@@ -208,6 +208,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
         clanComboBox.setClans(this.getClans());
+        clanComboBox.setLanguage(this.language);
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
