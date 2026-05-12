@@ -207,8 +207,8 @@ public class LooksPanel extends javax.swing.JPanel {
         weightField.setName("weight"); // NOI18N
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
-        clanComboBox.setClans(this.getClans());
         clanComboBox.setLanguage(this.language);
+        clanComboBox.setClans(this.getClans());
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
@@ -864,8 +864,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
     private Clan getClan()
     {
-        Object selectedItem = this.clanComboBox.getSelectedItem();
-        return selectedItem instanceof Clan ? (Clan) selectedItem : null;
+        return this.clanComboBox.getSelectedItem();
     }
 
     /**

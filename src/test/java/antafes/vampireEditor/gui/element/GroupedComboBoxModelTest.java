@@ -64,5 +64,22 @@ public class GroupedComboBoxModelTest
         Map<String, List<String>> groups = model.getGroups();
         groups.get("Main").add("Ventrue");
     }
-}
 
+    public void testUngroupedEmptyEntryCanBeEnabled()
+    {
+        GroupedComboBoxModel<String> model = new GroupedComboBoxModel<>();
+        model.setUngroupedEmptyEntry("");
+
+        Assert.assertTrue(model.hasUngroupedEmptyEntry());
+        Assert.assertEquals(model.getUngroupedEmptyEntryText(), "");
+    }
+
+    public void testUngroupedEmptyEntryDefaultsNullTextToEmptyString()
+    {
+        GroupedComboBoxModel<String> model = new GroupedComboBoxModel<>();
+        model.setUngroupedEmptyEntry(null);
+
+        Assert.assertTrue(model.hasUngroupedEmptyEntry());
+        Assert.assertEquals(model.getUngroupedEmptyEntryText(), "");
+    }
+}

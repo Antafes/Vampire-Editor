@@ -22,6 +22,8 @@
 package antafes.vampireEditor.gui.element;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -29,30 +31,45 @@ import java.awt.*;
  *
  * @param <T> Item type
  */
-public class GroupedComboBoxRenderer<T> implements ListCellRenderer<GroupedComboBox.ComboBoxEntry<T>>
+public class GroupedComboBoxRenderer<T> implements ListCellRenderer<Object>
 {
     private final DefaultListCellRenderer delegate = new DefaultListCellRenderer();
 
     @Override
     public Component getListCellRendererComponent(
-        JList<? extends GroupedComboBox.ComboBoxEntry<T>> list,
-        GroupedComboBox.ComboBoxEntry<T> value,
+        JList<?> list,
+        Object value,
         int index,
         boolean isSelected,
         boolean cellHasFocus
     )
     {
-        if (value instanceof GroupedComboBox.HeaderEntry<T> headerEntry) {
+        if (value instanceof GroupedComboBox.HeaderEntry<?> headerEntry) {
             return this.createHeaderComponent(list, headerEntry, index);
         }
 
-        String text = value != null ? value.getText() : "";
-        return this.delegate.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+        if (value instanceof GroupedComboBox.ItemEntry<?> itemEntry) {
+            Component component = this.delegate.getListCellRendererComponent(list, itemEntry.getText(), index, isSelected, cellHasFocus);
+            this.applyItemPadding(component, index);
+            return component;
+        }
+
+        if (value instanceof GroupedComboBox.EmptyEntry<?> emptyEntry) {
+            String text = emptyEntry.getText().isEmpty() ? " " : emptyEntry.getText();
+            Component component = this.delegate.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+            this.applyItemPadding(component, index);
+            return component;
+        }
+
+        String text = value != null ? value.toString() : "";
+        Component component = this.delegate.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+        this.applyItemPadding(component, index);
+        return component;
     }
 
     private Component createHeaderComponent(
-        JList<? extends GroupedComboBox.ComboBoxEntry<T>> list,
-        GroupedComboBox.HeaderEntry<T> headerEntry,
+        JList<?> list,
+        GroupedComboBox.HeaderEntry<?> headerEntry,
         int index
     )
     {
@@ -72,10 +89,30 @@ public class GroupedComboBoxRenderer<T> implements ListCellRenderer<GroupedCombo
         JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
         separator.setForeground(base.getForeground());
 
+        // Keep the line vertically centered in taller combo rows.
+        JPanel separatorContainer = new JPanel(new GridBagLayout());
+        separatorContainer.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        separatorContainer.add(separator, gbc);
+
         panel.add(textLabel, BorderLayout.WEST);
-        panel.add(separator, BorderLayout.CENTER);
+        panel.add(separatorContainer, BorderLayout.CENTER);
 
         return panel;
     }
-}
 
+    private void applyItemPadding(Component component, int index)
+    {
+        if (index < 0 || !(component instanceof JComponent jComponent)) {
+            return;
+        }
+
+        Border currentBorder = jComponent.getBorder();
+        jComponent.setBorder(BorderFactory.createCompoundBorder(currentBorder, new EmptyBorder(0, 10, 0, 0)));
+    }
+}

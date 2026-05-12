@@ -35,6 +35,7 @@ import java.util.Map;
 public class GroupedComboBoxModel<T>
 {
     private final LinkedHashMap<String, List<T>> groups = new LinkedHashMap<>();
+    private String ungroupedEmptyEntryText;
 
     /**
      * Add a group with items in the given order.
@@ -45,6 +46,36 @@ public class GroupedComboBoxModel<T>
     public void addGroup(String name, List<T> items)
     {
         this.groups.put(name, new ArrayList<>(items));
+    }
+
+    /**
+     * Add an ungrouped empty entry shown before all groups.
+     *
+     * @param text Display text for the empty entry (usually empty string)
+     */
+    public void setUngroupedEmptyEntry(String text)
+    {
+        this.ungroupedEmptyEntryText = text != null ? text : "";
+    }
+
+    /**
+     * Check whether an ungrouped empty entry should be shown.
+     *
+     * @return true if enabled
+     */
+    public boolean hasUngroupedEmptyEntry()
+    {
+        return this.ungroupedEmptyEntryText != null;
+    }
+
+    /**
+     * Get the display text of the ungrouped empty entry.
+     *
+     * @return Empty-entry label
+     */
+    public String getUngroupedEmptyEntryText()
+    {
+        return this.ungroupedEmptyEntryText;
     }
 
     /**
@@ -61,4 +92,3 @@ public class GroupedComboBoxModel<T>
         return Collections.unmodifiableMap(copy);
     }
 }
-

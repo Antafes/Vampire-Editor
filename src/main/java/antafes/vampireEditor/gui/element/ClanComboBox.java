@@ -21,49 +21,52 @@
  */
 package antafes.vampireEditor.gui.element;
 
-import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.character.ClanInterface;
-import antafes.vampireEditor.entity.character.Weakness;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.ClanComparator;
-import lombok.Setter;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 
 /**
  * Combo box for clan selection with group headlines for clans and bloodlines.
  */
-public class ClanComboBox extends JComboBox<ClanInterface>
+public class ClanComboBox extends GroupedComboBox<Clan>
 {
     private static final String CLANS_HEADER = "Clans";
     private static final String BLOODLINES_HEADER = "Bloodlines";
 
-    private ClanInterface lastSelectableItem;
-
-    @Setter
     private LanguageInterface language;
+    private Collection<Clan> clans = new ArrayList<>();
 
-    public ClanComboBox() {
+    public ClanComboBox()
+    {
         super();
-        this.setRenderer(this.createRenderer());
-        this.addActionListener(event -> this.handleSelection());
+    }
+
+    /**
+     * Set language used for group header labels.
+     *
+     * @param language Language object
+     */
+    public void setLanguage(LanguageInterface language)
+    {
+        this.language = language;
+        this.setClans(this.clans);
     }
 
     /**
      * Populate the combo box with grouped clan entries.
+     *
+     * @param clans Clans and bloodlines
      */
-    public void setClans(Collection<Clan> clans) {
-        DefaultComboBoxModel<ClanInterface> model = new DefaultComboBoxModel<>();
-        model.addElement(null);
+    public void setClans(Collection<Clan> clans)
+    {
+        this.clans = new ArrayList<>(clans);
 
         ArrayList<Clan> mainClans = new ArrayList<>();
         ArrayList<Clan> bloodlines = new ArrayList<>();
-        clans.forEach(clan -> {
+        this.clans.forEach(clan -> {
             if (clan.isBloodline()) {
                 bloodlines.add(clan);
             } else {
@@ -71,108 +74,46 @@ public class ClanComboBox extends JComboBox<ClanInterface>
             }
         });
 
-        Comparator<Clan> comparator = new ClanComparator();
-        mainClans.sort(comparator);
-        bloodlines.sort(comparator);
+        mainClans.sort(new ClanComparator());
+        bloodlines.sort(new ClanComparator());
 
-        if (!mainClans.isEmpty()) {
-            String clansHeader = this.language != null ? this.language.translate("clan.group.clans") : CLANS_HEADER;
-            model.addElement(new ClanGroupHeader(clansHeader));
-            mainClans.forEach(model::addElement);
-        }
-
-        if (!bloodlines.isEmpty()) {
-            String bloodlinesHeader = this.language != null ? this.language.translate("clan.group.bloodlines") : BLOODLINES_HEADER;
-            model.addElement(new ClanGroupHeader(bloodlinesHeader));
-            bloodlines.forEach(model::addElement);
-        }
-
-        this.setModel(model);
-        this.lastSelectableItem = null;
-        this.setSelectedItem(null);
+        GroupedComboBoxModel<Clan> groupedModel = this.createGroupedModel(mainClans, bloodlines);
+        super.setModel(groupedModel);
     }
 
     /**
      * Get the selected clan or null.
+     *
+     * @return Selected clan
      */
-    public Clan getSelectedClan() {
-        ClanInterface selectedItem = (ClanInterface) this.getSelectedItem();
-        return selectedItem instanceof Clan ? (Clan) selectedItem : null;
-    }
-
-    private void handleSelection() {
-        ClanInterface selectedItem = (ClanInterface) this.getSelectedItem();
-        if (selectedItem instanceof ClanGroupHeader) {
-            this.setSelectedItem(this.lastSelectableItem);
-            return;
-        }
-
-        this.lastSelectableItem = selectedItem;
-    }
-
-    private DefaultListCellRenderer createRenderer() {
-        return new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList<?> list,
-                Object value,
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus
-            ) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof ClanGroupHeader) {
-                    label.setFont(label.getFont().deriveFont(Font.BOLD));
-                    label.setForeground(UIManager.getColor("Label.disabledForeground"));
-                }
-
-                return label;
-            }
-        };
-    }
-
-    private static class ClanGroupHeader implements ClanInterface
+    public Clan getSelectedClan()
     {
-        private final String label;
+        return this.getSelectedItem();
+    }
 
-        private ClanGroupHeader(String label) {
-            this.label = label;
+    private GroupedComboBoxModel<Clan> createGroupedModel(ArrayList<Clan> mainClans, ArrayList<Clan> bloodlines)
+    {
+        GroupedComboBoxModel<Clan> groupedModel = new GroupedComboBoxModel<>();
+        groupedModel.setUngroupedEmptyEntry("");
+
+        if (!mainClans.isEmpty()) {
+            groupedModel.addGroup(this.getClansHeader(), mainClans);
         }
 
-        @Override
-        public String getKey() {
-            return this.label;
+        if (!bloodlines.isEmpty()) {
+            groupedModel.addGroup(this.getBloodlinesHeader(), bloodlines);
         }
 
-        @Override
-        public String getName() {
-            return this.label;
-        }
+        return groupedModel;
+    }
 
-        @Override
-        public String getNickname() {
-            return this.label;
-        }
+    private String getClansHeader()
+    {
+        return this.language != null ? this.language.translate("clan.group.clans") : CLANS_HEADER;
+    }
 
-        @Override
-        public ArrayList<Advantage> getAdvantages() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public ArrayList<Weakness> getWeaknesses() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public boolean isBloodline() {
-            return false;
-        }
-
-        @Override
-        public String toString() {
-            return this.label;
-        }
+    private String getBloodlinesHeader()
+    {
+        return this.language != null ? this.language.translate("clan.group.bloodlines") : BLOODLINES_HEADER;
     }
 }
-

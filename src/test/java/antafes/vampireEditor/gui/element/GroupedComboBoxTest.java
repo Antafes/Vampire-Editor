@@ -149,6 +149,70 @@ public class GroupedComboBoxTest
         Assert.assertEquals(comboBox.getSelectedItem(), "Ahrimanes");
     }
 
+    public void testRendererSupportsRawSelectedValue()
+    {
+        GroupedComboBox<String> comboBox = this.createComboBox();
+        ListCellRenderer<? super GroupedComboBox.ComboBoxEntry<String>> renderer = comboBox.getRenderer();
+        JList<GroupedComboBox.ComboBoxEntry<String>> list = new JList<>();
+
+        Component component = ((ListCellRenderer<Object>) renderer).getListCellRendererComponent(
+            list,
+            "Brujah",
+            -1,
+            true,
+            false
+        );
+
+        Assert.assertNotNull(component);
+    }
+
+    public void testUngroupedEmptyEntryIsInsertedBeforeGroups()
+    {
+        GroupedComboBoxModel<String> groupedModel = new GroupedComboBoxModel<>();
+        groupedModel.setUngroupedEmptyEntry("");
+        groupedModel.addGroup("Main Clans", Arrays.asList("Brujah", "Ventrue"));
+
+        GroupedComboBox<String> comboBox = new GroupedComboBox<>();
+        comboBox.setModel(groupedModel);
+
+        Assert.assertTrue(comboBox.getModel().getElementAt(0) instanceof GroupedComboBox.EmptyEntry<?>);
+        Assert.assertEquals(comboBox.getSelectedItem(), null);
+    }
+
+    public void testSetSelectedItemNullSelectsUngroupedEmptyEntry()
+    {
+        GroupedComboBoxModel<String> groupedModel = new GroupedComboBoxModel<>();
+        groupedModel.setUngroupedEmptyEntry("");
+        groupedModel.addGroup("Main Clans", Arrays.asList("Brujah", "Ventrue"));
+
+        GroupedComboBox<String> comboBox = new GroupedComboBox<>();
+        comboBox.setModel(groupedModel);
+        comboBox.setSelectedItem("Ventrue");
+
+        comboBox.setSelectedItem(null);
+
+        Assert.assertTrue(comboBox.getModel().getElementAt(comboBox.getSelectedIndex()) instanceof GroupedComboBox.EmptyEntry<?>);
+        Assert.assertNull(comboBox.getSelectedItem());
+    }
+
+    public void testEmptyEntryRendererUsesVisibleBlankText()
+    {
+        GroupedComboBox<String> comboBox = new GroupedComboBox<>();
+        ListCellRenderer<? super GroupedComboBox.ComboBoxEntry<String>> renderer = comboBox.getRenderer();
+        JList<GroupedComboBox.ComboBoxEntry<String>> list = new JList<>();
+
+        Component component = ((ListCellRenderer<Object>) renderer).getListCellRendererComponent(
+            list,
+            new GroupedComboBox.EmptyEntry<String>(""),
+            0,
+            false,
+            false
+        );
+
+        Assert.assertTrue(component instanceof JLabel);
+        Assert.assertEquals(((JLabel) component).getText(), " ");
+    }
+
     private GroupedComboBox<String> createComboBox()
     {
         GroupedComboBoxModel<String> groupedModel = new GroupedComboBoxModel<>();

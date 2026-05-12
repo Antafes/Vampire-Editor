@@ -21,8 +21,6 @@
  */
 package antafes.vampireEditor.gui.element;
 
-import lombok.Getter;
-
 import javax.swing.*;
 
 /**
@@ -32,8 +30,7 @@ import javax.swing.*;
  */
 public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<T>>
 {
-    @Getter
-    private ItemEntry<T> lastSelectableEntry;
+    private ComboBoxEntry<T> lastSelectableEntry;
 
     /**
      * Create a grouped combo box.
@@ -54,6 +51,10 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
     {
         DefaultComboBoxModel<ComboBoxEntry<T>> model = new DefaultComboBoxModel<>();
 
+        if (groupedModel.hasUngroupedEmptyEntry()) {
+            model.addElement(new EmptyEntry<>(groupedModel.getUngroupedEmptyEntryText()));
+        }
+
         groupedModel.getGroups().forEach((groupName, groupItems) -> {
             if (groupItems.isEmpty()) {
                 return;
@@ -65,11 +66,16 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
 
         super.setModel(model);
         this.lastSelectableEntry = null;
-        this.selectFirstSelectableItem();
+
+        if (groupedModel.hasUngroupedEmptyEntry()) {
+            this.setSelectedIndex(0);
+        } else {
+            this.selectFirstSelectableItem();
+        }
     }
 
     /**
-     * Return the selected item value. Headers return null.
+     * Return the selected item value. Headers and empty entries return null.
      *
      * @return Selected item or null
      */
@@ -94,7 +100,17 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
     @Override
     public void setSelectedItem(Object object)
     {
-        if (object == null || object instanceof ComboBoxEntry<?>) {
+        if (object == null) {
+            int emptyIndex = this.findEmptyEntryIndex();
+            if (emptyIndex >= 0) {
+                this.setSelectedIndex(emptyIndex);
+            } else {
+                super.setSelectedItem(null);
+            }
+            return;
+        }
+
+        if (object instanceof ComboBoxEntry<?>) {
             super.setSelectedItem(object);
             return;
         }
@@ -124,10 +140,9 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
         }
 
         ComboBoxEntry<T> candidate = model.getElementAt(index);
-        if (candidate instanceof ItemEntry<?> itemEntry) {
+        if (candidate instanceof ItemEntry<?> || candidate instanceof EmptyEntry<?>) {
             super.setSelectedIndex(index);
-            @SuppressWarnings("unchecked") ItemEntry<T> selectedEntry = (ItemEntry<T>) itemEntry;
-            this.lastSelectableEntry = selectedEntry;
+            this.lastSelectableEntry = candidate;
             return;
         }
 
@@ -157,7 +172,7 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
      *
      * @param <T> Item type
      */
-    public sealed interface ComboBoxEntry<T> permits HeaderEntry, ItemEntry
+    public sealed interface ComboBoxEntry<T> permits HeaderEntry, ItemEntry, EmptyEntry
     {
         String getText();
     }
@@ -169,7 +184,6 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
      */
     public static final class HeaderEntry<T> implements ComboBoxEntry<T>
     {
-        @Getter
         private final GroupHeader header;
 
         public HeaderEntry(GroupHeader header)
@@ -197,12 +211,16 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
      */
     public static final class ItemEntry<T> implements ComboBoxEntry<T>
     {
-        @Getter
         private final T item;
 
         public ItemEntry(T item)
         {
             this.item = item;
+        }
+
+        public T getItem()
+        {
+            return this.item;
         }
 
         @Override
@@ -215,6 +233,33 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
         public String toString()
         {
             return this.getText();
+        }
+    }
+
+    /**
+     * Ungrouped empty entry shown before all headers.
+     *
+     * @param <T> Item type
+     */
+    public static final class EmptyEntry<T> implements ComboBoxEntry<T>
+    {
+        private final String text;
+
+        public EmptyEntry(String text)
+        {
+            this.text = text;
+        }
+
+        @Override
+        public String getText()
+        {
+            return this.text;
+        }
+
+        @Override
+        public String toString()
+        {
+            return this.text;
         }
     }
 
@@ -231,9 +276,9 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
             return;
         }
 
-        if (selected instanceof ItemEntry<?> itemEntry) {
-            @SuppressWarnings("unchecked") ItemEntry<T> typedEntry = (ItemEntry<T>) itemEntry;
-            this.lastSelectableEntry = typedEntry;
+        if (selected instanceof ItemEntry<?> || selected instanceof EmptyEntry<?>) {
+            @SuppressWarnings("unchecked") ComboBoxEntry<T> selectedEntry = (ComboBoxEntry<T>) selected;
+            this.lastSelectableEntry = selectedEntry;
         }
     }
 
@@ -251,12 +296,26 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
         return -1;
     }
 
+    private int findEmptyEntryIndex()
+    {
+        ComboBoxModel<ComboBoxEntry<T>> model = this.getModel();
+
+        for (int i = 0; i < model.getSize(); i++) {
+            if (model.getElementAt(i) instanceof EmptyEntry<?>) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     private int findSelectableIndex(int startIndex, int direction)
     {
         ComboBoxModel<ComboBoxEntry<T>> model = this.getModel();
 
         for (int i = startIndex + direction; i >= 0 && i < model.getSize(); i += direction) {
-            if (model.getElementAt(i) instanceof ItemEntry<?>) {
+            ComboBoxEntry<T> entry = model.getElementAt(i);
+            if (entry instanceof ItemEntry<?> || entry instanceof EmptyEntry<?>) {
                 return i;
             }
         }
@@ -275,4 +334,3 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
         }
     }
 }
-
