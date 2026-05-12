@@ -24,12 +24,22 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Clan;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Test
 public class ClanStorageTest extends BaseTest
@@ -42,12 +52,11 @@ public class ClanStorageTest extends BaseTest
         super.setUp();
         Configuration.getInstance().loadProperties();
         StorageFactory.storageWarmUp();
-        this.clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        this.clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
     }
 
     public void testClanStorageContainsBloodlineAfterPhase2()
     {
-        // After Phase 2, at least one bloodline (Ahrimanes) should be present
         ArrayList<Clan> bloodlines = new ArrayList<>();
 
         this.clanStorage.getList().values().forEach(clan -> {
@@ -60,34 +69,30 @@ public class ClanStorageTest extends BaseTest
         Assert.assertTrue(bloodlines.size() >= 1, "There should be at least one bloodline in storage");
     }
 
-    public void testClanStorageMainClansAreNotBloodlines()
+    public void testClanStorageMainClansAreNotBloodlines() throws Exception
     {
-        // All original/main clans should have isBloodline() == false
-        ArrayList<Clan> mainClans = new ArrayList<>();
-        ArrayList<Clan> bloodlineClans = new ArrayList<>();
+        Map<String, Boolean> expectedBloodlineFlags = this.getClanBloodlineFlagsFromXml();
+        long expectedMainClanCount = expectedBloodlineFlags.values().stream().filter(isBloodline -> !isBloodline).count();
+        ArrayList<Clan> actualMainClans = new ArrayList<>();
 
-        this.clanStorage.getList().values().forEach(clan -> {
-            if (clan.isBloodline()) {
-                bloodlineClans.add(clan);
-            } else {
-                mainClans.add(clan);
+        this.clanStorage.getList().forEach((key, clan) -> {
+            Boolean expectedBloodlineFlag = expectedBloodlineFlags.get(key);
+            Assert.assertNotNull(expectedBloodlineFlag,
+                "Clan '" + key + "' should be defined in clans.xml");
+
+            if (!expectedBloodlineFlag) {
+                Assert.assertFalse(clan.isBloodline(),
+                    "Main clan '" + key + "' should not be marked as bloodline in storage");
+                actualMainClans.add(clan);
             }
         });
 
-        // All main clans should return false for isBloodline()
-        mainClans.forEach(clan -> {
-            Assert.assertFalse(clan.isBloodline(),
-                "Main clan '" + clan.getKey() + "' should not be a bloodline");
-        });
-
-        // There should be more main clans than bloodlines
-        Assert.assertTrue(mainClans.size() >= bloodlineClans.size(),
-            "There should be more or equal main clans compared to bloodlines");
+        Assert.assertEquals(actualMainClans.size(), (int) expectedMainClanCount,
+            "Storage should contain the same number of main clans as defined in clans.xml");
     }
 
     public void testClanStorageBloodlineCanBeIdentified()
     {
-        // There should be a way to identify bloodlines from the storage
         ArrayList<Clan> bloodlines = new ArrayList<>();
 
         this.clanStorage.getList().values().forEach(clan -> {
@@ -96,25 +101,45 @@ public class ClanStorageTest extends BaseTest
             }
         });
 
-        // Verify we can find Ahrimanes (the example bloodline from Phase 2)
         boolean ahrimanesFound = bloodlines.stream()
             .anyMatch(clan -> "ahrimanes".equals(clan.getKey()));
 
         Assert.assertTrue(ahrimanesFound, "Ahrimanes bloodline should be identifiable from storage");
     }
 
-    public void testClanStorageContainsCorrectNumberOfClans()
+    public void testClanStorageContainsCorrectNumberOfClans() throws Exception
     {
-        // Total should be 13 main clans + at least 1 bloodline/example
-        ArrayList<Clan> allClans = new ArrayList<>(this.clanStorage.getList().values());
+        Set<String> expectedKeys = this.getClanKeysFromXml();
+        Set<String> actualKeys = new HashSet<>(this.clanStorage.getList().keySet());
 
-        Assert.assertTrue(allClans.size() == 14,
-            "Storage should contain exactly 13 main clans + 1 bloodline");
+        Assert.assertEquals(actualKeys.size(), expectedKeys.size(),
+            "ClanStorage should contain the same number of clans as defined in clans.xml");
+        Assert.assertEquals(actualKeys, expectedKeys,
+            "ClanStorage keys should exactly match the clan keys defined in clans.xml");
+    }
+
+    private Map<String, Boolean> getClanBloodlineFlagsFromXml() throws Exception
+    {
+        try (InputStream inputStream = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "clans.xml")) {
+            Assert.assertNotNull(inputStream, "clans.xml resource should be available for tests");
+
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
+            NodeList clanNodes = document.getElementsByTagName("clan");
+            Map<String, Boolean> bloodlineFlags = new HashMap<>();
+
+            for (int i = 0; i < clanNodes.getLength(); i++) {
+                Element clanElement = (Element) clanNodes.item(i);
+                String key = clanElement.getAttribute("key");
+                String bloodlineValue = clanElement.getElementsByTagName("bloodline").item(0).getTextContent();
+                bloodlineFlags.put(key, Boolean.parseBoolean(bloodlineValue.trim()));
+            }
+
+            return bloodlineFlags;
+        }
+    }
+
+    private Set<String> getClanKeysFromXml() throws Exception
+    {
+        return new HashSet<>(this.getClanBloodlineFlagsFromXml().keySet());
     }
 }
-
-
-
-
-
-
