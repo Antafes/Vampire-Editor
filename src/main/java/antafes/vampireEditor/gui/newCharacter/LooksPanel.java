@@ -853,8 +853,6 @@ public class LooksPanel extends javax.swing.JPanel {
 
          if (currentSelection instanceof Road) {
              this.roadComboBox.setSelectedItem(emptyRoad);
-             this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
-             this.clearPathComboBox();
              this.enteredFields.replace(this.roadComboBox, Boolean.FALSE);
          }
      }
