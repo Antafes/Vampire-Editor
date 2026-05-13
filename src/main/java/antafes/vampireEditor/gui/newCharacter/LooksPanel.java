@@ -606,6 +606,8 @@ public class LooksPanel extends javax.swing.JPanel {
         Clan clan = this.clanComboBox.getSelectedClan();
         if (clan == null) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
+            this.onClanSelected(null);
+            this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(null));
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
@@ -800,9 +802,13 @@ public class LooksPanel extends javax.swing.JPanel {
       */
      private ArrayList<Road> getRoadValuesForClan(Clan clan) {
          RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-         ArrayList<Road> list = clan != null
-             ? roadStorage.getRoadsForClan(clan)
-             : roadStorage.getRoads();
+         ArrayList<Road> list;
+         if (clan != null) {
+             list = roadStorage.getRoadsForClan(clan);
+         } else {
+             list = roadStorage.getRoads();
+             list.removeIf(road -> !road.isUniversal());
+         }
          list.sort(new StringComparator());
 
          return list;

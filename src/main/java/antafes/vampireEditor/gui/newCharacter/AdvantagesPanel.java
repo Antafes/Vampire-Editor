@@ -303,21 +303,23 @@ public class AdvantagesPanel extends BaseColumnListPanel
 
         int max = this.generationMaximum;
 
-        clan.getAdvantages().stream()
-            .filter(a -> a.getType() == AdvantageInterface.AdvantageType.DISCIPLINE)
-            .forEach(discipline -> {
-                int counter = this.dynamicRowCounters.merge(disciplineGroup, 1, Integer::sum);
-                String uniqueLabel = AdvantageInterface.AdvantageType.DISCIPLINE.name() + "_" + counter;
-                JComboBox<BaseTranslatedEntity> cb = this.addDynamicRow(
-                    disciplineGroup, uniqueLabel,
-                    AdvantageInterface.AdvantageType.DISCIPLINE.name(),
-                    max, discipline
-                );
-                if (cb != null) {
-                    cb.setEnabled(false);
-                    this.applyLockedStyle(cb);
-                }
-            });
+        if (clan != null && clan.getAdvantages() != null) {
+            clan.getAdvantages().stream()
+                .filter(a -> a.getType() == AdvantageInterface.AdvantageType.DISCIPLINE)
+                .forEach(discipline -> {
+                    int counter = this.dynamicRowCounters.merge(disciplineGroup, 1, Integer::sum);
+                    String uniqueLabel = AdvantageInterface.AdvantageType.DISCIPLINE.name() + "_" + counter;
+                    JComboBox<BaseTranslatedEntity> cb = this.addDynamicRow(
+                        disciplineGroup, uniqueLabel,
+                        AdvantageInterface.AdvantageType.DISCIPLINE.name(),
+                        max, discipline
+                    );
+                    if (cb != null) {
+                        cb.setEnabled(false);
+                        this.applyLockedStyle(cb);
+                    }
+                });
+        }
 
         int counter = this.dynamicRowCounters.merge(disciplineGroup, 1, Integer::sum);
         this.addDynamicRow(
