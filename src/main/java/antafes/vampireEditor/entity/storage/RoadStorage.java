@@ -81,7 +81,7 @@ public class RoadStorage extends BaseStorage<Road> {
      * Clan-specific roads are included only if the clan key matches.
      *
      * @param clan the selected clan, must not be null
-     * @return sorted list of roads available to clan
+     * @return list of roads available to clan
      */
     public ArrayList<Road> getRoadsForClan(@NonNull Clan clan) {
         return this.getList().values().stream()
