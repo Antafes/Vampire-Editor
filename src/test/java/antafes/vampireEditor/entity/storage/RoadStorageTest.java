@@ -239,16 +239,15 @@ public class RoadStorageTest extends BaseTest
 
      public void testAllExistingRoadsRemainUniversalAfterDataChange() throws Exception
      {
-         ArrayList<Road> allRoads = this.roadStorage.getRoads();
+         Assert.assertTrue(
+             this.roadStorage.getEntity("roadOfHumanity").isUniversal(),
+             "Road of Humanity should remain universal"
+         );
 
-         // Verify that most roads are still universal (only the 4 new clan-specific roads + 1 path should have restrictions)
-         long universalRoadCount = allRoads.stream()
-             .filter(Road::isUniversal)
-             .count();
-
-         // There should be many universal roads
-         Assert.assertTrue(universalRoadCount > 5,
-             "Most existing roads should still be universal. Found " + universalRoadCount + " universal roads");
+         Assert.assertFalse(this.roadStorage.getEntity("roadOfBlood").isUniversal());
+         Assert.assertFalse(this.roadStorage.getEntity("roadOfTheAbyss").isUniversal());
+         Assert.assertFalse(this.roadStorage.getEntity("roadOfParadox").isUniversal());
+         Assert.assertFalse(this.roadStorage.getEntity("roadOfSet").isUniversal());
      }
  }
 
