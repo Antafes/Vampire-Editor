@@ -69,6 +69,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private final LocalDate date;
 
     private Clan selectedClan;
+    private boolean suppressRoadEvents = false;
 
     private javax.swing.JTextField ageField;
     private javax.swing.JLabel ageLabel;
@@ -365,6 +366,9 @@ public class LooksPanel extends javax.swing.JPanel {
         roadComboBox.setModel(roadModel);
         roadComboBox.setName("road"); // NOI18N
         roadComboBox.addActionListener(evt -> {
+            if (this.suppressRoadEvents) {
+                return;
+            }
             Object selected = roadComboBox.getSelectedItem();
             if (selected instanceof EmptyEntity) {
                 enteredFields.replace(roadComboBox, Boolean.FALSE);
@@ -832,6 +836,8 @@ public class LooksPanel extends javax.swing.JPanel {
       * Refresh the road combo box based on the currently selected clan.
       * If a previously selected road is no longer available for the clan,
       * clear the road and path selections.
+      * The road ActionListener is suppressed during the model update to avoid
+      * unnecessary path repopulation and event dispatching when the road has not changed.
       */
      private void refreshRoadComboBox() {
          ArrayList<Road> availableRoads = this.getRoadValuesForClan(this.selectedClan);
@@ -841,19 +847,41 @@ public class LooksPanel extends javax.swing.JPanel {
          newModel.addElement(emptyRoad);
          availableRoads.forEach(newModel::addElement);
 
-         Object currentSelection = this.roadComboBox.getSelectedItem();
-         boolean roadStillAvailable = currentSelection instanceof EmptyEntity
-             || (currentSelection instanceof Road && availableRoads.contains(currentSelection));
+         Object currentRoadSelection = this.roadComboBox.getSelectedItem();
+         Object currentPathSelection = this.pathComboBox.getSelectedItem();
+         boolean roadStillAvailable = currentRoadSelection instanceof EmptyEntity
+             || (currentRoadSelection instanceof Road && availableRoads.contains(currentRoadSelection));
 
-         this.roadComboBox.setModel(newModel);
-         if (roadStillAvailable && currentSelection != null) {
-             this.roadComboBox.setSelectedItem(currentSelection);
-             return;
+         this.suppressRoadEvents = true;
+         try {
+             this.roadComboBox.setModel(newModel);
+             if (roadStillAvailable) {
+                 this.roadComboBox.setSelectedItem(currentRoadSelection);
+             } else {
+                 this.roadComboBox.setSelectedItem(emptyRoad);
+             }
+         } finally {
+             this.suppressRoadEvents = false;
          }
 
-         if (currentSelection instanceof Road) {
-             this.roadComboBox.setSelectedItem(emptyRoad);
+         if (!roadStillAvailable && currentRoadSelection instanceof Road) {
              this.enteredFields.replace(this.roadComboBox, Boolean.FALSE);
+             this.clearPathComboBox();
+             this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+         } else if (roadStillAvailable && currentRoadSelection instanceof Road) {
+             if (this.pathComboBox.isEnabled() && currentPathSelection != null) {
+                 DefaultComboBoxModel<?> pathModel = (DefaultComboBoxModel<?>) this.pathComboBox.getModel();
+                 boolean pathStillValid = false;
+                 for (int i = 0; i < pathModel.getSize(); i++) {
+                     if (pathModel.getElementAt(i).equals(currentPathSelection)) {
+                         pathStillValid = true;
+                         break;
+                     }
+                 }
+                 if (pathStillValid) {
+                     this.pathComboBox.setSelectedItem(currentPathSelection);
+                 }
+             }
          }
      }
 
