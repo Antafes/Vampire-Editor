@@ -121,7 +121,7 @@
         <German>Blut ist mangelernährend</German>
     </weakness>
     <weakness key="poorlyAged">
-        <English>appearance loses to physical every 100 years</English>
+        <English>Appearance loses to physical every 100 years</English>
         <German>Das Aussehen verliert alle 100 Jahre gegenüber der physischen Erscheinung</German>
     </weakness>
     <weakness key="weakUseOfPresence">
