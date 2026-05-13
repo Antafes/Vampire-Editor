@@ -30,8 +30,8 @@ import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.TranslatableComponent;
+import antafes.vampireEditor.utility.NatureResolutionUtility;
 import antafes.vampireEditor.utility.StringComparator;
-import antafes.vampireEditor.utility.StringUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -340,49 +340,11 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
 
     private Nature resolveNatureFromText(NatureStorage natureStorage, String inputText) throws EntityStorageException
     {
-        String natureText = this.normalizeOptionalText(inputText);
-        if (natureText == null) {
-            return null;
-        }
-
-        Nature nature = natureStorage.getList().get(natureText);
-        if (nature != null) {
-            return nature;
-        }
-
-        String normalizedKey = StringUtility.toCamelCase(natureText);
-        nature = natureStorage.getList().get(normalizedKey);
-        if (nature != null) {
-            return nature;
-        }
-
-        for (Nature storedNature : natureStorage.getList().values()) {
-            if (storedNature.getKey().equalsIgnoreCase(natureText)) {
-                return storedNature;
-            }
-
-            if (storedNature.getNames() == null) {
-                continue;
-            }
-
-            boolean hasNameMatch = storedNature.getNames().values().stream()
-                .anyMatch((name) -> name != null && name.equalsIgnoreCase(natureText));
-            if (hasNameMatch) {
-                return storedNature;
-            }
-        }
-
-        return natureStorage.getEntity(natureText);
+        return NatureResolutionUtility.resolveNature(natureStorage, inputText);
     }
 
     private String normalizeOptionalText(String inputText)
     {
-        if (inputText == null) {
-            return null;
-        }
-
-        String normalizedText = inputText.trim();
-
-        return normalizedText.isEmpty() ? null : normalizedText;
+        return NatureResolutionUtility.normalizeOptionalText(inputText);
     }
 }

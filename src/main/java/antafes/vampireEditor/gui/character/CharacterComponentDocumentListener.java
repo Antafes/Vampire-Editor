@@ -25,13 +25,12 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
-import antafes.vampireEditor.utility.StringUtility;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.utility.NatureResolutionUtility;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -122,7 +121,7 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
     private String normalizeComparedValue(String value)
     {
         if (this.isOptionalNormalizedField()) {
-            return this.normalizeOptionalText(value);
+            return NatureResolutionUtility.normalizeOptionalText(value);
         }
 
         return value;
@@ -155,54 +154,11 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
             || "concept".equals(componentName);
     }
 
-    private String normalizeOptionalText(String value)
-    {
-        if (value == null) {
-            return null;
-        }
-
-        String normalizedValue = value.trim();
-
-        return normalizedValue.isEmpty() ? null : normalizedValue;
-    }
-
     private String resolveNatureKeyFromText(String inputText)
     {
-        String natureText = this.normalizeOptionalText(inputText);
-        if (natureText == null) {
-            return null;
-        }
-
         NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        Nature nature = natureStorage.getList().get(natureText);
-        if (nature != null) {
-            return nature.getKey();
-        }
-
-        String normalizedKey = StringUtility.toCamelCase(natureText);
-        nature = natureStorage.getList().get(normalizedKey);
-        if (nature != null) {
-            return nature.getKey();
-        }
-
-        for (Nature storedNature : natureStorage.getList().values()) {
-            if (storedNature.getKey().equalsIgnoreCase(natureText)) {
-                return storedNature.getKey();
-            }
-
-            if (storedNature.getNames() == null) {
-                continue;
-            }
-
-            boolean hasNameMatch = storedNature.getNames().values().stream()
-                .anyMatch((name) -> name != null && name.equalsIgnoreCase(natureText));
-            if (hasNameMatch) {
-                return storedNature.getKey();
-            }
-        }
-
         try {
-            return natureStorage.getEntity(natureText).getKey();
+            return NatureResolutionUtility.resolveNatureKey(natureStorage, inputText);
         } catch (EntityStorageException e) {
             throw new RuntimeException(e);
         }
