@@ -1,5 +1,8 @@
 # Agent Instructions
 
+## Communication
+- Always use English for communication.
+
 ## First step
 - Always inspect the `.aiassistant` directory, if existing, before starting work.
 - Read and follow the rules in `.aiassistant/rules/`.
