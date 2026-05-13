@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * JAXB adapter: {@code List<String>} <-> list of clan key strings inside a {@code <clanRestrictions>} wrapper.
  */
-public class StringListAdapter extends XmlAdapter<StringListAdapter.KeyList, List<String>> {
+public class ClanKeyListAdapter extends XmlAdapter<ClanKeyListAdapter.KeyList, List<String>> {
 
     /** JAXB value type - list of key strings. */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -63,4 +63,5 @@ public class StringListAdapter extends XmlAdapter<StringListAdapter.KeyList, Lis
         return list;
     }
 }
+
 
