@@ -29,10 +29,16 @@ import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.AttributeInterface;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
+import antafes.vampireEditor.gui.event.CharacterChangedEvent;
+import antafes.vampireEditor.gui.event.listener.CharacterChangedListener;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Component;
@@ -42,6 +48,8 @@ import java.util.ArrayList;
 public class CharacterPanelUpdateCharacterTest extends BaseTest
 {
     private Character character;
+    private ArrayList<CharacterChangedEvent> capturedCharacterChangedEvents;
+    private boolean characterChangedListenerRegistered;
 
     @BeforeMethod
     public void setUp()
@@ -50,6 +58,20 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         new VampireEditor();
         this.character = TestCharacterUtility.createTestCharacter();
         Assert.assertNotNull(this.character);
+
+        if (this.capturedCharacterChangedEvents == null) {
+            this.capturedCharacterChangedEvents = new ArrayList<>();
+        }
+
+        if (!this.characterChangedListenerRegistered) {
+            VampireEditor.getDispatcher().addListener(
+                CharacterChangedEvent.class,
+                new CharacterChangedListener(event -> this.capturedCharacterChangedEvents.add(event))
+            );
+            this.characterChangedListenerRegistered = true;
+        }
+
+        this.capturedCharacterChangedEvents.clear();
     }
 
     public void testAttributesPanelUpdateCharacterUsesAttributeGroupKeys()
@@ -112,6 +134,185 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertEquals(builder.build().getAdvantages().get(spinner.getName()).getValue(), newValue);
     }
 
+    public void testGeneralPanelUpdateCharacterPersistsDemeanorConceptAndNature()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+
+        this.findBaseTextField(panel, "demeanor").setText("new demeanor");
+        this.findBaseTextField(panel, "concept").setText("new concept");
+        this.findBaseTextField(panel, "nature").setText("Architect");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        panel.updateCharacter(builder);
+        Character updated = builder.build();
+
+        Assert.assertEquals(updated.getDemeanor(), "new demeanor");
+        Assert.assertEquals(updated.getConcept(), "new concept");
+        Assert.assertNotNull(updated.getNature());
+        Assert.assertEquals(updated.getNature().getKey(), "architect");
+        Assert.assertEquals(updated.getNature().getName(), "Architect");
+        Assert.assertFalse(updated.getNature().isManual());
+    }
+
+    public void testGeneralPanelUpdateCharacterTrimsDemeanorAndConcept()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+
+        this.findBaseTextField(panel, "demeanor").setText("  new demeanor  ");
+        this.findBaseTextField(panel, "concept").setText("  new concept  ");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        panel.updateCharacter(builder);
+        Character updated = builder.build();
+
+        Assert.assertEquals(updated.getDemeanor(), "new demeanor");
+        Assert.assertEquals(updated.getConcept(), "new concept");
+    }
+
+    public void testGeneralPanelUpdateCharacterClearsNatureWhenEmpty()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+
+        this.findBaseTextField(panel, "nature").setText(" ");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        panel.updateCharacter(builder);
+
+        Assert.assertNull(builder.build().getNature());
+    }
+
+    public void testGeneralPanelUpdateCharacterStoresNullForBlankDemeanorAndConcept()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithoutOptionalValues = this.character.toBuilder()
+            .setDemeanor(null)
+            .setConcept(null)
+            .build();
+        panel.setCharacter(testCharacterWithoutOptionalValues);
+        panel.start();
+
+        this.findBaseTextField(panel, "demeanor").setText("   ");
+        this.findBaseTextField(panel, "concept").setText(" ");
+
+        Character.CharacterBuilder<?, ?> builder = testCharacterWithoutOptionalValues.toBuilder();
+        panel.updateCharacter(builder);
+        Character updated = builder.build();
+
+        Assert.assertNull(updated.getDemeanor());
+        Assert.assertNull(updated.getConcept());
+    }
+
+    public void testGeneralPanelNatureFieldDispatchesCharacterChangedEvent()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+
+        this.findBaseTextField(panel, "nature").setText("Architect");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        CharacterChangedEvent event = this.capturedCharacterChangedEvents.getLast();
+        Assert.assertTrue(event.isChanged());
+    }
+
+    public void testGeneralPanelNullFieldTransitionDispatchesCharacterChangedEvent()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterNullNature = this.character.toBuilder()
+            .setNature(null)
+            .build();
+        panel.setCharacter(testCharacterNullNature);
+        panel.start();
+
+        this.findBaseTextField(panel, "nature").setText("Architect");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        CharacterChangedEvent event = this.capturedCharacterChangedEvents.getLast();
+        Assert.assertTrue(event.isChanged());
+    }
+
+    public void testGeneralPanelWhitespaceOnlyOptionalFieldsDoNotReportChanged()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithoutOptionalValues = this.character.toBuilder()
+            .setDemeanor(null)
+            .setConcept(null)
+            .setNature(null)
+            .build();
+        panel.setCharacter(testCharacterWithoutOptionalValues);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "demeanor").setText("   ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "concept").setText(" ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "nature").setText("  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelTrimEquivalentOptionalFieldsDoNotReportChanged()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+        String currentNatureText = this.findBaseTextField(panel, "nature").getText();
+
+        this.findBaseTextField(panel, "demeanor").setText("  strict  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "concept").setText("  Really no concept!  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "nature").setText("  " + currentNatureText + "  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelNatureKeyInputEquivalentDoesNotReportChanged() throws EntityStorageException
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithBuiltInNature = this.character.toBuilder()
+            .setNature(natureStorage.getEntity("architect"))
+            .build();
+        panel.setCharacter(testCharacterWithBuiltInNature);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "nature").setText("architect");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelNatureCaseOnlyDisplayInputEquivalentDoesNotReportChanged() throws EntityStorageException
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithBuiltInNature = this.character.toBuilder()
+            .setNature(natureStorage.getEntity("architect"))
+            .build();
+        panel.setCharacter(testCharacterWithBuiltInNature);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "nature").setText("aRcHiTeCt");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
     private int incrementWithinBounds(JSpinner spinner, int currentValue)
     {
         int maximum = ((Number) ((SpinnerNumberModel) spinner.getModel()).getMaximum()).intValue();
@@ -120,6 +321,18 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         }
 
         return currentValue > 1 ? currentValue - 1 : currentValue;
+    }
+
+    private JTextField findBaseTextField(GeneralPanel panel, String fieldName)
+    {
+        ArrayList<Component> fields = panel.getFields("base");
+        for (Component field : fields) {
+            if (field instanceof JTextField && fieldName.equals(field.getName())) {
+                return (JTextField) field;
+            }
+        }
+
+        throw new IllegalStateException("Could not find base text field: " + fieldName);
     }
 }
 

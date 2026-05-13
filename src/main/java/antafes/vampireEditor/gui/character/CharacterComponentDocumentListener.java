@@ -25,8 +25,12 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.utility.NatureResolutionUtility;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class CharacterComponentDocumentListener extends ComponentDocumentListener
 {
@@ -66,6 +71,10 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
             componentValue = ((JTextComponent) this.getComponent()).getText();
         } else if (this.getComponent() instanceof JComboBox) {
             BaseTranslatedEntity entity = (BaseTranslatedEntity) ((JComboBox<BaseTranslatedEntity>) this.getComponent()).getSelectedItem();
+            if (entity == null) {
+                return;
+            }
+
             componentValue = entity.getKey();
         }
 
@@ -73,18 +82,85 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
             return;
         }
 
+        componentValue = this.normalizeComparedValue(componentValue);
+
         String methodName = "get" + StringUtils.capitalize(this.getComponent().getName());
         Method method;
         try {
             method = character.getClass().getMethod(methodName);
             Object value = method.invoke(character);
 
-            if (value instanceof String) {
-                CharacterChangedEvent event = new CharacterChangedEvent();
-                event.setChanged(((String) value).compareTo(componentValue) != 0);
+            switch (value) {
+                case String s -> {
+                    String normalizedValue = this.normalizeComparedValue(s);
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(!Objects.equals(normalizedValue, componentValue));
 
-                VampireEditor.getDispatcher().dispatch(event);
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                case BaseTranslatedEntity translatedEntity -> {
+                    String normalizedValue = this.normalizeTranslatedEntityValue(translatedEntity);
+                    String normalizedComponentValue = this.normalizeTranslatedEntityInput(componentValue);
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(!Objects.equals(normalizedValue, normalizedComponentValue));
+
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                case null -> {
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(componentValue != null);
+
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                default -> {
+                }
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
+    }
+
+    private String normalizeComparedValue(String value)
+    {
+        if (this.isOptionalNormalizedField()) {
+            return NatureResolutionUtility.normalizeOptionalText(value);
+        }
+
+        return value;
+    }
+
+    private String normalizeTranslatedEntityInput(String componentValue)
+    {
+        if ("nature".equals(this.getComponent().getName())) {
+            return this.resolveNatureKeyFromText(componentValue);
+        }
+
+        return this.normalizeComparedValue(componentValue);
+    }
+
+    private String normalizeTranslatedEntityValue(BaseTranslatedEntity entity)
+    {
+        if ("nature".equals(this.getComponent().getName())) {
+            return entity.getKey();
+        }
+
+        return this.normalizeComparedValue(entity.toString());
+    }
+
+    private boolean isOptionalNormalizedField()
+    {
+        String componentName = this.getComponent().getName();
+
+        return "nature".equals(componentName)
+            || "demeanor".equals(componentName)
+            || "concept".equals(componentName);
+    }
+
+    private String resolveNatureKeyFromText(String inputText)
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        try {
+            return NatureResolutionUtility.resolveNatureKey(natureStorage, inputText);
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

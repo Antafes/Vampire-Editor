@@ -24,8 +24,13 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
+import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.TranslatableComponent;
+import antafes.vampireEditor.utility.NatureResolutionUtility;
 import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
@@ -122,13 +127,27 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
     @Override
     public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder)
     {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         this.getFields("base").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
             switch (element.getName()) {
+                case "nature":
+                    try {
+                        characterBuilder.setNature(this.resolveNatureFromText(natureStorage, element.getText()));
+                    } catch (EntityStorageException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
                 case "hideout":
                     characterBuilder.setHideout(element.getText());
                     break;
                 case "player":
                     characterBuilder.setPlayer(element.getText());
+                    break;
+                case "demeanor":
+                    characterBuilder.setDemeanor(this.normalizeOptionalText(element.getText()));
+                    break;
+                case "concept":
+                    characterBuilder.setConcept(this.normalizeOptionalText(element.getText()));
                     break;
                 case "sire":
                     characterBuilder.setSire(element.getText());
@@ -201,13 +220,16 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         fieldNames.put("name", this.generateTextField("name", false));
         fieldNames.put("chronicle", this.generateTextField("chronicle", false));
         fieldNames.put("generation", this.generateTextField("generation", false));
-        fieldNames.put("nature", this.generateTextField("nature", false));
+        fieldNames.put("nature", this.generateTextField("nature"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("nature"));
         fieldNames.put("hideout", this.generateTextField("hideout"));
         this.addChangeListenerForCharacterChanged(fieldNames.get("hideout"));
         fieldNames.put("player", this.generateTextField("player"));
         this.addChangeListenerForCharacterChanged(fieldNames.get("player"));
-        fieldNames.put("demeanor", this.generateTextField("demeanor", false));
-        fieldNames.put("concept", this.generateTextField("concept", false));
+        fieldNames.put("demeanor", this.generateTextField("demeanor"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("demeanor"));
+        fieldNames.put("concept", this.generateTextField("concept"));
+        this.addChangeListenerForCharacterChanged(fieldNames.get("concept"));
         fieldNames.put("sire", this.generateTextField("sire"));
         this.addChangeListenerForCharacterChanged(fieldNames.get("sire"));
         fieldNames.put("clan", this.generateTextField("clan", false));
@@ -314,5 +336,15 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         }
 
         return this.getCharacter().getRoad();
+    }
+
+    private Nature resolveNatureFromText(NatureStorage natureStorage, String inputText) throws EntityStorageException
+    {
+        return NatureResolutionUtility.resolveNature(natureStorage, inputText);
+    }
+
+    private String normalizeOptionalText(String inputText)
+    {
+        return NatureResolutionUtility.normalizeOptionalText(inputText);
     }
 }
