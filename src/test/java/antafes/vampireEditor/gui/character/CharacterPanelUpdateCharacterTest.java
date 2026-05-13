@@ -180,6 +180,22 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertTrue(event.isChanged());
     }
 
+    public void testGeneralPanelNullFieldTransitionDispatchesCharacterChangedEvent()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterNullNature = this.character.toBuilder()
+            .setNature(null)
+            .build();
+        panel.setCharacter(testCharacterNullNature);
+        panel.start();
+
+        this.findBaseTextField(panel, "nature").setText("Architect");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        CharacterChangedEvent event = this.capturedCharacterChangedEvents.getLast();
+        Assert.assertTrue(event.isChanged());
+    }
+
     private int incrementWithinBounds(JSpinner spinner, int currentValue)
     {
         int maximum = ((Number) ((SpinnerNumberModel) spinner.getModel()).getMaximum()).intValue();
