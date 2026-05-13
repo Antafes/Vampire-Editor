@@ -373,8 +373,13 @@ public class LooksPanel extends javax.swing.JPanel {
             } else if (selected instanceof Road) {
                 enteredFields.replace(roadComboBox, Boolean.TRUE);
                 checkFieldsFilled();
-                if (roadModel.getIndexOf(emptyRoad) >= 0) {
-                    roadModel.removeElement(emptyRoad);
+                if (roadComboBox.getModel() instanceof DefaultComboBoxModel<?> currentModel) {
+                    for (int i = 0; i < currentModel.getSize(); i++) {
+                        if (currentModel.getElementAt(i) instanceof EmptyEntity) {
+                            currentModel.removeElementAt(i);
+                            break;
+                        }
+                    }
                 }
                 this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
                 this.populatePathComboBox((Road) selected);
