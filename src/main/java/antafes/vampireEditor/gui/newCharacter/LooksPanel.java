@@ -377,14 +377,7 @@ public class LooksPanel extends javax.swing.JPanel {
             } else if (selected instanceof Road) {
                 enteredFields.replace(roadComboBox, Boolean.TRUE);
                 checkFieldsFilled();
-                if (roadComboBox.getModel() instanceof DefaultComboBoxModel<?> currentModel) {
-                    for (int i = 0; i < currentModel.getSize(); i++) {
-                        if (currentModel.getElementAt(i) instanceof EmptyEntity) {
-                            currentModel.removeElementAt(i);
-                            break;
-                        }
-                    }
-                }
+                this.removeEmptyRoadEntry();
                 this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
                 this.populatePathComboBox((Road) selected);
             }
@@ -869,6 +862,7 @@ public class LooksPanel extends javax.swing.JPanel {
              this.clearPathComboBox();
              this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
          } else if (roadStillAvailable && currentRoadSelection instanceof Road) {
+              this.removeEmptyRoadEntry();
              if (this.pathComboBox.isEnabled() && currentPathSelection != null) {
                  DefaultComboBoxModel<?> pathModel = (DefaultComboBoxModel<?>) this.pathComboBox.getModel();
                  boolean pathStillValid = false;
@@ -998,6 +992,22 @@ public class LooksPanel extends javax.swing.JPanel {
         pathComboBox.setEnabled(false);
         pathComboBox.setSelectedItem(emptyPath);
         this.createFocusTraversalPolicy();
+    }
+
+    /**
+     * Remove the empty road entry once a concrete road is selected.
+     */
+    private void removeEmptyRoadEntry() {
+        if (!(this.roadComboBox.getModel() instanceof DefaultComboBoxModel<?> currentModel)) {
+            return;
+        }
+
+        for (int i = 0; i < currentModel.getSize(); i++) {
+            if (currentModel.getElementAt(i) instanceof EmptyEntity) {
+                currentModel.removeElementAt(i);
+                break;
+            }
+        }
     }
 
     /**
