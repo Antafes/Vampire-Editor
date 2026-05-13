@@ -29,6 +29,9 @@ import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.AbilityInterface;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.AttributeInterface;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
 import antafes.vampireEditor.gui.event.listener.CharacterChangedListener;
 import org.testng.Assert;
@@ -273,6 +276,40 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
 
         this.findBaseTextField(panel, "nature").setText("  " + currentNatureText + "  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelNatureKeyInputEquivalentDoesNotReportChanged() throws EntityStorageException
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithBuiltInNature = this.character.toBuilder()
+            .setNature(natureStorage.getEntity("architect"))
+            .build();
+        panel.setCharacter(testCharacterWithBuiltInNature);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "nature").setText("architect");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelNatureCaseOnlyDisplayInputEquivalentDoesNotReportChanged() throws EntityStorageException
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithBuiltInNature = this.character.toBuilder()
+            .setNature(natureStorage.getEntity("architect"))
+            .build();
+        panel.setCharacter(testCharacterWithBuiltInNature);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "nature").setText("aRcHiTeCt");
+
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
         Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
     }
 

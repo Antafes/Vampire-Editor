@@ -25,8 +25,13 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.NatureStorage;
+import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
+import antafes.vampireEditor.utility.StringUtility;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -95,9 +100,10 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
                     VampireEditor.getDispatcher().dispatch(event);
                 }
                 case BaseTranslatedEntity translatedEntity -> {
-                    String normalizedValue = this.normalizeComparedValue(translatedEntity.toString());
+                    String normalizedValue = this.normalizeTranslatedEntityValue(translatedEntity);
+                    String normalizedComponentValue = this.normalizeTranslatedEntityInput(componentValue);
                     CharacterChangedEvent event = new CharacterChangedEvent();
-                    event.setChanged(!Objects.equals(normalizedValue, componentValue));
+                    event.setChanged(!Objects.equals(normalizedValue, normalizedComponentValue));
 
                     VampireEditor.getDispatcher().dispatch(event);
                 }
@@ -122,6 +128,24 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
         return value;
     }
 
+    private String normalizeTranslatedEntityInput(String componentValue)
+    {
+        if ("nature".equals(this.getComponent().getName())) {
+            return this.resolveNatureKeyFromText(componentValue);
+        }
+
+        return this.normalizeComparedValue(componentValue);
+    }
+
+    private String normalizeTranslatedEntityValue(BaseTranslatedEntity entity)
+    {
+        if ("nature".equals(this.getComponent().getName())) {
+            return entity.getKey();
+        }
+
+        return this.normalizeComparedValue(entity.toString());
+    }
+
     private boolean isOptionalNormalizedField()
     {
         String componentName = this.getComponent().getName();
@@ -140,5 +164,47 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
         String normalizedValue = value.trim();
 
         return normalizedValue.isEmpty() ? null : normalizedValue;
+    }
+
+    private String resolveNatureKeyFromText(String inputText)
+    {
+        String natureText = this.normalizeOptionalText(inputText);
+        if (natureText == null) {
+            return null;
+        }
+
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        Nature nature = natureStorage.getList().get(natureText);
+        if (nature != null) {
+            return nature.getKey();
+        }
+
+        String normalizedKey = StringUtility.toCamelCase(natureText);
+        nature = natureStorage.getList().get(normalizedKey);
+        if (nature != null) {
+            return nature.getKey();
+        }
+
+        for (Nature storedNature : natureStorage.getList().values()) {
+            if (storedNature.getKey().equalsIgnoreCase(natureText)) {
+                return storedNature.getKey();
+            }
+
+            if (storedNature.getNames() == null) {
+                continue;
+            }
+
+            boolean hasNameMatch = storedNature.getNames().values().stream()
+                .anyMatch((name) -> name != null && name.equalsIgnoreCase(natureText));
+            if (hasNameMatch) {
+                return storedNature.getKey();
+            }
+        }
+
+        try {
+            return natureStorage.getEntity(natureText).getKey();
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
