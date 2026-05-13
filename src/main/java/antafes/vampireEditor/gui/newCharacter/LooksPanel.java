@@ -859,8 +859,8 @@ public class LooksPanel extends javax.swing.JPanel {
 
          if (!roadStillAvailable && currentRoadSelection instanceof Road) {
              this.enteredFields.replace(this.roadComboBox, Boolean.FALSE);
-             this.clearPathComboBox();
              this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+             this.clearPathComboBox();
          } else if (roadStillAvailable && currentRoadSelection instanceof Road) {
               this.removeEmptyRoadEntry();
              if (this.pathComboBox.isEnabled() && currentPathSelection != null) {
