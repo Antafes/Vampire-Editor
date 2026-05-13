@@ -63,4 +63,11 @@ public interface ClanInterface {
      * @return
      */
     public ArrayList<Weakness> getWeaknesses();
+
+    /**
+     * Check whether this clan is a bloodline.
+     *
+     * @return
+     */
+    public boolean isBloodline();
 }

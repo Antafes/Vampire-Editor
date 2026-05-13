@@ -118,6 +118,8 @@ public class English extends Language {
         this.getTranslations().put("sire", "Sire");
         this.getTranslations().put("clan", "Clan");
         this.getTranslations().put("sect", "Sect");
+        this.getTranslations().put("clan.group.clans", "Clans");
+        this.getTranslations().put("clan.group.bloodlines", "Bloodlines");
         this.getTranslations().put("age", "Age");
         this.getTranslations().put("apparentAge", "Apparent age");
         this.getTranslations().put("dayOfBirth", "Day of birth");

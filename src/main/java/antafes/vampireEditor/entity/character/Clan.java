@@ -62,6 +62,9 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     @XmlJavaTypeAdapter(WeaknessListAdapter.class)
     private ArrayList<Weakness> weaknesses;
 
+    @XmlElement(name = "bloodline")
+    private boolean bloodline;
+
     protected Clan()
     {
         super();

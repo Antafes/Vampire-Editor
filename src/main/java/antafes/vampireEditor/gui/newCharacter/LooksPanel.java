@@ -33,6 +33,7 @@ import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.element.ClanComboBox;
 import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.element.WideComboBox;
@@ -42,7 +43,6 @@ import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
-import antafes.vampireEditor.utility.ClanComparator;
 import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
@@ -72,7 +72,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JButton backButton;
     private javax.swing.JTextField chronicleField;
     private javax.swing.JLabel chronicleLabel;
-    private javax.swing.JComboBox<BaseEntity> clanComboBox;
+    private ClanComboBox clanComboBox;
     private javax.swing.JLabel clanLabel;
     private javax.swing.JTextField conceptField;
     private javax.swing.JLabel conceptLabel;
@@ -155,7 +155,7 @@ public class LooksPanel extends javax.swing.JPanel {
         backButton = new javax.swing.JButton();
         chronicleField = new javax.swing.JTextField();
         chronicleLabel = new javax.swing.JLabel();
-        clanComboBox = new javax.swing.JComboBox<>();
+        clanComboBox = new ClanComboBox();
         clanLabel = new javax.swing.JLabel();
         conceptField = new javax.swing.JTextField();
         conceptLabel = new javax.swing.JLabel();
@@ -207,9 +207,8 @@ public class LooksPanel extends javax.swing.JPanel {
         weightField.setName("weight"); // NOI18N
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
-        DefaultComboBoxModel<BaseEntity> clanModel = this.getClans();
-        clanComboBox.setModel(clanModel);
-        clanComboBox.putClientProperty("emptyEntry", clanModel.getElementAt(0));
+        clanComboBox.setLanguage(this.language);
+        clanComboBox.setClans(this.getClans());
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
@@ -597,18 +596,12 @@ public class LooksPanel extends javax.swing.JPanel {
      * @param evt Event object
      */
     private void clanComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        Object selectedItem = this.clanComboBox.getSelectedItem();
-        if (selectedItem instanceof EmptyEntity || Objects.equals(selectedItem, "")) {
+        Clan clan = this.clanComboBox.getSelectedClan();
+        if (clan == null) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
-            Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
-            Object emptyEntry = this.clanComboBox.getClientProperty("emptyEntry");
-            DefaultComboBoxModel<BaseEntity> clanModel = (DefaultComboBoxModel<BaseEntity>) this.clanComboBox.getModel();
-            if (emptyEntry != null && clanModel.getIndexOf(emptyEntry) >= 0) {
-                clanModel.removeElement(emptyEntry);
-            }
             this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
@@ -709,19 +702,11 @@ public class LooksPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Get the generations for showing them in the form.
+     * Get the clans for showing them in the form.
      */
-    public DefaultComboBoxModel<BaseEntity> getClans() {
+    private ArrayList<Clan> getClans() {
         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
-        DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
-        EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
-        model.addElement(emptyEntity);
-        ArrayList<BaseEntity> sortedClans = new ArrayList<>(clanStorage.getList().values());
-        sortedClans.sort(new ClanComparator());
-
-        sortedClans.forEach(model::addElement);
-
-        return model;
+        return new ArrayList<>(clanStorage.getList().values());
     }
 
     private DefaultComboBoxModel<BaseEntity> getNatures()
@@ -879,8 +864,7 @@ public class LooksPanel extends javax.swing.JPanel {
 
     private Clan getClan()
     {
-        Object selectedItem = this.clanComboBox.getSelectedItem();
-        return selectedItem instanceof Clan ? (Clan) selectedItem : null;
+        return this.clanComboBox.getSelectedItem();
     }
 
     /**
