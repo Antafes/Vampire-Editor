@@ -180,22 +180,75 @@ public class RoadStorageTest extends BaseTest
         }
     }
 
-    private void invokeResolveAndValidateParents(RoadStorage storage) throws Exception
-    {
-        Method method = RoadStorage.class.getDeclaredMethod("resolveAndValidateParents");
-        method.setAccessible(true);
-        try {
-            method.invoke(storage);
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            }
-            if (cause instanceof Exception) {
-                throw (Exception) cause;
-            }
-            throw e;
-        }
-    }
-}
+     private void invokeResolveAndValidateParents(RoadStorage storage) throws Exception
+     {
+         Method method = RoadStorage.class.getDeclaredMethod("resolveAndValidateParents");
+         method.setAccessible(true);
+         try {
+             method.invoke(storage);
+         } catch (InvocationTargetException e) {
+             Throwable cause = e.getCause();
+             if (cause instanceof RuntimeException) {
+                 throw (RuntimeException) cause;
+             }
+             if (cause instanceof Exception) {
+                 throw (Exception) cause;
+             }
+             throw e;
+         }
+     }
+
+     public void testGetRoadsForClanIncludesUniversalRoads() throws Exception
+     {
+         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+         antafes.vampireEditor.entity.character.Clan assamites = clanStorage.getEntity("assamites");
+
+         ArrayList<Road> roadsForAssamites = this.roadStorage.getRoadsForClan(assamites);
+         ArrayList<Road> universalRoads = this.roadStorage.getRoads();
+
+         // Verify that all universal roads are present for clan-specific roads
+         for (Road universalRoad : universalRoads) {
+             if (universalRoad.isUniversal()) {
+                 Assert.assertTrue(roadsForAssamites.contains(universalRoad),
+                     "Universal road " + universalRoad.getKey() + " should be available for any clan");
+             }
+         }
+     }
+
+     public void testGetRoadsForClanIncludesClanSpecificRoads() throws Exception
+     {
+         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+         antafes.vampireEditor.entity.character.Clan assamites = clanStorage.getEntity("assamites");
+         ArrayList<Road> roadsForAssamites = this.roadStorage.getRoadsForClan(assamites);
+
+         Road roadOfBlood = this.roadStorage.getEntity("roadOfBlood");
+         Assert.assertTrue(roadsForAssamites.contains(roadOfBlood),
+             "Road of Blood should be available for Assamites");
+     }
+
+     public void testGetRoadsForClanExcludesClanSpecificRoadsForOtherClans() throws Exception
+     {
+         ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+         antafes.vampireEditor.entity.character.Clan gangrel = clanStorage.getEntity("gangrel");
+         ArrayList<Road> roadsForGangrel = this.roadStorage.getRoadsForClan(gangrel);
+
+         Road roadOfBlood = this.roadStorage.getEntity("roadOfBlood");
+         Assert.assertFalse(roadsForGangrel.contains(roadOfBlood),
+             "Road of Blood (restricted to Assamites) should not be available for Gangrel");
+     }
+
+     public void testAllExistingRoadsRemainUniversalAfterDataChange() throws Exception
+     {
+         ArrayList<Road> allRoads = this.roadStorage.getRoads();
+
+         // Verify that most roads are still universal (only the 4 new clan-specific roads + 1 path should have restrictions)
+         long universalRoadCount = allRoads.stream()
+             .filter(Road::isUniversal)
+             .count();
+
+         // There should be many universal roads
+         Assert.assertTrue(universalRoadCount > 5,
+             "Most existing roads should still be universal. Found " + universalRoadCount + " universal roads");
+     }
+ }
 

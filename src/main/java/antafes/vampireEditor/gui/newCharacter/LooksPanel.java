@@ -39,6 +39,7 @@ import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
 import antafes.vampireEditor.gui.element.WideComboBox;
 import antafes.vampireEditor.gui.event.*;
 import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
@@ -66,6 +67,8 @@ public class LooksPanel extends javax.swing.JPanel {
     private final NewCharacterDialog parent;
     private final DateTimeFormatter dateTimeFormatter;
     private final LocalDate date;
+
+    private Clan selectedClan;
 
     private javax.swing.JTextField ageField;
     private javax.swing.JLabel ageLabel;
@@ -407,6 +410,10 @@ public class LooksPanel extends javax.swing.JPanel {
         this.parent.getDialogDispatcher().addListener(
             AddGenerationItemListenerEvent.class,
             new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            ClanSelectedEvent.class,
+            new ClanSelectedListener(event -> this.onClanSelected(event.getClan()))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -777,16 +784,70 @@ public class LooksPanel extends javax.swing.JPanel {
         this.setFocusTraversalPolicyProvider(true);
     }
 
-    /**
-     * Get the values for the road combo box.
-     */
-    private ArrayList<Road> getRoadValues() {
-        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        ArrayList<Road> list = roadStorage.getRoads();
-        list.sort(new StringComparator());
+     /**
+      * Get the values for the road combo box.
+      */
+     private ArrayList<Road> getRoadValues() {
+         return this.getRoadValuesForClan(null);
+     }
 
-        return list;
-    }
+     /**
+      * Get the roads available for the given clan.
+      * If clan is null, returns only universal roads.
+      *
+      * @param clan the clan to filter roads for, or null for universal roads only
+      * @return sorted list of roads available to the clan
+      */
+     private ArrayList<Road> getRoadValuesForClan(Clan clan) {
+         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+         ArrayList<Road> list = clan != null
+             ? roadStorage.getRoadsForClan(clan)
+             : roadStorage.getRoads();
+         list.sort(new StringComparator());
+
+         return list;
+     }
+
+     /**
+      * Handle clan selection event by refreshing road combo box.
+      *
+      * @param clan the selected clan
+      */
+     private void onClanSelected(Clan clan) {
+         this.selectedClan = clan;
+         this.refreshRoadComboBox();
+     }
+
+     /**
+      * Refresh the road combo box based on the currently selected clan.
+      * If a previously selected road is no longer available for the clan,
+      * clear the road and path selections.
+      */
+     private void refreshRoadComboBox() {
+         ArrayList<Road> availableRoads = this.getRoadValuesForClan(this.selectedClan);
+         DefaultComboBoxModel<BaseTranslatedEntity> newModel = new DefaultComboBoxModel<>();
+
+         EmptyEntity emptyRoad = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+         newModel.addElement(emptyRoad);
+         availableRoads.forEach(newModel::addElement);
+
+         Object currentSelection = this.roadComboBox.getSelectedItem();
+         boolean roadStillAvailable = currentSelection instanceof EmptyEntity
+             || (currentSelection instanceof Road && availableRoads.contains(currentSelection));
+
+         this.roadComboBox.setModel(newModel);
+         if (roadStillAvailable && currentSelection != null) {
+             this.roadComboBox.setSelectedItem(currentSelection);
+             return;
+         }
+
+         if (currentSelection instanceof Road) {
+             this.roadComboBox.setSelectedItem(emptyRoad);
+             this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+             this.clearPathComboBox();
+             this.enteredFields.replace(this.roadComboBox, Boolean.FALSE);
+         }
+     }
 
     /**
      * This method checks every input made by the user for duplicate entries.

@@ -153,26 +153,80 @@ public class RoadTest extends BaseTest
             .build();
     }
 
-    public void testCalculateRoadScore()
-    {
-        ArrayList<Advantage> advantages = new ArrayList<>();
-        advantages.add(
-            Advantage.builder()
-                .setKey("test1")
-                .setValue(2)
-                .setType(AdvantageInterface.AdvantageType.VIRTUE)
-                .addName(Configuration.Language.ENGLISH, "Test 1")
-                .build()
-        );
-        advantages.add(
-            Advantage.builder()
-                .setKey("test2")
-                .setValue(1)
-                .setType(AdvantageInterface.AdvantageType.VIRTUE)
-                .addName(Configuration.Language.ENGLISH, "Test 2")
-                .build()
-        );
-        int score = Road.calculateRoadScore(advantages);
-        Assert.assertEquals(score, 3);
-    }
+     public void testCalculateRoadScore()
+     {
+         ArrayList<Advantage> advantages = new ArrayList<>();
+         advantages.add(
+             Advantage.builder()
+                 .setKey("test1")
+                 .setValue(2)
+                 .setType(AdvantageInterface.AdvantageType.VIRTUE)
+                 .addName(Configuration.Language.ENGLISH, "Test 1")
+                 .build()
+         );
+         advantages.add(
+             Advantage.builder()
+                 .setKey("test2")
+                 .setValue(1)
+                 .setType(AdvantageInterface.AdvantageType.VIRTUE)
+                 .addName(Configuration.Language.ENGLISH, "Test 2")
+                 .build()
+         );
+         int score = Road.calculateRoadScore(advantages);
+         Assert.assertEquals(score, 3);
+     }
+
+     public void testRoadIsUniversalWhenNoClanRestrictionsSet()
+     {
+         Assert.assertTrue(this.road.isUniversal());
+     }
+
+     public void testRoadIsNotUniversalWhenClanRestrictionsSet()
+     {
+         ArrayList<String> clanRestrictions = new ArrayList<>();
+         clanRestrictions.add("assamites");
+         Road restrictedRoad = this.road.toBuilder()
+             .setClanRestrictions(clanRestrictions)
+             .build();
+
+         Assert.assertFalse(restrictedRoad.isUniversal());
+     }
+
+     public void testIsRestrictedToClanReturnsTrueForMatchingClan()
+     {
+         ArrayList<String> clanRestrictions = new ArrayList<>();
+         clanRestrictions.add("assamites");
+         Road restrictedRoad = this.road.toBuilder()
+             .setClanRestrictions(clanRestrictions)
+             .build();
+
+         Assert.assertTrue(restrictedRoad.isRestrictedToClan("assamites"));
+     }
+
+     public void testIsRestrictedToClanReturnsFalseForNonMatchingClan()
+     {
+         ArrayList<String> clanRestrictions = new ArrayList<>();
+         clanRestrictions.add("assamites");
+         Road restrictedRoad = this.road.toBuilder()
+             .setClanRestrictions(clanRestrictions)
+             .build();
+
+         Assert.assertFalse(restrictedRoad.isRestrictedToClan("lasombra"));
+     }
+
+     public void testIsRestrictedToClanReturnsFalseForUniversalRoad()
+     {
+         Assert.assertFalse(this.road.isRestrictedToClan("assamites"));
+     }
+
+     public void testIsRestrictedToClanReturnsFalseForNullClanKey()
+     {
+         ArrayList<String> clanRestrictions = new ArrayList<>();
+         clanRestrictions.add("assamites");
+         Road restrictedRoad = this.road.toBuilder()
+             .setClanRestrictions(clanRestrictions)
+             .build();
+
+         Assert.assertFalse(restrictedRoad.isRestrictedToClan(null));
+     }
 }
