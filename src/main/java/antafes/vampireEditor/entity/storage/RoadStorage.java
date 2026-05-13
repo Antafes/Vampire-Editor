@@ -22,6 +22,7 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
 import jakarta.xml.bind.JAXBContext;
@@ -33,12 +34,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.NonNull;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +72,21 @@ public class RoadStorage extends BaseStorage<Road> {
         return this.getList().values().stream()
             .filter(road -> road.getParent() != null)
             .filter(road -> parentRoad.getKey().equals(road.getParent().getKey()))
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Returns all top-level roads available for the given clan.
+     * Universal roads (no clan restrictions) are always included.
+     * Clan-specific roads are included only if the clan key matches.
+     *
+     * @param clan the selected clan, must not be null
+     * @return list of roads available to clan
+     */
+    public ArrayList<Road> getRoadsForClan(@NonNull Clan clan) {
+        return this.getList().values().stream()
+            .filter(road -> road.getParent() == null)
+            .filter(road -> road.isUniversal() || road.isRestrictedToClan(clan.getKey()))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 

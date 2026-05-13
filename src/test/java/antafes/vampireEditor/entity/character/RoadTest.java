@@ -50,58 +50,68 @@ public class RoadTest extends BaseTest
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown()
+    {
         this.road = null;
     }
 
-    public void testGetKey() {
+    public void testGetKey()
+    {
         final String expected = "testRoad";
         final String actual = this.road.getKey();
 
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetNames() {
+    public void testGetNames()
+    {
         final HashMap<Configuration.Language, String> actual = this.road.getNames();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
     }
 
-    public void testGetName() {
+    public void testGetName()
+    {
         final String expected = "Test road";
         final String actual = this.road.getName();
 
         Assert.assertEquals(actual, expected);
     }
 
-    public void testGetValue() {
+    public void testGetValue()
+    {
         final int expected = 11;
         final int actual = this.road.getValue();
 
         Assert.assertEquals(actual, expected);
     }
 
-    public void testToString() {
+    public void testToString()
+    {
         final String expected = "Test road";
         final String actual = this.road.toString();
 
         Assert.assertEquals(actual, expected);
     }
 
-    public void testEqualObjects() {
+    public void testEqualObjects()
+    {
         Assert.assertEquals(this.road, this.road);
     }
 
-    public void testObjectNull() {
+    public void testObjectNull()
+    {
         Assert.assertNotEquals(this.road, null);
     }
 
-    public void testDifferentObject() {
+    public void testDifferentObject()
+    {
         Assert.assertNotEquals(this.road, "");
     }
 
-    public void testDifferentAbility() throws EntityException {
+    public void testDifferentAbility() throws EntityException
+    {
         final Road object = Road.builder()
             .setKey("testRoad2")
             .addName(Configuration.Language.ENGLISH, "Test road 2")
@@ -111,68 +121,105 @@ public class RoadTest extends BaseTest
         Assert.assertNotEquals(this.road, object);
     }
 
-    public void testHashCode() throws EntityException {
+    public void testHashCode() throws EntityException
+    {
         final int expected = this.road.hashCode();
-        final int actual = this.road.toBuilder()
-            .build()
-            .hashCode();
+        final int actual = this.road.toBuilder().build().hashCode();
 
         Assert.assertEquals(expected, actual);
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
-    public void testBuilderNullKey() throws EntityException {
-        this.road.toBuilder()
-            .setKey(null)
-            .build();
+    public void testBuilderNullKey() throws EntityException
+    {
+        this.road.toBuilder().setKey(null).build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing key for entity.*")
-    public void testBuilderEmptyKey() throws EntityException {
-        this.road.toBuilder()
-            .setKey("")
-            .build();
+    public void testBuilderEmptyKey() throws EntityException
+    {
+        this.road.toBuilder().setKey("").build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
-    public void testBuilderNullNames() throws EntityException {
-        this.road.toBuilder()
-            .setNames(null)
-            .build();
+    public void testBuilderNullNames() throws EntityException
+    {
+        this.road.toBuilder().setNames(null).build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing names for entity.*")
-    public void testBuilderEmptyNames() throws EntityException {
-        this.road.toBuilder()
-            .setNames(new HashMap<>())
-            .build();
+    public void testBuilderEmptyNames() throws EntityException
+    {
+        this.road.toBuilder().setNames(new HashMap<>()).build();
     }
 
-    public void testBuilderBuild() throws EntityException {
-        this.road.toBuilder()
-            .build();
+    public void testBuilderBuild() throws EntityException
+    {
+        this.road.toBuilder().build();
     }
 
     public void testCalculateRoadScore()
     {
         ArrayList<Advantage> advantages = new ArrayList<>();
-        advantages.add(
-            Advantage.builder()
-                .setKey("test1")
-                .setValue(2)
-                .setType(AdvantageInterface.AdvantageType.VIRTUE)
-                .addName(Configuration.Language.ENGLISH, "Test 1")
-                .build()
-        );
-        advantages.add(
-            Advantage.builder()
-                .setKey("test2")
-                .setValue(1)
-                .setType(AdvantageInterface.AdvantageType.VIRTUE)
-                .addName(Configuration.Language.ENGLISH, "Test 2")
-                .build()
-        );
+        advantages.add(Advantage.builder()
+            .setKey("test1")
+            .setValue(2)
+            .setType(AdvantageInterface.AdvantageType.VIRTUE)
+            .addName(Configuration.Language.ENGLISH, "Test 1")
+            .build());
+        advantages.add(Advantage.builder()
+            .setKey("test2")
+            .setValue(1)
+            .setType(AdvantageInterface.AdvantageType.VIRTUE)
+            .addName(Configuration.Language.ENGLISH, "Test 2")
+            .build());
         int score = Road.calculateRoadScore(advantages);
         Assert.assertEquals(score, 3);
+    }
+
+    public void testRoadIsUniversalWhenNoClanRestrictionsSet()
+    {
+        Assert.assertTrue(this.road.isUniversal());
+    }
+
+    public void testRoadIsNotUniversalWhenClanRestrictionsSet()
+    {
+        ArrayList<String> clanRestrictions = new ArrayList<>();
+        clanRestrictions.add("assamites");
+        Road restrictedRoad = this.road.toBuilder().setClanRestrictions(clanRestrictions).build();
+
+        Assert.assertFalse(restrictedRoad.isUniversal());
+    }
+
+    public void testIsRestrictedToClanReturnsTrueForMatchingClan()
+    {
+        ArrayList<String> clanRestrictions = new ArrayList<>();
+        clanRestrictions.add("assamites");
+        Road restrictedRoad = this.road.toBuilder().setClanRestrictions(clanRestrictions).build();
+
+        Assert.assertTrue(restrictedRoad.isRestrictedToClan("assamites"));
+    }
+
+    public void testIsRestrictedToClanReturnsFalseForNonMatchingClan()
+    {
+        ArrayList<String> clanRestrictions = new ArrayList<>();
+        clanRestrictions.add("assamites");
+        Road restrictedRoad = this.road.toBuilder().setClanRestrictions(clanRestrictions).build();
+
+        Assert.assertFalse(restrictedRoad.isRestrictedToClan("lasombra"));
+    }
+
+    public void testIsRestrictedToClanReturnsFalseForUniversalRoad()
+    {
+        Assert.assertFalse(this.road.isRestrictedToClan("assamites"));
+    }
+
+    public void testIsRestrictedToClanReturnsFalseForNullClanKey()
+    {
+        ArrayList<String> clanRestrictions = new ArrayList<>();
+        clanRestrictions.add("assamites");
+        Road restrictedRoad = this.road.toBuilder().setClanRestrictions(clanRestrictions).build();
+
+        Assert.assertFalse(restrictedRoad.isRestrictedToClan(null));
     }
 }

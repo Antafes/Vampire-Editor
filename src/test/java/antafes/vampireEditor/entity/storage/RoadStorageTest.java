@@ -63,7 +63,9 @@ public class RoadStorageTest extends BaseTest
     {
         ArrayList<Road> roads = this.roadStorage.getRoads();
         Set<String> roadKeys = roads.stream().map(Road::getKey).collect(Collectors.toCollection(HashSet::new));
-        Set<String> allPathKeys = this.roadStorage.getList().values().stream()
+        Set<String> allPathKeys = this.roadStorage.getList()
+            .values()
+            .stream()
             .filter(road -> road.getParent() != null)
             .map(Road::getKey)
             .collect(Collectors.toCollection(HashSet::new));
@@ -75,19 +77,17 @@ public class RoadStorageTest extends BaseTest
 
     public void testGetPathsForRoadReturnsChildPathsOnly() throws Exception
     {
-        Road selectedRoad = this.roadStorage.getRoads().stream()
-            .findFirst()
-            .orElseThrow();
+        Road selectedRoad = this.roadStorage.getRoads().stream().findFirst().orElseThrow();
 
         ArrayList<Road> paths = this.roadStorage.getPathsForRoad(selectedRoad);
-        Set<String> expectedPathKeys = this.roadStorage.getList().values().stream()
+        Set<String> expectedPathKeys = this.roadStorage.getList()
+            .values()
+            .stream()
             .filter(road -> road.getParent() != null)
             .filter(road -> selectedRoad.getKey().equals(road.getParent().getKey()))
             .map(Road::getKey)
             .collect(Collectors.toCollection(HashSet::new));
-        Set<String> actualPathKeys = paths.stream()
-            .map(Road::getKey)
-            .collect(Collectors.toCollection(HashSet::new));
+        Set<String> actualPathKeys = paths.stream().map(Road::getKey).collect(Collectors.toCollection(HashSet::new));
 
         Assert.assertEquals(actualPathKeys, expectedPathKeys);
         Assert.assertTrue(paths.stream().allMatch(road -> road.getParent() != null));
@@ -123,10 +123,7 @@ public class RoadStorageTest extends BaseTest
 
     public void testResolveAndValidateParentsRejectsCircularParentReferences()
     {
-        RoadStorage storage = this.createStorage(
-            this.createRoad("roadA", "roadB"),
-            this.createRoad("roadB", "roadA")
-        );
+        RoadStorage storage = this.createStorage(this.createRoad("roadA", "roadB"), this.createRoad("roadB", "roadA"));
 
         RuntimeException ex = this.assertResolveFails(storage);
 
@@ -159,11 +156,7 @@ public class RoadStorageTest extends BaseTest
 
     private Road createRoad(String key, String parentKey)
     {
-        return Road.builder()
-            .setKey(key)
-            .addName(Configuration.Language.ENGLISH, key)
-            .setParentKey(parentKey)
-            .build();
+        return Road.builder().setKey(key).addName(Configuration.Language.ENGLISH, key).setParentKey(parentKey).build();
     }
 
     private RuntimeException assertResolveFails(RoadStorage storage)
@@ -196,6 +189,61 @@ public class RoadStorageTest extends BaseTest
             }
             throw e;
         }
+    }
+
+    public void testGetRoadsForClanIncludesUniversalRoads() throws Exception
+    {
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        antafes.vampireEditor.entity.character.Clan assamites = clanStorage.getEntity("assamites");
+
+        ArrayList<Road> roadsForAssamites = this.roadStorage.getRoadsForClan(assamites);
+        ArrayList<Road> universalRoads = this.roadStorage.getRoads();
+
+        // Verify that all universal roads are present for clan-specific roads
+        for (Road universalRoad : universalRoads) {
+            if (universalRoad.isUniversal()) {
+                Assert.assertTrue(
+                    roadsForAssamites.contains(universalRoad),
+                    "Universal road " + universalRoad.getKey() + " should be available for any clan"
+                );
+            }
+        }
+    }
+
+    public void testGetRoadsForClanIncludesClanSpecificRoads() throws Exception
+    {
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        antafes.vampireEditor.entity.character.Clan assamites = clanStorage.getEntity("assamites");
+        ArrayList<Road> roadsForAssamites = this.roadStorage.getRoadsForClan(assamites);
+
+        Road roadOfBlood = this.roadStorage.getEntity("roadOfBlood");
+        Assert.assertTrue(roadsForAssamites.contains(roadOfBlood), "Road of Blood should be available for Assamites");
+    }
+
+    public void testGetRoadsForClanExcludesClanSpecificRoadsForOtherClans() throws Exception
+    {
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        antafes.vampireEditor.entity.character.Clan gangrel = clanStorage.getEntity("gangrel");
+        ArrayList<Road> roadsForGangrel = this.roadStorage.getRoadsForClan(gangrel);
+
+        Road roadOfBlood = this.roadStorage.getEntity("roadOfBlood");
+        Assert.assertFalse(
+            roadsForGangrel.contains(roadOfBlood),
+            "Road of Blood (restricted to Assamites) should not be available for Gangrel"
+        );
+    }
+
+    public void testAllExistingRoadsRemainUniversalAfterDataChange() throws Exception
+    {
+        Assert.assertTrue(
+            this.roadStorage.getEntity("roadOfHumanity").isUniversal(),
+            "Road of Humanity should remain universal"
+        );
+
+        Assert.assertFalse(this.roadStorage.getEntity("roadOfBlood").isUniversal());
+        Assert.assertFalse(this.roadStorage.getEntity("roadOfTheAbyss").isUniversal());
+        Assert.assertFalse(this.roadStorage.getEntity("roadOfParadox").isUniversal());
+        Assert.assertFalse(this.roadStorage.getEntity("roadOfSet").isUniversal());
     }
 }
 
