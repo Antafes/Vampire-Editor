@@ -136,10 +136,10 @@
         <English>Prefer willing prey when feeding</English>
         <German>Bevorzugt willige Beute beim Trinken</German>
     </weakness>
-    <wekaness key="defeatedPrey">
+    <weakness key="defeatedPrey">
         <English>Prefer vanquished prey when feeding</English>
         <German>Bevorzugt besiegte Beute beim Trinken</German>
-    </wekaness>
+    </weakness>
     <weakness key="knowledgeSpecialty">
         <English>Meticulous</English>
         <German>Detailversessen</German>
