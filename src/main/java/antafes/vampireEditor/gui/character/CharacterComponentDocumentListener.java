@@ -84,6 +84,11 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
                 event.setChanged(((String) value).compareTo(componentValue) != 0);
 
                 VampireEditor.getDispatcher().dispatch(event);
+            } else if (value instanceof BaseTranslatedEntity) {
+                CharacterChangedEvent event = new CharacterChangedEvent();
+                event.setChanged(((BaseTranslatedEntity) value).toString().compareTo(componentValue) != 0);
+
+                VampireEditor.getDispatcher().dispatch(event);
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
     }
