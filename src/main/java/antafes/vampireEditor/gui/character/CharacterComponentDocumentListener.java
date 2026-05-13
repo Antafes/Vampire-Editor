@@ -35,6 +35,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class CharacterComponentDocumentListener extends ComponentDocumentListener
 {
@@ -66,6 +67,10 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
             componentValue = ((JTextComponent) this.getComponent()).getText();
         } else if (this.getComponent() instanceof JComboBox) {
             BaseTranslatedEntity entity = (BaseTranslatedEntity) ((JComboBox<BaseTranslatedEntity>) this.getComponent()).getSelectedItem();
+            if (entity == null) {
+                return;
+            }
+
             componentValue = entity.getKey();
         }
 
@@ -73,28 +78,67 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
             return;
         }
 
+        componentValue = this.normalizeComparedValue(componentValue);
+
         String methodName = "get" + StringUtils.capitalize(this.getComponent().getName());
         Method method;
         try {
             method = character.getClass().getMethod(methodName);
             Object value = method.invoke(character);
 
-            if (value instanceof String) {
-                CharacterChangedEvent event = new CharacterChangedEvent();
-                event.setChanged(((String) value).compareTo(componentValue) != 0);
+            switch (value) {
+                case String s -> {
+                    String normalizedValue = this.normalizeComparedValue(s);
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(!Objects.equals(normalizedValue, componentValue));
 
-                VampireEditor.getDispatcher().dispatch(event);
-            } else if (value instanceof BaseTranslatedEntity) {
-                CharacterChangedEvent event = new CharacterChangedEvent();
-                event.setChanged(((BaseTranslatedEntity) value).toString().compareTo(componentValue) != 0);
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                case BaseTranslatedEntity translatedEntity -> {
+                    String normalizedValue = this.normalizeComparedValue(translatedEntity.toString());
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(!Objects.equals(normalizedValue, componentValue));
 
-                VampireEditor.getDispatcher().dispatch(event);
-            } else if (value == null) {
-                CharacterChangedEvent event = new CharacterChangedEvent();
-                event.setChanged(!componentValue.isEmpty());
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                case null -> {
+                    CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setChanged(componentValue != null);
 
-                VampireEditor.getDispatcher().dispatch(event);
+                    VampireEditor.getDispatcher().dispatch(event);
+                }
+                default -> {
+                }
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
+    }
+
+    private String normalizeComparedValue(String value)
+    {
+        if (this.isOptionalNormalizedField()) {
+            return this.normalizeOptionalText(value);
+        }
+
+        return value;
+    }
+
+    private boolean isOptionalNormalizedField()
+    {
+        String componentName = this.getComponent().getName();
+
+        return "nature".equals(componentName)
+            || "demeanor".equals(componentName)
+            || "concept".equals(componentName);
+    }
+
+    private String normalizeOptionalText(String value)
+    {
+        if (value == null) {
+            return null;
+        }
+
+        String normalizedValue = value.trim();
+
+        return normalizedValue.isEmpty() ? null : normalizedValue;
     }
 }

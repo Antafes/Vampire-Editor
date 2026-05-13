@@ -234,6 +234,48 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertTrue(event.isChanged());
     }
 
+    public void testGeneralPanelWhitespaceOnlyOptionalFieldsDoNotReportChanged()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithoutOptionalValues = this.character.toBuilder()
+            .setDemeanor(null)
+            .setConcept(null)
+            .setNature(null)
+            .build();
+        panel.setCharacter(testCharacterWithoutOptionalValues);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+
+        this.findBaseTextField(panel, "demeanor").setText("   ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "concept").setText(" ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "nature").setText("  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
+    public void testGeneralPanelTrimEquivalentOptionalFieldsDoNotReportChanged()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+        this.capturedCharacterChangedEvents.clear();
+        String currentNatureText = this.findBaseTextField(panel, "nature").getText();
+
+        this.findBaseTextField(panel, "demeanor").setText("  strict  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.isEmpty());
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "concept").setText("  Really no concept!  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+
+        this.findBaseTextField(panel, "nature").setText("  " + currentNatureText + "  ");
+        Assert.assertFalse(this.capturedCharacterChangedEvents.getLast().isChanged());
+    }
+
     private int incrementWithinBounds(JSpinner spinner, int currentValue)
     {
         int maximum = ((Number) ((SpinnerNumberModel) spinner.getModel()).getMaximum()).intValue();
