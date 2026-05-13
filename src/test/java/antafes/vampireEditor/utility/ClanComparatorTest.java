@@ -75,11 +75,10 @@ public class ClanComparatorTest {
             .setBloodline(true)
             .build();
 
-        // Compare should work consistently regardless of bloodline flag
-        final int result = comparator.compare(clan, bloodline);
-        // Comparison should be based on names, not on bloodline flag
-        Assert.assertNotEquals(result, Integer.MIN_VALUE);
-        Assert.assertNotEquals(result, Integer.MAX_VALUE);
+        final int expected = 0;
+        final int actual = comparator.compare(clan, bloodline);
+
+        Assert.assertEquals(actual, expected);
     }
 
     public void testCompareBloodlineWithBloodline() throws EntityException, EntityStorageException {
@@ -94,9 +93,8 @@ public class ClanComparatorTest {
             .setBloodline(true)
             .build();
 
-        // Bloodlines should be comparable just like clans
-        final int result = comparator.compare(bloodline1, bloodline2);
-        Assert.assertNotEquals(result, Integer.MIN_VALUE);
-        Assert.assertNotEquals(result, Integer.MAX_VALUE);
+        final int actual = comparator.compare(bloodline1, bloodline2);
+
+        Assert.assertTrue(actual > 0);
     }
 }
