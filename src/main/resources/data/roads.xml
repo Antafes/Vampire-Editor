@@ -90,6 +90,46 @@
             <advantage>self-control</advantage>
         </advantages>
     </road>
+    <road key="roadOfBlood">
+        <name>
+            <English>Road of Blood</English>
+            <German>Weg des Blutes</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="roadOfTheAbyss">
+        <name>
+            <English>The Road of the Abyss</English>
+            <German>Der Weg des Abgrunds</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="roadOfParadox">
+        <name>
+            <English>Road of Paradox</English>
+            <German>Der Weg des Paradoxes</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="roadOfSet">
+        <name>
+            <English>The Road of Set</English>
+            <German>Der Weg des Set</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>self-control</advantage>
+        </advantages>
+    </road>
     <road key="pathOfHunter">
         <parent>roadOfBeast</parent>
         <name>
@@ -330,6 +370,17 @@
         <advantages>
             <advantage>conscience</advantage>
             <advantage>self-control</advantage>
+        </advantages>
+    </road>
+    <road key="pathOfApep">
+        <parent>roadOfSet</parent>
+        <name>
+            <English>Path of Apep</English>
+            <German>Pfad des Apep</German>
+        </name>
+        <advantages>
+            <advantage>conviction</advantage>
+            <advantage>instinct</advantage>
         </advantages>
     </road>
 </roads>
