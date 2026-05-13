@@ -50,4 +50,11 @@ public interface RoadInterface {
      */
     public List<Advantage> getMerits();
 
+    /**
+     * Get the optional clan key restrictions for this road.
+     *
+     * @return List of clan keys that can access this road
+     */
+    public List<String> getClanRestrictions();
+
 }

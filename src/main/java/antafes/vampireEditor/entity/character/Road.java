@@ -23,6 +23,7 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.entity.BaseValuedTranslatedEntity;
 import antafes.vampireEditor.entity.storage.adapter.AdvantageListAdapter;
+import antafes.vampireEditor.entity.storage.adapter.StringListAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -50,6 +51,10 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     @XmlElement(name = "advantages")
     @XmlJavaTypeAdapter(AdvantageListAdapter.class)
     private List<Advantage> merits;
+
+    @XmlElement(name = "clanRestrictions")
+    @XmlJavaTypeAdapter(StringListAdapter.class)
+    private List<String> clanRestrictions;
 
     /**
      * Parent road key read from XML (<parent>...</parent>) for path entries.
@@ -81,6 +86,20 @@ public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
     public String toString()
     {
         return super.toString();
+    }
+
+    public boolean isUniversal()
+    {
+        return this.clanRestrictions == null || this.clanRestrictions.isEmpty();
+    }
+
+    public boolean isRestrictedToClan(String clanKey)
+    {
+        if (clanKey == null || clanKey.isEmpty() || this.isUniversal()) {
+            return false;
+        }
+
+        return this.clanRestrictions.contains(clanKey);
     }
 
     public static int calculateRoadScore(ArrayList<Advantage> virtues)
