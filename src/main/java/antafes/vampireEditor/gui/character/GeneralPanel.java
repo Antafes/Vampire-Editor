@@ -24,12 +24,14 @@ package antafes.vampireEditor.gui.character;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
+import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.character.Road;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.StringUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,14 +131,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         this.getFields("base").stream().map((field) -> (JTextField) field).forEachOrdered((element) -> {
             switch (element.getName()) {
                 case "nature":
-                    String natureText = element.getText().trim();
-                    if (natureText.isEmpty()) {
-                        characterBuilder.setNature(null);
-                        break;
-                    }
-
                     try {
-                        characterBuilder.setNature(natureStorage.getEntity(natureText));
+                        characterBuilder.setNature(this.resolveNatureFromText(natureStorage, element.getText()));
                     } catch (EntityStorageException e) {
                         throw new RuntimeException(e);
                     }
@@ -340,5 +336,42 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         }
 
         return this.getCharacter().getRoad();
+    }
+
+    private Nature resolveNatureFromText(NatureStorage natureStorage, String inputText) throws EntityStorageException
+    {
+        String natureText = inputText == null ? "" : inputText.trim();
+        if (natureText.isEmpty()) {
+            return null;
+        }
+
+        Nature nature = natureStorage.getList().get(natureText);
+        if (nature != null) {
+            return nature;
+        }
+
+        String normalizedKey = StringUtility.toCamelCase(natureText);
+        nature = natureStorage.getList().get(normalizedKey);
+        if (nature != null) {
+            return nature;
+        }
+
+        for (Nature storedNature : natureStorage.getList().values()) {
+            if (storedNature.getKey().equalsIgnoreCase(natureText)) {
+                return storedNature;
+            }
+
+            if (storedNature.getNames() == null) {
+                continue;
+            }
+
+            boolean hasNameMatch = storedNature.getNames().values().stream()
+                .anyMatch((name) -> name != null && name.equalsIgnoreCase(natureText));
+            if (hasNameMatch) {
+                return storedNature;
+            }
+        }
+
+        return natureStorage.getEntity(natureText);
     }
 }

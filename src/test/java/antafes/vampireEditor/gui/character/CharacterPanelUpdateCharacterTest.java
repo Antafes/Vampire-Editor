@@ -148,7 +148,9 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertEquals(updated.getDemeanor(), "new demeanor");
         Assert.assertEquals(updated.getConcept(), "new concept");
         Assert.assertNotNull(updated.getNature());
+        Assert.assertEquals(updated.getNature().getKey(), "architect");
         Assert.assertEquals(updated.getNature().getName(), "Architect");
+        Assert.assertFalse(updated.getNature().isManual());
     }
 
     public void testGeneralPanelUpdateCharacterClearsNatureWhenEmpty()
