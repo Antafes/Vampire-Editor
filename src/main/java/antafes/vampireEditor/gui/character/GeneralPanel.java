@@ -144,10 +144,10 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                     characterBuilder.setPlayer(element.getText());
                     break;
                 case "demeanor":
-                    characterBuilder.setDemeanor(element.getText());
+                    characterBuilder.setDemeanor(this.normalizeOptionalText(element.getText()));
                     break;
                 case "concept":
-                    characterBuilder.setConcept(element.getText());
+                    characterBuilder.setConcept(this.normalizeOptionalText(element.getText()));
                     break;
                 case "sire":
                     characterBuilder.setSire(element.getText());
@@ -340,8 +340,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
 
     private Nature resolveNatureFromText(NatureStorage natureStorage, String inputText) throws EntityStorageException
     {
-        String natureText = inputText == null ? "" : inputText.trim();
-        if (natureText.isEmpty()) {
+        String natureText = this.normalizeOptionalText(inputText);
+        if (natureText == null) {
             return null;
         }
 
@@ -373,5 +373,16 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         }
 
         return natureStorage.getEntity(natureText);
+    }
+
+    private String normalizeOptionalText(String inputText)
+    {
+        if (inputText == null) {
+            return null;
+        }
+
+        String normalizedText = inputText.trim();
+
+        return normalizedText.isEmpty() ? null : normalizedText;
     }
 }

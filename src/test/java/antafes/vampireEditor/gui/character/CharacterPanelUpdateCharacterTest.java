@@ -153,6 +153,23 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         Assert.assertFalse(updated.getNature().isManual());
     }
 
+    public void testGeneralPanelUpdateCharacterTrimsDemeanorAndConcept()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        panel.setCharacter(this.character);
+        panel.start();
+
+        this.findBaseTextField(panel, "demeanor").setText("  new demeanor  ");
+        this.findBaseTextField(panel, "concept").setText("  new concept  ");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        panel.updateCharacter(builder);
+        Character updated = builder.build();
+
+        Assert.assertEquals(updated.getDemeanor(), "new demeanor");
+        Assert.assertEquals(updated.getConcept(), "new concept");
+    }
+
     public void testGeneralPanelUpdateCharacterClearsNatureWhenEmpty()
     {
         GeneralPanel panel = new GeneralPanel();
@@ -165,6 +182,27 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
         panel.updateCharacter(builder);
 
         Assert.assertNull(builder.build().getNature());
+    }
+
+    public void testGeneralPanelUpdateCharacterStoresNullForBlankDemeanorAndConcept()
+    {
+        GeneralPanel panel = new GeneralPanel();
+        Character testCharacterWithoutOptionalValues = this.character.toBuilder()
+            .setDemeanor(null)
+            .setConcept(null)
+            .build();
+        panel.setCharacter(testCharacterWithoutOptionalValues);
+        panel.start();
+
+        this.findBaseTextField(panel, "demeanor").setText("   ");
+        this.findBaseTextField(panel, "concept").setText(" ");
+
+        Character.CharacterBuilder<?, ?> builder = testCharacterWithoutOptionalValues.toBuilder();
+        panel.updateCharacter(builder);
+        Character updated = builder.build();
+
+        Assert.assertNull(updated.getDemeanor());
+        Assert.assertNull(updated.getConcept());
     }
 
     public void testGeneralPanelNatureFieldDispatchesCharacterChangedEvent()
