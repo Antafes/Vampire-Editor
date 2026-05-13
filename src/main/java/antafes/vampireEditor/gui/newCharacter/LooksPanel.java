@@ -611,7 +611,6 @@ public class LooksPanel extends javax.swing.JPanel {
         Clan clan = this.clanComboBox.getSelectedClan();
         if (clan == null) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
-            this.onClanSelected(null);
             this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(null));
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
