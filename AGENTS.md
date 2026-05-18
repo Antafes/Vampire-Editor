@@ -1,7 +1,7 @@
 # Agent Instructions
 
 ## Communication
-- Always use English for communication.
+- Always use English for communication no matter what language the user uses or what the locales define!
 
 ## First step
 - Always inspect the `.aiassistant` directory, if existing, before starting work.

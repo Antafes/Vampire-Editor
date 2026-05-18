@@ -27,8 +27,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.exception.MissingClanException;
-import antafes.vampireEditor.entity.exception.MissingRoadException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.xml.validation.XsdValidator;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -41,6 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Test
 public class CharacterStorageTest extends BaseTest
@@ -78,12 +78,6 @@ public class CharacterStorageTest extends BaseTest
         File file = new File(this.saveDir + "/" + this.filename);
 
         Assert.assertTrue(file.exists());
-
-        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
-            XsdValidator.validate(file, schemaInputStream);
-        } catch (Exception e) {
-            Assert.fail("XML validation failed: " + e.getMessage(), e);
-        }
     }
 
     public void testLoad() throws Exception {
@@ -100,7 +94,7 @@ public class CharacterStorageTest extends BaseTest
 
     public void testSaveAndLoadWithPath() throws Exception {
         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+        Character expected = Objects.requireNonNull(TestCharacterUtility.createTestCharacter()).toBuilder()
             .setRoad(roadStorage.getEntity("roadOfBeast").toBuilder().setValue(4).build())
             .setPath(roadStorage.getEntity("pathOfHunter").toBuilder().setValue(4).build())
             .build();
@@ -119,7 +113,7 @@ public class CharacterStorageTest extends BaseTest
     }
 
     public void testSaveWithoutPathOmitsPathElementAndLoads() throws Exception {
-        Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+        Character expected = Objects.requireNonNull(TestCharacterUtility.createTestCharacter()).toBuilder()
             .setPath(null)
             .build();
 
@@ -134,7 +128,7 @@ public class CharacterStorageTest extends BaseTest
     }
 
     public void testLoadWithoutSex() throws Exception {
-        final Character expected = TestCharacterUtility.createTestCharacter().toBuilder()
+        final Character expected = Objects.requireNonNull(TestCharacterUtility.createTestCharacter()).toBuilder()
             .setSex(null)
             .build();
         this.characterStorage.save(expected, this.filename);
@@ -148,7 +142,7 @@ public class CharacterStorageTest extends BaseTest
     }
 
     public void testSaveNpcWithoutNatureIsXsdValid() throws Exception {
-        Character npcWithoutNature = TestCharacterUtility.createTestCharacter().toBuilder()
+        Character npcWithoutNature = Objects.requireNonNull(TestCharacterUtility.createTestCharacter()).toBuilder()
             .setNpc(true)
             .setNature(null)
             .setClan(null)
@@ -182,41 +176,80 @@ public class CharacterStorageTest extends BaseTest
         Assert.assertTrue(Files.exists(missingSaveDir.resolve(this.filename)));
     }
 
-    @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Could not load character '.*'!")
     public void testLoadFailed() throws Exception {
         this.characterStorage.load("path/to/not/existing/file.xml");
     }
 
-    @Test(expectedExceptions = MissingRoadException.class, expectedExceptionsMessageRegExp = "Missing road for non-NPC character!")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
     public void testLoadFailedMissingRoad() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         Path filePath = Paths.get(this.saveDir, this.filename);
 
-        String xml = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+        String xml = Files.readString(filePath);
         String xmlWithoutRoad = xml.replaceFirst("(?s)<road[^>]*>.*?</road>\\s*", "");
 
         Assert.assertNotEquals(xmlWithoutRoad, xml, "Test fixture corruption failed: road tag was not removed.");
-        Files.write(filePath, xmlWithoutRoad.getBytes(StandardCharsets.UTF_8));
+        Files.writeString(filePath, xmlWithoutRoad);
 
         this.characterStorage.load(this.filename);
     }
 
-    @Test(expectedExceptions = MissingClanException.class, expectedExceptionsMessageRegExp = "Missing clan for non-NPC character!")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
     public void testLoadFailedMissingClan() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         Path filePath = Paths.get(this.saveDir, this.filename);
 
-        String xml = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+        String xml = Files.readString(filePath);
         String xmlWithoutClan = xml.replaceFirst("(?s)<clan>.*?</clan>\\s*", "");
 
         Assert.assertNotEquals(xmlWithoutClan, xml, "Test fixture corruption failed: clan tag was not removed.");
-        Files.write(filePath, xmlWithoutClan.getBytes(StandardCharsets.UTF_8));
+        Files.writeString(filePath, xmlWithoutClan);
 
         this.characterStorage.load(this.filename);
     }
 
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
+    public void testLoadFailsForXmlWithWrongElementType() throws Exception {
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        String xml = Files.readString(filePath);
+        String invalidXml = xml.replaceFirst("<generation>\\d+</generation>", "<generation>invalid</generation>");
+
+        Assert.assertNotEquals(invalidXml, xml, "Test fixture corruption failed: generation tag was not replaced.");
+        Files.writeString(filePath, invalidXml);
+
+        this.characterStorage.load(this.filename);
+    }
+
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
+    public void testLoadFailsForXmlMissingRequiredElement() throws Exception {
+        this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        String xml = Files.readString(filePath);
+        String invalidXml = xml.replaceFirst("(?s)<generation>.*?</generation>\\s*", "");
+
+        Assert.assertNotEquals(invalidXml, xml, "Test fixture corruption failed: generation tag was not removed.");
+        Files.writeString(filePath, invalidXml);
+
+        this.characterStorage.load(this.filename);
+    }
+
+    public void testSaveProducesXsdValidFile() throws Exception {
+        Character expected = TestCharacterUtility.createTestCharacter();
+        this.characterStorage.save(expected, this.filename);
+        Path filePath = Paths.get(this.saveDir, this.filename);
+
+        Assert.assertTrue(Files.exists(filePath));
+        try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(filePath.toFile(), schemaInputStream);
+        }
+    }
+
     public void testLoadNpcWithoutClanAndRoad() throws Exception {
-        Character npc = TestCharacterUtility.createTestCharacter().toBuilder()
+        Character npc = Objects.requireNonNull(TestCharacterUtility.createTestCharacter()).toBuilder()
             .setNpc(true)
             .setClan(null)
             .setRoad(null)

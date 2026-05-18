@@ -22,10 +22,12 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.language.English;
+import antafes.vampireEditor.language.German;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,7 +51,7 @@ public class BaseWindowTest
                 new English(),
                 new MissingRoadException("Missing road for non-NPC character!")
             ),
-            "Could not load the character.\nMissing road for non-NPC character!"
+            "Could not load the character.\nMissing road for non-NPC character."
         );
     }
 
@@ -60,7 +62,7 @@ public class BaseWindowTest
                 new English(),
                 new MissingClanException("Missing clan for non-NPC character!")
             ),
-            "Could not load the character.\nMissing clan for non-NPC character!"
+            "Could not load the character.\nMissing clan for non-NPC character."
         );
     }
 
@@ -71,7 +73,7 @@ public class BaseWindowTest
                 new English(),
                 new FileNotFoundException("C:/tmp/missing-character.xml")
             ),
-            "Could not load the character.\nC:/tmp/missing-character.xml"
+            "Could not load the character.\nCharacter file not found: C:/tmp/missing-character.xml"
         );
     }
 
@@ -82,7 +84,32 @@ public class BaseWindowTest
 
         Assert.assertEquals(
             BaseWindow.getCouldNotLoadCharacterMessage(new English(), ex),
-            "Could not load the character.\nUnknown road key 'invalidRoad' in character XML."
+            "Could not load the character."
+        );
+    }
+
+    public void testGetCouldNotLoadCharacterMessageWithEntityStorageXsdValidationDetails()
+    {
+        EntityStorageException ex = new EntityStorageException("Could not load character 'foo.xml'!");
+        ex.addSuppressed(new CharacterInvalidXmlException(
+            "Character file 'foo.xml' failed XSD validation!",
+            new Exception("XML validation error: cvc-complex-type.2.4.a")
+        ));
+
+        Assert.assertEquals(
+            BaseWindow.getCouldNotLoadCharacterMessage(new English(), ex),
+            "Could not load the character.\nCharacter file is invalid."
+        );
+    }
+
+    public void testGetCouldNotLoadCharacterMessageWithMissingRoadInGerman()
+    {
+        Assert.assertEquals(
+            BaseWindow.getCouldNotLoadCharacterMessage(
+                new German(),
+                new MissingRoadException("Missing road for non-NPC character!")
+            ),
+            "Konnte den Charakter nicht laden.\nDem Spielercharakter fehlt ein Pfad."
         );
     }
 }

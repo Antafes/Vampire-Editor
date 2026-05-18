@@ -22,11 +22,18 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
+import antafes.vampireEditor.entity.exception.CharacterMissingGenerationException;
+import antafes.vampireEditor.entity.exception.CharacterMissingIdException;
+import antafes.vampireEditor.entity.exception.CharacterValidationUnavailableException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import antafes.vampireEditor.xml.validation.XmlValidationException;
+import antafes.vampireEditor.xml.validation.XsdValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -35,8 +42,10 @@ import jakarta.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -68,13 +77,25 @@ public class CharacterStorage extends BaseStorage<Character> {
      * @param filename The filename to use for saving
      */
     public void save(Character character, String filename) {
+        File savedFile = this.configuration.getSaveDirPath(filename);
+
         try {
             Marshaller marshaller = JaxbBindingSupport.createMarshaller(jaxbContext);
-            marshaller.marshal(character, this.configuration.getSaveDirPath(filename));
-            this.getList().put(character.getId().toString(), character);
+            marshaller.marshal(character, savedFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Could not save character '" + filename + "'", e);
         }
+
+        try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(savedFile, schemaStream);
+        } catch (XmlValidationException e) {
+            savedFile.delete();
+            throw new RuntimeException("Saved character '" + filename + "' failed XSD validation and was removed", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read schema for validation", e);
+        }
+
+        this.getList().put(character.getId().toString(), character);
     }
 
     /**
@@ -87,6 +108,20 @@ public class CharacterStorage extends BaseStorage<Character> {
      */
     public Character load(String filename) throws EntityStorageException {
         File characterFile = new File(this.configuration.getOpenDirPath(), filename);
+
+        if (!characterFile.isFile() || !characterFile.canRead()) {
+            EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
+            ex.addSuppressed(new FileNotFoundException(characterFile.getAbsolutePath()));
+            throw ex;
+        }
+
+        try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(characterFile, schemaStream);
+        } catch (XmlValidationException e) {
+            throw new CharacterInvalidXmlException("Character file '" + filename + "' failed XSD validation!", e);
+        } catch (IOException e) {
+            throw new CharacterValidationUnavailableException("Could not read schema for validation", e);
+        }
 
         try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);
@@ -123,7 +158,7 @@ public class CharacterStorage extends BaseStorage<Character> {
     private void validateLoadedCharacter(Character character) throws EntityStorageException
     {
         if (character == null || character.getId() == null) {
-            throw new EntityStorageException("Character document has no id");
+            throw new CharacterMissingIdException("Character document has no id");
         }
 
         if (!character.isNpc() && character.getClan() == null) {
@@ -131,7 +166,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         }
 
         if (character.getGeneration() == null) {
-            throw new EntityStorageException("Missing generation for character!");
+            throw new CharacterMissingGenerationException("Missing generation for character!");
         }
 
         if (!character.isNpc() && character.getRoad() == null) {

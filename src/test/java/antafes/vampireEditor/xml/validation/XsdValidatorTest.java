@@ -28,7 +28,6 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXParseException;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -131,15 +130,17 @@ public class XsdValidatorTest extends BaseTest {
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
             Assert.fail("Validation should have failed: non-NPC missing clan and road");
-        } catch (SAXParseException e) {
+        } catch (XmlValidationException e) {
             // Expected: xsd:assert should catch the violation
+            Throwable cause = e.getCause();
+            String errorMessage = cause != null ? cause.getMessage() : e.getMessage();
             Assert.assertTrue(
-                e.getMessage().contains("cvc-assertion") ||
-                e.getMessage().contains("assert") ||
-                e.getMessage().contains("Non-NPC") ||
-                e.getMessage().contains("clan") ||
-                e.getMessage().contains("road"),
-                "Error message should mention the assertion: " + e.getMessage()
+                errorMessage.contains("cvc-assertion") ||
+                errorMessage.contains("assert") ||
+                errorMessage.contains("Non-NPC") ||
+                errorMessage.contains("clan") ||
+                errorMessage.contains("road"),
+                "Error message should mention the assertion: " + errorMessage
             );
         }
     }
@@ -220,13 +221,15 @@ public class XsdValidatorTest extends BaseTest {
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
             Assert.fail("Validation should have failed: generation out of range");
-        } catch (SAXParseException e) {
+        } catch (XmlValidationException e) {
             // Expected: xsd:assert should catch the violation
+            Throwable cause = e.getCause();
+            String errorMessage = cause != null ? cause.getMessage() : e.getMessage();
             Assert.assertTrue(
-                e.getMessage().contains("cvc-assertion") ||
-                e.getMessage().contains("assert") ||
-                e.getMessage().contains("generation"),
-                "Error message should mention generation constraint: " + e.getMessage()
+                errorMessage.contains("cvc-assertion") ||
+                errorMessage.contains("assert") ||
+                errorMessage.contains("generation"),
+                "Error message should mention generation constraint: " + errorMessage
             );
         }
     }
@@ -381,13 +384,15 @@ public class XsdValidatorTest extends BaseTest {
         try (InputStream schemaInputStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(tmpFile.toFile(), schemaInputStream);
             Assert.fail("Validation should have failed: NPC character contains path");
-        } catch (SAXParseException e) {
+        } catch (XmlValidationException e) {
+            Throwable cause = e.getCause();
+            String errorMessage = cause != null ? cause.getMessage() : e.getMessage();
             Assert.assertTrue(
-                e.getMessage().contains("cvc-assertion") ||
-                    e.getMessage().contains("assert") ||
-                    e.getMessage().contains("path") ||
-                    e.getMessage().contains("road"),
-                "Error message should mention the path assertion: " + e.getMessage()
+                errorMessage.contains("cvc-assertion") ||
+                    errorMessage.contains("assert") ||
+                    errorMessage.contains("path") ||
+                    errorMessage.contains("road"),
+                "Error message should mention the path assertion: " + errorMessage
             );
         }
     }
