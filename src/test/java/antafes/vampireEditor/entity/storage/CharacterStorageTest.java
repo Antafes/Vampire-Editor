@@ -176,7 +176,7 @@ public class CharacterStorageTest extends BaseTest
         Assert.assertTrue(Files.exists(missingSaveDir.resolve(this.filename)));
     }
 
-    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Could not load character '.*'!")
     public void testLoadFailed() throws Exception {
         this.characterStorage.load("path/to/not/existing/file.xml");
     }

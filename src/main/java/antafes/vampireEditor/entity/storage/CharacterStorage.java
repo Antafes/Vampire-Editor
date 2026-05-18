@@ -38,6 +38,7 @@ import jakarta.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,6 +104,12 @@ public class CharacterStorage extends BaseStorage<Character> {
      */
     public Character load(String filename) throws EntityStorageException {
         File characterFile = new File(this.configuration.getOpenDirPath(), filename);
+
+        if (!characterFile.isFile() || !characterFile.canRead()) {
+            EntityStorageException ex = new EntityStorageException("Could not load character '" + filename + "'!");
+            ex.addSuppressed(new FileNotFoundException(characterFile.getAbsolutePath()));
+            throw ex;
+        }
 
         try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(characterFile, schemaStream);
