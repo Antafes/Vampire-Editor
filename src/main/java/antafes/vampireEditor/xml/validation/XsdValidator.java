@@ -39,7 +39,7 @@ import java.io.InputStream;
  * Strict mode: no fallback to JDK/XSD 1.0.
  */
 public final class XsdValidator {
-    private static final String STRICT_SCHEMA_FACTORY_CLASS = "org.apache.xerces.jaxp.validation.XMLSchema11Factory";
+    private static final String XSD_11_SCHEMA_LANGUAGE = "http://www.w3.org/XML/XMLSchema/v1.1";
 
     private static Boolean strictValidatorAvailable = null;
 
@@ -105,7 +105,7 @@ public final class XsdValidator {
      */
     private static SchemaFactory createSchemaFactory() throws Exception {
         if (!isStrictValidatorAvailable()) {
-            throw new IllegalStateException("Strict XSD validation requires Xerces XMLSchema11Factory on the classpath.");
+            throw new IllegalStateException("Strict XSD validation requires an XSD 1.1 SchemaFactory provider on the classpath.");
         }
         return createStrictSchemaFactory();
     }
@@ -117,8 +117,13 @@ public final class XsdValidator {
      * @throws Exception if Xerces factory cannot be created
      */
     private static SchemaFactory createStrictSchemaFactory() throws Exception {
-        Class<?> factoryClass = Class.forName(STRICT_SCHEMA_FACTORY_CLASS);
-        SchemaFactory factory = (SchemaFactory) factoryClass.getDeclaredConstructor().newInstance();
+        SchemaFactory factory;
+        try {
+            factory = SchemaFactory.newInstance(XSD_11_SCHEMA_LANGUAGE);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Strict XSD validation requires an XSD 1.1 SchemaFactory provider.", e);
+        }
+
         try {
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         } catch (Exception ignored) {
@@ -140,10 +145,10 @@ public final class XsdValidator {
     private static boolean isStrictValidatorAvailable() {
         if (strictValidatorAvailable == null) {
             try {
-                Class.forName(STRICT_SCHEMA_FACTORY_CLASS);
+                SchemaFactory.newInstance(XSD_11_SCHEMA_LANGUAGE);
                 strictValidatorAvailable = true;
                 System.out.println("Strict XSD 1.1 validator available - xsd:assert enabled");
-            } catch (ClassNotFoundException e) {
+            } catch (IllegalArgumentException e) {
                 strictValidatorAvailable = false;
                 System.out.println("Strict XSD 1.1 validator not available");
             }
@@ -154,10 +159,10 @@ public final class XsdValidator {
     /**
      * Returns the currently active validator implementation name.
      *
-     * @return "Xerces XMLSchema11Factory (XSD 1.1)" or "Unavailable"
+     * @return "XSD 1.1 SchemaFactory" or "Unavailable"
      */
     public static String getValidatorImplementation() {
-        return isStrictValidatorAvailable() ? "Xerces XMLSchema11Factory (XSD 1.1)" : "Unavailable";
+        return isStrictValidatorAvailable() ? "XSD 1.1 SchemaFactory" : "Unavailable";
     }
 }
 
