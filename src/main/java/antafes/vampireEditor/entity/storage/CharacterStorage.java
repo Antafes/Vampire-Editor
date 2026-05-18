@@ -24,6 +24,10 @@ package antafes.vampireEditor.entity.storage;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
+import antafes.vampireEditor.entity.exception.CharacterMissingGenerationException;
+import antafes.vampireEditor.entity.exception.CharacterMissingIdException;
+import antafes.vampireEditor.entity.exception.CharacterValidationUnavailableException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
@@ -114,13 +118,9 @@ public class CharacterStorage extends BaseStorage<Character> {
         try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
             XsdValidator.validate(characterFile, schemaStream);
         } catch (XmlValidationException e) {
-            EntityStorageException ex = new EntityStorageException("Character file '" + filename + "' failed XSD validation!");
-            ex.addSuppressed(e);
-            throw ex;
+            throw new CharacterInvalidXmlException("Character file '" + filename + "' failed XSD validation!", e);
         } catch (IOException e) {
-            EntityStorageException ex = new EntityStorageException("Could not read schema for validation");
-            ex.addSuppressed(e);
-            throw ex;
+            throw new CharacterValidationUnavailableException("Could not read schema for validation", e);
         }
 
         try (FileInputStream fis = new FileInputStream(characterFile)) {
@@ -158,7 +158,7 @@ public class CharacterStorage extends BaseStorage<Character> {
     private void validateLoadedCharacter(Character character) throws EntityStorageException
     {
         if (character == null || character.getId() == null) {
-            throw new EntityStorageException("Character document has no id");
+            throw new CharacterMissingIdException("Character document has no id");
         }
 
         if (!character.isNpc() && character.getClan() == null) {
@@ -166,7 +166,7 @@ public class CharacterStorage extends BaseStorage<Character> {
         }
 
         if (character.getGeneration() == null) {
-            throw new EntityStorageException("Missing generation for character!");
+            throw new CharacterMissingGenerationException("Missing generation for character!");
         }
 
         if (!character.isNpc() && character.getRoad() == null) {

@@ -22,12 +22,12 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.language.English;
 import antafes.vampireEditor.language.German;
-import antafes.vampireEditor.xml.validation.XmlValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -90,8 +90,11 @@ public class BaseWindowTest
 
     public void testGetCouldNotLoadCharacterMessageWithEntityStorageXsdValidationDetails()
     {
-        EntityStorageException ex = new EntityStorageException("Character file 'foo.xml' failed XSD validation!");
-        ex.addSuppressed(new XmlValidationException("XML validation error: cvc-complex-type.2.4.a"));
+        EntityStorageException ex = new EntityStorageException("Could not load character 'foo.xml'!");
+        ex.addSuppressed(new CharacterInvalidXmlException(
+            "Character file 'foo.xml' failed XSD validation!",
+            new Exception("XML validation error: cvc-complex-type.2.4.a")
+        ));
 
         Assert.assertEquals(
             BaseWindow.getCouldNotLoadCharacterMessage(new English(), ex),

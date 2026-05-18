@@ -24,6 +24,10 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
+import antafes.vampireEditor.entity.exception.CharacterMissingGenerationException;
+import antafes.vampireEditor.entity.exception.CharacterMissingIdException;
+import antafes.vampireEditor.entity.exception.CharacterValidationUnavailableException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
@@ -44,7 +48,6 @@ import antafes.vampireEditor.gui.exception.SaveCancelledException;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
-import antafes.vampireEditor.xml.validation.XmlValidationException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -550,38 +553,28 @@ public class BaseWindow extends javax.swing.JFrame {
             case null -> {
                 return null;
             }
-            case MissingRoadException missingRoadException -> {
+            case MissingRoadException ignored -> {
                 return language.translate("couldNotLoadCharacterMissingRoad");
             }
-            case MissingClanException missingClanException -> {
+            case MissingClanException ignored -> {
                 return language.translate("couldNotLoadCharacterMissingClan");
             }
-            case FileNotFoundException fileNotFoundException -> {
+            case FileNotFoundException ignored -> {
                 return language.translate("couldNotLoadCharacterFileNotFound") + ": " + throwable.getMessage();
             }
-            case XmlValidationException xmlValidationException -> {
+            case CharacterInvalidXmlException ignored -> {
                 return language.translate("couldNotLoadCharacterInvalidXml");
+            }
+            case CharacterMissingIdException ignored -> {
+                return language.translate("couldNotLoadCharacterMissingId");
+            }
+            case CharacterMissingGenerationException ignored -> {
+                return language.translate("couldNotLoadCharacterMissingGeneration");
+            }
+            case CharacterValidationUnavailableException ignored -> {
+                return language.translate("couldNotLoadCharacterValidationUnavailable");
             }
             default -> {
-            }
-        }
-
-        String message = throwable.getMessage();
-        if (message != null && !message.trim().isEmpty()) {
-            switch (message) {
-                case "Character document has no id" -> {
-                    return language.translate("couldNotLoadCharacterMissingId");
-                }
-                case "Missing generation for character!" -> {
-                    return language.translate("couldNotLoadCharacterMissingGeneration");
-                }
-                case "Could not read schema for validation" -> {
-                    return language.translate("couldNotLoadCharacterValidationUnavailable");
-                }
-            }
-
-            if (message.startsWith("Character file '") && message.endsWith("' failed XSD validation!")) {
-                return language.translate("couldNotLoadCharacterInvalidXml");
             }
         }
 
