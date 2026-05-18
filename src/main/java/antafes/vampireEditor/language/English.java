@@ -90,6 +90,15 @@ public class English extends Language {
         this.getTranslations().put("fileExists", "The selected file already exists, overwrite?");
         this.getTranslations().put("couldNotLoad", "Could not load");
         this.getTranslations().put("couldNotLoadCharacter", "Could not load the character.");
+        this.getTranslations().put("couldNotLoadCharacterMissingRoad", "Missing road for non-NPC character.");
+        this.getTranslations().put("couldNotLoadCharacterMissingClan", "Missing clan for non-NPC character.");
+        this.getTranslations().put("couldNotLoadCharacterFileNotFound", "Character file not found");
+        this.getTranslations().put("couldNotLoadCharacterInvalidXml", "Character file is invalid.");
+        this.getTranslations().put("couldNotLoadCharacterMissingId", "Character file has no ID.");
+        this.getTranslations().put("couldNotLoadCharacterMissingGeneration", "Character file has no generation.");
+        this.getTranslations().put("couldNotLoadCharacterValidationUnavailable", "Character validation is unavailable.");
+        this.getTranslations().put("couldNotSave", "Could not save");
+        this.getTranslations().put("couldNotSaveCharacter", "Could not save the character.");
         this.getTranslations().put("close", "Close");
         this.getTranslations().put("loadingCharacter", "Loading character, please wait");
     }

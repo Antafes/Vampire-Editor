@@ -90,6 +90,15 @@ public class German extends Language {
         this.getTranslations().put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
         this.getTranslations().put("couldNotLoad", "Laden fehlgeschlagen");
         this.getTranslations().put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
+        this.getTranslations().put("couldNotLoadCharacterMissingRoad", "Dem Spielercharakter fehlt ein Pfad.");
+        this.getTranslations().put("couldNotLoadCharacterMissingClan", "Dem Spielercharakter fehlt ein Clan.");
+        this.getTranslations().put("couldNotLoadCharacterFileNotFound", "Charakterdatei nicht gefunden");
+        this.getTranslations().put("couldNotLoadCharacterInvalidXml", "Charakterdatei ist ungueltig.");
+        this.getTranslations().put("couldNotLoadCharacterMissingId", "Charakterdatei hat keine ID.");
+        this.getTranslations().put("couldNotLoadCharacterMissingGeneration", "Charakterdatei hat keine Generation.");
+        this.getTranslations().put("couldNotLoadCharacterValidationUnavailable", "Charaktervalidierung ist nicht verfuegbar.");
+        this.getTranslations().put("couldNotSave", "Speichern fehlgeschlagen");
+        this.getTranslations().put("couldNotSaveCharacter", "Konnte den Charakter nicht speichern.");
         this.getTranslations().put("close", "Schließen");
         this.getTranslations().put("loadingCharacter", "Lade Character, bitte warten");
     }

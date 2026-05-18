@@ -24,7 +24,6 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.entity.storage.CharacterStorage;
@@ -45,6 +44,7 @@ import antafes.vampireEditor.gui.exception.SaveCancelledException;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
+import antafes.vampireEditor.xml.validation.XmlValidationException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -491,7 +491,23 @@ public class BaseWindow extends javax.swing.JFrame {
             this.configuration.saveProperties();
             CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 
-            storage.save(character, this.saveFileChooser.getSelectedFile().getName());
+            try {
+                storage.save(character, this.saveFileChooser.getSelectedFile().getName());
+            } catch (Exception ex) {
+                Logger.getLogger(BaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+                this.runOnEdt(() -> JOptionPane.showMessageDialog(
+                    this,
+                    this.language.translate("couldNotSaveCharacter"),
+                    this.language.translate("couldNotSave"),
+                    JOptionPane.ERROR_MESSAGE
+                ));
+                ArrayList<String> list = new ArrayList<>(Collections.singletonList(ex.getMessage()));
+                for (Throwable throwable : ex.getSuppressed()) {
+                    list.add(throwable.getMessage());
+                }
+                VampireEditor.log(list);
+                return;
+            }
             ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).setCharacterChanged(false);
             this.charactersTabPane.setTitleAt(this.charactersTabPane.getSelectedIndex(), character.getName());
         }
@@ -520,52 +536,63 @@ public class BaseWindow extends javax.swing.JFrame {
     static String getCouldNotLoadCharacterMessage(LanguageInterface language, Exception ex)
     {
         String message = language.translate("couldNotLoadCharacter");
-
-        if (
-            ex instanceof MissingRoadException
-                || ex instanceof MissingClanException
-                || ex instanceof FileNotFoundException
-        ) {
-            String details = ex.getMessage();
-
-            if (details != null && !details.trim().isEmpty()) {
-                return message + "\n" + details;
-            }
-        }
-
-        if (ex instanceof EntityStorageException) {
-            String details = findNestedDetailMessage(ex);
-            if (details != null && !details.trim().isEmpty()) {
-                return message + "\n" + details;
-            }
+        String details = findTranslatedLoadDetailMessage(language, ex);
+        if (details != null && !details.trim().isEmpty()) {
+            return message + "\n" + details;
         }
 
         return message;
     }
 
-    private static String findNestedDetailMessage(Throwable throwable)
+    private static String findTranslatedLoadDetailMessage(LanguageInterface language, Throwable throwable)
     {
-        if (throwable == null) {
-            return null;
+        switch (throwable) {
+            case null -> {
+                return null;
+            }
+            case MissingRoadException missingRoadException -> {
+                return language.translate("couldNotLoadCharacterMissingRoad");
+            }
+            case MissingClanException missingClanException -> {
+                return language.translate("couldNotLoadCharacterMissingClan");
+            }
+            case FileNotFoundException fileNotFoundException -> {
+                return language.translate("couldNotLoadCharacterFileNotFound") + ": " + throwable.getMessage();
+            }
+            case XmlValidationException xmlValidationException -> {
+                return language.translate("couldNotLoadCharacterInvalidXml");
+            }
+            default -> {
+            }
         }
 
         String message = throwable.getMessage();
-        if (message != null
-            && !message.trim().isEmpty()
-            && !message.startsWith("Could not load character '")
-            && !message.startsWith("Could not rebuild loaded character '")
-        ) {
-            return message;
+        if (message != null && !message.trim().isEmpty()) {
+            switch (message) {
+                case "Character document has no id" -> {
+                    return language.translate("couldNotLoadCharacterMissingId");
+                }
+                case "Missing generation for character!" -> {
+                    return language.translate("couldNotLoadCharacterMissingGeneration");
+                }
+                case "Could not read schema for validation" -> {
+                    return language.translate("couldNotLoadCharacterValidationUnavailable");
+                }
+            }
+
+            if (message.startsWith("Character file '") && message.endsWith("' failed XSD validation!")) {
+                return language.translate("couldNotLoadCharacterInvalidXml");
+            }
         }
 
         for (Throwable suppressed : throwable.getSuppressed()) {
-            String suppressedMessage = findNestedDetailMessage(suppressed);
+            String suppressedMessage = findTranslatedLoadDetailMessage(language, suppressed);
             if (suppressedMessage != null && !suppressedMessage.trim().isEmpty()) {
                 return suppressedMessage;
             }
         }
 
-        return findNestedDetailMessage(throwable.getCause());
+        return findTranslatedLoadDetailMessage(language, throwable.getCause());
     }
 
     /**

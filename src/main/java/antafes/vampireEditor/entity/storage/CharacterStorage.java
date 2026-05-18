@@ -22,11 +22,14 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
 import antafes.vampireEditor.entity.exception.MissingRoadException;
 import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import antafes.vampireEditor.xml.validation.XmlValidationException;
+import antafes.vampireEditor.xml.validation.XsdValidator;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -37,6 +40,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -68,13 +72,25 @@ public class CharacterStorage extends BaseStorage<Character> {
      * @param filename The filename to use for saving
      */
     public void save(Character character, String filename) {
+        File savedFile = this.configuration.getSaveDirPath(filename);
+
         try {
             Marshaller marshaller = JaxbBindingSupport.createMarshaller(jaxbContext);
-            marshaller.marshal(character, this.configuration.getSaveDirPath(filename));
-            this.getList().put(character.getId().toString(), character);
+            marshaller.marshal(character, savedFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Could not save character '" + filename + "'", e);
         }
+
+        try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(savedFile, schemaStream);
+        } catch (XmlValidationException e) {
+            savedFile.delete();
+            throw new RuntimeException("Saved character '" + filename + "' failed XSD validation and was removed", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read schema for validation", e);
+        }
+
+        this.getList().put(character.getId().toString(), character);
     }
 
     /**
@@ -87,6 +103,18 @@ public class CharacterStorage extends BaseStorage<Character> {
      */
     public Character load(String filename) throws EntityStorageException {
         File characterFile = new File(this.configuration.getOpenDirPath(), filename);
+
+        try (InputStream schemaStream = VampireEditor.getFileInJar("character-strict.xsd")) {
+            XsdValidator.validate(characterFile, schemaStream);
+        } catch (XmlValidationException e) {
+            EntityStorageException ex = new EntityStorageException("Character file '" + filename + "' failed XSD validation!");
+            ex.addSuppressed(e);
+            throw ex;
+        } catch (IOException e) {
+            EntityStorageException ex = new EntityStorageException("Could not read schema for validation");
+            ex.addSuppressed(e);
+            throw ex;
+        }
 
         try (FileInputStream fis = new FileInputStream(characterFile)) {
             Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(jaxbContext);

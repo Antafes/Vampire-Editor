@@ -27,8 +27,7 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.exception.MissingClanException;
-import antafes.vampireEditor.entity.exception.MissingRoadException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.xml.validation.XsdValidator;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -182,12 +181,12 @@ public class CharacterStorageTest extends BaseTest
         Assert.assertTrue(Files.exists(missingSaveDir.resolve(this.filename)));
     }
 
-    @Test(expectedExceptions = Exception.class, expectedExceptionsMessageRegExp = "Could not load character.*")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
     public void testLoadFailed() throws Exception {
         this.characterStorage.load("path/to/not/existing/file.xml");
     }
 
-    @Test(expectedExceptions = MissingRoadException.class, expectedExceptionsMessageRegExp = "Missing road for non-NPC character!")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
     public void testLoadFailedMissingRoad() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         Path filePath = Paths.get(this.saveDir, this.filename);
@@ -201,7 +200,7 @@ public class CharacterStorageTest extends BaseTest
         this.characterStorage.load(this.filename);
     }
 
-    @Test(expectedExceptions = MissingClanException.class, expectedExceptionsMessageRegExp = "Missing clan for non-NPC character!")
+    @Test(expectedExceptions = EntityStorageException.class, expectedExceptionsMessageRegExp = "Character file '.*' failed XSD validation!")
     public void testLoadFailedMissingClan() throws Exception {
         this.characterStorage.save(TestCharacterUtility.createTestCharacter(), this.filename);
         Path filePath = Paths.get(this.saveDir, this.filename);

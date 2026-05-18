@@ -22,12 +22,16 @@
 
 package antafes.vampireEditor.xml.validation;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -49,9 +53,9 @@ public final class XsdValidator {
      *
      * @param xmlFile the XML file to validate
      * @param schemaInputStream the XSD schema as input stream
-     * @throws Exception if validation fails or schema is invalid
+     * @throws XmlValidationException if validation fails or schema is invalid
      */
-    public static void validate(File xmlFile, InputStream schemaInputStream) throws Exception {
+    public static void validate(File xmlFile, InputStream schemaInputStream) throws XmlValidationException {
         validate(new StreamSource(xmlFile), schemaInputStream);
     }
 
@@ -61,12 +65,22 @@ public final class XsdValidator {
      *
      * @param xmlSource the XML source to validate
      * @param schemaInputStream the XSD schema as input stream
-     * @throws Exception if validation fails or schema is invalid
+     * @throws XmlValidationException if validation fails or schema is invalid
      */
-    public static void validate(StreamSource xmlSource, InputStream schemaInputStream) throws Exception {
-        Schema schema = buildSchema(schemaInputStream);
-        Validator validator = schema.newValidator();
-        validator.validate(xmlSource);
+    public static void validate(StreamSource xmlSource, InputStream schemaInputStream) throws XmlValidationException {
+        try {
+            Schema schema = buildSchema(schemaInputStream);
+            Validator validator = schema.newValidator();
+            validator.validate(xmlSource);
+        } catch (SAXParseException e) {
+            throw new XmlValidationException("XML validation error: " + e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new XmlValidationException("XML validation failed: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new XmlValidationException("Unable to read XML source for validation: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new XmlValidationException("Unexpected error during validation: " + e.getMessage(), e);
+        }
     }
 
     /**
