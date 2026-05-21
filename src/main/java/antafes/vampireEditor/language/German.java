@@ -259,7 +259,9 @@ public class German extends Language {
         this.getTranslations().put("unsavedChangesMultipleMessage", "Mehrere Charaktere haben ungespeicherte Änderungen. Möchtest du alle Änderungen vor dem Schließen speichern?");
         this.getTranslations().put("multipleCharactersList", "Die folgenden Charaktere haben ungespeicherte Änderungen:");
         this.getTranslations().put("saveAllButton", "Alles speichern");
+        this.getTranslations().put("saveAllMnemonic", "s");
         this.getTranslations().put("discardAllButton", "Alle verwerfen");
+        this.getTranslations().put("discardAllMnemonic", "v");
     }
 
     @Override

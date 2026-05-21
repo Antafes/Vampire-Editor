@@ -78,8 +78,8 @@ public class UnsavedCharactersDialog extends JDialog
         this.infoTextArea.setEditable(false);
         this.infoTextArea.setOpaque(false);
 
-        this.saveButton.setMnemonic(this.language.translate("saveMnemonic").charAt(0));
-        this.exitButton.setMnemonic(this.language.translate("dontSaveMnemonic").charAt(0));
+        this.saveButton.setMnemonic(this.language.translate("saveAllMnemonic").charAt(0));
+        this.exitButton.setMnemonic(this.language.translate("discardAllMnemonic").charAt(0));
         this.cancelButton.setMnemonic(this.language.translate("cancelMnemonic").charAt(0));
 
         this.cancelButton.addActionListener(this::cancelButtonActionPerformed);

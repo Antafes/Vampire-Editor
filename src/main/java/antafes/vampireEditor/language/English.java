@@ -259,7 +259,9 @@ public class English extends Language {
         this.getTranslations().put("unsavedChangesMultipleMessage", "Multiple characters have unsaved changes. Do you want to save all changes before closing?");
         this.getTranslations().put("multipleCharactersList", "The following characters have unsaved changes:");
         this.getTranslations().put("saveAllButton", "Save All");
+        this.getTranslations().put("saveAllMnemonic", "s");
         this.getTranslations().put("discardAllButton", "Discard All");
+        this.getTranslations().put("discardAllMnemonic", "d");
     }
 
     @Override
