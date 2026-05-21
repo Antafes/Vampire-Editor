@@ -33,7 +33,6 @@ import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +49,6 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private final Configuration configuration;
     private LanguageInterface language;
     @Getter
-    @Setter
     private antafes.vampireEditor.entity.Character character = null;
     @Getter
     private PrintPreviewPanel printPreview;
@@ -118,6 +116,19 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.updateTabTitle();
     }
 
+    public void setCharacter(antafes.vampireEditor.entity.Character character)
+    {
+        this.character = character;
+
+        if (this.printPreview != null) {
+            this.printPreview.setCharacter(character);
+        }
+
+        if (this.getTabCount() > 0) {
+            this.rebuildPrintPages();
+        }
+    }
+
     /**
      * Add the general panel.
      */
@@ -182,6 +193,17 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.printPreview.start();
         this.add(this.printPreview);
         this.setTitleAt(this.indexOfComponent(this.printPreview), this.language.translate("printPreview"));
+        this.rebuildPrintPages();
+    }
+
+    private void rebuildPrintPages()
+    {
+        this.printPages.clear();
+
+        if (this.character == null) {
+            return;
+        }
+
         this.fillPrintPages();
     }
 
