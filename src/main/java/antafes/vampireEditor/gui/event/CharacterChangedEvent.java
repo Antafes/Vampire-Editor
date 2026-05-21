@@ -30,5 +30,13 @@ public class CharacterChangedEvent extends Event
 {
     @Getter
     @Setter
+    private antafes.vampireEditor.entity.Character character;
+
+    @Getter
+    @Setter
+    private String componentIdentifier;
+
+    @Getter
+    @Setter
     private boolean changed;
 }

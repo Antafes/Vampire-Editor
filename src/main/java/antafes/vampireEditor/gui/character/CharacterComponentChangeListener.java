@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -45,6 +46,11 @@ public class CharacterComponentChangeListener extends ComponentChangeListener
     @Override
     public void stateChanged(ChangeEvent e)
     {
+        Character currentCharacter = this.resolveCharacter();
+        if (currentCharacter == null) {
+            return;
+        }
+
         int componentValue = (int) ((JSpinner) this.getComponent()).getValue();
         String componentName = this.getComponent().getName();
         String methodName = "get" + StringUtils.capitalize(componentName);
@@ -53,33 +59,53 @@ public class CharacterComponentChangeListener extends ComponentChangeListener
         int value;
 
         try {
-            if (character.isAttribute(componentName)) {
-                returnValue = character.getAttributes().get(componentName).getValue();
-            } else if (character.isAbility(componentName)) {
-                returnValue = character.getAbilities().get(componentName).getValue();
-            } else if (character.isAdvantage(componentName)) {
-                returnValue = character.getAdvantages().get(componentName).getValue();
+            if (currentCharacter.isAttribute(componentName)) {
+                returnValue = currentCharacter.getAttributes().get(componentName).getValue();
+            } else if (currentCharacter.isAbility(componentName)) {
+                returnValue = currentCharacter.getAbilities().get(componentName).getValue();
+            } else if (currentCharacter.isAdvantage(componentName)) {
+                returnValue = currentCharacter.getAdvantages().get(componentName).getValue();
             } else {
-                method = character.getClass().getMethod(methodName);
-                returnValue = method.invoke(character);
+                method = currentCharacter.getClass().getMethod(methodName);
+                returnValue = method.invoke(currentCharacter);
             }
 
-            if (returnValue instanceof Generation) {
-                value = ((Generation) returnValue).getGeneration();
-            } else if (returnValue instanceof ValuedEntityInterface) {
-                value = ((ValuedEntityInterface) returnValue).getValue();
-            } else if (returnValue instanceof SpecialFeature) {
-                value = ((SpecialFeature) returnValue).getCost();
-            } else if (returnValue == null) {
-                value = 0;
-            } else {
-                value = (int) returnValue;
-            }
+            value = switch (returnValue) {
+                case Generation generation -> generation.getGeneration();
+                case ValuedEntityInterface valuedEntityInterface -> valuedEntityInterface.getValue();
+                case SpecialFeature specialFeature -> specialFeature.getCost();
+                case null -> 0;
+                default -> (int) returnValue;
+            };
 
             CharacterChangedEvent event = new CharacterChangedEvent();
+            event.setCharacter(currentCharacter);
+            event.setComponentIdentifier(this.resolveComponentIdentifier());
             event.setChanged(value != componentValue);
 
             VampireEditor.getDispatcher().dispatch(event);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
+    }
+
+    private String resolveComponentIdentifier()
+    {
+        String componentName = this.getComponent().getName();
+
+        if (StringUtils.isNotBlank(componentName)) {
+            return componentName;
+        }
+
+        return this.getComponent().getClass().getName() + "@" + System.identityHashCode(this.getComponent());
+    }
+
+    private Character resolveCharacter()
+    {
+        Container panel = SwingUtilities.getAncestorOfClass(BaseCharacterPanel.class, this.getComponent());
+
+        if (panel instanceof BaseCharacterPanel baseCharacterPanel && baseCharacterPanel.getCharacter() != null) {
+            return baseCharacterPanel.getCharacter();
+        }
+
+        return this.character;
     }
 }

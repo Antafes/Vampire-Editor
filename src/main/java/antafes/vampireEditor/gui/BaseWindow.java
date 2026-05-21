@@ -516,6 +516,12 @@ public class BaseWindow extends javax.swing.JFrame {
                 return;
             }
             CharacterTabbedPane selectedTab = (CharacterTabbedPane) this.charactersTabPane.getSelectedComponent();
+            selectedTab.setCharacter(character);
+            for (Component component : selectedTab.getComponents()) {
+                if (component instanceof CharacterPanelInterface panel) {
+                    panel.setCharacter(character);
+                }
+            }
             selectedTab.setCharacterChanged(false);
             selectedTab.resetModificationFlag();
             this.charactersTabPane.setTitleAt(this.charactersTabPane.getSelectedIndex(), character.getName());

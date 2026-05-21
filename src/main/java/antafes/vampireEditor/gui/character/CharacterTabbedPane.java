@@ -38,6 +38,8 @@ import lombok.Setter;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A tabbed panel for displaying a character.
@@ -54,11 +56,11 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private PrintPreviewPanel printPreview;
     @Getter
     private final ArrayList<PrintBase> printPages;
-    @Setter
     @Getter
     private boolean isCharacterChanged = false;
+    private final Map<String, Boolean> changedComponents = new HashMap<>();
 
-    private CharacterModificationTracker modificationTracker;
+    private final CharacterModificationTracker modificationTracker;
 
     /**
      * Creates new form CharacterFrame
@@ -101,31 +103,19 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     {
         VampireEditor.getDispatcher().addListener(
             CharacterChangedEvent.class,
-            new CharacterChangedListener((event) -> {
-                this.isCharacterChanged = event.isChanged();
-                CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
-                    .getAncestorOfClass(CloseableTabbedPane.class, this);
-
-                if (tabbedPane == null) {
-                    return;
-                }
-
-                int tabIndex = tabbedPane.indexOfComponent(this);
-                if (tabIndex < 0) {
-                    return;
-                }
-
-                String tabName = this.getCharacter().getName();
-
-                if (this.isCharacterChanged) {
-                    tabName += "*";
-                }
-
-                tabbedPane.setTitleAt(tabIndex, tabName);
-                tabbedPane.revalidate();
-                tabbedPane.repaint();
-            })
+            new CharacterChangedListener(this::handleCharacterChangedEvent)
         );
+    }
+
+    public void setCharacterChanged(boolean characterChanged)
+    {
+        this.isCharacterChanged = characterChanged;
+
+        if (!characterChanged) {
+            this.changedComponents.clear();
+        }
+
+        this.updateTabTitle();
     }
 
     /**
@@ -295,5 +285,47 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
      */
     public void markModified() {
         this.modificationTracker.markModified();
+    }
+
+    void handleCharacterChangedEvent(CharacterChangedEvent event)
+    {
+        if (event.getCharacter() != this.character) {
+            return;
+        }
+
+        String componentIdentifier = event.getComponentIdentifier();
+        if (componentIdentifier != null) {
+            this.changedComponents.put(componentIdentifier, event.isChanged());
+            this.isCharacterChanged = this.changedComponents.values().stream().anyMatch(Boolean::booleanValue);
+        } else {
+            this.isCharacterChanged = event.isChanged();
+        }
+
+        this.updateTabTitle();
+    }
+
+    private void updateTabTitle()
+    {
+        CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
+            .getAncestorOfClass(CloseableTabbedPane.class, this);
+
+        if (tabbedPane == null) {
+            return;
+        }
+
+        int tabIndex = tabbedPane.indexOfComponent(this);
+        if (tabIndex < 0) {
+            return;
+        }
+
+        String tabName = this.getCharacter().getName();
+
+        if (this.isCharacterChanged) {
+            tabName += "*";
+        }
+
+        tabbedPane.setTitleAt(tabIndex, tabName);
+        tabbedPane.revalidate();
+        tabbedPane.repaint();
     }
 }

@@ -101,7 +101,7 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                     case "willpower":
                         element.setValue(this.getCharacter().getWillpower());
                         break;
-                    case "bloodStock":
+                    case "bloodPool":
                         element.setValue(this.getCharacter().getBloodPool());
                         break;
                     default:
@@ -195,6 +195,7 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         this.addMeritAndFlawFields();
         this.addOtherFields();
         this.fillCharacterData();
+        this.clearUndoHistory();
 
         super.init();
     }
