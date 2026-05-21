@@ -23,10 +23,8 @@
 package antafes.vampireEditor.gui.dialog;
 
 import antafes.vampireEditor.BaseTest;
-import antafes.vampireEditor.VampireEditor;
 import org.testng.Assert;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.awt.GraphicsEnvironment;
@@ -34,14 +32,6 @@ import java.awt.GraphicsEnvironment;
 @Test
 public class UnsavedChangesDialogTest extends BaseTest
 {
-    @BeforeMethod
-    @Override
-    public void setUp()
-    {
-        super.setUp();
-        new VampireEditor();
-    }
-
     public void testResultEnumSaveHasValueZero()
     {
         Assert.assertEquals(UnsavedChangesDialog.Result.SAVE.getValue(), 0);
