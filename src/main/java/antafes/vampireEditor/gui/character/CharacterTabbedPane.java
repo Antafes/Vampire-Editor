@@ -27,6 +27,7 @@ import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
 import antafes.vampireEditor.gui.event.listener.CharacterChangedListener;
+import antafes.vampireEditor.gui.modification.CharacterModificationTracker;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PaperA4;
@@ -57,6 +58,8 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     @Getter
     private boolean isCharacterChanged = false;
 
+    private CharacterModificationTracker modificationTracker;
+
     /**
      * Creates new form CharacterFrame
      */
@@ -64,6 +67,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
         this.printPages = new ArrayList<>();
+        this.modificationTracker = new CharacterModificationTracker();
     }
 
     /**
@@ -266,5 +270,30 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
                 ((PrintPreviewPanel) tab).updateTexts();
             }
         }
+    }
+
+    /**
+     * Check if the character has unsaved modifications.
+     *
+     * @return true if the character has unsaved modifications, false otherwise
+     */
+    public boolean isModified() {
+        return this.modificationTracker.isModified();
+    }
+
+    /**
+     * Clear the modification flag after a successful save operation.
+     * This should be called by the save handler when the character is successfully saved.
+     */
+    public void resetModificationFlag() {
+        this.modificationTracker.resetModified();
+    }
+
+    /**
+     * Mark the character as having unsaved modifications.
+     * This should be called by component listeners when the character is edited.
+     */
+    public void markModified() {
+        this.modificationTracker.markModified();
     }
 }

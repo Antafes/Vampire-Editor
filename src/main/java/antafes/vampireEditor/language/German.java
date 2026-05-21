@@ -254,6 +254,12 @@ public class German extends Language {
         this.getTranslations().put("dontSave", "Nicht speichern");
         this.getTranslations().put("dontSaveMnemonic", "n");
         this.getTranslations().put("unsavedCharacters", "Du hast nicht gespeicherte Charaktere offen, möchtest du sie jetzt speichern?");
+        this.getTranslations().put("unsavedChangesTitle", "Ungespeicherte Änderungen");
+        this.getTranslations().put("unsavedChangesMessage", "Charakter \"{0}\" hat ungespeicherte Änderungen. Möchtest du die Änderungen vor dem Schließen speichern?");
+        this.getTranslations().put("unsavedChangesMultipleMessage", "Mehrere Charaktere haben ungespeicherte Änderungen. Möchtest du alle Änderungen vor dem Schließen speichern?");
+        this.getTranslations().put("multipleCharactersList", "Die folgenden Charaktere haben ungespeicherte Änderungen:");
+        this.getTranslations().put("saveAllButton", "Alles speichern");
+        this.getTranslations().put("discardAllButton", "Alle verwerfen");
     }
 
     @Override

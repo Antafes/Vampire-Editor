@@ -23,36 +23,46 @@
 package antafes.vampireEditor.gui;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
-import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
-import antafes.vampireEditor.gui.event.SaveAllCharactersEvent;
 import antafes.vampireEditor.language.LanguageInterface;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UnsavedCharactersDialog extends JDialog
 {
+    @Getter
+    public enum Result {
+        SAVE_ALL,
+        DISCARD_ALL,
+        CANCEL
+    }
+
     private final LanguageInterface language;
+    @Getter
+    private Result userChoice = Result.CANCEL;
     private JTextArea infoTextArea;
     private JButton saveButton;
     private JButton exitButton;
     private JButton cancelButton;
 
-    public UnsavedCharactersDialog(Frame owner)
+    public UnsavedCharactersDialog(Frame owner, List<String> characterNames)
     {
         super(owner, true);
 
         this.setResizable(false);
-        this.setSize(new Dimension(400, 150));
+        this.setSize(new Dimension(450, 220));
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         Configuration configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
 
         this.initComponents();
+        this.setFieldTexts(characterNames);
         this.init();
     }
 
@@ -108,37 +118,57 @@ public class UnsavedCharactersDialog extends JDialog
         }
 
         BaseWindow.installEscapeCloseOperation(this);
-        this.setFieldTexts();
     }
 
-    private void setFieldTexts()
+    private void setFieldTexts(List<String> characterNames)
     {
         this.setTitle(this.language.translate("unsavedCharactersTitle"));
-        this.infoTextArea.setText(this.language.translate("unsavedCharacters"));
-        this.saveButton.setText(this.language.translate("save"));
-        this.exitButton.setText(this.language.translate("dontSave"));
+        this.infoTextArea.setText(this.buildInfoMessage(characterNames));
+        this.saveButton.setText(this.language.translate("saveAllButton"));
+        this.exitButton.setText(this.language.translate("discardAllButton"));
         this.cancelButton.setText(this.language.translate("cancel"));
     }
 
     private void cancelButtonActionPerformed(ActionEvent actionEvent)
     {
+        this.userChoice = Result.CANCEL;
         this.closeDialog();
     }
 
     private void exitButtonActionPerformed(ActionEvent actionEvent)
     {
-        VampireEditor.getDispatcher().dispatch(new CloseProgrammeEvent());
+        this.userChoice = Result.DISCARD_ALL;
+        this.closeDialog();
     }
 
     private void saveButtonActionPerformed(ActionEvent actionEvent)
     {
+        this.userChoice = Result.SAVE_ALL;
         this.closeDialog();
-        VampireEditor.getDispatcher().dispatch(new SaveAllCharactersEvent());
     }
 
     private void closeDialog()
     {
         this.setVisible(false);
         this.dispose();
+    }
+
+    private String buildInfoMessage(List<String> characterNames)
+    {
+        StringBuilder builder = new StringBuilder(this.language.translate("unsavedChangesMultipleMessage"));
+
+        if (characterNames == null || characterNames.isEmpty()) {
+            return builder.toString();
+        }
+
+        builder.append("\n\n");
+        builder.append(this.language.translate("multipleCharactersList"));
+
+        for (String characterName : characterNames) {
+            builder.append("\n- ");
+            builder.append(characterName);
+        }
+
+        return builder.toString();
     }
 }

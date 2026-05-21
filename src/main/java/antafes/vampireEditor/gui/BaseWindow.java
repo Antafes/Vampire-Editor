@@ -55,6 +55,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
@@ -170,7 +171,7 @@ public class BaseWindow extends javax.swing.JFrame {
 
         openFileChooser.setCurrentDirectory(null);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         fileMenu.setText("File");
 
@@ -348,30 +349,22 @@ public class BaseWindow extends javax.swing.JFrame {
      * @param evt Event object
      */
     private void closeMenuItemActionPerformed(ActionEvent evt) {
-        if (this.checkForUnsavedCharacters()) {
-            this.showUnsavedCharactersDialog();
-        } else {
-            VampireEditor.getDispatcher().dispatch(new CloseProgrammeEvent());
-        }
+        this.requestCloseProgramme();
     }
 
     /**
      * Returns true if one or more unsaved characters are found.
      */
     private boolean checkForUnsavedCharacters() {
-        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
-            CharacterTabbedPane tab = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
-
-            if (tab.isCharacterChanged()) {
-                return true;
-            }
-        }
-
-        return false;
+        return !this.getUnsavedCharacterTabs().isEmpty();
     }
 
     private void showUnsavedCharactersDialog() {
-        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(this);
+        this.showUnsavedCharactersDialog(this.getUnsavedCharacterTabs());
+    }
+
+    private void showUnsavedCharactersDialog(java.util.List<CharacterTabbedPane> unsavedTabs) {
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(this, this.getUnsavedCharacterNames(unsavedTabs));
         int x,
             y,
             width = dialog.getWidth(),
@@ -382,6 +375,17 @@ public class BaseWindow extends javax.swing.JFrame {
 
         dialog.setBounds(x, y, width, height);
         dialog.setVisible(true);
+
+        switch (dialog.getUserChoice()) {
+            case SAVE_ALL -> {
+                if (this.saveAllCharacters(unsavedTabs)) {
+                    this.closeProgramme();
+                }
+            }
+            case DISCARD_ALL -> this.closeProgramme();
+            case CANCEL -> {
+            }
+        }
     }
 
     /**
@@ -511,13 +515,95 @@ public class BaseWindow extends javax.swing.JFrame {
                 VampireEditor.log(list);
                 return;
             }
-            ((CharacterTabbedPane) this.charactersTabPane.getSelectedComponent()).setCharacterChanged(false);
+            CharacterTabbedPane selectedTab = (CharacterTabbedPane) this.charactersTabPane.getSelectedComponent();
+            selectedTab.setCharacterChanged(false);
+            selectedTab.resetModificationFlag();
             this.charactersTabPane.setTitleAt(this.charactersTabPane.getSelectedIndex(), character.getName());
         }
 
         if (result == JFileChooser.CANCEL_OPTION) {
             throw new SaveCancelledException();
         }
+    }
+
+    /**
+     * Save a specific character tab and return whether the save finished successfully.
+     *
+     * @param tab The tab whose character should be saved
+     * @return true if the character was saved, false if save was cancelled or failed
+     */
+    public boolean saveCharacterTab(CharacterTabbedPane tab)
+    {
+        int tabIndex = this.charactersTabPane.indexOfComponent(tab);
+        if (tabIndex < 0) {
+            return false;
+        }
+
+        int selectedIndex = this.charactersTabPane.getSelectedIndex();
+        this.charactersTabPane.setSelectedIndex(tabIndex);
+
+        try {
+            this.saveCurrentCharacter();
+            return !tab.isCharacterChanged();
+        } catch (SaveCancelledException ignored) {
+            return false;
+        } finally {
+            if (selectedIndex >= 0 && selectedIndex < this.charactersTabPane.getTabCount()) {
+                this.charactersTabPane.setSelectedIndex(selectedIndex);
+            }
+        }
+    }
+
+    private java.util.List<String> getUnsavedCharacterNames(java.util.List<CharacterTabbedPane> unsavedTabs)
+    {
+        java.util.List<String> characterNames = new ArrayList<>();
+
+        for (CharacterTabbedPane unsavedTab : unsavedTabs) {
+            characterNames.add(unsavedTab.getCharacter().getName());
+        }
+
+        return characterNames;
+    }
+
+    private java.util.List<CharacterTabbedPane> getUnsavedCharacterTabs()
+    {
+        java.util.List<CharacterTabbedPane> unsavedTabs = new ArrayList<>();
+
+        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
+            CharacterTabbedPane tab = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
+
+            if (this.hasUnsavedChanges(tab)) {
+                unsavedTabs.add(tab);
+            }
+        }
+
+        return unsavedTabs;
+    }
+
+    private boolean hasUnsavedChanges(CharacterTabbedPane tab)
+    {
+        return tab.isCharacterChanged() || tab.isModified();
+    }
+
+    private void installWindowCloseHandler()
+    {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event)
+            {
+                requestCloseProgramme();
+            }
+        });
+    }
+
+    private void requestCloseProgramme()
+    {
+        if (this.checkForUnsavedCharacters()) {
+            this.showUnsavedCharactersDialog();
+            return;
+        }
+
+        this.closeProgramme();
     }
 
     /**
@@ -692,6 +778,7 @@ public class BaseWindow extends javax.swing.JFrame {
             this.languageGroup.setSelected(this.germanMenuItem.getModel(), true);
         }
 
+        this.installWindowCloseHandler();
         this.registerGlobalEvents();
     }
 
@@ -1033,20 +1120,34 @@ public class BaseWindow extends javax.swing.JFrame {
 
     private void saveAllCharacters()
     {
-        for (int i = 0; i < this.charactersTabPane.getTabCount(); i++) {
-            CharacterTabbedPane tab = (CharacterTabbedPane) this.charactersTabPane.getComponentAt(i);
+        if (this.saveAllCharacters(this.getUnsavedCharacterTabs())) {
+            this.closeProgramme();
+        }
+    }
 
-            if (tab.isCharacterChanged()) {
-                this.charactersTabPane.setSelectedIndex(this.charactersTabPane.indexOfComponent(tab));
+    private boolean saveAllCharacters(java.util.List<CharacterTabbedPane> tabs)
+    {
+        int selectedIndex = this.charactersTabPane.getSelectedIndex();
 
-                try {
-                    this.saveCurrentCharacter();
-                } catch (SaveCancelledException e) {
-                    return;
+        for (CharacterTabbedPane tab : tabs) {
+            if (!this.hasUnsavedChanges(tab)) {
+                continue;
+            }
+
+            if (!this.saveCharacterTab(tab)) {
+                int failedTabIndex = this.charactersTabPane.indexOfComponent(tab);
+                if (failedTabIndex >= 0) {
+                    this.charactersTabPane.setSelectedIndex(failedTabIndex);
                 }
+                return false;
             }
         }
 
-        this.closeProgramme();
+        if (selectedIndex >= 0 && selectedIndex < this.charactersTabPane.getTabCount()) {
+            this.charactersTabPane.setSelectedIndex(selectedIndex);
+        }
+
+        return true;
     }
 }
+

@@ -254,6 +254,12 @@ public class English extends Language {
         this.getTranslations().put("dontSave", "Don't save");
         this.getTranslations().put("dontSaveMnemonic", "d");
         this.getTranslations().put("unsavedCharacters", "There are unsaved characters open. Do you want to save them now?");
+        this.getTranslations().put("unsavedChangesTitle", "Unsaved Changes");
+        this.getTranslations().put("unsavedChangesMessage", "Character \"{0}\" has unsaved changes. Do you want to save before closing?");
+        this.getTranslations().put("unsavedChangesMultipleMessage", "Multiple characters have unsaved changes. Do you want to save all changes before closing?");
+        this.getTranslations().put("multipleCharactersList", "The following characters have unsaved changes:");
+        this.getTranslations().put("saveAllButton", "Save All");
+        this.getTranslations().put("discardAllButton", "Discard All");
     }
 
     @Override
