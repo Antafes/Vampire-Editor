@@ -114,7 +114,7 @@ public class UnsavedCharactersDialog extends JDialog
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(NewCharacterDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UnsavedCharactersDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         BaseWindow.installEscapeCloseOperation(this);
