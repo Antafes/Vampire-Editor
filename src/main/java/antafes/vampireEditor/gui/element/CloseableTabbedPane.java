@@ -170,7 +170,7 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     private boolean isCharacterModified(CharacterTabbedPane characterTabbedPane)
     {
-        return characterTabbedPane.isCharacterChanged() || characterTabbedPane.isModified();
+        return characterTabbedPane.isCharacterChanged();
     }
 
     /**

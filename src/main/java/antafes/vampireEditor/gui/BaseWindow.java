@@ -588,7 +588,7 @@ public class BaseWindow extends javax.swing.JFrame {
 
     private boolean hasUnsavedChanges(CharacterTabbedPane tab)
     {
-        return tab.isCharacterChanged() || tab.isModified();
+        return tab.isCharacterChanged();
     }
 
     private void installWindowCloseHandler()
