@@ -29,6 +29,7 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -155,11 +156,15 @@ public class UnsavedCharactersDialog extends JDialog
 
     private String buildInfoMessage(List<String> characterNames)
     {
-        StringBuilder builder = new StringBuilder(this.language.translate("unsavedChangesMultipleMessage"));
-
         if (characterNames == null || characterNames.isEmpty()) {
-            return builder.toString();
+            return this.language.translate("unsavedCharacters");
         }
+
+        if (characterNames.size() == 1) {
+            return MessageFormat.format(this.language.translate("unsavedChangesMessage"), characterNames.getFirst());
+        }
+
+        StringBuilder builder = new StringBuilder(this.language.translate("unsavedChangesMultipleMessage"));
 
         builder.append("\n\n");
         builder.append(this.language.translate("multipleCharactersList"));
