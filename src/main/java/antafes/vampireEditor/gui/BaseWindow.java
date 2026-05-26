@@ -597,7 +597,7 @@ public class BaseWindow extends javax.swing.JFrame {
 
         try {
             this.saveCurrentCharacter();
-            return !tab.isCharacterChanged();
+            return !tab.isModified();
         } catch (SaveCancelledException ignored) {
             return false;
         } finally {
@@ -635,7 +635,7 @@ public class BaseWindow extends javax.swing.JFrame {
 
     private boolean hasUnsavedChanges(CharacterTabbedPane tab)
     {
-        return tab.isCharacterChanged();
+        return tab.isModified();
     }
 
     private void installWindowCloseHandler()

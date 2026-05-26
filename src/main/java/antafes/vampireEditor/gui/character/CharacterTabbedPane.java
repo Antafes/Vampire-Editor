@@ -111,6 +111,9 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
 
         if (!characterChanged) {
             this.changedComponents.clear();
+            this.resetModificationFlag();
+        } else {
+            this.markModified();
         }
 
         this.updateTabTitle();
@@ -317,13 +320,16 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
 
         String componentIdentifier = event.getComponentIdentifier();
         if (componentIdentifier != null) {
-            this.changedComponents.put(componentIdentifier, event.isChanged());
-            this.isCharacterChanged = this.changedComponents.values().stream().anyMatch(Boolean::booleanValue);
-        } else {
-            this.isCharacterChanged = event.isChanged();
-        }
+            if (event.isChanged()) {
+                this.changedComponents.put(componentIdentifier, true);
+            } else {
+                this.changedComponents.remove(componentIdentifier);
+            }
 
-        this.updateTabTitle();
+            this.setCharacterChanged(!this.changedComponents.isEmpty());
+        } else {
+            this.setCharacterChanged(event.isChanged());
+        }
     }
 
     private void updateTabTitle()

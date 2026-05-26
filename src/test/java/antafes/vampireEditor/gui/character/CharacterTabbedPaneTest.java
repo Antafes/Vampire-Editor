@@ -50,6 +50,7 @@ public class CharacterTabbedPaneTest extends BaseTest
         pane.handleCharacterChangedEvent(event);
 
         Assert.assertFalse(pane.isCharacterChanged(), "Events from different characters must be ignored.");
+        Assert.assertFalse(pane.isModified(), "Events from different characters must not mark this tab as modified.");
     }
 
     public void testTracksDirtyStatePerComponent()
@@ -64,6 +65,7 @@ public class CharacterTabbedPaneTest extends BaseTest
         firstFieldChanged.setComponentIdentifier("name");
         firstFieldChanged.setChanged(true);
         pane.handleCharacterChangedEvent(firstFieldChanged);
+        Assert.assertTrue(pane.isModified(), "A changed component must mark the tab as modified.");
 
         CharacterChangedEvent secondFieldChanged = new CharacterChangedEvent();
         secondFieldChanged.setCharacter(character);
@@ -86,6 +88,7 @@ public class CharacterTabbedPaneTest extends BaseTest
         pane.handleCharacterChangedEvent(secondFieldReverted);
 
         Assert.assertFalse(pane.isCharacterChanged(), "Character must be clean once all changed components are reverted.");
+        Assert.assertFalse(pane.isModified(), "Tracker state must be reset once all changed components are reverted.");
     }
 
     public void testResetCharacterChangedClearsTrackedComponents()
@@ -110,6 +113,7 @@ public class CharacterTabbedPaneTest extends BaseTest
         pane.handleCharacterChangedEvent(falseEvent);
 
         Assert.assertFalse(pane.isCharacterChanged(), "After reset, stale dirty components must not keep the character dirty.");
+        Assert.assertFalse(pane.isModified(), "After reset, tracker state must remain clean.");
     }
 }
 
