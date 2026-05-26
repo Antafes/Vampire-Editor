@@ -23,6 +23,9 @@
 package antafes.vampireEditor.gui.element;
 
 import antafes.vampireEditor.VampireEditor;
+import antafes.vampireEditor.gui.BaseWindow;
+import antafes.vampireEditor.gui.character.CharacterTabbedPane;
+import antafes.vampireEditor.gui.dialog.UnsavedChangesDialog;
 import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
 import antafes.vampireEditor.gui.event.CloseSelectedCharacterTabEvent;
 import antafes.vampireEditor.gui.event.listener.CloseSelectedCharacterTabListener;
@@ -135,8 +138,39 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     private void closeTab(Component tab)
     {
+        if (!this.canCloseTab(tab)) {
+            return;
+        }
+
         this.remove(tab);
         VampireEditor.getDispatcher().dispatch(new CharacterTabClosedEvent());
+    }
+
+    private boolean canCloseTab(Component tab)
+    {
+        if (!(tab instanceof CharacterTabbedPane characterTabbedPane)) {
+            return true;
+        }
+
+        if (!this.isCharacterModified(characterTabbedPane)) {
+            return true;
+        }
+
+        BaseWindow baseWindow = (BaseWindow) SwingUtilities.getAncestorOfClass(BaseWindow.class, this);
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(baseWindow, characterTabbedPane.getCharacter().getName());
+        dialog.setLocationRelativeTo(baseWindow);
+        dialog.setVisible(true);
+
+        return switch (dialog.getUserChoice()) {
+            case SAVE -> baseWindow != null && baseWindow.saveCharacterTab(characterTabbedPane);
+            case DISCARD -> true;
+            case CANCEL -> false;
+        };
+    }
+
+    private boolean isCharacterModified(CharacterTabbedPane characterTabbedPane)
+    {
+        return characterTabbedPane.isCharacterChanged();
     }
 
     /**

@@ -31,6 +31,11 @@ import lombok.Setter;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
+import javax.swing.undo.UndoManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 abstract public class BaseCharacterPanel extends BasePanel implements TranslatableComponent, antafes.vampireEditor.gui.character.CharacterPanelInterface
 {
@@ -38,15 +43,69 @@ abstract public class BaseCharacterPanel extends BasePanel implements Translatab
     @Setter
     private antafes.vampireEditor.entity.Character character = null;
 
+    private final ArrayList<UndoManager> undoManagers = new ArrayList<>();
+
+    @Override
+    protected void init()
+    {
+        this.clearUndoHistory();
+        super.init();
+    }
+
     protected void addChangeListenerForCharacterChanged(JComponent component)
     {
-        if (component instanceof JTextComponent) {
-            ((JTextComponent) component).getDocument().addDocumentListener(this.createDocumentListener(component));
+        if (component instanceof JTextComponent textComponent) {
+            textComponent.getDocument().addDocumentListener(this.createDocumentListener(component));
+
+            if (textComponent.isEditable()) {
+                this.installUndoSupport(textComponent);
+            }
         }
 
         if (component instanceof JSpinner) {
             ((JSpinner) component).addChangeListener(this.createChangeListener(component));
         }
+    }
+
+    /**
+     * Discard all recorded undo/redo history for every tracked text field.
+     * Call this after filling fields with initial character data so the user
+     * cannot undo past the loaded state.
+     */
+    protected void clearUndoHistory()
+    {
+        this.undoManagers.forEach(UndoManager::discardAllEdits);
+    }
+
+    private void installUndoSupport(JTextComponent textComponent)
+    {
+        UndoManager undoManager = new UndoManager();
+        this.undoManagers.add(undoManager);
+        textComponent.getDocument().addUndoableEditListener(undoManager);
+
+        textComponent.getInputMap().put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "undo"
+        );
+        textComponent.getInputMap().put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK), "redo"
+        );
+
+        textComponent.getActionMap().put("undo", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (undoManager.canUndo()) {
+                    undoManager.undo();
+                }
+            }
+        });
+        textComponent.getActionMap().put("redo", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (undoManager.canRedo()) {
+                    undoManager.redo();
+                }
+            }
+        });
     }
 
     private ComponentDocumentListener createDocumentListener(JComponent component)

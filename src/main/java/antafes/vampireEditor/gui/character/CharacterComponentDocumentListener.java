@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -66,6 +67,11 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
 
     private void changed()
     {
+        Character currentCharacter = this.resolveCharacter();
+        if (currentCharacter == null) {
+            return;
+        }
+
         String componentValue = null;
         if (this.getComponent() instanceof JTextComponent) {
             componentValue = ((JTextComponent) this.getComponent()).getText();
@@ -87,27 +93,43 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
         String methodName = "get" + StringUtils.capitalize(this.getComponent().getName());
         Method method;
         try {
-            method = character.getClass().getMethod(methodName);
-            Object value = method.invoke(character);
+            method = currentCharacter.getClass().getMethod(methodName);
+            Object value = method.invoke(currentCharacter);
 
             switch (value) {
                 case String s -> {
                     String normalizedValue = this.normalizeComparedValue(s);
                     CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setCharacter(currentCharacter);
+                    event.setComponentIdentifier(this.resolveComponentIdentifier());
                     event.setChanged(!Objects.equals(normalizedValue, componentValue));
 
                     VampireEditor.getDispatcher().dispatch(event);
                 }
                 case BaseTranslatedEntity translatedEntity -> {
+                    if (this.isUnchangedNatureDisplayText(translatedEntity, componentValue)) {
+                        CharacterChangedEvent event = new CharacterChangedEvent();
+                        event.setCharacter(currentCharacter);
+                        event.setComponentIdentifier(this.resolveComponentIdentifier());
+                        event.setChanged(false);
+
+                        VampireEditor.getDispatcher().dispatch(event);
+                        return;
+                    }
+
                     String normalizedValue = this.normalizeTranslatedEntityValue(translatedEntity);
                     String normalizedComponentValue = this.normalizeTranslatedEntityInput(componentValue);
                     CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setCharacter(currentCharacter);
+                    event.setComponentIdentifier(this.resolveComponentIdentifier());
                     event.setChanged(!Objects.equals(normalizedValue, normalizedComponentValue));
 
                     VampireEditor.getDispatcher().dispatch(event);
                 }
                 case null -> {
                     CharacterChangedEvent event = new CharacterChangedEvent();
+                    event.setCharacter(currentCharacter);
+                    event.setComponentIdentifier(this.resolveComponentIdentifier());
                     event.setChanged(componentValue != null);
 
                     VampireEditor.getDispatcher().dispatch(event);
@@ -160,7 +182,46 @@ public class CharacterComponentDocumentListener extends ComponentDocumentListene
         try {
             return NatureResolutionUtility.resolveNatureKey(natureStorage, inputText);
         } catch (EntityStorageException e) {
-            throw new RuntimeException(e);
+            // Unknown interim user input should still be treated as "changed" instead of aborting listener updates.
+            return this.normalizeComparedValue(inputText);
         }
+    }
+
+    private Character resolveCharacter()
+    {
+        Container panel = SwingUtilities.getAncestorOfClass(BaseCharacterPanel.class, this.getComponent());
+
+        if (panel instanceof BaseCharacterPanel baseCharacterPanel && baseCharacterPanel.getCharacter() != null) {
+            return baseCharacterPanel.getCharacter();
+        }
+
+        return this.character;
+    }
+
+    private boolean isUnchangedNatureDisplayText(BaseTranslatedEntity translatedEntity, String componentValue)
+    {
+        if (!"nature".equals(this.getComponent().getName())) {
+            return false;
+        }
+
+        if (componentValue == null) {
+            return false;
+        }
+
+        String normalizedStoredDisplayValue = this.normalizeComparedValue(translatedEntity.toString());
+        String normalizedInputValue = this.normalizeComparedValue(componentValue);
+
+        return Objects.equals(normalizedStoredDisplayValue, normalizedInputValue);
+    }
+
+    private String resolveComponentIdentifier()
+    {
+        String componentName = this.getComponent().getName();
+
+        if (StringUtils.isNotBlank(componentName)) {
+            return componentName;
+        }
+
+        return this.getComponent().getClass().getName() + "@" + System.identityHashCode(this.getComponent());
     }
 }

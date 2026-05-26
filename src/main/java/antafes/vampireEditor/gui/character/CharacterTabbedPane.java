@@ -27,16 +27,18 @@ import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.gui.element.CloseableTabbedPane;
 import antafes.vampireEditor.gui.event.CharacterChangedEvent;
 import antafes.vampireEditor.gui.event.listener.CharacterChangedListener;
+import antafes.vampireEditor.gui.modification.CharacterModificationTracker;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PaperA4;
 import antafes.vampireEditor.print.PrintBase;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A tabbed panel for displaying a character.
@@ -47,15 +49,16 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     private final Configuration configuration;
     private LanguageInterface language;
     @Getter
-    @Setter
     private antafes.vampireEditor.entity.Character character = null;
     @Getter
     private PrintPreviewPanel printPreview;
     @Getter
     private final ArrayList<PrintBase> printPages;
-    @Setter
     @Getter
     private boolean isCharacterChanged = false;
+    private final Map<String, Boolean> changedComponents = new HashMap<>();
+
+    private final CharacterModificationTracker modificationTracker;
 
     /**
      * Creates new form CharacterFrame
@@ -64,6 +67,7 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.configuration = Configuration.getInstance();
         this.language = this.configuration.getLanguageObject();
         this.printPages = new ArrayList<>();
+        this.modificationTracker = new CharacterModificationTracker();
     }
 
     /**
@@ -97,31 +101,35 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
     {
         VampireEditor.getDispatcher().addListener(
             CharacterChangedEvent.class,
-            new CharacterChangedListener((event) -> {
-                this.isCharacterChanged = event.isChanged();
-                CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
-                    .getAncestorOfClass(CloseableTabbedPane.class, this);
-
-                if (tabbedPane == null) {
-                    return;
-                }
-
-                int tabIndex = tabbedPane.indexOfComponent(this);
-                if (tabIndex < 0) {
-                    return;
-                }
-
-                String tabName = this.getCharacter().getName();
-
-                if (this.isCharacterChanged) {
-                    tabName += "*";
-                }
-
-                tabbedPane.setTitleAt(tabIndex, tabName);
-                tabbedPane.revalidate();
-                tabbedPane.repaint();
-            })
+            new CharacterChangedListener(this::handleCharacterChangedEvent)
         );
+    }
+
+    public void setCharacterChanged(boolean characterChanged)
+    {
+        this.isCharacterChanged = characterChanged;
+
+        if (!characterChanged) {
+            this.changedComponents.clear();
+            this.resetModificationFlag();
+        } else {
+            this.markModified();
+        }
+
+        this.updateTabTitle();
+    }
+
+    public void setCharacter(antafes.vampireEditor.entity.Character character)
+    {
+        this.character = character;
+
+        if (this.printPreview != null) {
+            this.printPreview.setCharacter(character);
+        }
+
+        if (this.getTabCount() > 0) {
+            this.rebuildPrintPages();
+        }
     }
 
     /**
@@ -188,6 +196,17 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
         this.printPreview.start();
         this.add(this.printPreview);
         this.setTitleAt(this.indexOfComponent(this.printPreview), this.language.translate("printPreview"));
+        this.rebuildPrintPages();
+    }
+
+    private void rebuildPrintPages()
+    {
+        this.printPages.clear();
+
+        if (this.character == null) {
+            return;
+        }
+
         this.fillPrintPages();
     }
 
@@ -266,5 +285,75 @@ public class CharacterTabbedPane extends JTabbedPane implements TranslatableComp
                 ((PrintPreviewPanel) tab).updateTexts();
             }
         }
+    }
+
+    /**
+     * Check if the character has unsaved modifications.
+     *
+     * @return true if the character has unsaved modifications, false otherwise
+     */
+    public boolean isModified() {
+        return this.modificationTracker.isModified();
+    }
+
+    /**
+     * Clear the modification flag after a successful save operation.
+     * This should be called by the save handler when the character is successfully saved.
+     */
+    public void resetModificationFlag() {
+        this.modificationTracker.resetModified();
+    }
+
+    /**
+     * Mark the character as having unsaved modifications.
+     * This should be called by component listeners when the character is edited.
+     */
+    public void markModified() {
+        this.modificationTracker.markModified();
+    }
+
+    void handleCharacterChangedEvent(CharacterChangedEvent event)
+    {
+        if (event.getCharacter() != this.character) {
+            return;
+        }
+
+        String componentIdentifier = event.getComponentIdentifier();
+        if (componentIdentifier != null) {
+            if (event.isChanged()) {
+                this.changedComponents.put(componentIdentifier, true);
+            } else {
+                this.changedComponents.remove(componentIdentifier);
+            }
+
+            this.setCharacterChanged(!this.changedComponents.isEmpty());
+        } else {
+            this.setCharacterChanged(event.isChanged());
+        }
+    }
+
+    private void updateTabTitle()
+    {
+        CloseableTabbedPane tabbedPane = (CloseableTabbedPane) SwingUtilities
+            .getAncestorOfClass(CloseableTabbedPane.class, this);
+
+        if (tabbedPane == null) {
+            return;
+        }
+
+        int tabIndex = tabbedPane.indexOfComponent(this);
+        if (tabIndex < 0) {
+            return;
+        }
+
+        String tabName = this.getCharacter().getName();
+
+        if (this.isCharacterChanged) {
+            tabName += "*";
+        }
+
+        tabbedPane.setTitleAt(tabIndex, tabName);
+        tabbedPane.revalidate();
+        tabbedPane.repaint();
     }
 }
