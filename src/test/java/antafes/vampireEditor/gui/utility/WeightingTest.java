@@ -22,13 +22,14 @@
 
 package antafes.vampireEditor.gui.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test
-public class WeightingTest {
+public class WeightingTest extends BaseTest {
     @BeforeMethod
     public void setUp() {
         Configuration configuration = Configuration.getInstance();

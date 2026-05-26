@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.entity.exception.CharacterInvalidXmlException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.exception.MissingClanException;
@@ -34,7 +35,7 @@ import org.testng.annotations.Test;
 import java.io.FileNotFoundException;
 
 @Test
-public class BaseWindowTest
+public class BaseWindowTest extends BaseTest
 {
     public void testGetCouldNotLoadCharacterMessageWithoutMissingRoad()
     {

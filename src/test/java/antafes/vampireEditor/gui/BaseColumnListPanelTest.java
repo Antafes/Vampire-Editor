@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Test
-public class BaseColumnListPanelTest
+public class BaseColumnListPanelTest extends BaseTest
 {
     static {
         System.setProperty("java.awt.headless", "true");

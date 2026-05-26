@@ -22,11 +22,12 @@
 
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class StringComparatorTest {
+public class StringComparatorTest extends BaseTest {
     public void testCompare() {
         StringComparator comparator = new StringComparator();
         String string1 = "test string";

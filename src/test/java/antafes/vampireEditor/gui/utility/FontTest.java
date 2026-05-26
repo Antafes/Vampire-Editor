@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.VampireEditor;
 import org.testng.annotations.Test;
 
@@ -29,7 +30,7 @@ import java.awt.*;
 import java.io.IOException;
 
 @Test
-public class FontTest {
+public class FontTest extends BaseTest {
     public void testGetFont() throws IOException, FontFormatException {
         final java.awt.Font expected = java.awt.Font.createFont(
             java.awt.Font.TRUETYPE_FONT,

@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Test
-public class GroupedComboBoxTest
+public class GroupedComboBoxTest extends BaseTest
 {
     public void testSetModelPopulatesEntries()
     {

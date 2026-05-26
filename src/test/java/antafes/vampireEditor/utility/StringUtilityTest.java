@@ -22,11 +22,12 @@
 
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class StringUtilityTest
+public class StringUtilityTest extends BaseTest
 {
     @Test(dataProvider = "dataProvider")
     public void testToCamelCase(String string, String expected)

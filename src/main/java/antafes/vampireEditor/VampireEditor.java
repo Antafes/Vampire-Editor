@@ -21,7 +21,6 @@
  */
 package antafes.vampireEditor;
 
-import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -89,8 +88,6 @@ public class VampireEditor
                 "start of log (" + (DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(LocalDateTime.now()) + ")"
             )
         ));
-
-        StorageFactory.storageWarmUp();
     }
 
     /**

@@ -21,10 +21,11 @@
  */
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class DiceRollerTest
+public class DiceRollerTest extends BaseTest
 {
     @Test
     public void testRollD6Range()

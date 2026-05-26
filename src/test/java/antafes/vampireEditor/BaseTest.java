@@ -22,12 +22,17 @@
 
 package antafes.vampireEditor;
 
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeMethod;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class BaseTest
+@SpringBootTest(classes = VampireEditor.class)
+@ActiveProfiles("test")
+public abstract class BaseTest extends AbstractTestNGSpringContextTests
 {
     Configuration configuration;
 

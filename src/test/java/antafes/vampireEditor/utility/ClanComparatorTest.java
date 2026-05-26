@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -35,7 +36,7 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 
 @Test
-public class ClanComparatorTest {
+public class ClanComparatorTest extends BaseTest {
     @BeforeMethod
     public void setUp() {
         Configuration.getInstance().loadProperties();
