@@ -32,6 +32,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import java.util.logging.Logger;
 /**
  * Storage for abilities.
  */
+@Repository
 public class AbilityStorage extends BaseTypedStorage<Ability, AbilityInterface.AbilityType>
 {
     /**

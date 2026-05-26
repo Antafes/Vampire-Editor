@@ -38,6 +38,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import org.springframework.stereotype.Repository;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -53,6 +54,7 @@ import java.util.HashMap;
  *
  * @author Marian Pollzien
  */
+@Repository
 public class CharacterStorage extends BaseStorage<Character> {
     private final Configuration configuration;
     private final JAXBContext jaxbContext;
