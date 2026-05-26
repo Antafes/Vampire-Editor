@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import java.util.List;
+
 /**
  *
  * @author Marian Pollzien
@@ -40,5 +42,19 @@ public interface RoadInterface {
      * @return
      */
     public String getName();
+
+    /**
+     * Get the list of merits (advantage objects) associated with this road.
+     *
+     * @return The list of merits
+     */
+    public List<Advantage> getMerits();
+
+    /**
+     * Get the optional clan key restrictions for this road.
+     *
+     * @return List of clan keys that can access this road
+     */
+    public List<String> getClanRestrictions();
 
 }

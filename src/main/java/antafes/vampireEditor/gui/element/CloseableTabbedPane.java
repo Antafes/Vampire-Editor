@@ -24,7 +24,11 @@ package antafes.vampireEditor.gui.element;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.BaseWindow;
-import sun.awt.SunToolkit;
+import antafes.vampireEditor.gui.character.CharacterTabbedPane;
+import antafes.vampireEditor.gui.dialog.UnsavedChangesDialog;
+import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
+import antafes.vampireEditor.gui.event.CloseSelectedCharacterTabEvent;
+import antafes.vampireEditor.gui.event.listener.CloseSelectedCharacterTabListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +46,44 @@ public class CloseableTabbedPane extends JTabbedPane {
 
     public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy) {
         super(tabPlacement, tabLayoutPolicy);
+
+        VampireEditor.getDispatcher().addListener(
+            CloseSelectedCharacterTabEvent.class,
+            new CloseSelectedCharacterTabListener((event) -> this.closeSelectedTab())
+        );
+    }
+
+    /**
+     * Insert a new tab.
+     *
+     * @param title The title to be displayed on the tab
+     * @param icon The icon to be displayed on the tab
+     * @param component The component to be displayed when this tab is clicked.
+     * @param tip The tooltip to be displayed for this tab
+     * @param index The position to insert this new tab ({@code > 0 and <= getTabCount()})
+     * @see #insertTab
+     */
+    @Override
+    public void insertTab(String title, Icon icon, Component component, String tip, int index) {
+        super.insertTab(title, icon, component, tip, index);
+
+        this.addTabCloseButtons(title, index);
+    }
+
+    @Override
+    public void setTitleAt(int index, String title)
+    {
+        super.setTitleAt(index, title);
+
+        Component tabComponent = this.getTabComponentAt(index);
+
+        if (tabComponent instanceof JPanel) {
+            for (Component child : ((JPanel) tabComponent).getComponents()) {
+                if (child instanceof JLabel) {
+                    ((JLabel) child).setText(title);
+                }
+            }
+        }
     }
 
     /**
@@ -84,27 +126,57 @@ public class CloseableTabbedPane extends JTabbedPane {
         closeButton.addActionListener(handler);
     }
 
-    /**
-     * Insert a new tab.
-     *
-     * @param title The title to be displayed on the tab
-     * @param icon The icon to be displayed on the tab
-     * @param component The component to be displayed when this tab is clicked.
-     * @param tip The tooltip to be displayed for this tab
-     * @param index The position to insert this new tab ({@code > 0 and <= getTabCount()})
-     * @see #insertTab
-     */
-    @Override
-    public void insertTab(String title, Icon icon, Component component, String tip, int index) {
-        super.insertTab(title, icon, component, tip, index);
+    public void closeSelectedTab()
+    {
+        int selectedIndex = this.getSelectedIndex();
+        if (selectedIndex < 0) {
+            return;
+        }
 
-        this.addTabCloseButtons(title, index);
+        this.closeTab(this.getComponentAt(selectedIndex));
+    }
+
+    private void closeTab(Component tab)
+    {
+        if (!this.canCloseTab(tab)) {
+            return;
+        }
+
+        this.remove(tab);
+        VampireEditor.getDispatcher().dispatch(new CharacterTabClosedEvent());
+    }
+
+    private boolean canCloseTab(Component tab)
+    {
+        if (!(tab instanceof CharacterTabbedPane characterTabbedPane)) {
+            return true;
+        }
+
+        if (!this.isCharacterModified(characterTabbedPane)) {
+            return true;
+        }
+
+        BaseWindow baseWindow = (BaseWindow) SwingUtilities.getAncestorOfClass(BaseWindow.class, this);
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(baseWindow, characterTabbedPane.getCharacter().getName());
+        dialog.setLocationRelativeTo(baseWindow);
+        dialog.setVisible(true);
+
+        return switch (dialog.getUserChoice()) {
+            case SAVE -> baseWindow != null && baseWindow.saveCharacterTab(characterTabbedPane);
+            case DISCARD -> true;
+            case CANCEL -> false;
+        };
+    }
+
+    private boolean isCharacterModified(CharacterTabbedPane characterTabbedPane)
+    {
+        return characterTabbedPane.isCharacterChanged();
     }
 
     /**
      * Close action handler.
      */
-    private class TabCloseActionHandler implements ActionListener {
+    private static class TabCloseActionHandler implements ActionListener {
         private final Component tab;
         private final CloseableTabbedPane pane;
 
@@ -127,13 +199,7 @@ public class CloseableTabbedPane extends JTabbedPane {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            this.pane.remove(this.tab);
-            BaseWindow window = (BaseWindow) SunToolkit.getContainingWindow(this.pane);
-
-            if (!window.isAnyCharacterLoaded()) {
-                window.disablePrintMenuItem();
-                window.disableSaveMenuItem();
-            }
+            this.pane.closeTab(this.tab);
         }
     }
 }

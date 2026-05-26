@@ -22,21 +22,25 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.AttributeStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.event.AddGenerationItemListenerEvent;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,6 +62,10 @@ public class AttributesPanel extends BaseListPanel {
         this.addPhysicalFields();
         this.addSocialFields();
         this.addMentalFields();
+        this.getParentComponent().getDialogDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
 
         super.init();
     }
@@ -71,7 +79,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     protected String getElementLabelText(String element) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
 
         try {
             return storage.getEntity(element).getName();
@@ -85,38 +93,35 @@ public class AttributesPanel extends BaseListPanel {
      * Add all talent fields sorted by the translated name.
      */
     private void addPhysicalFields() {
-        this.addAttributeFields("physical", AttributeInterface.AttributeType.PHYSICAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.PHYSICAL);
     }
 
     /**
      * Add all skill fields sorted by the translated name.
      */
     private void addSocialFields() {
-        this.addAttributeFields("social", AttributeInterface.AttributeType.SOCIAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.SOCIAL);
     }
 
     /**
      * Add all knowledge fields sorted by the translated name.
      */
     private void addMentalFields() {
-        this.addAttributeFields("mental", AttributeInterface.AttributeType.MENTAL);
+        this.addAttributeFields(AttributeInterface.AttributeType.MENTAL);
     }
 
     /**
      * Add attribute fields with the given fieldName and for the given attribute type.
      *
-     * @param fieldName Name of the field
      * @param type Attribute type
      */
-    private void addAttributeFields(String fieldName, AttributeInterface.AttributeType type) {
-        ArrayList<String> list = new ArrayList<>();
-
-        this.getValues(type.name()).stream()
-            .filter((attribute) -> (attribute.getType().equals(type)))
-            .forEachOrdered((attribute) -> list.add(attribute.getKey()));
-        list.sort(new StringComparator());
-
-        this.addFields(fieldName, list, 1);
+    private void addAttributeFields(AttributeInterface.AttributeType type)
+    {
+        this.addFields(
+            type.getKeyPlural(),
+            SortingUtility.sortAndStringifyEntityMap(new HashMap<>(this.getValues(type))),
+            1
+        );
     }
 
     /**
@@ -126,12 +131,9 @@ public class AttributesPanel extends BaseListPanel {
      *
      * @return List of attribute objects
      */
-    protected ArrayList<Attribute> getValues(String type) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
-        ArrayList<Attribute> list = storage.getEntityListByType(AttributeInterface.AttributeType.valueOf(type.toUpperCase()));
-        list.sort(new StringComparator());
-
-        return list;
+    protected HashMap<String, Attribute> getValues(AttributeInterface.AttributeType type) {
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        return storage.getEntityMapByType(type);
     }
 
     /**
@@ -342,6 +344,21 @@ public class AttributesPanel extends BaseListPanel {
         });
     }
 
+    private void adjustGeneration(int adjustment)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+
+        try {
+            this.getParentComponent().setAttributeMaximum(
+                generationStorage.clampGeneration(
+                    generationStorage.getDefaultGeneration().getGeneration() - adjustment
+                ).getMaximumAttributes()
+            );
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * This method checks every input made by the user for duplicate entries or other inconsistencies.
      *
@@ -367,7 +384,7 @@ public class AttributesPanel extends BaseListPanel {
      */
     @Override
     public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
         this.getFields("physical").stream().map((field) -> (JSpinner) field).forEachOrdered((spinner) -> {
             try {
                 Attribute attribute = storage.getEntity(spinner.getName());

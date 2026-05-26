@@ -16,37 +16,21 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.gui;
 
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+package antafes.vampireEditor.gui.event;
 
-/**
- * ChangeListener with the possibility to store the component it is created on.
- *
- * @author Marian Pollzien
- */
-public abstract class ComponentChangeListener implements ChangeListener {
-    private Component component;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import scripts.laniax.framework.event_dispatcher.Event;
 
-    /**
-     * Get the component this listener is registered on.
-     *
-     * @return
-     */
-    public Component getComponent() {
-        return component;
-    }
-
-    /**
-     * Set the component this listener is registered on.
-     *
-     * @param component
-     */
-    public void setComponent(Component component) {
-        this.component = component;
-    }
+@Getter
+@AllArgsConstructor
+public class UpdateFreeAdditionalPointsEvent extends Event
+{
+    private String groupLabel;
+    private String parent;
+    private int pointsOverMax;
 }

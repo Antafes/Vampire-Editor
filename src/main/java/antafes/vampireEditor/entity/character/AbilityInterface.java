@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Getter;
+
 /**
  * Ability interface.
  *
@@ -30,10 +32,20 @@ public interface AbilityInterface {
     /**
      * List of ability types.
      */
+    @Getter
     public enum AbilityType implements EntityTypeInterface {
-        TALENT,
-        SKILL,
-        KNOWLEDGE
+        TALENT("talent", "talents"),
+        SKILL("skill", "skills"),
+        KNOWLEDGE("knowledge", "knowledge");
+
+        private final String keySingular;
+        private final String keyPlural;
+
+        AbilityType(String keySingular, String keyPlural)
+        {
+            this.keySingular = keySingular;
+            this.keyPlural = keyPlural;
+        }
     }
 
     /**

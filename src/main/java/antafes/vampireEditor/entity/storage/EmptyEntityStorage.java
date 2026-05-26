@@ -24,7 +24,7 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 
 import java.util.HashMap;
 

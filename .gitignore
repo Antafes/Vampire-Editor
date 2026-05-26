@@ -28,6 +28,10 @@ hs_err_pid*
 /resources
 /target
 /Vampire Editor.iml
+/vampire-editor.iml
 
 # CI variables file
 ci/variables.yml
+.m2/settings.xml
+/.aiassistant/
+/docs/plans/*.md

@@ -23,7 +23,15 @@ package antafes.vampireEditor.entity.character;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.storage.adapter.AdvantageListAdapter;
+import antafes.vampireEditor.entity.storage.adapter.LocalizedNamesAdapter;
+import antafes.vampireEditor.entity.storage.adapter.WeaknessListAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -39,10 +47,28 @@ import java.util.HashMap;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "clan")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Clan extends BaseTranslatedEntity implements ClanInterface {
-    private final HashMap<Configuration.Language, String> nicknames;
-    private final ArrayList<Advantage> advantages;
-    private final ArrayList<Weakness> weaknesses;
+    @XmlElement(name = "nickname")
+    @XmlJavaTypeAdapter(LocalizedNamesAdapter.class)
+    private HashMap<Configuration.Language, String> nicknames;
+
+    @XmlElement(name = "advantages")
+    @XmlJavaTypeAdapter(AdvantageListAdapter.class)
+    private ArrayList<Advantage> advantages;
+
+    @XmlElement(name = "weaknesses")
+    @XmlJavaTypeAdapter(WeaknessListAdapter.class)
+    private ArrayList<Weakness> weaknesses;
+
+    @XmlElement(name = "bloodline")
+    private boolean bloodline;
+
+    protected Clan()
+    {
+        super();
+    }
 
     /**
      * Get the clan nicknames.

@@ -21,7 +21,10 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
+import antafes.vampireEditor.entity.BaseValuedTypedTranslatedEntity;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,8 +37,13 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Attribute extends BaseTypedTranslatedEntity implements AttributeInterface {
-    private final int value;
+@XmlRootElement(name = "attribute")
+@XmlAccessorType(XmlAccessType.NONE)
+public class Attribute extends BaseValuedTypedTranslatedEntity implements AttributeInterface {
+    protected Attribute()
+    {
+        super();
+    }
 
     /**
      * Get the type of attribute.
@@ -43,6 +51,12 @@ public class Attribute extends BaseTypedTranslatedEntity implements AttributeInt
     @Override
     public AttributeType getType() {
         return (AttributeType) super.getType();
+    }
+
+    @Override
+    protected EntityTypeInterface parseJaxbType(String type)
+    {
+        return AttributeType.valueOf(type);
     }
 
     @Override

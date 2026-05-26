@@ -25,10 +25,7 @@ import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.character.Flaw;
-import antafes.vampireEditor.entity.character.Merit;
-import antafes.vampireEditor.entity.character.Road;
-import antafes.vampireEditor.entity.character.SpecialFeature;
+import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
@@ -40,7 +37,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -48,7 +49,6 @@ import java.util.*;
  */
 public class LastStepsPanel extends BasePanel {
     private JLabel flawInfoLabel;
-    private JComboBox<BaseTranslatedEntity> roadComboBox;
 
     /**
      * Create the last steps panel.
@@ -65,7 +65,6 @@ public class LastStepsPanel extends BasePanel {
     @Override
     protected void init() {
         this.addMeritAndFlawFields();
-        this.addRoadFields();
         this.adjustNextButton();
 
         super.init();
@@ -77,123 +76,41 @@ public class LastStepsPanel extends BasePanel {
     private void addMeritAndFlawFields() {
         String headlineMerits = "merits", headlineFlaws = "flaws";
         GroupLayout layout = (GroupLayout) this.getLayout();
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup();
+        GroupLayout.ParallelGroup meritsHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
+        GroupLayout.ParallelGroup flawsHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
+        GroupLayout.SequentialGroup centeredFieldsHorizontalGroup = layout.createSequentialGroup()
+            .addGap(11, 11, 11)
+            .addGroup(meritsHorizontalGroup)
+            .addGap(18, 18, 18)
+            .addGroup(flawsHorizontalGroup)
+            .addGap(11, 11, 11);
         this.getOuterSequentialHorizontalGroup()
-            .addGroup(
-                layout.createSequentialGroup()
-                    .addGap(11, 11, 11)
-                    .addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup();
-        HashMap<String, GroupLayout.Group> groups = new HashMap<>();
-        groups.put("listHorizontalGroup", listHorizontalGroup);
-        groups.put("listVerticalGroup", listVerticalGroup);
-        this.addSpecialFeatureFields(headlineMerits, "merit", groups);
-        this.addSpecialFeatureFields(headlineFlaws, "flaw", groups);
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(centeredFieldsHorizontalGroup)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+
+        HashMap<String, GroupLayout.Group> meritGroups = new HashMap<>();
+        meritGroups.put("listHorizontalGroup", meritsHorizontalGroup);
+        meritGroups.put("listVerticalGroup", layout.createSequentialGroup());
+        this.addSpecialFeatureFields(headlineMerits, "merit", meritGroups);
+
+        HashMap<String, GroupLayout.Group> flawGroups = new HashMap<>();
+        flawGroups.put("listHorizontalGroup", flawsHorizontalGroup);
+        flawGroups.put("listVerticalGroup", layout.createSequentialGroup());
+        this.addSpecialFeatureFields(headlineFlaws, "flaw", flawGroups);
         this.flawInfoLabel = new JLabel();
         this.flawInfoLabel.setText("<html>" + this.getLanguage().translate("flawInfoTooMany") + "</html>");
         this.flawInfoLabel.setVisible(false);
-        listHorizontalGroup.addComponent(this.flawInfoLabel, GroupLayout.PREFERRED_SIZE, 150, 300);
-        listVerticalGroup.addComponent(this.flawInfoLabel);
+        flawsHorizontalGroup.addComponent(this.flawInfoLabel, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        ((GroupLayout.SequentialGroup) flawGroups.get("listVerticalGroup")).addComponent(this.flawInfoLabel);
+        this.linkSpecialFeatureFieldWidths(layout);
     }
 
     /**
-     * Add all road fields sorted by the translated name.
-     */
-    private void addRoadFields() {
-        this.addFields("road");
-    }
-
-    /**
-     * Add fields by the given list and under the given headline.
-     * This is going to be used to add the road and humanity fields.
-     *
-     * @param headline The headline of the element group
-     */
-    protected void addFields(String headline) {
-        this.addFields(headline, new ArrayList<>());
-    }
-
-    /**
-     * Add labels and spinners by the given list and under the given headline.
-     * This will use 0 as minimum value for the spinners.
-     *
-     * @param headline The headline of the element group
-     * @param addHeadline Whether to add a headline
-     * @param elementList List of elements
+     * Not used in this panel.
      */
     @Override
-    protected void addFields(String headline, boolean addHeadline, ArrayList<String> elementList) {
-        if (!this.getFields().containsKey(headline)) {
-            this.getFields().put(headline, new ArrayList<>());
-        }
-
-        GroupLayout layout = (GroupLayout) this.getLayout();
-        JLabel groupLabel = new JLabel(this.getLanguage().translate(headline));
-        groupLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        GroupLayout.ParallelGroup listHorizontalGroup = layout.createParallelGroup()
-            .addComponent(
-                groupLabel,
-                GroupLayout.Alignment.LEADING,
-                GroupLayout.PREFERRED_SIZE,
-                GroupLayout.PREFERRED_SIZE,
-                Short.MAX_VALUE
-            );
-        this.getOuterSequentialHorizontalGroup()
-            .addGroup(
-                layout.createSequentialGroup()
-                    .addGap(11, 11, 11)
-                    .addGroup(listHorizontalGroup)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-
-        GroupLayout.SequentialGroup listVerticalGroup = layout.createSequentialGroup()
-            .addGap(11, 11, 11)
-            .addComponent(groupLabel);
-
-        listVerticalGroup.addGap(11, 11, 11);
-        GroupLayout.SequentialGroup listOuterVerticalGroup = layout.createSequentialGroup();
-        listVerticalGroup.addGroup(listOuterVerticalGroup);
-        this.getOuterParallelVerticalGroup()
-            .addGroup(listVerticalGroup);
-
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-
-        this.roadComboBox = new JComboBox<>();
-        DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
-        roadModel.addElement(this.getEmptyEntity());
-        this.roadComboBox.setModel(roadModel);
-        this.getRoadValues().forEach(roadModel::addElement);
-        this.roadComboBox.addItemListener((ItemEvent e) -> {
-            if (Objects.equals(this.roadComboBox.getSelectedItem(), "")) {
-                this.disableNextButton();
-            } else {
-                this.enableNextButton();
-            }
-        });
-        this.roadComboBox.setMaximumRowCount(Math.min(this.roadComboBox.getModel().getSize(), 20));
-
-        comboBoxHorizontalGroup.addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
-        listOuterVerticalGroup
-            .addComponent(this.roadComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE);
-
-        outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
-    }
-
-    /**
-     * Get the values for the road combo box.
-     */
-    protected ArrayList<Road> getRoadValues() {
-        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
-        ArrayList<Road> list = new ArrayList<>();
-        roadStorage.getList().forEach((String key, Road road) -> list.add(road));
-        list.sort(new StringComparator());
-
-        return list;
+    protected void addFields(HashMap<String, String> elementList, String headline, boolean addHeadline) {
     }
 
     /**
@@ -219,8 +136,8 @@ public class LastStepsPanel extends BasePanel {
             .addComponent(
                 groupLabel,
                 GroupLayout.Alignment.LEADING,
-                GroupLayout.PREFERRED_SIZE,
-                GroupLayout.PREFERRED_SIZE,
+                0,
+                GroupLayout.DEFAULT_SIZE,
                 Short.MAX_VALUE
             );
 
@@ -234,8 +151,7 @@ public class LastStepsPanel extends BasePanel {
         this.getOuterParallelVerticalGroup()
             .addGroup(listVerticalGroup);
 
-        GroupLayout.SequentialGroup outerLabelHorizontalGroup = layout.createSequentialGroup();
-        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        GroupLayout.ParallelGroup comboBoxHorizontalGroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING, true);
         innerGroups.put("comboBoxHorizontalGroup", comboBoxHorizontalGroup);
         innerGroups.put("listOuterVerticalGroup", listOuterVerticalGroup);
 
@@ -246,8 +162,7 @@ public class LastStepsPanel extends BasePanel {
             this.getComboBoxItemListener(type, this.getFields(type), innerGroups)
         );
 
-        outerLabelHorizontalGroup.addGroup(comboBoxHorizontalGroup);
-        listHorizontalGroup.addGroup(outerLabelHorizontalGroup);
+        listHorizontalGroup.addGroup(comboBoxHorizontalGroup);
     }
 
     /**
@@ -269,7 +184,12 @@ public class LastStepsPanel extends BasePanel {
         model.addElement(this.getEmptyEntity());
         this.getSpecialFeatureValues(type).forEach(model::addElement);
         elementComboBox.setModel(model);
-        groups.get("comboBoxHorizontalGroup").addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, 150, 300);
+        groups.get("comboBoxHorizontalGroup").addComponent(
+            elementComboBox,
+            0,
+            GroupLayout.DEFAULT_SIZE,
+            Short.MAX_VALUE
+        );
         groups.get("listOuterVerticalGroup")
             .addComponent(elementComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
             .addGap(6, 6, 6);
@@ -277,8 +197,32 @@ public class LastStepsPanel extends BasePanel {
         HashMap<String, Component> elements = new HashMap<>();
         fields.add(elementComboBox);
         elements.put("comboBox", elementComboBox);
+        this.linkSpecialFeatureFieldWidths((GroupLayout) this.getLayout());
 
         return elements;
+    }
+
+    private void linkSpecialFeatureFieldWidths(GroupLayout layout)
+    {
+        List<Component> components = new ArrayList<>();
+        List<Component> meritFields = this.getFields("merit");
+        List<Component> flawFields = this.getFields("flaw");
+
+        if (meritFields != null) {
+            components.addAll(meritFields);
+        }
+
+        if (flawFields != null) {
+            components.addAll(flawFields);
+        }
+
+        if (this.flawInfoLabel != null) {
+            components.add(this.flawInfoLabel);
+        }
+
+        if (components.size() > 1) {
+            layout.linkSize(SwingConstants.HORIZONTAL, components.toArray(new Component[0]));
+        }
     }
 
     /**
@@ -289,11 +233,11 @@ public class LastStepsPanel extends BasePanel {
      * @return List of special features
      */
     private ArrayList<SpecialFeature> getSpecialFeatureValues(String type) {
-        MeritStorage meritStorage = (MeritStorage) StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
-        FlawStorage flawStorage = (FlawStorage) StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
+        MeritStorage meritStorage = StorageFactory.getStorage(StorageFactory.StorageType.MERIT);
+        FlawStorage flawStorage = StorageFactory.getStorage(StorageFactory.StorageType.FLAW);
 
         ArrayList<SpecialFeature> list = new ArrayList<>(
-            (Collection<SpecialFeature>)(Collection<?>)("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
+            ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
         list.sort(new StringComparator());
 
@@ -343,6 +287,7 @@ public class LastStepsPanel extends BasePanel {
     private void adjustNextButton() {
         JButton nextButton = this.getNextButton();
         nextButton.setText(this.getConfiguration().getLanguageObject().translate("finish"));
+        nextButton.setEnabled(true);
 
         for (ActionListener actionListener : nextButton.getActionListeners()) {
             nextButton.removeActionListener(actionListener);
@@ -374,8 +319,16 @@ public class LastStepsPanel extends BasePanel {
 
         sum = this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
-            .map((comboBox) -> ((Flaw) comboBox.getSelectedItem()).getCost())
+            .map((comboBox) -> ((Flaw) Objects.requireNonNull(comboBox.getSelectedItem())).getCost())
             .reduce(sum, Integer::sum);
+
+        if (this.getParentComponent().isNpcCreation()) {
+            this.flawInfoLabel.setVisible(false);
+            this.getParentComponent().getFreeAdditionalMaxPointsTextField().setText(Integer.toString(sum + 15));
+            this.getParentComponent().calculateUsedFreeAdditionalPoints();
+            this.getNextButton().setEnabled(true);
+            return;
+        }
 
         if (sum > 7) {
             this.flawInfoLabel.setVisible(true);
@@ -401,7 +354,7 @@ public class LastStepsPanel extends BasePanel {
 
         sum = this.getFields("merit").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> (!Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
-            .map((comboBox) -> ((Merit) comboBox.getSelectedItem()).getCost())
+            .map((comboBox) -> ((Merit) Objects.requireNonNull(comboBox.getSelectedItem())).getCost())
             .reduce(sum, Integer::sum);
 
         return sum;
@@ -435,6 +388,5 @@ public class LastStepsPanel extends BasePanel {
         this.getFields("flaw").stream().map((field) -> (JComboBox<BaseTranslatedEntity>) field)
             .filter((comboBox) -> !(Objects.equals(comboBox.getSelectedItem(), this.getEmptyEntity())))
             .forEachOrdered((comboBox) -> builder.addFlaw((Flaw) comboBox.getSelectedItem()));
-        builder.setRoad((Road) this.roadComboBox.getSelectedItem());
     }
 }

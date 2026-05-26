@@ -24,8 +24,8 @@ package antafes.vampireEditor.utility;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import org.testng.Assert;
@@ -65,5 +65,36 @@ public class ClanComparatorTest {
         final int actual = comparator.compare(clan1, clan2);
 
         Assert.assertEquals(actual, expected);
+    }
+
+    public void testCompareClanWithBloodline() throws EntityException, EntityStorageException {
+        ClanComparator comparator = new ClanComparator();
+        Clan clan = TestClanUtility.createTestClan();
+        Clan bloodline = TestClanUtility.createTestClan().toBuilder()
+            .setKey("testBloodline")
+            .setBloodline(true)
+            .build();
+
+        final int expected = 0;
+        final int actual = comparator.compare(clan, bloodline);
+
+        Assert.assertEquals(actual, expected);
+    }
+
+    public void testCompareBloodlineWithBloodline() throws EntityException, EntityStorageException {
+        ClanComparator comparator = new ClanComparator();
+        Clan bloodline1 = TestClanUtility.createTestClan().toBuilder()
+            .setBloodline(true)
+            .build();
+        Clan bloodline2 = TestClanUtility.createTestClan().toBuilder()
+            .setKey("testBloodline2")
+            .setNames(new HashMap<>())
+            .addName(Configuration.Language.ENGLISH, "Another test bloodline")
+            .setBloodline(true)
+            .build();
+
+        final int actual = comparator.compare(bloodline1, bloodline2);
+
+        Assert.assertTrue(actual > 0);
     }
 }

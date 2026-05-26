@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<natures>
+    <nature key="architect">
+        <English>Architect</English>
+        <German>Architekt</German>
+    </nature>
+    <nature key="autocrat">
+        <English>Autocrat</English>
+        <German>Autokrat</German>
+    </nature>
+    <nature key="beast">
+        <English>Beast</English>
+        <German>Tier</German>
+    </nature>
+    <nature key="bonVivant">
+        <English>Bon Vivant</English>
+        <German>Bonvivant</German>
+    </nature>
+    <nature key="bravo">
+        <English>Bravo</English>
+        <German>Raubein</German>
+    </nature>
+    <nature key="caregiver">
+        <English>Caregiver</English>
+        <German>Helfer</German>
+    </nature>
+    <nature key="celebrant">
+        <English>Celebrant</English>
+        <German>Zelebrant</German>
+    </nature>
+    <nature key="chameleon">
+        <English>Chameleon</English>
+        <German>Chamäleon</German>
+    </nature>
+    <nature key="child">
+        <English>Child</English>
+        <German>Kind</German>
+    </nature>
+    <nature key="competitor">
+        <English>Competitor</English>
+        <German>Wettkämpfer</German>
+    </nature>
+    <nature key="conformist">
+        <English>Conformist</English>
+        <German>Konformist</German>
+    </nature>
+    <nature key="conniver">
+        <English>Conniver</English>
+        <German>Schmarotzer</German>
+    </nature>
+    <nature key="creepShow">
+        <English>Creep Show</English>
+        <German>Gruselkabinett</German>
+    </nature>
+    <nature key="curmudgeon">
+        <English>Curmudgeon</English>
+        <German>Griesgram</German>
+    </nature>
+    <nature key="dabbler">
+        <English>Dabbler</English>
+        <German>Dilettant</German>
+    </nature>
+    <nature key="defender">
+        <English>Defender</English>
+        <German>Verteidiger</German>
+    </nature>
+    <nature key="deviant">
+        <English>Deviant</English>
+        <German>Abweichler</German>
+    </nature>
+    <nature key="enigma">
+        <English>Enigma</English>
+        <German>Rätsel</German>
+    </nature>
+    <nature key="eyeOfTheStorm">
+        <English>Eye of the Storm</English>
+        <German>Auge des Sturms</German>
+    </nature>
+    <nature key="fanatic">
+        <English>Fanatic</English>
+        <German>Fanatiker</German>
+    </nature>
+    <nature key="gallant">
+        <English>Gallant</English>
+        <German>Gigolo</German>
+    </nature>
+    <nature key="guru">
+        <English>Guru</English>
+        <German>Guru</German>
+    </nature>
+    <nature key="idealist">
+        <English>Idealist</English>
+        <German>Idealist</German>
+    </nature>
+    <nature key="jester">
+        <English>Jester</English>
+        <German>Narr</German>
+    </nature>
+    <nature key="judge">
+        <English>Judge</English>
+        <German>Richter</German>
+    </nature>
+    <nature key="loner">
+        <English>Loner</English>
+        <German>Einzelgänger</German>
+    </nature>
+    <nature key="martyr">
+        <English>Martyr</English>
+        <German>Märtyrer</German>
+    </nature>
+    <nature key="masochist">
+        <English>Masochist</English>
+        <German>Masochist</German>
+    </nature>
+    <nature key="mercenary">
+        <English>Mercenary</English>
+        <German>Söldner</German>
+    </nature>
+    <nature key="monster">
+        <English>Monster</English>
+        <German>Monster</German>
+    </nature>
+    <nature key="pedagogue">
+        <English>Pedagogue</English>
+        <German>Pädagoge</German>
+    </nature>
+    <nature key="penitent">
+        <English>Penitent</English>
+        <German>Büßer</German>
+    </nature>
+    <nature key="perfectionist">
+        <English>Perfectionist</English>
+        <German>Perfektionist</German>
+    </nature>
+    <nature key="philosopher">
+        <English>Philosopher</English>
+        <German>Philosoph</German>
+    </nature>
+    <nature key="rebel">
+        <English>Rebel</English>
+        <German>Rebell</German>
+    </nature>
+    <nature key="rogue">
+        <English>Rogue</English>
+        <German>Schurke</German>
+    </nature>
+    <nature key="sadist">
+        <English>Sadist</English>
+        <German>Sadist</German>
+    </nature>
+    <nature key="soldier">
+        <English>Soldier</English>
+        <German>Soldat</German>
+    </nature>
+    <nature key="survivor">
+        <English>Survivor</English>
+        <German>Überlebenskünstler</German>
+    </nature>
+    <nature key="thrillSeeker">
+        <English>Thrill-Seeker</English>
+        <German>Sensationsjunkie</German>
+    </nature>
+    <nature key="traditionalist">
+        <English>Traditionalist</English>
+        <German>Traditionalist</German>
+    </nature>
+    <nature key="tyrant">
+        <English>Tyrant</English>
+        <German>Tyrann</German>
+    </nature>
+    <nature key="visionary">
+        <English>Visionary</English>
+        <German>Visionär</German>
+    </nature>
+</natures>

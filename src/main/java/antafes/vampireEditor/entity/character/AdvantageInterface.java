@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import lombok.Getter;
+
 /**
  * Advantage interface.
  *
@@ -30,10 +32,20 @@ public interface AdvantageInterface {
     /**
      * List of advantage types.
      */
+    @Getter
     public enum AdvantageType implements EntityTypeInterface {
-        BACKGROUND,
-        DISCIPLINE,
-        VIRTUE
+        BACKGROUND("background", "backgrounds"),
+        DISCIPLINE("discipline", "disciplines"),
+        VIRTUE("virtue", "virtues");
+
+        private final String keySingular;
+        private final String keyPlural;
+
+        AdvantageType(String keySingular, String keyPlural)
+        {
+            this.keySingular = keySingular;
+            this.keyPlural = keyPlural;
+        }
     }
 
     /**

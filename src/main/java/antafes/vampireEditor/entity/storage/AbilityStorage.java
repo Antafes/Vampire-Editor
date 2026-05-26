@@ -22,16 +22,22 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for abilities.
@@ -50,32 +56,21 @@ public class AbilityStorage extends BaseTypedStorage<Ability, AbilityInterface.A
      * Load available data.
      */
     private void loadData() {
-        Element root;
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "abilities.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "abilities.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(AbilitiesDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            AbilitiesDocument doc = (AbilitiesDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            root = xp.getRootElement();
-            ArrayList<Element> elements = XMLParser.getAllChildren(root);
-            elements.forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Ability.builder()
-                        .setType(
-                            AbilityInterface.AbilityType.valueOf(XMLParser.getTagValue("type", element))
-                        )
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .build()
-                    );
-            });
+            doc.abilities.forEach((ability) -> this.getList().put(ability.getKey(), ability));
+        } catch (Exception e) {
+            Logger.getLogger(AbilityStorage.class.getName()).log(Level.SEVERE, "Could not load abilities", e);
         }
+    }
+
+    @XmlRootElement(name = "abilities")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class AbilitiesDocument {
+        @XmlElement(name = "ability")
+        public List<Ability> abilities = new ArrayList<>();
     }
 }

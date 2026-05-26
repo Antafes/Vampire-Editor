@@ -80,18 +80,14 @@ public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
             UIManager.setLookAndFeel(previousLF);
 
             BasicArrowButton rightButton = new BasicArrowButton(BasicArrowButton.EAST);
-            rightButton.addActionListener((ActionEvent e) -> {
-                this.nextPage();
-            });
+            rightButton.addActionListener((ActionEvent e) -> this.nextPage());
 
             if (this.page.getFollowingPageObject() == null) {
                 rightButton.setEnabled(false);
             }
 
             BasicArrowButton leftButton = new BasicArrowButton(BasicArrowButton.WEST);
-            leftButton.addActionListener((ActionEvent e) -> {
-                this.previousPage();
-            });
+            leftButton.addActionListener((ActionEvent e) -> this.previousPage());
 
             if (this.page.getPreviousPageObject() == null) {
                 leftButton.setEnabled(false);

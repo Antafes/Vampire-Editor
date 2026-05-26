@@ -22,15 +22,22 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.myXML.XMLParser;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
-import org.w3c.dom.Element;
+import antafes.vampireEditor.xml.jaxb.JaxbBindingSupport;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage for attributes.
@@ -48,29 +55,21 @@ public class AttributeStorage extends BaseTypedStorage<Attribute, AttributeInter
      * Load available data.
      */
     private void loadData() {
-        InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "attributes.xml");
-        XMLParser xp = new XMLParser();
+        try (InputStream is = VampireEditor.getFileInJar(VampireEditor.getDataPath() + "attributes.xml")) {
+            JAXBContext context = JaxbBindingSupport.createContext(AttributesDocument.class);
+            Unmarshaller unmarshaller = JaxbBindingSupport.createUnmarshaller(context);
+            AttributesDocument doc = (AttributesDocument) unmarshaller.unmarshal(is);
 
-        if (xp.parse(is)) {
-            XMLParser.getAllChildren(xp.getRootElement()).forEach((element) -> {
-                HashMap<Configuration.Language, String> names = new HashMap<>();
-                Element name = XMLParser.getTagElement("name", element);
-                XMLParser.getAllChildren(name).forEach((translatedName) -> names.put(
-                    Configuration.Language.valueOf(translatedName.getNodeName().toUpperCase()),
-                    translatedName.getFirstChild().getNodeValue()
-                ));
-
-                this.getList().put(
-                    element.getAttribute("key"),
-                    Attribute.builder()
-                        .setKey(element.getAttribute("key"))
-                        .setNames(names)
-                        .setType(AttributeInterface.AttributeType.valueOf(
-                            XMLParser.getTagValue("type", element)
-                        ))
-                        .build()
-                );
-            });
+            doc.attributes.forEach((attribute) -> this.getList().put(attribute.getKey(), attribute));
+        } catch (Exception e) {
+            Logger.getLogger(AttributeStorage.class.getName()).log(Level.SEVERE, "Could not load attributes", e);
         }
+    }
+
+    @XmlRootElement(name = "attributes")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    private static class AttributesDocument {
+        @XmlElement(name = "attribute")
+        public List<Attribute> attributes = new ArrayList<>();
     }
 }

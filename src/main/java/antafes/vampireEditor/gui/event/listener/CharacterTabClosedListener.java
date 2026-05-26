@@ -16,34 +16,31 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
 
-/**
- * Exceptions thrown for or in Entities.
- *
- * @author Marian Pollzien
- */
-public class EntityException extends Exception {
+package antafes.vampireEditor.gui.event.listener;
 
-    public EntityException() {
+import antafes.vampireEditor.gui.event.CharacterTabClosedEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
+
+import java.util.function.Consumer;
+
+public class CharacterTabClosedListener extends EventListener<CharacterTabClosedEvent>
+{
+    public CharacterTabClosedListener()
+    {
     }
 
-    public EntityException(String message) {
-        super(message);
+    public CharacterTabClosedListener(Consumer<CharacterTabClosedEvent> consumer)
+    {
+        super(consumer);
     }
 
-    public EntityException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public EntityException(Throwable cause) {
-        super(cause);
-    }
-
-    public EntityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public CharacterTabClosedListener(Consumer<CharacterTabClosedEvent> consumer, int priority)
+    {
+        super(consumer, priority);
     }
 }
+

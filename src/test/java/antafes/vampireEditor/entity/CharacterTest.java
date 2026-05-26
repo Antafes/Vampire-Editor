@@ -22,29 +22,32 @@
 
 package antafes.vampireEditor.entity;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.UUID;
+import java.util.*;
 
 import static org.testng.Assert.assertEquals;
 
 @Test
-public class CharacterTest {
+public class CharacterTest extends BaseTest
+{
     private Character character;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp()
+    {
+        super.setUp();
         new VampireEditor();
         Configuration configuration = Configuration.getInstance();
         configuration.loadProperties();
@@ -82,13 +85,14 @@ public class CharacterTest {
         Assert.assertEquals(this.character.getName(), "Test Character");
     }
 
-    public void testGetClan() throws EntityStorageException {
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+    public void testGetClan() throws EntityStorageException
+    {
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
         Assert.assertEquals(this.character.getClan(), clanStorage.getEntity("brujah"));
     }
 
     public void testGetGeneration() throws EntityStorageException {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         Assert.assertEquals(this.character.getGeneration(), generationStorage.getEntity(4));
     }
 
@@ -119,7 +123,7 @@ public class CharacterTest {
     }
 
     public void testGetNature() {
-        Assert.assertEquals(this.character.getNature(), "wise");
+        Assert.assertEquals(this.character.getNature().toString(), "wise");
     }
 
     public void testGetHideout() {
@@ -147,7 +151,7 @@ public class CharacterTest {
     }
 
     public void testGetAttributes() {
-        final ArrayList<Attribute> actual = this.character.getAttributes();
+        final HashMap<String, Attribute> actual = this.character.getAttributes();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -191,7 +195,7 @@ public class CharacterTest {
     }
 
     public void testGetAbilities() {
-        final ArrayList<Ability> actual = this.character.getAbilities();
+        final HashMap<String, Ability> actual = this.character.getAbilities();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -210,7 +214,7 @@ public class CharacterTest {
     }
 
     public void testGetAdvantages() {
-        final ArrayList<Advantage> actual = this.character.getAdvantages();
+        final HashMap<String, Advantage> actual = this.character.getAdvantages();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
@@ -229,29 +233,25 @@ public class CharacterTest {
     }
 
     public void testGetMerits() {
-        final ArrayList<Merit> actual = this.character.getMerits();
+        final HashMap<String, Merit> actual = this.character.getMerits();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
 
-        for (Merit merit : actual) {
-            assertEquals(merit.getClass(), Merit.class);
-        }
+        actual.forEach((key, merit) -> assertEquals(merit.getClass(), Merit.class));
     }
 
     public void testGetFlaws() {
-        final ArrayList<Flaw> actual = this.character.getFlaws();
+        final HashMap<String, Flaw> actual = this.character.getFlaws();
 
         Assert.assertNotNull(actual);
         Assert.assertFalse(actual.isEmpty());
 
-        for (Flaw flaw : actual) {
-            Assert.assertEquals(flaw.getClass(), Flaw.class);
-        }
+        actual.forEach((key, flaw) -> Assert.assertEquals(flaw.getClass(), Flaw.class));
     }
 
     public void testGetRoad() throws EntityStorageException {
-        RoadStorage roadStorage = (RoadStorage) StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         final Road expected =roadStorage.getEntity("roadOfHumanity").toBuilder()
             .setValue(5)
             .build();
@@ -260,8 +260,43 @@ public class CharacterTest {
         Assert.assertEquals(actual, expected);
     }
 
+    public void testBuilderSetsPathValueToComputedRoadScore() throws EntityStorageException {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        Character characterWithPath = this.character.toBuilder()
+            .setRoad(roadStorage.getEntity("roadOfBeast"))
+            .setPath(roadStorage.getEntity("pathOfHunter"))
+            .build();
+
+        Assert.assertNotNull(characterWithPath.getPath());
+        Assert.assertEquals(characterWithPath.getRoad().getValue(), characterWithPath.getPath().getValue());
+        Assert.assertEquals(characterWithPath.getRoad().getValue(), 5);
+    }
+
     public void testGetWillpower() {
         Assert.assertEquals(this.character.getWillpower(), 5);
+    }
+
+    public void testInitialWillpowerCanBeDerivedFromCourage() {
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder();
+        int courage = builder.getAdvantageValue("courage");
+        Character updatedCharacter = builder
+            .initializeWillpowerFromCourage()
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getWillpower(), courage);
+    }
+
+    public void testInitialWillpowerDefaultsToZeroWhenCourageIsMissing() {
+        HashMap<String, Advantage> advantages = new HashMap<>(this.character.getAdvantages());
+        advantages.remove("courage");
+
+        Character.CharacterBuilder<?, ?> builder = this.character.toBuilder()
+            .setAdvantages(advantages);
+        Character updatedCharacter = builder
+            .initializeWillpowerFromCourage()
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getWillpower(), 0);
     }
 
     public void testGetUsedWillpower() {
@@ -270,6 +305,78 @@ public class CharacterTest {
 
     public void testGetBloodPool() {
         Assert.assertEquals(this.character.getBloodPool(), 3);
+    }
+
+    public void testInitialBloodPoolCanBeDerivedFromD6DomainAndHerd() throws EntityStorageException {
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        Character updatedCharacter = this.character.toBuilder()
+            .addAdvantage(advantageStorage.getEntity("domain").toBuilder().setValue(2).build())
+            .addAdvantage(advantageStorage.getEntity("herd").toBuilder().setValue(1).build())
+            .initializeBloodPoolFromRoll(() -> 4)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 7);
+    }
+
+    public void testInitialBloodPoolIsCappedByGenerationMaximum() {
+        Generation lowCapGeneration = Generation.builder()
+            .setGeneration(13)
+            .setMaximumAttributes(5)
+            .setMaximumBloodPool(5)
+            .setBloodPerRound(1)
+            .build();
+
+        Character updatedCharacter = this.character.toBuilder()
+            .setGeneration(lowCapGeneration)
+            .initializeBloodPoolFromRoll(() -> 6)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 5);
+    }
+
+    public void testInitialBloodPoolDefaultsBackgroundBonusesToZeroWhenMissing() {
+        HashMap<String, Advantage> advantages = new HashMap<>(this.character.getAdvantages());
+        advantages.remove("domain");
+        advantages.remove("herd");
+
+        Character updatedCharacter = this.character.toBuilder()
+            .setAdvantages(advantages)
+            .initializeBloodPoolFromRoll(() -> 3)
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 3);
+    }
+
+    public void testNpcInitialBloodPoolUsesSameRule() throws EntityStorageException {
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        Character npc = this.character.toBuilder()
+            .setNpc(true)
+            .setClan(null)
+            .setRoad(null)
+            .addAdvantage(advantageStorage.getEntity("domain").toBuilder().setValue(1).build())
+            .addAdvantage(advantageStorage.getEntity("herd").toBuilder().setValue(2).build())
+            .initializeBloodPoolFromRoll(() -> 6)
+            .build();
+
+        Assert.assertTrue(npc.isNpc());
+        Assert.assertEquals(npc.getBloodPool(), 9);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Die roll must be between 1 and 6")
+    public void testInitialBloodPoolRejectsInvalidRoll() {
+        this.character.toBuilder()
+            .initializeBloodPoolFromRoll(() -> 0)
+            .build();
+    }
+
+    public void testBloodPoolAndWillpowerInitializationWorksTogether() {
+        Character updatedCharacter = this.character.toBuilder()
+            .initializeBloodPoolFromRoll(() -> 5)
+            .initializeWillpowerFromCourage()
+            .build();
+
+        Assert.assertEquals(updatedCharacter.getBloodPool(), 5);
+        Assert.assertEquals(updatedCharacter.getWillpower(), updatedCharacter.getAdvantages().get("courage").getValue());
     }
 
     public void testGetAge() {
@@ -341,135 +448,156 @@ public class CharacterTest {
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing name")
-    public void testBuilderNullName() throws EntityException {
+    public void testBuilderNullName() {
         this.character.toBuilder()
             .setName(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing clan")
-    public void testBuilderEmptyClan() throws EntityException {
+    public void testBuilderEmptyClan() {
         this.character.toBuilder()
             .setClan(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing generation")
-    public void testBuilderEmptyGeneration() throws EntityException {
+    public void testBuilderEmptyGeneration() {
         this.character.toBuilder()
             .setGeneration(null)
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
-    public void testBuilderEmptyNature() throws EntityException {
+    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing road")
+    public void testBuilderEmptyRoadForNonNpc() {
         this.character.toBuilder()
-            .setNature("")
+            .setRoad(null)
             .build();
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing nature")
-    public void testBuilderNullNature() throws EntityException {
-        this.character.toBuilder()
+    public void testBuilderNpcWithoutClanAndRoad() {
+        Character npc = this.character.toBuilder()
+            .setNpc(true)
+            .setClan(null)
+            .setRoad(null)
+            .build();
+
+        Assert.assertTrue(npc.isNpc());
+        Assert.assertNull(npc.getClan());
+        Assert.assertNull(npc.getRoad());
+    }
+
+    public void testBuilderNullNature() {
+        Character character = this.character.toBuilder()
             .setNature(null)
             .build();
+
+        Assert.assertNull(character.getNature());
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
-    public void testBuilderEmptyDemeanor() throws EntityException {
-        this.character.toBuilder()
+    public void testBuilderEmptyDemeanor() {
+        Character character = this.character.toBuilder()
             .setDemeanor("")
             .build();
+
+        Assert.assertEquals(character.getDemeanor(), "");
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing demeanor")
-    public void testBuilderNullDemeanor() throws EntityException {
-        this.character.toBuilder()
+    public void testBuilderNullDemeanor() {
+        Character character = this.character.toBuilder()
             .setDemeanor(null)
             .build();
+
+        Assert.assertNull(character.getDemeanor());
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
-    public void testBuilderEmptyConcept() throws EntityException {
-        this.character.toBuilder()
+    public void testBuilderEmptyConcept() {
+        Character character = this.character.toBuilder()
             .setConcept("")
             .build();
+
+        Assert.assertEquals(character.getConcept(), "");
     }
 
-    @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing concept")
-    public void testBuilderNullConcept() throws EntityException {
-        this.character.toBuilder()
+    public void testBuilderNullConcept() {
+        Character character = this.character.toBuilder()
             .setConcept(null)
             .build();
+
+        Assert.assertNull(character.getConcept());
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Attributes are empty")
-    public void testBuilderEmptyAttributes() throws EntityException {
+    public void testBuilderEmptyAttributes() {
         this.character.toBuilder()
             .setAttributes(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Abilities are empty")
-    public void testBuilderEmptyAbilities() throws EntityException {
+    public void testBuilderEmptyAbilities() {
         this.character.toBuilder()
             .setAbilities(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Advantages are empty")
-    public void testBuilderEmptyAdvantages() throws EntityException {
+    public void testBuilderEmptyAdvantages() {
         this.character.toBuilder()
             .setAdvantages(null)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing attributes")
-    public void testBuilderMissingAttributes() throws EntityException {
-        ArrayList<Attribute> list = this.character.getAttributes();
-        list.remove(0);
+    public void testBuilderMissingAttributes() {
+        HashMap<String, Attribute> map = this.character.getAttributes();
+        map.remove(map.keySet().iterator().next());
         this.character.toBuilder()
-            .setAttributes(list)
+            .setAttributes(map)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing abilities")
-    public void testBuilderMissingAbilities() throws EntityException {
-        ArrayList<Ability> list = this.character.getAbilities();
-        list.remove(0);
+    public void testBuilderMissingAbilities() {
+        HashMap<String, Ability> map = this.character.getAbilities();
+        map.remove(map.keySet().iterator().next());
         this.character.toBuilder()
-            .setAbilities(list)
+            .setAbilities(map)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Missing advantages")
-    public void testBuilderMissingAdvantages() throws EntityException {
+    public void testBuilderMissingAdvantages() {
+        HashMap<String, Advantage> map = this.character.getAdvantages();
+        map.remove(map.keySet().iterator().next());
+        map.remove(map.keySet().iterator().next());
+        map.remove(map.keySet().iterator().next());
         this.character.toBuilder()
-            .setAdvantages(new ArrayList<>(this.character.getAdvantages().subList(0, 4)))
+            .setAdvantages(map)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many attributes")
-    public void testBuilderTooManyAttributes() throws EntityException, EntityStorageException {
-        ArrayList<Attribute> list = this.character.getAttributes();
-        AttributeStorage storage = (AttributeStorage) StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
-        list.add(storage.getEntity("strength"));
+    public void testBuilderTooManyAttributes() throws EntityStorageException {
+        HashMap<String, Attribute> map = this.character.getAttributes();
+        AttributeStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ATTRIBUTE);
+        map.put("test", storage.getEntity("strength"));
         this.character.toBuilder()
-            .setAttributes(list)
+            .setAttributes(map)
             .build();
     }
 
     @Test(expectedExceptions = EntityException.class, expectedExceptionsMessageRegExp = "Too many abilities")
-    public void testBuilderTooManyAbilities() throws EntityException, EntityStorageException {
-        ArrayList<Ability> list = this.character.getAbilities();
-        AbilityStorage storage = (AbilityStorage) StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
-        list.add(storage.getEntity("alertness"));
+    public void testBuilderTooManyAbilities() throws EntityStorageException {
+        HashMap<String, Ability> map = this.character.getAbilities();
+        AbilityStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ABILITY);
+        map.put("test", storage.getEntity("alertness"));
         this.character.toBuilder()
-            .setAbilities(list)
+            .setAbilities(map)
             .build();
     }
 
-    public void testBuilderBuild() throws EntityException {
+    public void testBuilderBuild() {
         this.character.toBuilder()
             .build();
     }

@@ -22,10 +22,11 @@
 
 package antafes.vampireEditor.entity.character;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.entity.storage.WeaknessStorage;
@@ -38,13 +39,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Test
-public class ClanTest {
+public class ClanTest extends BaseTest
+{
     private Clan clan;
 
     @BeforeMethod
-    public void setUp() throws EntityException, EntityStorageException {
-        Configuration.getInstance().loadProperties();
-        this.clan = TestClanUtility.createTestClan();
+    public void setUp()
+    {
+        super.setUp();
+        try {
+            this.clan = TestClanUtility.createTestClan();
+        } catch (EntityException | EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterMethod
@@ -111,6 +118,18 @@ public class ClanTest {
         Assert.assertEquals(actual.size(), 1);
     }
 
+    public void testIsBloodlineDefaultsFalse() {
+        Assert.assertFalse(this.clan.isBloodline());
+    }
+
+    public void testIsBloodlineTrue() throws EntityException {
+        Clan bloodlineClan = this.clan.toBuilder()
+            .setBloodline(true)
+            .build();
+
+        Assert.assertTrue(bloodlineClan.isBloodline());
+    }
+
     public void testToString() {
         final String expected = "Test clan";
         final String actual = this.clan.toString();
@@ -131,8 +150,8 @@ public class ClanTest {
     }
 
     public void testDifferentClan() throws EntityException, EntityStorageException {
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        WeaknessStorage weaknessStorage = StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
         final Clan object = Clan.builder()
             .setKey("testClan2")
             .addName(Configuration.Language.ENGLISH, "Test clan 2")

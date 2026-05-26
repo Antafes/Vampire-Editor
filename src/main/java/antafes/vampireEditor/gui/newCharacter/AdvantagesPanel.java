@@ -21,378 +21,518 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.EmptyEntity;
-import antafes.vampireEditor.entity.EntityStorageException;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
 import antafes.vampireEditor.entity.character.Clan;
+import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
-import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
+import antafes.vampireEditor.entity.storage.GenerationStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentChangeListener;
+import antafes.vampireEditor.gui.BaseColumnListPanel;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.event.*;
+import antafes.vampireEditor.gui.event.listener.*;
+import antafes.vampireEditor.gui.exception.ElementAlreadyExistsException;
+import antafes.vampireEditor.gui.exception.LabelEmptyException;
+import antafes.vampireEditor.gui.exception.TypeNotSupportedException;
+import antafes.vampireEditor.gui.utility.FreeAdditionalPointsFields;
 import antafes.vampireEditor.gui.utility.Weighting;
-import antafes.vampireEditor.utility.StringComparator;
+import antafes.vampireEditor.utility.SortingUtility;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
 /**
- *
  * @author Marian Pollzien
  */
-public class AdvantagesPanel extends BaseEditableListPanel {
+public class AdvantagesPanel extends BaseColumnListPanel
+{
+    private static final int VIRTUE_MAXIMUM = 5;
+    private final NewCharacterDialog parent;
+    private final HashMap<String, Integer> dynamicRowCounters = new HashMap<>();
+    /** Maps advantage key (e.g. "conscience") to the translated label used as the spinner map key, in sorted order. */
+    private final LinkedHashMap<String, String> virtueKeyToLabel = new LinkedHashMap<>();
+    private int generationMaximum;
+    private Road selectedRoad;
+    private Road selectedPath;
+    private JButton backButton;
+    private JButton nextButton;
 
     /**
-     * Create a new advantages panel.
+     * Creates a new AdvantagesPanel.
+     * {@link #start()} and {@link #build()} must be called separately by the owner.
      *
-     * @param parent Parent element
+     * @param parent The owning NewCharacterDialog
      */
-    public AdvantagesPanel(NewCharacterDialog parent) {
-        super(parent);
+    public AdvantagesPanel(NewCharacterDialog parent)
+    {
+        super();
+        this.parent = parent;
     }
 
     /**
      * Initialize everything.
      */
     @Override
-    protected void init() {
-        this.setUseWeightings(false);
+    protected void init()
+    {
+        this.generationMaximum = this.getMaximumFromGeneration(0);
         this.addBackgroundFields();
         this.addDisciplineFields();
         this.addVirtueFields();
+        this.initButtons();
 
-        super.init();
+        this.parent.getDialogDispatcher().addListener(
+            ClanSelectedEvent.class,
+            new ClanSelectedListener(event -> this.onClanSelected(event.getClan()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            RoadSelectedEvent.class,
+            new RoadSelectedListener(event -> this.onRoadSelected(event.getRoad()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            PathSelectedEvent.class,
+            new PathSelectedListener(event -> this.onPathSelected(event.getPath()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
+        this.parent.getDialogDispatcher().addListener(
+            FillCharacterEvent.class,
+            new FillCharacterListener(event -> this.fillCharacter(event.getBuilder()))
+        );
+    }
+
+    /**
+     * Builds the columns and appends the navigation button row directly to this panel.
+     */
+    @Override
+    public void build() throws TypeNotSupportedException
+    {
+        super.build();
+        this.configureVirtueSpinners();
+        this.registerGenerationListeners(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
+        this.addButtonPanel();
+    }
+
+    @Override
+    public void updateTexts()
+    {
     }
 
     /**
      * Add all background fields sorted by the translated name.
      */
-    private void addBackgroundFields() {
-        this.addFields("background", AdvantageInterface.AdvantageType.BACKGROUND.name());
+    private void addBackgroundFields()
+    {
+        this.addGroup(1, AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), false, true);
+        try {
+            this.addRow(
+                1,
+                AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(),
+                AdvantageInterface.AdvantageType.BACKGROUND.name(),
+                ElementType.SPINNER,
+                true,
+                this.generationMaximum,
+                null
+            );
+        } catch (ElementAlreadyExistsException | LabelEmptyException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Add all discipline fields sorted by the translated name.
+     * Rows are populated dynamically when a clan is selected via {@link #onClanSelected(Clan)}.
      */
-    private void addDisciplineFields() {
-        this.addFields("disciplines", AdvantageInterface.AdvantageType.DISCIPLINE.name());
+    private void addDisciplineFields()
+    {
+        this.addGroup(2, AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), false, true);
+        try {
+            this.addRow(
+                2,
+                AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(),
+                AdvantageInterface.AdvantageType.DISCIPLINE.name(),
+                ElementType.SPINNER,
+                true,
+                this.generationMaximum,
+                null
+            );
+        } catch (ElementAlreadyExistsException | LabelEmptyException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Add all virtue fields sorted by the translated name.
      */
-    private void addVirtueFields() {
-        ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
-        ArrayList<String> list = new ArrayList<>();
+    private void addVirtueFields()
+    {
+        this.addGroup(3, AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(), false, true);
+        HashMap<String, BaseTypedTranslatedEntity> values = SortingUtility.sortEntityMap(
+            new HashMap<>(this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name()))
+        );
+        values.forEach((key, background) -> {
+            try {
+                this.addRow(
+                    3,
+                    AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural(),
+                    background.getName(),
+                    ElementType.SPINNER,
+                    VIRTUE_MAXIMUM
+                );
+                this.virtueKeyToLabel.put(key, background.getName());
+            } catch (ElementAlreadyExistsException | LabelEmptyException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
-        advantages.forEach((advantage) -> list.add(advantage.getKey()));
+    /**
+     * Called when a road is selected. Clears the virtue group and re-adds only the virtue spinners
+     * that belong to the effective selection (path if set, otherwise road); courage is always included.
+     * Pass {@code null} to show all virtues.
+     *
+     * @param road The selected road, or {@code null} when the selection is cleared
+     */
+    private void onRoadSelected(Road road)
+    {
+        this.selectedRoad = road;
+        this.selectedPath = null;
+        this.updateVirtueDisplay();
+    }
 
-        this.addFields(
-            "virtues",
-            AdvantageInterface.AdvantageType.VIRTUE.name(),
-            list,
-            true,
-            1,
-            3
+    /**
+     * Called when a path is selected. Updates the virtue display to use the path's merits if set,
+     * otherwise falls back to the currently selected road.
+     * Pass {@code null} to revert to road virtues.
+     *
+     * @param path The selected path, or {@code null} when the selection is cleared
+     */
+    private void onPathSelected(Road path)
+    {
+        this.selectedPath = path;
+        this.updateVirtueDisplay();
+    }
+
+    /**
+     * Update the virtue display based on the effective selection.
+     * Priority: selected path, then selected road, otherwise all virtues.
+     */
+    private void updateVirtueDisplay()
+    {
+        String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
+        this.clearDynamicRows(virtueGroup);
+
+        Road effectiveRoad = this.selectedPath != null ? this.selectedPath : this.selectedRoad;
+
+        HashSet<String> allowedKeys;
+        if (effectiveRoad == null || effectiveRoad.getMerits() == null || effectiveRoad.getMerits().isEmpty()) {
+            allowedKeys = new HashSet<>(this.virtueKeyToLabel.keySet());
+        } else {
+            allowedKeys = new HashSet<>();
+            allowedKeys.add("courage");
+            effectiveRoad.getMerits().forEach(merit -> allowedKeys.add(merit.getKey()));
+        }
+
+        this.virtueKeyToLabel.entrySet().stream()
+            .filter(e -> allowedKeys.contains(e.getKey()))
+            .sorted(Map.Entry.comparingByValue())
+            .forEach(e -> this.addDynamicLabelSpinnerRow(
+                virtueGroup,
+                e.getValue(),
+                e.getValue(),
+                VIRTUE_MAXIMUM
+            ));
+        this.configureVirtueSpinners();
+    }
+
+    /**
+     * When a background or discipline is selected from an editable combo box, add a new empty row of the same
+     * type below.
+     */
+    @Override
+    protected void onEditableComboBoxSelected(String groupLabel, JComboBox<BaseTranslatedEntity> comboBox)
+    {
+        if (!AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural().equals(groupLabel)
+            && !AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural().equals(groupLabel)) {
+            return;
+        }
+
+        Object selected = comboBox.getSelectedItem();
+        if (selected == null || selected instanceof EmptyEntity) {
+            return;
+        }
+
+        if (Boolean.TRUE.equals(comboBox.getClientProperty("dynamicRowAdded"))) {
+            return;
+        }
+
+        AdvantageInterface.AdvantageType type =
+            AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural().equals(groupLabel)
+                ? AdvantageInterface.AdvantageType.BACKGROUND
+                : AdvantageInterface.AdvantageType.DISCIPLINE;
+
+        comboBox.putClientProperty("dynamicRowAdded", true);
+        int counter = this.dynamicRowCounters.merge(groupLabel, 1, Integer::sum);
+        String rowKey = type.name() + "_" + counter;
+        this.addDynamicRow(groupLabel, rowKey, type.name(), this.generationMaximum);
+        if (AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural().equals(groupLabel)) {
+            this.registerGenerationListener(groupLabel, rowKey);
+        }
+    }
+
+    /**
+     * Called when a clan is selected. Replaces any existing discipline rows with one locked row per
+     * clan discipline (pre-selected and disabled) followed by one empty row for user selection.
+     *
+     * @param clan The selected clan
+     */
+    private void onClanSelected(Clan clan)
+    {
+        String disciplineGroup = AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural();
+        this.clearDynamicRows(disciplineGroup);
+        this.dynamicRowCounters.remove(disciplineGroup);
+
+        int max = this.generationMaximum;
+
+        if (clan != null && clan.getAdvantages() != null) {
+            clan.getAdvantages().stream()
+                .filter(a -> a.getType() == AdvantageInterface.AdvantageType.DISCIPLINE)
+                .forEach(discipline -> {
+                    int counter = this.dynamicRowCounters.merge(disciplineGroup, 1, Integer::sum);
+                    String uniqueLabel = AdvantageInterface.AdvantageType.DISCIPLINE.name() + "_" + counter;
+                    JComboBox<BaseTranslatedEntity> cb = this.addDynamicRow(
+                        disciplineGroup, uniqueLabel,
+                        AdvantageInterface.AdvantageType.DISCIPLINE.name(),
+                        max, discipline
+                    );
+                    if (cb != null) {
+                        cb.setEnabled(false);
+                        this.applyLockedStyle(cb);
+                    }
+                });
+        }
+
+        int counter = this.dynamicRowCounters.merge(disciplineGroup, 1, Integer::sum);
+        this.addDynamicRow(
+            disciplineGroup,
+            AdvantageInterface.AdvantageType.DISCIPLINE.name() + "_" + counter,
+            AdvantageInterface.AdvantageType.DISCIPLINE.name(),
+            max
         );
     }
 
     /**
-     * This will translate the element name.
-     *
-     * @param element The element name to translate
-     *
-     * @return The translated name
+     * Creates and configures the back and next navigation buttons.
+     */
+    private void initButtons()
+    {
+        this.backButton = new JButton(this.getConfiguration().getLanguageObject().translate("back"));
+        this.backButton.addActionListener(e ->
+            this.parent.getCharacterTabPane().setSelectedIndex(
+                this.parent.getCharacterTabPane().getSelectedIndex() - 1
+            )
+        );
+
+        this.nextButton = new JButton(this.getConfiguration().getLanguageObject().translate("next"));
+        this.nextButton.setEnabled(false);
+        this.nextButton.addActionListener(e ->
+            this.parent.getCharacterTabPane().setSelectedIndex(
+                this.parent.getCharacterTabPane().getSelectedIndex() + 1
+            )
+        );
+    }
+
+    /**
+     * Appends a button row to the bottom of this panel, matching the layout of the abilities panel.
+     */
+    private void addButtonPanel()
+    {
+        JPanel buttonPanel = new JPanel();
+        GroupLayout btnLayout = new GroupLayout(buttonPanel);
+        buttonPanel.setLayout(btnLayout);
+        btnLayout.setHorizontalGroup(
+            btnLayout.createSequentialGroup()
+                .addContainerGap(479, Short.MAX_VALUE)
+                .addComponent(this.backButton, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(this.nextButton, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+        );
+        btnLayout.setVerticalGroup(
+            btnLayout.createSequentialGroup()
+                .addGroup(btnLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(this.backButton)
+                    .addComponent(this.nextButton)
+                )
+                .addContainerGap()
+        );
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.PAGE_END;
+        this.add(buttonPanel, c);
+    }
+
+    /**
+     * Adds the navigation buttons to the focus traversal order before creating the policy.
      */
     @Override
-    protected String getElementLabelText(String element) {
-        ArrayList<Advantage> advantages = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+    protected void createFocusTraversalPolicy()
+    {
+        this.addToFocusTraversalOrder(this.nextButton);
+        this.addToFocusTraversalOrder(this.backButton);
+        super.createFocusTraversalPolicy();
+    }
 
-        for (Advantage advantage : advantages) {
-            if (advantage.getKey().equals(element)) {
-                return advantage.getName();
-            }
+    /**
+     * Reacts to spinner changes by checking whether virtue points are fully spent.
+     */
+    @Override
+    protected void afterFreeAdditionalPointsUpdated(String groupLabel)
+    {
+        if (AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural().equals(groupLabel)) {
+            this.dispatchVirtueValues();
+        }
+        this.checkFieldsFilled();
+    }
+
+    @Override
+    protected int getUsedGroupSpinnerSum(String groupLabel)
+    {
+        if (!AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural().equals(groupLabel)) {
+            return super.getUsedGroupSpinnerSum(groupLabel);
         }
 
-        return super.getElementLabelText(element);
+        int baseVirtuePoints = this.getSpinnersForGroup(groupLabel).size();
+        return Math.max(0, super.getGroupSpinnerSum(groupLabel) - baseVirtuePoints);
     }
 
     /**
-     * Create the attributes document listener.
-     *
-     * @return Change listener for the component
+     * Enables the next button and unlocks the last-steps tab once all advantage points are spent.
      */
-    @Override
-    protected ComponentChangeListener createChangeListener() {
-        return new ComponentChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (getFields(AdvantageInterface.AdvantageType.BACKGROUND.name()).contains(this.getComponent())) {
-                    calculateUsedBackgroundPoints();
-                }
-
-                if (getFields(AdvantageInterface.AdvantageType.DISCIPLINE.name()).contains(this.getComponent())) {
-                    calculateUsedDisciplinePoints();
-                }
-
-                if (getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).contains(this.getComponent())) {
-                    calculateUsedVirtuePoints();
-                }
-
-                checkFieldsFilled();
-                getParentComponent().calculateUsedFreeAdditionalPoints();
-            }
-        };
-    }
-
-    /**
-     * Calculate the used background points.
-     */
-    private void calculateUsedBackgroundPoints() {
-        this.calculateUsedPoints(AdvantageInterface.AdvantageType.BACKGROUND.name());
-    }
-
-    /**
-     * Calculate and return the sum of points spent for backgrounds.
-     */
-    public int getBackgroundPointsSum() {
-        return this.getPointsSum(AdvantageInterface.AdvantageType.BACKGROUND.name());
-    }
-
-    /**
-     * Check if the spent points for backgrounds is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    public boolean checkBackgroundPoints() {
-        return this.checkPoints(AdvantageInterface.AdvantageType.BACKGROUND.name());
-    }
-
-    /**
-     * Get the maximum points available for talents.
-     */
-    public int getBackgroundMaxPoints() {
-        return this.getMaxPoints(AdvantageInterface.AdvantageType.BACKGROUND.name());
-    }
-
-    /**
-     * Calculate the used discipline points.
-     */
-    private void calculateUsedDisciplinePoints() {
-        this.calculateUsedPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-    }
-
-    /**
-     * Calculate and return the sum of points spent for disciplines.
-     */
-    public int getDisciplinePointsSum() {
-        return this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-    }
-
-    /**
-     * Check if the spent points for disciplines is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    public boolean checkDisciplinePoints() {
-        return this.checkPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-    }
-
-    /**
-     * Get the maximum points available for disciplines.
-     */
-    public int getDisciplineMaxPoints() {
-        return this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-    }
-
-    /**
-     * Calculate the used virtue points.
-     */
-    private void calculateUsedVirtuePoints() {
-        this.calculateUsedPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
-    }
-
-    /**
-     * Calculate and return the sum of points spent for virtues.
-     */
-    public int getVirtuePointsSum() {
-        return this.getPointsSum(AdvantageInterface.AdvantageType.VIRTUE.name());
-    }
-
-    /**
-     * Check if the spent points for virtues is above its maximum.
-     *
-     * @return True if spent points are above maximum
-     */
-    public boolean checkVirtuePoints() {
-        return this.checkPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
-    }
-
-    /**
-     * Get the maximum points available for virtues.
-     */
-    public int getVirtueMaxPoints() {
-        return this.getMaxPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
-    }
-
-    /**
-     * Set the maximum value for the attribute spinners.
-     */
-    @Override
-    public void setSpinnerMaximum(int maximum) {
-        this.setSpinnerMaximumValue(maximum);
-        this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.name()).stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AdvantageInterface.AdvantageType.DISCIPLINE.name()).stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, maximum));
-        this.getFields(AdvantageInterface.AdvantageType.VIRTUE.name()).stream().map((component) -> (JSpinner) component)
-            .forEachOrdered((spinner) -> this.setFieldMaximum(spinner, 5));
-
-        this.calculateUsedVirtuePoints();
-        this.calculateUsedDisciplinePoints();
-        this.calculateUsedBackgroundPoints();
-    }
-
-    /**
-     * Check if every attribute has been set.
-     */
-    @Override
-    protected void checkFieldsFilled() {
-        int backgroundSum = this.getBackgroundPointsSum();
-        int backgroundMax = this.getBackgroundMaxPoints();
-        int disciplinesSum = this.getDisciplinePointsSum();
-        int disciplinesMax = this.getDisciplineMaxPoints();
-        int virtuesSum = this.getVirtuePointsSum();
-        int virtuesMax = this.getVirtueMaxPoints();
-
-        if (backgroundSum >= backgroundMax
-            && disciplinesSum >= disciplinesMax
-            && virtuesSum >= virtuesMax
-        ) {
-            if (this.getParentComponent().getMaxActiveTab() < 4) {
-                this.getParentComponent().increaseMaxActiveTab();
-            }
-
-            this.getParentComponent().getCharacterTabPane().setEnabledAt(this.getParentComponent().getMaxActiveTab(), true);
+    protected void checkFieldsFilled()
+    {
+        if (this.parent.isNpcCreation()) {
             this.enableNextButton();
+            return;
+        }
+
+        boolean allGroupsFilled = this.isGroupFilled(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural())
+            && this.isGroupFilled(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural())
+            && this.isGroupFilled(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+
+        if (allGroupsFilled) {
+            if (this.parent.getMaxActiveTab() < 4) {
+                this.parent.increaseMaxActiveTab();
+            }
+            this.parent.getCharacterTabPane().setEnabledAt(this.parent.getMaxActiveTab(), true);
+            this.enableNextButton();
+        } else if (this.parent.getMaxActiveTab() < 4) {
+            this.disableNextButton();
         }
     }
 
+    private boolean isGroupFilled(String groupLabel)
+    {
+        FreeAdditionalPointsFields fields = this.getFreeAdditionalPointsElementsForGroup(groupLabel);
+        if (fields == null) {
+            return false;
+        }
+
+        int used = Integer.parseInt(fields.getFreeAdditionalPointsField().getText());
+        int max = Integer.parseInt(fields.getMaxFreeAdditionalPointsField().getText());
+
+        return used >= max;
+    }
+
+    protected void enableNextButton()
+    {
+        this.nextButton.setEnabled(true);
+        this.createFocusTraversalPolicy();
+    }
+
+    protected void disableNextButton()
+    {
+        this.nextButton.setEnabled(false);
+        this.createFocusTraversalPolicy();
+    }
+
+    public void applyNpcCreationMode() {
+        this.enableNextButton();
+    }
+
     /**
-     * Get the max points field with the properly weighting values set.
-     * This isn't used for this kind of panel.
-     *
-     * @param weighting Enum to get the weighting value from
-     *
-     * @return Returns always 0 as it isn't used here
+     * Applies the standard disabled-field foreground colour to a locked combo box so its text remains readable.
      */
-    @Override
-    protected int getWeightingMax(Weighting weighting) {
-        return 0;
+    private void applyLockedStyle(JComboBox<BaseTranslatedEntity> comboBox)
+    {
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public void paint(Graphics g) {
+                setForeground(Color.BLACK);
+                super.paint(g);
+            }
+        });
     }
 
     /**
      * Get the values for the element combo box.
      *
      * @param type Identifier for the group of combo boxes
-     *
-     * @return List of values
+     * @return Map of values
      */
-    @Override
-    protected ArrayList<Advantage> getValues(String type) {
-        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        ArrayList<Advantage> list = storage.getEntityListByType(AdvantageInterface.AdvantageType.valueOf(type.toUpperCase()));
-        list.sort(new StringComparator());
+    protected HashMap<String, BaseTranslatedEntity> getComboBoxLabelValues(String type)
+    {
+        AdvantageInterface.AdvantageType advantageType = AdvantageInterface.AdvantageType.valueOf(type);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+
+        return new LinkedHashMap<>(SortingUtility.sortEntityMap(new HashMap<>(
+            storage.getEntityMapByType(advantageType))));
+    }
+
+    /**
+     * Get the values for the element combo box.
+     *
+     * @param type Identifier for the group of combo boxes
+     * @return Map of values
+     */
+    protected HashMap<String, Advantage> getValues(String type)
+    {
+        AdvantageInterface.AdvantageType advantageType = AdvantageInterface.AdvantageType.valueOf(type);
+        AdvantageStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        LinkedHashMap<String, Advantage> list = new LinkedHashMap<>();
+
+        SortingUtility.sortEntityMap(
+            new HashMap<>(storage.getEntityMapByType(advantageType))
+        ).forEach((key, value) -> list.put(key, (Advantage) value));
 
         return list;
     }
 
     /**
-     * Get an entity for the given type.
-     *
-     * @param type Identifier for the group of combo boxes
-     * @param key Key for the object to get
-     *
-     * @return Returns an advantage object if found, otherwise null.
-     */
-    @Override
-    protected Advantage getEntity(String type, String key) {
-        for (Advantage advantage : this.getValues(type)) {
-            if (advantage.getKey().equals(key)) {
-                return advantage;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Set the disciplines of the given clan.
-     */
-    public void setDisciplines(Clan clan) {
-        if (this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name()).size() == 1) {
-            clan.getAdvantages().forEach((discipline) -> {
-                ArrayList<JComboBox<BaseTranslatedEntity>> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-
-                JComboBox<BaseTranslatedEntity> comboBox = comboBoxList.get(comboBoxList.size() - 1);
-                comboBox.setSelectedItem(discipline);
-                comboBox.setEditable(false);
-                comboBox.setEnabled(false);
-                comboBox.setRenderer(new DefaultListCellRenderer() {
-                    @Override
-                    public void paint(Graphics g) {
-                        setForeground(Color.BLACK);
-                        super.paint(g);
-                    }
-                });
-            });
-        } else {
-            AtomicInteger counter = new AtomicInteger();
-            clan.getAdvantages().forEach((discipline) -> {
-                ArrayList<JComboBox<BaseTranslatedEntity>> comboBoxList = this.getComboBoxes(AdvantageInterface.AdvantageType.DISCIPLINE.name());
-                int boxCounter = 0;
-                for (JComboBox<BaseTranslatedEntity> comboBox : comboBoxList) {
-                    if (!comboBox.isEnabled() && !comboBox.isEditable()) {
-                        if (counter.get() == boxCounter) {
-                            comboBox.setSelectedItem(discipline);
-                            counter.getAndIncrement();
-                            break;
-                        }
-
-                        boxCounter++;
-                    }
-                }
-            });
-        }
-    }
-
-    /**
      * Get the maximum available points for setting them in the max points field.
-     *
-     * @param type Identifier for the field
-     *
-     * @return Maximum points value
      */
     @Override
-    protected int getMaxPointsForField(String type) {
-        if (type.equals(AdvantageInterface.AdvantageType.BACKGROUND.name())) {
+    protected int fetchMaxFreeAdditionalPoints(String groupLabelText, JComboBox<Weighting> weightingField)
+    {
+        if (groupLabelText.equals(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural())) {
             return 5;
-        } else if (type.equals(AdvantageInterface.AdvantageType.DISCIPLINE.name())) {
+        } else if (groupLabelText.equals(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural())) {
             return 4;
-        } else if (type.equals(AdvantageInterface.AdvantageType.VIRTUE.name())) {
+        } else if (groupLabelText.equals(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural())) {
             return 7;
         }
 
@@ -404,132 +544,173 @@ public class AdvantagesPanel extends BaseEditableListPanel {
      *
      * @return Returns true if a duplicate entry has been found.
      */
-    @Override
-    public boolean checkAllFields() {
-        if (this.getPointsSum(AdvantageInterface.AdvantageType.BACKGROUND.name()) < this.getMaxPoints(AdvantageInterface.AdvantageType.BACKGROUND.name())) {
-            return true;
-        }
-
-        if (this.getPointsSum(AdvantageInterface.AdvantageType.DISCIPLINE.name()) < this.getMaxPoints(AdvantageInterface.AdvantageType.DISCIPLINE.name())) {
-            return true;
-        }
-
-        return this.getPointsSum(AdvantageInterface.AdvantageType.VIRTUE.name()) < this.getMaxPoints(AdvantageInterface.AdvantageType.VIRTUE.name());
+    public boolean checkAllFields()
+    {
+        return this.hasDuplicateSelections(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural())
+            || this.hasDuplicateSelections(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural());
     }
 
     /**
-     * Get a list with all field values.
-     *
-     * @param builder Character builder object
+     * Returns true if two or more combo boxes in the given group have the same non-empty selection.
      */
-    @Override
-    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        this.getFields().forEach((key, fields) -> {
-            for (int i = 0; i < fields.size(); i++) {
-                JSpinner spinner = (JSpinner) fields.get(i);
-                Advantage advantage;
+    private boolean hasDuplicateSelections(String groupLabel)
+    {
+        HashSet<String> seen = new HashSet<>();
+        for (JComboBox<BaseTranslatedEntity> comboBox : this.getComboBoxesForGroup(groupLabel).values()) {
+            Object selected = comboBox.getSelectedItem();
+            if (selected == null || selected instanceof EmptyEntity) {
+                continue;
+            }
+            if (!seen.add(((BaseTranslatedEntity) selected).getKey())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private int getMaximumFromGeneration(int adjustment)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        int maximum;
+        try {
+            maximum = generationStorage.clampGeneration(
+                generationStorage.getDefaultGeneration().getGeneration() - adjustment
+            ).getMaximumAttributes();
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
+        }
+        return maximum;
+    }
 
-                try {
-                    if (this.getComboBoxes(key).size() > 0) {
-                        JComboBox<BaseTranslatedEntity> comboBox = this.getComboBoxes(key).get(i);
+    private void adjustGeneration(int adjustment)
+    {
+        this.generationMaximum = this.getMaximumFromGeneration(adjustment);
+        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural(), this.generationMaximum);
+        this.setSpinnerMaximum(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural(), this.generationMaximum);
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural());
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.DISCIPLINE.getKeyPlural());
+        this.updateFreeAdditionalPoints(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+    }
 
-                        if (Objects.equals(comboBox.getSelectedItem(), "")) {
-                            continue;
-                        }
-
-                        if (comboBox.getSelectedItem().equals(this.getEmptyEntity())) {
-                            continue;
-                        }
-
-                        advantage = (Advantage) comboBox.getSelectedItem();
-                    } else {
-                        AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-                        advantage = storage.getEntity(spinner.getName());
-                    }
-
-                    builder.addAdvantage(
-                        advantage.toBuilder()
-                            .setValue((int) spinner.getValue())
-                            .build()
-                    );
-                } catch (EntityStorageException ex) {
-                    Logger.getLogger(AdvantagesPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
+    private void setSpinnerMaximum(String groupLabel, int maximum)
+    {
+        this.getSpinnersForGroup(groupLabel).values().forEach(spinner -> {
+            SpinnerNumberModel currentModel = (SpinnerNumberModel) spinner.getModel();
+            int value = ((Number) spinner.getValue()).intValue();
+            currentModel.setMaximum(maximum);
+            if (value > maximum) {
+                spinner.setValue(maximum);
             }
         });
     }
 
-    private EmptyEntity getEmptyEntity()
+    private void registerGenerationListeners(String groupLabel)
     {
-        return ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        this.getComboBoxesForGroup(groupLabel).keySet()
+            .forEach(rowKey -> this.registerGenerationListener(groupLabel, rowKey));
     }
 
-    /**
-     * Add an item listener for the combobox.
-     *
-     * @param elements Map with the combobox and the spinner
-     * @param type Identifier for the field
-     * @param spinnerMinimum Minimum value for the spinner
-     * @param fields List of all fields
-     * @param groups Groups the element should be added to
-     * @param layout GroupLayout object
-     * @param maxFields Maximum amount of fields
-     */
-    @Override
-    protected void addComboBoxItemListener(
-        HashMap<String, Component> elements,
-        String type,
-        int spinnerMinimum,
-        ArrayList<Component> fields,
-        HashMap<String, GroupLayout.Group> groups,
-        GroupLayout layout,
-        int maxFields
-    ) {
-        super.addComboBoxItemListener(elements, type, spinnerMinimum, fields, groups, layout, maxFields);
+    private void registerGenerationListener(String groupLabel, String rowKey)
+    {
+        JComboBox<BaseTranslatedEntity> comboBox = this.getComboBoxesForGroup(groupLabel).get(rowKey);
+        JSpinner spinner = this.getSpinnersForGroup(groupLabel).get(rowKey);
 
-        JComboBox<BaseTranslatedEntity> comboBox = (JComboBox<BaseTranslatedEntity>) elements.get("comboBox");
-        JSpinner spinner = (JSpinner) elements.get("spinner");
-
-        // Fetching the second element, as the first is only an empty string.
-        if (((Advantage) comboBox.getItemAt(1)).getType().equals(AdvantageInterface.AdvantageType.BACKGROUND)) {
-            comboBox.addItemListener((ItemEvent e) -> {
-                JComboBox<BaseTranslatedEntity> element = (JComboBox<BaseTranslatedEntity>) e.getSource();
-                AdvantageStorage storage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-
-                try {
-                    if (storage.getEntity("generation").equals(element.getSelectedItem())) {
-                        this.addGenerationSpinnerItemListener(spinner);
-                    } else {
-                        // Remove the generation bonus
-                        if (spinner.getChangeListeners().length > 1) {
-                            for (ChangeListener listener : spinner.getChangeListeners()) {
-                                if (listener.toString().contains(AdvantagesPanel.class.toString())) {
-                                    spinner.removeChangeListener(listener);
-                                    break;
-                                }
-                            }
-                            ((LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0))
-                                .adjustGeneration(0);
-                        }
-                    }
-                } catch (EntityStorageException ex) {
-                    VampireEditor.log(ex.getMessage());
-                }
-            });
+        if (comboBox == null || spinner == null || Boolean.TRUE.equals(comboBox.getClientProperty("generationListenerRegistered"))) {
+            return;
         }
+
+        comboBox.addItemListener(new AdvantagesComboBoxItemListener(spinner, this.parent.getDialogDispatcher()));
+        comboBox.putClientProperty("generationListenerRegistered", true);
     }
 
-    /**
-     * Add a change listener to the generation spinner element.
-     *
-     * @param spinner The generation spinner
-     */
-    protected void addGenerationSpinnerItemListener(JSpinner spinner) {
-        LooksPanel panel = (LooksPanel) this.getParentComponent().getCharacterTabPane().getComponentAt(0);
-        spinner.addChangeListener(
-            (ChangeEvent e) -> panel.adjustGeneration((int) ((JSpinner) e.getSource()).getValue())
-        );
-        panel.adjustGeneration((int) spinner.getValue());
+    private void configureVirtueSpinners()
+    {
+        String virtueGroup = AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural();
+        this.getSpinnersForGroup(virtueGroup).values().forEach(spinner -> {
+            SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
+            model.setMinimum(1);
+            if (((Number) spinner.getValue()).intValue() < 1) {
+                spinner.setValue(1);
+            }
+        });
+        this.updateFreeAdditionalPoints(virtueGroup);
+    }
+
+    private void dispatchVirtueValues()
+    {
+        HashMap<String, JSpinner> virtueSpinners = this.getSpinnersForGroup(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+        HashMap<String, Advantage> virtueValues = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+        ArrayList<Advantage> virtues = new ArrayList<>();
+
+        this.virtueKeyToLabel.forEach((key, label) -> {
+            JSpinner spinner = virtueSpinners.get(label);
+            Advantage virtue = virtueValues.get(key);
+
+            if (spinner == null || virtue == null) {
+                return;
+            }
+
+            virtues.add(virtue.toBuilder().setValue(((Number) spinner.getValue()).intValue()).build());
+        });
+
+        this.parent.getDialogDispatcher().dispatch(new VirtueValueSetEvent().setVirtues(virtues));
+    }
+
+    @Override
+    protected void dispatchUpdateFreeAdditionalPointsEvent(UpdateFreeAdditionalPointsEvent event)
+    {
+        this.parent.getDialogDispatcher().dispatch(event);
+    }
+
+    private void fillCharacter(Character.CharacterBuilder<?, ?> builder)
+    {
+        this.fillSelectedAdvantages(builder, AdvantageInterface.AdvantageType.BACKGROUND);
+        this.fillSelectedAdvantages(builder, AdvantageInterface.AdvantageType.DISCIPLINE);
+        this.fillVirtues(builder);
+    }
+
+    private void fillSelectedAdvantages(Character.CharacterBuilder<?, ?> builder, AdvantageInterface.AdvantageType type)
+    {
+        String groupLabel = type.getKeyPlural();
+        HashMap<String, JSpinner> spinners = this.getSpinnersForGroup(groupLabel);
+
+        this.getComboBoxesForGroup(groupLabel).forEach((rowKey, comboBox) -> {
+            Object selectedItem = comboBox.getSelectedItem();
+            if (!(selectedItem instanceof Advantage)) {
+                return;
+            }
+
+            JSpinner spinner = spinners.get(rowKey);
+            if (spinner == null) {
+                return;
+            }
+
+            builder.addAdvantage(
+                ((Advantage) selectedItem).toBuilder()
+                    .setValue(((Number) spinner.getValue()).intValue())
+                    .build()
+            );
+        });
+    }
+
+    private void fillVirtues(Character.CharacterBuilder<?, ?> builder)
+    {
+        HashMap<String, JSpinner> virtueSpinners = this.getSpinnersForGroup(AdvantageInterface.AdvantageType.VIRTUE.getKeyPlural());
+        HashMap<String, Advantage> virtueValues = this.getValues(AdvantageInterface.AdvantageType.VIRTUE.name());
+
+        this.virtueKeyToLabel.forEach((key, label) -> {
+            JSpinner spinner = virtueSpinners.get(label);
+            Advantage virtue = virtueValues.get(key);
+
+            if (spinner == null || virtue == null) {
+                return;
+            }
+
+            builder.addAdvantage(
+                virtue.toBuilder()
+                    .setValue(((Number) spinner.getValue()).intValue())
+                    .build()
+            );
+        });
     }
 }

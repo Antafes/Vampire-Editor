@@ -38,6 +38,7 @@ public class English extends Language {
         this.character();
         this.health();
         this.print();
+        this.unsavedCharacters();
     }
 
     /**
@@ -77,16 +78,33 @@ public class English extends Language {
         this.getTranslations().put("aboutMnemonic", "A");
         this.getTranslations().put("new", "New");
         this.getTranslations().put("newMnemonic", "N");
+        this.getTranslations().put("newNpc", "New NPC");
+        this.getTranslations().put("newNpcMnemonic", "e");
         this.getTranslations().put("open", "Open");
         this.getTranslations().put("openMnemonic", "O");
         this.getTranslations().put("save", "Save");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("edit", "Edit");
+        this.getTranslations().put("editMnemonic", "E");
+        this.getTranslations().put("undo", "Undo");
+        this.getTranslations().put("undoMnemonic", "U");
+        this.getTranslations().put("redo", "Redo");
+        this.getTranslations().put("redoMnemonic", "R");
         this.getTranslations().put("print", "Print");
         this.getTranslations().put("printMnemonic", "P");
         this.getTranslations().put("existingFile", "Existing file");
         this.getTranslations().put("fileExists", "The selected file already exists, overwrite?");
         this.getTranslations().put("couldNotLoad", "Could not load");
         this.getTranslations().put("couldNotLoadCharacter", "Could not load the character.");
+        this.getTranslations().put("couldNotLoadCharacterMissingRoad", "Missing road for non-NPC character.");
+        this.getTranslations().put("couldNotLoadCharacterMissingClan", "Missing clan for non-NPC character.");
+        this.getTranslations().put("couldNotLoadCharacterFileNotFound", "Character file not found");
+        this.getTranslations().put("couldNotLoadCharacterInvalidXml", "Character file is invalid.");
+        this.getTranslations().put("couldNotLoadCharacterMissingId", "Character file has no ID.");
+        this.getTranslations().put("couldNotLoadCharacterMissingGeneration", "Character file has no generation.");
+        this.getTranslations().put("couldNotLoadCharacterValidationUnavailable", "Character validation is unavailable.");
+        this.getTranslations().put("couldNotSave", "Could not save");
+        this.getTranslations().put("couldNotSaveCharacter", "Could not save the character.");
         this.getTranslations().put("close", "Close");
         this.getTranslations().put("loadingCharacter", "Loading character, please wait");
     }
@@ -115,6 +133,8 @@ public class English extends Language {
         this.getTranslations().put("sire", "Sire");
         this.getTranslations().put("clan", "Clan");
         this.getTranslations().put("sect", "Sect");
+        this.getTranslations().put("clan.group.clans", "Clans");
+        this.getTranslations().put("clan.group.bloodlines", "Bloodlines");
         this.getTranslations().put("age", "Age");
         this.getTranslations().put("apparentAge", "Apparent age");
         this.getTranslations().put("dayOfBirth", "Day of birth");
@@ -126,6 +146,7 @@ public class English extends Language {
         this.getTranslations().put("height", "Height");
         this.getTranslations().put("weight", "Weight");
         this.getTranslations().put("sex", "Sex");
+        this.getTranslations().put("sexInfo", "This only describes the character's physical sex, not their social gender.");
         this.getTranslations().put("MALE", "male");
         this.getTranslations().put("FEMALE", "female");
         this.getTranslations().put("required", "Fields marked with * are required.");
@@ -139,12 +160,16 @@ public class English extends Language {
         this.getTranslations().put("mental", "Mental");
         this.getTranslations().put("abilities", "Abilities");
         this.getTranslations().put("talents", "Talents");
+        this.getTranslations().put("talent", "Talent");
         this.getTranslations().put("skills", "Skills");
+        this.getTranslations().put("skill", "Skill");
         this.getTranslations().put("knowledge", "Knowledge");
         this.getTranslations().put("advantages", "Advantages");
         this.getTranslations().put("background", "Background");
         this.getTranslations().put("disciplines", "Disciplines");
+        this.getTranslations().put("discipline", "Discipline");
         this.getTranslations().put("virtues", "Virtues");
+        this.getTranslations().put("virtue", "Virtue");
         this.getTranslations().put("lastSteps", "Last steps");
         this.getTranslations().put("merits", "Merits");
         this.getTranslations().put("flaws", "Flaws");
@@ -159,6 +184,9 @@ public class English extends Language {
         this.getTranslations().put("printPreview", "Print preview");
         this.getTranslations().put("otherTraits", "Other traits");
         this.getTranslations().put("experience", "Experience");
+        this.getTranslations().put("roadScore", "Score");
+        this.getTranslations().put("nameRequiredTitle", "Missing name");
+        this.getTranslations().put("nameRequiredMessage", "The character needs a name.");
     }
 
     /**
@@ -226,11 +254,22 @@ public class English extends Language {
         this.getTranslations().put("incapacitated", "Incapacitated");
     }
 
-    /**
-     * Get the language.
-     *
-     * @return
-     */
+    private void unsavedCharacters()
+    {
+        this.getTranslations().put("unsavedCharactersTitle", "Unsaved characters");
+        this.getTranslations().put("dontSave", "Don't save");
+        this.getTranslations().put("dontSaveMnemonic", "d");
+        this.getTranslations().put("unsavedCharacters", "There are unsaved characters open. Do you want to save them now?");
+        this.getTranslations().put("unsavedChangesTitle", "Unsaved Changes");
+        this.getTranslations().put("unsavedChangesMessage", "Character \"{0}\" has unsaved changes. Do you want to save before closing?");
+        this.getTranslations().put("unsavedChangesMultipleMessage", "Multiple characters have unsaved changes. Do you want to save all changes before closing?");
+        this.getTranslations().put("multipleCharactersList", "The following characters have unsaved changes:");
+        this.getTranslations().put("saveAllButton", "Save All");
+        this.getTranslations().put("saveAllMnemonic", "s");
+        this.getTranslations().put("discardAllButton", "Discard All");
+        this.getTranslations().put("discardAllMnemonic", "d");
+    }
+
     @Override
     public String getLanguage() {
         return "English";

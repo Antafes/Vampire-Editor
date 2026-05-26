@@ -21,10 +21,21 @@
  */
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.BaseTranslatedEntity;
+import antafes.vampireEditor.entity.BaseValuedTranslatedEntity;
+import antafes.vampireEditor.entity.storage.adapter.AdvantageListAdapter;
+import antafes.vampireEditor.entity.storage.adapter.ClanKeyListAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Road object.
@@ -34,12 +45,80 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
-public class Road extends BaseTranslatedEntity implements RoadInterface {
-    private final int value;
+@XmlRootElement(name = "road")
+@XmlAccessorType(XmlAccessType.NONE)
+public class Road extends BaseValuedTranslatedEntity implements RoadInterface {
+    @XmlElement(name = "advantages")
+    @XmlJavaTypeAdapter(AdvantageListAdapter.class)
+    private List<Advantage> merits;
+
+    @XmlElement(name = "clanRestrictions")
+    @XmlJavaTypeAdapter(ClanKeyListAdapter.class)
+    private List<String> clanRestrictions;
+
+    /**
+     * Parent road key read from XML (<parent>...</parent>) for path entries.
+     * Used during road loading/validation to resolve the actual parent Road.
+     * Because it is part of the model, it is available to Lombok-generated
+     * builder/toBuilder and may remain populated in-memory after loading.
+     */
+    @XmlElement(name = "parent")
+    private String parentKey;
+
+    /**
+     * Optional parent road (for paths).
+     * Only set for path entries that inherit from a parent road.
+     * Resolved from parentKey during road data loading and validation.
+     * Field is excluded from XML serialization (@XmlTransient) and from
+     * equals/hashCode (@EqualsAndHashCode.Exclude), but is included in the
+     * Lombok-generated builder via @SuperBuilder(toBuilder = true).
+     */
+    @XmlTransient
+    @EqualsAndHashCode.Exclude
+    private Road parent;
+
+    protected Road()
+    {
+        super();
+    }
 
     @Override
     public String toString()
     {
         return super.toString();
+    }
+
+    public boolean isUniversal()
+    {
+        return this.clanRestrictions == null || this.clanRestrictions.isEmpty();
+    }
+
+    public boolean isRestrictedToClan(String clanKey)
+    {
+        if (clanKey == null || clanKey.isEmpty() || this.isUniversal()) {
+            return false;
+        }
+
+        return this.clanRestrictions.contains(clanKey);
+    }
+
+    public static int calculateRoadScore(ArrayList<Advantage> virtues)
+    {
+        int roadScore = 0;
+
+        // If there's more than 3 virtues, it probably means the road hasn't been selected.
+        if (virtues.size() > 3) {
+            return 2;
+        }
+
+        for (Advantage virtue : virtues) {
+            if (virtue.getKey().equals("courage")) {
+                continue;
+            }
+
+            roadScore += virtue.getValue();
+        }
+
+        return roadScore;
     }
 }

@@ -25,7 +25,7 @@ package antafes.vampireEditor.print;
 import org.apache.commons.lang3.StringUtils;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.gui.utility.Font;
 import antafes.vampireEditor.print.utility.StringProperties;
 
@@ -183,7 +183,7 @@ public class Looks extends PrintBase {
             PositionX.LEFT1.getPosition(),
             yLeft,
             PositionX.LEFT2.getPosition(),
-            this.getCharacter().getSex().toString()
+            this.getCharacter().getSex() != null ? this.getCharacter().getSex().toString() : ""
         );
 
         for (int i = 0; i < 11; i++) {

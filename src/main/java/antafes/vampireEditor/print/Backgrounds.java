@@ -24,7 +24,7 @@ package antafes.vampireEditor.print;
 
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.gui.utility.Font;
 import antafes.vampireEditor.print.utility.StringProperties;
 

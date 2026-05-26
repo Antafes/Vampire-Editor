@@ -24,7 +24,7 @@ package antafes.vampireEditor.print;
 import org.apache.commons.lang3.StringUtils;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.gui.utility.Font;
 import antafes.vampireEditor.print.utility.Dot;
@@ -118,10 +118,10 @@ public class General extends PrintBase {
             this.getLanguage().translate("name") + ": " + this.getCharacter().getName(),
             this.getLanguage().translate("player") + ": " + this.getCharacter().getPlayer(),
             this.getLanguage().translate("chronicle") + ": " + this.getCharacter().getChronicle(),
-            this.getLanguage().translate("nature") + ": " + this.getCharacter().getNature(),
-            this.getLanguage().translate("demeanor") + ": " + this.getCharacter().getDemeanor(),
-            this.getLanguage().translate("concept") + ": " + this.getCharacter().getConcept(),
-            this.getLanguage().translate("clan") + ": " + this.getCharacter().getClan().getName(),
+            this.getLanguage().translate("nature") + ": " + (this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature()),
+            this.getLanguage().translate("demeanor") + ": " + (this.getCharacter().getDemeanor() == null ? "" : this.getCharacter().getDemeanor()),
+            this.getLanguage().translate("concept") + ": " + (this.getCharacter().getConcept() == null ? "" : this.getCharacter().getConcept()),
+            this.getLanguage().translate("clan") + ": " + (this.getCharacter().getClan() == null ? "" : this.getCharacter().getClan().getName()),
             this.getLanguage().translate("generation") + ": " + this.getCharacter().getGeneration().toString(),
             this.getLanguage().translate("sire") + ": " + this.getCharacter().getSire()
         };
@@ -282,6 +282,7 @@ public class General extends PrintBase {
      */
     protected void addAdditionalInformation() {
         int yLeft = this.getMaxY(), yMiddle = this.getMaxY(), yRight = this.getMaxY();
+        Road effectiveRoad = this.getCharacter().getPath() != null ? this.getCharacter().getPath() : this.getCharacter().getRoad();
 
         this.addHeadline(this.getLanguage().translate("otherTraits"), PositionX.LEFT1.getPosition(), yLeft, 20f);
         yLeft++;
@@ -291,8 +292,13 @@ public class General extends PrintBase {
         }
 
         this.addHeadline(this.getLanguage().translate("road"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
-        this.addText(this.getCharacter().getRoad().getName(), PositionX.MIDDLE1.getPosition(), yMiddle++, 2);
-        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getRoad().getValue(), 2);
+        this.addText(
+            effectiveRoad == null ? "" : effectiveRoad.getName(),
+            PositionX.MIDDLE1.getPosition(),
+            yMiddle++,
+            2
+        );
+        this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, effectiveRoad == null ? 2 : effectiveRoad.getValue(), 2);
         this.addHeadline(this.getLanguage().translate("willpower"), PositionX.MIDDLE1.getPosition(), yMiddle++, 20f);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getWillpower(), 2);
         this.createDots(PositionX.MIDDLE1.getPosition(), yMiddle++, 10, this.getCharacter().getUsedWillpower(), 2, Dot.SQUARE);

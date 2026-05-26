@@ -21,6 +21,8 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.entity.Character;
+
 /**
  * An interface adding specific methods for every character panel.
  *
@@ -32,10 +34,15 @@ public interface CharacterPanelInterface {
      *
      * @param character
      */
-    abstract public void setCharacter(antafes.vampireEditor.entity.Character character);
+    abstract public void setCharacter(Character character);
 
     /**
      * Fill in the character data. If no character is set, nothing will be added.
      */
     abstract public void fillCharacterData();
+
+    /**
+     * Uses the given character builder as a base and updates it with every possibly changed value from the form.
+     */
+    abstract public void updateCharacter(Character.CharacterBuilder<?, ?> characterBuilder);
 }

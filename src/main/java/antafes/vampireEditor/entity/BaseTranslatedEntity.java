@@ -22,6 +22,13 @@
 package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.Configuration;
+import antafes.vampireEditor.entity.exception.EntityException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import antafes.vampireEditor.entity.storage.adapter.LocalizedNamesAdapter;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -33,9 +40,13 @@ import java.util.HashMap;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(setterPrefix = "set", toBuilder = true)
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class BaseTranslatedEntity extends BaseEntity {
-    private final String key;
-    private final HashMap<Configuration.Language, String> names;
+    private String key;
+    private HashMap<Configuration.Language, String> names;
+
+    /** No-arg constructor for JAXB deserialisation. */
+    protected BaseTranslatedEntity() { super(); }
 
     /**
      * Get the name of the entity according to the currently used language.
@@ -58,6 +69,29 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
         return this.getName();
     }
 
+    @XmlAttribute(name = "key")
+    protected String getJaxbKey()
+    {
+        return this.key;
+    }
+
+    protected void setJaxbKey(String key)
+    {
+        this.key = key;
+    }
+
+    @XmlElement(name = "name")
+    @XmlJavaTypeAdapter(LocalizedNamesAdapter.class)
+    protected HashMap<Configuration.Language, String> getJaxbName()
+    {
+        return this.names;
+    }
+
+    protected void setJaxbName(HashMap<Configuration.Language, String> names)
+    {
+        this.names = names;
+    }
+
     public abstract static class BaseTranslatedEntityBuilder<C extends BaseTranslatedEntity, B extends BaseTranslatedEntityBuilder<C, B>> extends BaseEntityBuilder<C, B> {
         @Override
         protected void checkValues() throws EntityException
@@ -69,6 +103,11 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
             if (this.names == null || this.names.isEmpty()) {
                 throw new EntityException("Missing names for entity: " + this);
             }
+        }
+
+        @Override
+        protected void executeAdditionalCalculations()
+        {
         }
 
         /**

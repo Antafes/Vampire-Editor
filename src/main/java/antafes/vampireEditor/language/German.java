@@ -38,6 +38,7 @@ public class German extends Language {
         this.character();
         this.health();
         this.print();
+        this.unsavedCharacters();
     }
 
     /**
@@ -77,16 +78,33 @@ public class German extends Language {
         this.getTranslations().put("aboutMnemonic", "b");
         this.getTranslations().put("new", "Neu");
         this.getTranslations().put("newMnemonic", "N");
+        this.getTranslations().put("newNpc", "Neuer NSC");
+        this.getTranslations().put("newNpcMnemonic", "e");
         this.getTranslations().put("open", "Öffnen");
         this.getTranslations().put("openMnemonic", "f");
         this.getTranslations().put("save", "Speichern");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("edit", "Bearbeiten");
+        this.getTranslations().put("editMnemonic", "B");
+        this.getTranslations().put("undo", "Rückgängig");
+        this.getTranslations().put("undoMnemonic", "R");
+        this.getTranslations().put("redo", "Wiederherstellen");
+        this.getTranslations().put("redoMnemonic", "W");
         this.getTranslations().put("print", "Drucken");
         this.getTranslations().put("printMnemonic", "D");
         this.getTranslations().put("existingFile", "Existierende Datei");
         this.getTranslations().put("fileExists", "Die ausgewählte Datei existiert bereits, überschreiben?");
         this.getTranslations().put("couldNotLoad", "Laden fehlgeschlagen");
         this.getTranslations().put("couldNotLoadCharacter", "Konnte den Charakter nicht laden.");
+        this.getTranslations().put("couldNotLoadCharacterMissingRoad", "Dem Spielercharakter fehlt ein Pfad.");
+        this.getTranslations().put("couldNotLoadCharacterMissingClan", "Dem Spielercharakter fehlt ein Clan.");
+        this.getTranslations().put("couldNotLoadCharacterFileNotFound", "Charakterdatei nicht gefunden");
+        this.getTranslations().put("couldNotLoadCharacterInvalidXml", "Charakterdatei ist ungültig.");
+        this.getTranslations().put("couldNotLoadCharacterMissingId", "Charakterdatei hat keine ID.");
+        this.getTranslations().put("couldNotLoadCharacterMissingGeneration", "Charakterdatei hat keine Generation.");
+        this.getTranslations().put("couldNotLoadCharacterValidationUnavailable", "Charaktervalidierung ist nicht verfügbar.");
+        this.getTranslations().put("couldNotSave", "Speichern fehlgeschlagen");
+        this.getTranslations().put("couldNotSaveCharacter", "Konnte den Charakter nicht speichern.");
         this.getTranslations().put("close", "Schließen");
         this.getTranslations().put("loadingCharacter", "Lade Character, bitte warten");
     }
@@ -115,6 +133,8 @@ public class German extends Language {
         this.getTranslations().put("sire", "Erzeuger");
         this.getTranslations().put("clan", "Clan");
         this.getTranslations().put("sect", "Sekte");
+        this.getTranslations().put("clan.group.clans", "Clans");
+        this.getTranslations().put("clan.group.bloodlines", "Blutlinien");
         this.getTranslations().put("age", "Alter");
         this.getTranslations().put("apparentAge", "Sieht aus wie");
         this.getTranslations().put("dayOfBirth", "Geburtstag");
@@ -126,6 +146,7 @@ public class German extends Language {
         this.getTranslations().put("height", "Größe");
         this.getTranslations().put("weight", "Gewicht");
         this.getTranslations().put("sex", "Geschlecht");
+        this.getTranslations().put("sexInfo", "Dies beschreibt nur das körperliche Geschlecht des Charakters, nicht das soziale Geschlecht.");
         this.getTranslations().put("MALE", "männlich");
         this.getTranslations().put("FEMALE", "weiblich");
         this.getTranslations().put("required", "Felder mit * sind Pflichtfelder.");
@@ -139,16 +160,20 @@ public class German extends Language {
         this.getTranslations().put("mental", "Geistig");
         this.getTranslations().put("abilities", "Fähigkeiten");
         this.getTranslations().put("talents", "Talente");
+        this.getTranslations().put("talent", "Talent");
         this.getTranslations().put("skills", "Fertigkeiten");
+        this.getTranslations().put("skill", "Fertigkeit");
         this.getTranslations().put("knowledge", "Kenntnisse");
         this.getTranslations().put("advantages", "Vorteile");
         this.getTranslations().put("background", "Hintergrund");
         this.getTranslations().put("disciplines", "Disziplinen");
+        this.getTranslations().put("discipline", "Disziplin");
         this.getTranslations().put("virtues", "Tugenden");
+        this.getTranslations().put("virtue", "Tugend");
         this.getTranslations().put("lastSteps", "Letzte Schritte");
         this.getTranslations().put("merits", "Vorzüge");
         this.getTranslations().put("flaws", "Schwächen");
-        this.getTranslations().put("road", "Pfad");
+        this.getTranslations().put("road", "Weg");
         this.getTranslations().put("humanity", "Menschlichkeit");
         this.getTranslations().put("roadOf", "Pfad der ...");
         this.getTranslations().put("flawInfoTooMany", "Deine ausgewählten Schwächen übersteigen das Maximum von 7 Punkten.");
@@ -159,6 +184,9 @@ public class German extends Language {
         this.getTranslations().put("printPreview", "Druckvorschau");
         this.getTranslations().put("otherTraits", "Andere Eigenschaften");
         this.getTranslations().put("experience", "Erfahrung");
+        this.getTranslations().put("roadScore", "Wert");
+        this.getTranslations().put("nameRequiredTitle", "Name fehlt");
+        this.getTranslations().put("nameRequiredMessage", "Der Charakter braucht einen Namen.");
     }
 
     /**
@@ -226,11 +254,22 @@ public class German extends Language {
         this.getTranslations().put("incapacitated", "Außer Gefecht");
     }
 
-    /**
-     * Get the language.
-     *
-     * @return
-     */
+    private void unsavedCharacters()
+    {
+        this.getTranslations().put("unsavedCharactersTitle", "Ungespeicherte Charaktere");
+        this.getTranslations().put("dontSave", "Nicht speichern");
+        this.getTranslations().put("dontSaveMnemonic", "n");
+        this.getTranslations().put("unsavedCharacters", "Du hast nicht gespeicherte Charaktere offen, möchtest du sie jetzt speichern?");
+        this.getTranslations().put("unsavedChangesTitle", "Ungespeicherte Änderungen");
+        this.getTranslations().put("unsavedChangesMessage", "Charakter \"{0}\" hat ungespeicherte Änderungen. Möchtest du die Änderungen vor dem Schließen speichern?");
+        this.getTranslations().put("unsavedChangesMultipleMessage", "Mehrere Charaktere haben ungespeicherte Änderungen. Möchtest du alle Änderungen vor dem Schließen speichern?");
+        this.getTranslations().put("multipleCharactersList", "Die folgenden Charaktere haben ungespeicherte Änderungen:");
+        this.getTranslations().put("saveAllButton", "Alles speichern");
+        this.getTranslations().put("saveAllMnemonic", "s");
+        this.getTranslations().put("discardAllButton", "Alle verwerfen");
+        this.getTranslations().put("discardAllMnemonic", "v");
+    }
+
     @Override
     public String getLanguage() {
         return "German";

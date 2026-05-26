@@ -24,7 +24,7 @@ package antafes.vampireEditor.print;
 import org.apache.commons.lang3.StringUtils;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
 import antafes.vampireEditor.gui.utility.Font;
@@ -112,7 +112,7 @@ public class MeritsAndFlaws extends PrintBase {
         this.setMaxY(this.getMaxY() + 1);
         int yMerit = this.getMaxY(), yFlaw = this.getMaxY();
 
-        for (Merit merit : this.getCharacter().getMerits()) {
+        for (Merit merit : this.getCharacter().getMerits().values()) {
             this.addText(
                 merit.getName(),
                 PositionX.LEFT1.getPosition(),
@@ -127,7 +127,7 @@ public class MeritsAndFlaws extends PrintBase {
             this.setMaxY(this.getMaxY() + 1);
         }
 
-        for (Flaw flaw : this.getCharacter().getFlaws()) {
+        for (Flaw flaw : this.getCharacter().getFlaws().values()) {
             this.addValueEntry(
                 flaw.getName(),
                 PositionX.RIGHT1.getPosition(),
@@ -168,7 +168,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             this.setMaxY(this.getMaxY() + 1);
         }
@@ -207,7 +207,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             this.setMaxY(this.getMaxY() + 1);
         }
@@ -222,7 +222,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -236,7 +236,7 @@ public class MeritsAndFlaws extends PrintBase {
                         .build()
                 );
             } catch (EntityException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

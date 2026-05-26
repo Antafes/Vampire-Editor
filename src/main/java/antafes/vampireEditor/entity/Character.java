@@ -23,58 +23,167 @@ package antafes.vampireEditor.entity;
 
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.storage.adapter.*;
 import antafes.vampireEditor.utility.StringComparator;
-import lombok.Data;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
 
 /**
  * Character object.
  */
-@Data
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "character")
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(propOrder = {
+    "name", "clan", "generation", "chronicle", "experience", "nature",
+    "hideout", "player", "demeanor", "concept", "sire", "sect",
+    "attributes", "abilities", "advantages", "merits", "flaws", "road", "path",
+    "willpower", "usedWillpower", "bloodPool", "age", "apparentAge",
+    "dayOfBirth", "dayOfDeath",
+    "hairColor", "eyeColor", "skinColor", "nationality", "height", "weight",
+    "sex", "story", "description"
+})
 public class Character extends BaseEntity {
-    private final UUID id;
-    private final String name;
-    private final Clan clan;
-    private final Generation generation;
-    private final String chronicle;
-    private final int experience;
-    private final String nature;
-    private final String hideout;
-    private final String player;
-    private final String demeanor;
-    private final String concept;
-    private final String sire;
-    private final String sect;
-    private final ArrayList<Attribute> attributes;
-    private final ArrayList<Ability> abilities;
-    private final ArrayList<Advantage> advantages;
-    private final ArrayList<Merit> merits;
-    private final ArrayList<Flaw> flaws;
-    private final Road road;
-    private final int willpower;
-    private final int usedWillpower;
-    private final int bloodPool;
-    private final int age;
-    private final int apparentAge;
-    private final Date dayOfBirth;
-    private final Date dayOfDeath;
-    private final String hairColor;
-    private final String eyeColor;
-    private final String skinColor;
-    private final String nationality;
-    private final int height;
-    private final int weight;
-    private final Sex sex;
-    private final String story;
-    private final String description;
+    @XmlAttribute(name = "id", required = true)
+    private UUID id;
+
+    @XmlAttribute(name = "isNpc")
+    private boolean npc;
+
+    @XmlElement(name = "name")
+    private String name;
+
+    @XmlElement(name = "clan")
+    @XmlJavaTypeAdapter(ClanKeyAdapter.class)
+    private Clan clan;
+
+    @XmlElement(name = "generation")
+    @XmlJavaTypeAdapter(GenerationValueAdapter.class)
+    private Generation generation;
+
+    @XmlElement(name = "chronicle")
+    private String chronicle;
+
+    @XmlElement(name = "experience")
+    private int experience;
+
+    @XmlElement(name = "nature")
+    @XmlJavaTypeAdapter(NatureKeyAdapter.class)
+    private Nature nature;
+
+    @XmlElement(name = "hideout")
+    private String hideout;
+
+    @XmlElement(name = "player")
+    private String player;
+
+    @XmlElement(name = "demeanor")
+    private String demeanor;
+
+    @XmlElement(name = "concept")
+    private String concept;
+
+    @XmlElement(name = "sire")
+    private String sire;
+
+    @XmlElement(name = "sect")
+    private String sect;
+
+    @XmlElement(name = "attributes")
+    @XmlJavaTypeAdapter(AttributeMapAdapter.class)
+    private HashMap<String, Attribute> attributes;
+
+    @XmlElement(name = "abilities")
+    @XmlJavaTypeAdapter(AbilityMapAdapter.class)
+    private HashMap<String, Ability> abilities;
+
+    @XmlElement(name = "advantages")
+    @XmlJavaTypeAdapter(AdvantageMapAdapter.class)
+    private HashMap<String, Advantage> advantages;
+
+    @XmlElement(name = "merits")
+    @XmlJavaTypeAdapter(MeritMapAdapter.class)
+    private HashMap<String, Merit> merits;
+
+    @XmlElement(name = "flaws")
+    @XmlJavaTypeAdapter(FlawMapAdapter.class)
+    private HashMap<String, Flaw> flaws;
+
+    @XmlElement(name = "road")
+    @XmlJavaTypeAdapter(RoadXmlAdapter.class)
+    private Road road;
+
+    @XmlElement(name = "path")
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
+    private Road path;
+
+    @XmlElement(name = "willpower")
+    private int willpower;
+
+    @XmlElement(name = "usedWillpower")
+    private int usedWillpower;
+
+    @XmlElement(name = "bloodPool")
+    private int bloodPool;
+
+    @XmlElement(name = "age")
+    private int age;
+
+    @XmlElement(name = "apparentAge")
+    private int apparentAge;
+
+    @XmlElement(name = "dayOfBirth", nillable = true)
+    @XmlJavaTypeAdapter(DateStringAdapter.class)
+    private Date dayOfBirth;
+
+    @XmlElement(name = "dayOfDeath", nillable = true)
+    @XmlJavaTypeAdapter(DateStringAdapter.class)
+    private Date dayOfDeath;
+
+    @XmlElement(name = "hairColor")
+    private String hairColor;
+
+    @XmlElement(name = "eyeColor")
+    private String eyeColor;
+
+    @XmlElement(name = "skinColor")
+    private String skinColor;
+
+    @XmlElement(name = "nationality")
+    private String nationality;
+
+    @XmlElement(name = "height")
+    private int height;
+
+    @XmlElement(name = "weight")
+    private int weight;
+
+    @XmlElement(name = "sex")
+    private Sex sex;
+
+    @XmlElement(name = "story")
+    private String story;
+
+    @XmlElement(name = "description")
+    private String description;
+
+    protected Character()
+    {
+        super();
+    }
 
     /**
      * Get a list of attributes by type.
@@ -84,7 +193,7 @@ public class Character extends BaseEntity {
      * @return List of attributes
      */
     public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
-        ArrayList<Attribute> attributes = (ArrayList<Attribute>) this.attributes.stream()
+        ArrayList<Attribute> attributes = (ArrayList<Attribute>) this.attributes.values().stream()
             .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
         attributes.sort(new StringComparator());
 
@@ -99,7 +208,7 @@ public class Character extends BaseEntity {
      * @return List of abilities
      */
     public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
-        ArrayList<Ability> abilities = (ArrayList<Ability>) this.abilities.stream()
+        ArrayList<Ability> abilities = (ArrayList<Ability>) this.abilities.values().stream()
             .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
         abilities.sort(new StringComparator());
 
@@ -114,11 +223,23 @@ public class Character extends BaseEntity {
      * @return List of advantages
      */
     public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
-        ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.stream()
+        ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
             .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
         advantages.sort(new StringComparator());
 
         return advantages;
+    }
+
+    public boolean isAttribute(String key) {
+        return this.attributes.containsKey(key);
+    }
+
+    public boolean isAbility(String key) {
+        return this.abilities.containsKey(key);
+    }
+
+    public boolean isAdvantage(String key) {
+        return this.advantages.containsKey(key);
     }
 
     @Override
@@ -148,11 +269,78 @@ public class Character extends BaseEntity {
     public abstract static class CharacterBuilder<C extends Character, B extends CharacterBuilder<C, B>> extends BaseEntityBuilder<C, B> {
         public CharacterBuilder()
         {
-            this.attributes = new ArrayList<>();
-            this.abilities = new ArrayList<>();
-            this.advantages = new ArrayList<>();
-            this.merits = new ArrayList<>();
-            this.flaws = new ArrayList<>();
+            this.attributes = new HashMap<>();
+            this.abilities = new HashMap<>();
+            this.advantages = new HashMap<>();
+            this.merits = new HashMap<>();
+            this.flaws = new HashMap<>();
+        }
+
+        public B addAttribute(Attribute attribute) {
+            this.attributes.put(attribute.getKey(), attribute);
+
+            return this.self();
+        }
+
+        public B addAbility(Ability ability) {
+            this.abilities.put(ability.getKey(), ability);
+
+            return this.self();
+        }
+
+        public B addAdvantage(Advantage advantage) {
+            this.advantages.put(advantage.getKey(), advantage);
+
+            return this.self();
+        }
+
+        public int getAdvantageValue(String key)
+        {
+            if (this.advantages == null) {
+                return 0;
+            }
+
+            Advantage advantage = this.advantages.get(key);
+            return advantage != null ? advantage.getValue() : 0;
+        }
+
+        public B initializeWillpowerFromCourage()
+        {
+            this.willpower = this.getAdvantageValue("courage");
+            return this.self();
+        }
+
+        public int calculateInitialBloodPool(int dieRoll)
+        {
+            if (dieRoll < 1 || dieRoll > 6) {
+                throw new IllegalArgumentException("Die roll must be between 1 and 6");
+            }
+
+            int domain = this.getAdvantageValue("domain");
+            int herd = this.getAdvantageValue("herd");
+            int rolledBloodPool = dieRoll + domain + herd;
+            int generationMaximum = this.generation != null ? this.generation.getMaximumBloodPool() : Integer.MAX_VALUE;
+
+            return Math.min(generationMaximum, rolledBloodPool);
+        }
+
+        public B initializeBloodPoolFromRoll(IntSupplier d6Supplier)
+        {
+            this.bloodPool = this.calculateInitialBloodPool(d6Supplier.getAsInt());
+
+            return this.self();
+        }
+
+        public B addMerit(Merit merit) {
+            this.merits.put(merit.getKey(), merit);
+
+            return this.self();
+        }
+
+        public B addFlaw(Flaw flaw) {
+            this.flaws.put(flaw.getKey(), flaw);
+
+            return this.self();
         }
 
         /**
@@ -168,7 +356,7 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing name");
             }
 
-            if (this.clan == null) {
+            if (!this.npc && this.clan == null) {
                 throw new EntityException("Missing clan");
             }
 
@@ -176,21 +364,21 @@ public class Character extends BaseEntity {
                 throw new EntityException("Missing generation");
             }
 
-            if (this.nature == null || this.nature.isEmpty()) {
-                throw new EntityException("Missing nature");
-            }
-
-            if (this.demeanor == null || this.demeanor.isEmpty()) {
-                throw new EntityException("Missing demeanor");
-            }
-
-            if (this.concept == null || this.concept.isEmpty()) {
-                throw new EntityException("Missing concept");
+            if (!this.npc && this.road == null) {
+                throw new EntityException("Missing road");
             }
 
             this.checkAttributes();
             this.checkAbilities();
             this.checkAdvantages();
+        }
+
+        @Override
+        protected void executeAdditionalCalculations()
+        {
+            if (this.road != null) {
+                this.calculateRoadScore();
+            }
         }
 
         /**
@@ -256,34 +444,22 @@ public class Character extends BaseEntity {
             }
         }
 
-        public B addAttribute(Attribute attribute) {
-            this.attributes.add(attribute);
+        private void calculateRoadScore()
+        {
+            ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
+                .filter((advantage) -> (advantage.getType() == AdvantageInterface.AdvantageType.VIRTUE))
+                .collect(Collectors.toList());
+            int roadScore = Road.calculateRoadScore(advantages);
 
-            return this.self();
-        }
+            Road.RoadBuilder<?, ?> roadBuilder = this.road.toBuilder();
+            roadBuilder.setValue(roadScore);
+            this.road = roadBuilder.build();
 
-        public B addAbility(Ability ability) {
-            this.abilities.add(ability);
-
-            return this.self();
-        }
-
-        public B addAdvantage(Advantage advantage) {
-            this.advantages.add(advantage);
-
-            return this.self();
-        }
-
-        public B addMerit(Merit merit) {
-            this.merits.add(merit);
-
-            return this.self();
-        }
-
-        public B addFlaw(Flaw flaw) {
-            this.flaws.add(flaw);
-
-            return this.self();
+            if (this.path != null) {
+                Road.RoadBuilder<?, ?> pathBuilder = this.path.toBuilder();
+                pathBuilder.setValue(roadScore);
+                this.path = pathBuilder.build();
+            }
         }
     }
 }

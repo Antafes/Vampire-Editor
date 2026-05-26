@@ -16,37 +16,31 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.gui;
 
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+package antafes.vampireEditor.gui.event.listener;
 
-/**
- * DocumentListener with the possibility to store the component it is created on.
- *
- * @author Marian Pollzien
- */
-public abstract class ComponentDocumentListener implements DocumentListener {
-    private Component component;
+import antafes.vampireEditor.gui.event.PathSelectedEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
 
-    /**
-     * Get the component this listener is registered on.
-     *
-     * @return
-     */
-    public Component getComponent() {
-        return component;
+import java.util.function.Consumer;
+
+public class PathSelectedListener extends EventListener<PathSelectedEvent>
+{
+    public PathSelectedListener()
+    {
     }
 
-    /**
-     * Set the component this listener is registered on.
-     *
-     * @param component
-     */
-    public void setComponent(Component component) {
-        this.component = component;
+    public PathSelectedListener(Consumer<PathSelectedEvent> consumer)
+    {
+        super(consumer);
+    }
+
+    public PathSelectedListener(Consumer<PathSelectedEvent> consumer, int priority)
+    {
+        super(consumer, priority);
     }
 }
+

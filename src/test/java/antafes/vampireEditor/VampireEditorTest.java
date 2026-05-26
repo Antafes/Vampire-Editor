@@ -29,7 +29,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 @Test
-public class VampireEditorTest {
+public class VampireEditorTest extends BaseTest
+{
     public void testGetFileInJar() {
         String path = "antafes/vampireEditor/VampireEditor.java";
         final InputStream expected = VampireEditorTest.class.getResourceAsStream(path);

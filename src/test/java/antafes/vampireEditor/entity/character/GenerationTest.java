@@ -22,18 +22,22 @@
 
 package antafes.vampireEditor.entity.character;
 
-import antafes.vampireEditor.entity.EntityException;
+import antafes.vampireEditor.BaseTest;
+import antafes.vampireEditor.entity.exception.EntityException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test
-public class GenerationTest {
+public class GenerationTest extends BaseTest
+{
     private Generation generation;
 
     @BeforeMethod
-    public void setUp() throws EntityException {
+    public void setUp()
+    {
+        super.setUp();
         this.generation = Generation.builder()
             .setGeneration(5)
             .setMaximumAttributes(10)

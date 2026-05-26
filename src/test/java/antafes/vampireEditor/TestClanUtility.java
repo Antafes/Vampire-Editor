@@ -22,8 +22,8 @@
 
 package antafes.vampireEditor;
 
-import antafes.vampireEditor.entity.EntityException;
-import antafes.vampireEditor.entity.EntityStorageException;
+import antafes.vampireEditor.entity.exception.EntityException;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.entity.storage.AdvantageStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
@@ -46,8 +46,8 @@ public class TestClanUtility {
      * @throws EntityException Thrown if something happened while building
      */
     public static Clan createTestClan() throws EntityException, EntityStorageException {
-        AdvantageStorage advantageStorage = (AdvantageStorage) StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
-        WeaknessStorage weaknessStorage = (WeaknessStorage) StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
+        AdvantageStorage advantageStorage = StorageFactory.getStorage(StorageFactory.StorageType.ADVANTAGE);
+        WeaknessStorage weaknessStorage = StorageFactory.getStorage(StorageFactory.StorageType.WEAKNESS);
         return Clan.builder()
             .setKey("testClan")
             .addName(Configuration.Language.ENGLISH, "Test clan")

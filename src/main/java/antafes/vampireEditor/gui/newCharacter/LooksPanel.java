@@ -22,19 +22,29 @@
 package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.entity.*;
+import antafes.vampireEditor.entity.BaseEntity;
+import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
+import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.character.Clan;
-import antafes.vampireEditor.entity.storage.ClanStorage;
-import antafes.vampireEditor.entity.storage.EmptyEntityStorage;
-import antafes.vampireEditor.entity.storage.GenerationStorage;
-import antafes.vampireEditor.entity.storage.StorageFactory;
-import antafes.vampireEditor.gui.ComponentDocumentListener;
+import antafes.vampireEditor.entity.character.Generation;
+import antafes.vampireEditor.entity.character.Nature;
+import antafes.vampireEditor.entity.character.Road;
+import antafes.vampireEditor.entity.exception.EntityStorageException;
+import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
+import antafes.vampireEditor.gui.element.ClanComboBox;
+import antafes.vampireEditor.gui.element.HelpIcon;
 import antafes.vampireEditor.gui.element.PlaceholderFormattedTextField;
+import antafes.vampireEditor.gui.element.WideComboBox;
+import antafes.vampireEditor.gui.event.*;
+import antafes.vampireEditor.gui.event.listener.AddGenerationEventListener;
+import antafes.vampireEditor.gui.event.listener.ClanSelectedListener;
+import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
+import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
-import antafes.vampireEditor.utility.ClanComparator;
+import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -51,20 +61,23 @@ import java.util.*;
  *
  * @author Marian Pollzien
  */
-public class LooksPanel extends javax.swing.JPanel {
-    static final int DEFAULT_GENERATION = 12;
+public class LooksPanel extends javax.swing.JPanel
+{
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
     private final DateTimeFormatter dateTimeFormatter;
     private final LocalDate date;
 
+    private Clan selectedClan;
+    private boolean suppressRoadEvents = false;
+
     private javax.swing.JTextField ageField;
     private javax.swing.JLabel ageLabel;
     private javax.swing.JButton backButton;
     private javax.swing.JTextField chronicleField;
     private javax.swing.JLabel chronicleLabel;
-    private javax.swing.JComboBox<BaseEntity> clanComboBox;
+    private ClanComboBox clanComboBox;
     private javax.swing.JLabel clanLabel;
     private javax.swing.JTextField conceptField;
     private javax.swing.JLabel conceptLabel;
@@ -88,7 +101,7 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nationalityField;
     private javax.swing.JLabel nationalityLabel;
-    private javax.swing.JTextField natureField;
+    private javax.swing.JComboBox<BaseEntity> natureField;
     private javax.swing.JLabel natureLabel;
     private javax.swing.JButton nextButton;
     private javax.swing.JTextField playerField;
@@ -106,13 +119,18 @@ public class LooksPanel extends javax.swing.JPanel {
     private javax.swing.JLabel skinColorLabel;
     private javax.swing.JTextField weightField;
     private javax.swing.JLabel weightLabel;
+    private javax.swing.JComboBox<BaseTranslatedEntity> roadComboBox;
+    private javax.swing.JLabel roadLabel;
+    private javax.swing.JComboBox<BaseTranslatedEntity> pathComboBox;
+    private javax.swing.JLabel pathLabel;
 
     /**
      * Creates new form looksPanel
      *
      * @param parent Parent element
      */
-    public LooksPanel(NewCharacterDialog parent) {
+    public LooksPanel(NewCharacterDialog parent)
+    {
         super();
         this.parent = parent;
         Configuration configuration = Configuration.getInstance();
@@ -126,7 +144,8 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Init everything.
      */
-    public void init() {
+    public void init()
+    {
         this.initComponents();
         this.setFieldTexts();
         this.createFocusTraversalPolicy();
@@ -135,7 +154,8 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Initialize every component that should be shown on the panel.
      */
-    private void initComponents() {
+    private void initComponents()
+    {
         ageField = new javax.swing.JTextField();
         ageLabel = new javax.swing.JLabel();
         apparentAgeField = new javax.swing.JTextField();
@@ -143,7 +163,7 @@ public class LooksPanel extends javax.swing.JPanel {
         backButton = new javax.swing.JButton();
         chronicleField = new javax.swing.JTextField();
         chronicleLabel = new javax.swing.JLabel();
-        clanComboBox = new javax.swing.JComboBox<>();
+        clanComboBox = new ClanComboBox();
         clanLabel = new javax.swing.JLabel();
         conceptField = new javax.swing.JTextField();
         conceptLabel = new javax.swing.JLabel();
@@ -167,7 +187,7 @@ public class LooksPanel extends javax.swing.JPanel {
         nameLabel = new javax.swing.JLabel();
         nationalityField = new javax.swing.JTextField();
         nationalityLabel = new javax.swing.JLabel();
-        natureField = new javax.swing.JTextField();
+        natureField = new javax.swing.JComboBox<>();
         natureLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         playerField = new javax.swing.JTextField();
@@ -195,12 +215,18 @@ public class LooksPanel extends javax.swing.JPanel {
         weightField.setName("weight"); // NOI18N
 
         this.enteredFields.put(clanComboBox, Boolean.FALSE);
-        clanComboBox.setModel(this.getClans());
+        clanComboBox.setLanguage(this.language);
+        clanComboBox.setClans(this.getClans());
         clanComboBox.setName("clan"); // NOI18N
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
         sexField.setModel(this.getSexes());
         sexField.setName("sex"); // NOI18N
+
+        sexLabel.setIcon(HelpIcon.getInstance());
+        sexLabel.setHorizontalTextPosition(SwingConstants.LEADING);
+        sexLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        sexLabel.setIconTextGap(4);
 
         sectLabel.setLabelFor(sectField);
         sectLabel.setText("Sect");
@@ -240,22 +266,27 @@ public class LooksPanel extends javax.swing.JPanel {
         hairColorField.setName("hairColor"); // NOI18N
 
         this.generationContentLabel.setName("generation");
-        this.generationContentLabel.setText(Integer.toString(LooksPanel.DEFAULT_GENERATION));
+        this.generationContentLabel.setText(Integer.toString(this.getDefaultGeneration().getGeneration()));
 
         sexLabel.setLabelFor(sexField);
         sexLabel.setText("Sex");
 
         natureLabel.setLabelFor(natureField);
-        natureLabel.setText("Nature*");
+        natureLabel.setText("Nature");
 
         eyeColorLabel.setLabelFor(eyeColorField);
         eyeColorLabel.setText("Eye color");
 
-        this.enteredFields.put(natureField, Boolean.FALSE);
         ComponentDocumentListener documentListener = this.createDocumentListener();
         documentListener.setComponent(natureField);
-        natureField.getDocument().addDocumentListener(documentListener);
+        natureField.setModel(this.getNatures());
+        natureField.setEditable(true);
         natureField.setName("nature"); // NOI18N
+        natureField.addActionListener(evt -> {
+            if (natureField.getSelectedItem() instanceof Nature) {
+                checkFieldsFilled();
+            }
+        });
 
         eyeColorField.setName("eyeColor"); // NOI18N
 
@@ -279,18 +310,16 @@ public class LooksPanel extends javax.swing.JPanel {
         ageField.setName("age"); // NOI18N
 
         demeanorLabel.setLabelFor(demeanorField);
-        demeanorLabel.setText("Demeanor*");
+        demeanorLabel.setText("Demeanor");
 
         ageLabel.setLabelFor(ageField);
         ageLabel.setText("Age");
 
-        this.enteredFields.put(demeanorField, Boolean.FALSE);
         documentListener = this.createDocumentListener();
         documentListener.setComponent(demeanorField);
         demeanorField.getDocument().addDocumentListener(documentListener);
         demeanorField.setName("demeanor"); // NOI18N
 
-        this.enteredFields.put(conceptField, Boolean.FALSE);
         documentListener = this.createDocumentListener();
         documentListener.setComponent(conceptField);
         conceptField.getDocument().addDocumentListener(documentListener);
@@ -318,7 +347,7 @@ public class LooksPanel extends javax.swing.JPanel {
         apparentAgeField.setName("apparentAge"); // NOI18N
 
         conceptLabel.setLabelFor(conceptField);
-        conceptLabel.setText("Concept*");
+        conceptLabel.setText("Concept");
 
         dayOfBirthLabel.setLabelFor(dayOfBirthField);
         dayOfBirthLabel.setText("Day of birth");
@@ -329,15 +358,75 @@ public class LooksPanel extends javax.swing.JPanel {
         nationalityLabel.setLabelFor(nationalityField);
         nationalityLabel.setText("Nationality");
 
+        roadComboBox = new javax.swing.JComboBox<>();
+        roadLabel = new javax.swing.JLabel();
+        roadLabel.setLabelFor(roadComboBox);
+        roadLabel.setText("Road*");
+        this.enteredFields.put(roadComboBox, Boolean.FALSE);
+        DefaultComboBoxModel<BaseTranslatedEntity> roadModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyRoad = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        roadModel.addElement(emptyRoad);
+        this.getRoadValues().forEach(roadModel::addElement);
+        roadComboBox.setModel(roadModel);
+        roadComboBox.setName("road"); // NOI18N
+        roadComboBox.addActionListener(evt -> {
+            if (this.suppressRoadEvents) {
+                return;
+            }
+            Object selected = roadComboBox.getSelectedItem();
+            if (selected instanceof EmptyEntity) {
+                enteredFields.replace(roadComboBox, Boolean.FALSE);
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+                this.clearPathComboBox();
+            } else if (selected instanceof Road) {
+                enteredFields.replace(roadComboBox, Boolean.TRUE);
+                checkFieldsFilled();
+                this.removeEmptyRoadEntry();
+                this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent((Road) selected));
+                this.populatePathComboBox((Road) selected);
+            }
+        });
+
+        pathComboBox = new WideComboBox<>();
+        pathLabel = new javax.swing.JLabel();
+        pathLabel.setLabelFor(pathComboBox);
+        pathLabel.setText("Path");
+        pathComboBox.setName("path"); // NOI18N
+        pathComboBox.setEnabled(false);
+        pathComboBox.addActionListener(evt -> {
+            Object selected = pathComboBox.getSelectedItem();
+            if (selected instanceof EmptyEntity) {
+                this.parent.getDialogDispatcher().dispatch(new PathSelectedEvent(null));
+            } else if (selected instanceof Road) {
+                this.parent.getDialogDispatcher().dispatch(new PathSelectedEvent((Road) selected));
+            }
+        });
+
+        this.parent.getDialogDispatcher().addListener(
+            VirtueValueSetEvent.class, new VirtueValueSetListener(event -> {
+                String text = "<html>" + language.translate("road") + "*<br>(" + language.translate("roadScore") + ": " + Road.calculateRoadScore(
+                    event.getVirtues()) + ")</html>";
+                this.roadLabel.setText(text);
+            })
+        );
+        this.parent.getDialogDispatcher().addListener(
+            AddGenerationItemListenerEvent.class,
+            new AddGenerationEventListener(event -> this.adjustGeneration(event.getAdjustment()))
+        );
+        this.parent.getDialogDispatcher()
+            .addListener(
+                ClanSelectedEvent.class,
+                new ClanSelectedListener(event -> this.onClanSelected(event.getClan()))
+            );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chronicleLabel)
                     .addComponent(nameLabel)
+                    .addComponent(chronicleLabel)
                     .addComponent(generationLabel)
                     .addComponent(natureLabel)
                     .addComponent(hideoutLabel)
@@ -346,24 +435,93 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(conceptLabel)
                     .addComponent(sireLabel)
                     .addComponent(clanLabel)
-                    .addComponent(sectLabel))
+                    .addComponent(sectLabel)
+                    .addComponent(roadLabel)
+                    .addComponent(pathLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(hideoutField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(playerField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(demeanorField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(conceptField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sireField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(natureField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chronicleField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(
+                        hideoutField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        playerField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        demeanorField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        conceptField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        sireField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        sectField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        clanComboBox,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        natureField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        nameField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        chronicleField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        generationContentLabel,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        roadComboBox,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        pathComboBox,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        167,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    ))
                 .addGap(18, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(apparentAgeLabel)
                     .addComponent(ageLabel)
+                    .addComponent(apparentAgeLabel)
                     .addComponent(dayOfBirthLabel)
                     .addComponent(dayOfDeathLabel)
                     .addComponent(hairColorLabel)
@@ -383,119 +541,276 @@ public class LooksPanel extends javax.swing.JPanel {
                     .addComponent(apparentAgeField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                     .addComponent(weightField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                     .addComponent(ageField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(sexField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dayOfBirthField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dayOfDeathField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(
+                        sexField,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addComponent(
+                        dayOfBirthField,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE
+                    )
+                    .addComponent(
+                        dayOfDeathField,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE
+                    ))
                 .addContainerGap(28, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(requiredLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(requiredLabel)
+                    .addPreferredGap(
+                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE
+                    )
+                    .addComponent(
+                        backButton,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        80,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(
+                        nextButton,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        80,
+                        javax.swing.GroupLayout.PREFERRED_SIZE
+                    )
+                    .addGap(11, 11, 11)
+            ));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ageField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(
+                                ageField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            )
                             .addComponent(ageLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(apparentAgeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(
+                                apparentAgeField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            )
                             .addComponent(apparentAgeLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dayOfBirthLabel)
-                            .addComponent(dayOfBirthField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                dayOfBirthField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dayOfDeathLabel)
-                            .addComponent(dayOfDeathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                dayOfDeathField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(hairColorLabel)
-                            .addComponent(hairColorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                hairColorField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(eyeColorLabel)
-                            .addComponent(eyeColorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                eyeColorField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(skinColorLabel)
-                            .addComponent(skinColorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                skinColorField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nationalityLabel)
-                            .addComponent(nationalityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                nationalityField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(heightLabel)
-                            .addComponent(heightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                heightField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(weightLabel)
-                            .addComponent(weightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                weightField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sexLabel)
-                            .addComponent(sexField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(
+                                sexField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            )))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(
+                                nameField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            )
                             .addComponent(nameLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(chronicleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(
+                                chronicleField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            )
                             .addComponent(chronicleLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(generationLabel)
-                            .addComponent(generationContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                generationContentLabel,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(natureLabel)
-                            .addComponent(natureField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                natureField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(hideoutLabel)
-                            .addComponent(hideoutField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                hideoutField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(playerLabel)
-                            .addComponent(playerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                playerField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(demeanorLabel)
-                            .addComponent(demeanorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                demeanorField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(conceptLabel)
-                            .addComponent(conceptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                conceptField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sireLabel)
-                            .addComponent(sireField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                sireField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(clanLabel)
-                            .addComponent(clanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                                clanComboBox,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sectLabel)
-                            .addComponent(sectField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(
+                                sectField,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(roadLabel)
+                            .addComponent(
+                                roadComboBox,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(pathLabel)
+                            .addComponent(
+                                pathComboBox,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE
+                            ))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
                     .addComponent(backButton)
                     .addComponent(requiredLabel))
-                .addGap(11, 11, 11))
-        );
+                .addGap(11, 11, 11)));
     }
 
     /**
@@ -503,14 +818,16 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @param evt Event object
      */
-    private void clanComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        if (Objects.equals(this.clanComboBox.getSelectedItem(), "")) {
+    private void clanComboBoxActionPerformed(java.awt.event.ActionEvent evt)
+    {
+        Clan clan = this.clanComboBox.getSelectedClan();
+        if (clan == null) {
             this.enteredFields.replace(this.clanComboBox, Boolean.FALSE);
+            this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(null));
         } else {
             this.enteredFields.replace(this.clanComboBox, Boolean.TRUE);
             this.checkFieldsFilled();
-            Clan clan = (Clan) ((JComboBox<BaseTranslatedEntity>) evt.getSource()).getSelectedItem();
-            this.parent.setClanDisciplines(clan);
+            this.parent.getDialogDispatcher().dispatch(new ClanSelectedEvent(clan));
             this.parent.adjustAttributesToClan(clan);
         }
     }
@@ -520,7 +837,8 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @param evt Event object
      */
-    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt)
+    {
         JTabbedPane pane = this.parent.getCharacterTabPane();
         pane.setSelectedIndex(pane.getSelectedIndex() + 1);
     }
@@ -528,18 +846,21 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Set the translated texts for the fields and labels of the looks tab.
      */
-    private void setFieldTexts() {
+    private void setFieldTexts()
+    {
         this.nameLabel.setText(this.language.translate("name") + "*");
         this.chronicleLabel.setText(this.language.translate("chronicle"));
         this.generationLabel.setText(this.language.translate("generation"));
-        this.natureLabel.setText(this.language.translate("nature") + "*");
+        this.natureLabel.setText(this.language.translate("nature"));
         this.hideoutLabel.setText(this.language.translate("hideout"));
         this.playerLabel.setText(this.language.translate("player"));
-        this.demeanorLabel.setText(this.language.translate("demeanor") + "*");
-        this.conceptLabel.setText(this.language.translate("concept") + "*");
+        this.demeanorLabel.setText(this.language.translate("demeanor"));
+        this.conceptLabel.setText(this.language.translate("concept"));
         this.sireLabel.setText(this.language.translate("sire"));
         this.clanLabel.setText(this.language.translate("clan") + "*");
         this.sectLabel.setText(this.language.translate("sect"));
+        this.roadLabel.setText(this.language.translate("road") + "*");
+        this.pathLabel.setText(this.language.translate("path"));
 
         this.ageLabel.setText(this.language.translate("age"));
         this.apparentAgeLabel.setText(this.language.translate("apparentAge"));
@@ -552,6 +873,7 @@ public class LooksPanel extends javax.swing.JPanel {
         this.heightLabel.setText(this.language.translate("height"));
         this.weightLabel.setText(this.language.translate("weight"));
         this.sexLabel.setText(this.language.translate("sex"));
+        this.sexLabel.setToolTipText(this.language.translate("sexInfo"));
 
         this.requiredLabel.setText(this.language.translate("required"));
         this.nextButton.setText(this.language.translate("next"));
@@ -563,29 +885,37 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @return Component document listener for this panel
      */
-    private ComponentDocumentListener createDocumentListener() {
-        return new ComponentDocumentListener() {
+    private ComponentDocumentListener createDocumentListener()
+    {
+        return new ComponentDocumentListener()
+        {
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                changed();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                changed();
-            }
-            @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e)
+            {
                 changed();
             }
 
-            public void changed() {
-                if (this.getComponent() instanceof JTextComponent
-                    && ((JTextComponent) this.getComponent()).getText().equals("")
-                ) {
+            @Override
+            public void removeUpdate(DocumentEvent e)
+            {
+                changed();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e)
+            {
+                changed();
+            }
+
+            public void changed()
+            {
+                if (this.getComponent() instanceof JTextComponent && ((JTextComponent) this.getComponent()).getText()
+                    .isEmpty()) {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
-                } else if (this.getComponent() instanceof JComboBox
-                    && Objects.equals(((JComboBox<BaseTranslatedEntity>) this.getComponent()).getSelectedItem(), "")
-                ) {
+                } else if (this.getComponent() instanceof JComboBox && Objects.equals(
+                    ((JComboBox<BaseTranslatedEntity>) this.getComponent()).getSelectedItem(),
+                    ""
+                )) {
                     enteredFields.replace(this.getComponent(), Boolean.FALSE);
                 } else {
                     enteredFields.replace(this.getComponent(), Boolean.TRUE);
@@ -598,22 +928,38 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Get the sexes for showing them in the form.
      */
-    public DefaultComboBoxModel<Character.Sex> getSexes() {
-        return new DefaultComboBoxModel<>(antafes.vampireEditor.entity.Character.Sex.values());
+    public DefaultComboBoxModel<Character.Sex> getSexes()
+    {
+        DefaultComboBoxModel<Character.Sex> model = new DefaultComboBoxModel<>();
+        model.addElement(null);
+        Arrays.stream(antafes.vampireEditor.entity.Character.Sex.values()).forEach(model::addElement);
+
+        return model;
     }
 
     /**
-     * Get the generations for showing them in the form.
+     * Get the clans for showing them in the form.
      */
-    public DefaultComboBoxModel<BaseEntity> getClans() {
-        ClanStorage clanStorage = (ClanStorage) StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+    private ArrayList<Clan> getClans()
+    {
+        ClanStorage clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
+        return new ArrayList<>(clanStorage.getList().values());
+    }
+
+    private DefaultComboBoxModel<BaseEntity> getNatures()
+    {
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
         DefaultComboBoxModel<BaseEntity> model = new DefaultComboBoxModel<>();
         EmptyEntity emptyEntity = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
         model.addElement(emptyEntity);
-        ArrayList<BaseEntity> sortedClans = new ArrayList<>(clanStorage.getList().values());
-        sortedClans.sort(new ClanComparator());
+        ArrayList<BaseEntity> sortedNatures = new ArrayList<>(natureStorage.getList().values());
+        sortedNatures.sort((o1, o2) -> {
+            Nature n1 = (Nature) o1;
+            Nature n2 = (Nature) o2;
 
-        sortedClans.forEach(model::addElement);
+            return n1.getName().compareToIgnoreCase(n2.getName());
+        });
+        sortedNatures.forEach(model::addElement);
 
         return model;
     }
@@ -621,7 +967,8 @@ public class LooksPanel extends javax.swing.JPanel {
     /**
      * Check if the next tab can be activated.
      */
-    private void checkFieldsFilled() {
+    private void checkFieldsFilled()
+    {
         if (!this.enteredFields.containsValue(Boolean.FALSE) && this.parent.getMaxActiveTab() < 1) {
             this.parent.increaseMaxActiveTab();
             this.parent.getCharacterTabPane().setEnabledAt(this.parent.getMaxActiveTab(), true);
@@ -629,10 +976,16 @@ public class LooksPanel extends javax.swing.JPanel {
         }
     }
 
+    public void applyNpcCreationMode()
+    {
+        this.nextButton.setEnabled(true);
+    }
+
     /**
      * Create the focus traversal policy for the looks tab.
      */
-    private void createFocusTraversalPolicy() {
+    private void createFocusTraversalPolicy()
+    {
         Vector<Component> order = new Vector<>();
         order.add(this.nameField);
         order.add(this.chronicleField);
@@ -644,6 +997,10 @@ public class LooksPanel extends javax.swing.JPanel {
         order.add(this.sireField);
         order.add(this.clanComboBox);
         order.add(this.sectField);
+        order.add(this.roadComboBox);
+        if (this.pathComboBox != null && this.pathComboBox.isEnabled()) {
+            order.add(this.pathComboBox);
+        }
         order.add(this.ageField);
         order.add(this.apparentAgeField);
         order.add(this.dayOfBirthField);
@@ -661,13 +1018,120 @@ public class LooksPanel extends javax.swing.JPanel {
     }
 
     /**
+     * Get the values for the road combo box.
+     */
+    private ArrayList<Road> getRoadValues()
+    {
+        return this.getRoadValuesForClan(null);
+    }
+
+    /**
+     * Get the roads available for the given clan.
+     * If clan is null, returns only universal roads.
+     *
+     * @param clan the clan to filter roads for, or null for universal roads only
+     * @return sorted list of roads available to the clan
+     */
+    private ArrayList<Road> getRoadValuesForClan(Clan clan)
+    {
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        ArrayList<Road> list;
+        if (clan != null) {
+            list = roadStorage.getRoadsForClan(clan);
+        } else {
+            list = roadStorage.getRoads();
+            list.removeIf(road -> !road.isUniversal());
+        }
+        list.sort(new StringComparator());
+
+        return list;
+    }
+
+    /**
+     * Handle clan selection event by refreshing road combo box.
+     *
+     * @param clan the selected clan
+     */
+    private void onClanSelected(Clan clan)
+    {
+        this.selectedClan = clan;
+        this.refreshRoadComboBox();
+    }
+
+    /**
+     * Refresh the road combo box based on the currently selected clan.
+     * If a previously selected road is no longer available for the clan,
+     * clear the road and path selections.
+     * The road ActionListener is suppressed during the model update to avoid
+     * unnecessary path repopulation and event dispatching when the road has not changed.
+     */
+    private void refreshRoadComboBox()
+    {
+        ArrayList<Road> availableRoads = this.getRoadValuesForClan(this.selectedClan);
+        DefaultComboBoxModel<BaseTranslatedEntity> newModel = new DefaultComboBoxModel<>();
+
+        EmptyEntity emptyRoad = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        newModel.addElement(emptyRoad);
+        availableRoads.forEach(newModel::addElement);
+
+        Object currentRoadSelection = this.roadComboBox.getSelectedItem();
+        Object currentPathSelection = this.pathComboBox.getSelectedItem();
+        boolean roadStillAvailable = currentRoadSelection instanceof EmptyEntity || (currentRoadSelection instanceof Road && availableRoads.contains(
+            currentRoadSelection));
+
+        this.suppressRoadEvents = true;
+        try {
+            this.roadComboBox.setModel(newModel);
+            if (roadStillAvailable) {
+                this.roadComboBox.setSelectedItem(currentRoadSelection);
+            } else {
+                this.roadComboBox.setSelectedItem(emptyRoad);
+            }
+        } finally {
+            this.suppressRoadEvents = false;
+        }
+
+        if (!roadStillAvailable && currentRoadSelection instanceof Road) {
+            this.enteredFields.replace(this.roadComboBox, Boolean.FALSE);
+            this.parent.getDialogDispatcher().dispatch(new RoadSelectedEvent(null));
+            this.clearPathComboBox();
+        } else if (roadStillAvailable && currentRoadSelection instanceof Road) {
+            this.removeEmptyRoadEntry();
+            if (this.pathComboBox.isEnabled() && currentPathSelection != null) {
+                DefaultComboBoxModel<?> pathModel = (DefaultComboBoxModel<?>) this.pathComboBox.getModel();
+                boolean pathStillValid = false;
+                for (int i = 0; i < pathModel.getSize(); i++) {
+                    if (pathModel.getElementAt(i).equals(currentPathSelection)) {
+                        pathStillValid = true;
+                        break;
+                    }
+                }
+                if (pathStillValid) {
+                    this.pathComboBox.setSelectedItem(currentPathSelection);
+                }
+            }
+        }
+    }
+
+    /**
      * This method checks every input made by the user for duplicate entries.
      * This method is only implemented to achieve consistency for every panel.
      *
      * @return Returns true if a duplicate entry has been found.
      */
-    public boolean checkAllFields() {
+    public boolean checkAllFields()
+    {
         return false;
+    }
+
+    public boolean hasName()
+    {
+        return !this.nameField.getText().trim().isEmpty();
+    }
+
+    public void focusNameField()
+    {
+        this.nameField.requestFocusInWindow();
     }
 
     /**
@@ -675,34 +1139,113 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @param builder Character builder object
      */
-    public void fillCharacter(Character.CharacterBuilder<?, ?> builder) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        builder.setName(this.nameField.getText());
-        builder.setChronicle(this.chronicleField.getText());
+    public void fillCharacter(Character.CharacterBuilder<?, ?> builder)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
+        builder.setName(this.nameField.getText()).setChronicle(this.chronicleField.getText());
         try {
             builder.setGeneration(generationStorage.getEntity(this.generationContentLabel.getText()));
+            if (this.natureField.getSelectedItem() instanceof Nature) {
+                builder.setNature(natureStorage.getEntity(((Nature) this.natureField.getSelectedItem()).getKey()));
+            } else {
+                builder.setNature(null);
+            }
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        builder.setNature(this.natureField.getText());
-        builder.setHideout(this.hideoutField.getText());
-        builder.setPlayer(this.playerField.getText());
-        builder.setDemeanor(this.demeanorField.getText());
-        builder.setConcept(this.conceptField.getText());
-        builder.setSire(this.sireField.getText());
-        builder.setClan((Clan) this.clanComboBox.getSelectedItem());
-        builder.setSect(this.sectField.getText());
-        builder.setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0);
-        builder.setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0);
-        builder.setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null);
-        builder.setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null);
-        builder.setHairColor(this.hairColorField.getText());
-        builder.setEyeColor(this.eyeColorField.getText());
-        builder.setSkinColor(this.skinColorField.getText());
-        builder.setNationality(this.nationalityField.getText());
-        builder.setHeight(!this.heightField.getText().equals("") ? Integer.parseInt(this.heightField.getText()) : 0);
-        builder.setWeight(!this.weightField.getText().equals("") ? Integer.parseInt(this.weightField.getText()) : 0);
-        builder.setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem());
+        builder.setHideout(this.hideoutField.getText())
+            .setPlayer(this.playerField.getText())
+            .setDemeanor(this.demeanorField.getText())
+            .setConcept(this.conceptField.getText())
+            .setSire(this.sireField.getText())
+            .setClan(getClan())
+            .setSect(this.sectField.getText())
+            .setAge(!"".equals(this.ageField.getText()) ? Integer.parseInt(this.ageField.getText()) : 0)
+            .setApparentAge(!"".equals(this.apparentAgeField.getText()) ? Integer.parseInt(this.apparentAgeField.getText()) : 0)
+            .setDayOfBirth(!"".equals(this.dayOfBirthField.getText()) ? (Date) this.dayOfBirthField.getValue() : null)
+            .setDayOfDeath(!"".equals(this.dayOfDeathField.getText()) ? (Date) this.dayOfDeathField.getValue() : null)
+            .setHairColor(this.hairColorField.getText())
+            .setEyeColor(this.eyeColorField.getText())
+            .setSkinColor(this.skinColorField.getText())
+            .setNationality(this.nationalityField.getText())
+            .setHeight(!this.heightField.getText().isEmpty() ? Integer.parseInt(this.heightField.getText()) : 0)
+            .setWeight(!this.weightField.getText().isEmpty() ? Integer.parseInt(this.weightField.getText()) : 0)
+            .setSex((antafes.vampireEditor.entity.Character.Sex) this.sexField.getSelectedItem())
+            .setRoad(getRoad())
+            .setPath(getPath());
+    }
+
+    private Road getRoad()
+    {
+        Object selectedItem = this.roadComboBox.getSelectedItem();
+        return selectedItem instanceof Road ? (Road) selectedItem : null;
+    }
+
+    private Road getPath()
+    {
+        Object selectedItem = this.pathComboBox.getSelectedItem();
+        return selectedItem instanceof Road ? (Road) selectedItem : null;
+    }
+
+    private Clan getClan()
+    {
+        return this.clanComboBox.getSelectedItem();
+    }
+
+    /**
+     * Populate the path combo box with child roads of the selected road.
+     *
+     * @param selectedRoad The selected road whose children should be displayed
+     */
+    private void populatePathComboBox(Road selectedRoad)
+    {
+        DefaultComboBoxModel<BaseTranslatedEntity> pathModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyPath = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        pathModel.addElement(emptyPath);
+        pathComboBox.putClientProperty("emptyEntry", emptyPath);
+
+        RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
+        ArrayList<Road> childPaths = new ArrayList<>(roadStorage.getPathsForRoad(selectedRoad));
+
+        childPaths.sort(new StringComparator());
+        childPaths.forEach(pathModel::addElement);
+
+        pathComboBox.setModel(pathModel);
+        pathComboBox.setEnabled(!childPaths.isEmpty());
+        pathComboBox.setSelectedItem(emptyPath);
+        this.createFocusTraversalPolicy();
+    }
+
+    /**
+     * Clear the path combo box and reset it to empty/disabled state.
+     */
+    private void clearPathComboBox()
+    {
+        DefaultComboBoxModel<BaseTranslatedEntity> pathModel = new DefaultComboBoxModel<>();
+        EmptyEntity emptyPath = ((EmptyEntityStorage) StorageFactory.getStorage(StorageFactory.StorageType.EMPTY)).getEntity();
+        pathModel.addElement(emptyPath);
+        pathComboBox.setModel(pathModel);
+        pathComboBox.setEnabled(false);
+        pathComboBox.setSelectedItem(emptyPath);
+        this.createFocusTraversalPolicy();
+    }
+
+    /**
+     * Remove the empty road entry once a concrete road is selected.
+     */
+    private void removeEmptyRoadEntry()
+    {
+        if (!(this.roadComboBox.getModel() instanceof DefaultComboBoxModel<?> currentModel)) {
+            return;
+        }
+
+        for (int i = 0; i < currentModel.getSize(); i++) {
+            if (currentModel.getElementAt(i) instanceof EmptyEntity) {
+                currentModel.removeElementAt(i);
+                break;
+            }
+        }
     }
 
     /**
@@ -710,18 +1253,25 @@ public class LooksPanel extends javax.swing.JPanel {
      *
      * @param adjustment Generation adjustment
      */
-    public void adjustGeneration(int adjustment) {
-        GenerationStorage generationStorage = (GenerationStorage) StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
-        int generation = LooksPanel.DEFAULT_GENERATION;
-        generation -= adjustment;
-
-        this.generationContentLabel.setText(Integer.toString(generation));
+    public void adjustGeneration(int adjustment)
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
         try {
-            this.parent.setAttributeMaximum(
-                Objects.requireNonNull(generationStorage.getEntity(generation)).getMaximumAttributes()
-            );
+            int generation = generationStorage.clampGeneration(this.getDefaultGeneration().getGeneration() - adjustment)
+                .getGeneration();
+            this.generationContentLabel.setText(Integer.toString(generation));
         } catch (EntityStorageException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Generation getDefaultGeneration()
+    {
+        GenerationStorage generationStorage = StorageFactory.getStorage(StorageFactory.StorageType.GENERATION);
+        try {
+            return generationStorage.getDefaultGeneration();
+        } catch (EntityStorageException e) {
+            throw new RuntimeException(e);
         }
     }
 }

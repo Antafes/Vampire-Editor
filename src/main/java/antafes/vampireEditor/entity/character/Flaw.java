@@ -21,6 +21,9 @@
  */
 package antafes.vampireEditor.entity.character;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -33,7 +36,14 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true, setterPrefix = "set")
+@XmlRootElement(name = "flaw")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Flaw extends SpecialFeature {
+    protected Flaw()
+    {
+        super();
+    }
+
     @Override
     public String toString()
     {

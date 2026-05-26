@@ -1,0 +1,4 @@
+.m2/
+.idea/
+resources/
+ci/variables.yml

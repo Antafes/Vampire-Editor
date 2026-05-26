@@ -16,11 +16,12 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2023, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 package antafes.vampireEditor;
 
+import antafes.eventDispatcher.Application;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
 
@@ -29,7 +30,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,8 +48,10 @@ import java.util.logging.Logger;
  *
  * @author Marian Pollzien <map@wafriv.de>
  */
-public class VampireEditor {
+public class VampireEditor extends Application
+{
     private static final boolean DEBUG = false;
+    private static final String DATA_PATH = "data/";
 
     /**
      * @param args the command line arguments
@@ -86,7 +90,7 @@ public class VampireEditor {
      *
      * @param lines The lines to log
      */
-    public static void log(ArrayList<String> lines) {
+    public static void log(List<String> lines) {
         if (!VampireEditor.DEBUG) {
             return;
         }
@@ -119,7 +123,7 @@ public class VampireEditor {
         }
 
         try {
-            Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            Files.write(file, lines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
         } catch (IOException ex) {
             Logger.getLogger(VampireEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -129,13 +133,15 @@ public class VampireEditor {
      * Open up the editors base window.
      */
     private void openBaseWindow() {
-        BaseWindow baseWindow = new BaseWindow();
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Image img = kit.createImage(
-            VampireEditor.getResourceInJar("images/logo16.png")
-        );
-        baseWindow.setIconImage(img);
-        baseWindow.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            BaseWindow baseWindow = new BaseWindow();
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(
+                VampireEditor.getResourceInJar("images/logo16.png")
+            );
+            baseWindow.setIconImage(img);
+            baseWindow.setVisible(true);
+        });
     }
 
     /**
@@ -144,11 +150,11 @@ public class VampireEditor {
      * @return Path to the data directory
      */
     public static String getDataPath() {
-        return "data/";
+        return DATA_PATH;
     }
 
     /**
-     * Get a file inside of the generated JAR.
+     * Get a file inside the generated JAR.
      *
      * @param path Path of the file
      *
@@ -159,7 +165,7 @@ public class VampireEditor {
     }
 
     /**
-     * Get a resource inside of the generated JAR.
+     * Get a resource inside the generated JAR.
      *
      * @param path Path of the file
      *

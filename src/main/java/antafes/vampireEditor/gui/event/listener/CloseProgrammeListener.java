@@ -16,34 +16,30 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2022, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.entity;
 
-/**
- * Exceptions thrown for or in entity storages.
- *
- * @author Marian Pollzien
- */
-public class EntityStorageException extends Exception {
+package antafes.vampireEditor.gui.event.listener;
 
-    public EntityStorageException() {
+import antafes.vampireEditor.gui.event.CloseProgrammeEvent;
+import scripts.laniax.framework.event_dispatcher.EventListener;
+
+import java.util.function.Consumer;
+
+public class CloseProgrammeListener extends EventListener<CloseProgrammeEvent>
+{
+    public CloseProgrammeListener()
+    {
     }
 
-    public EntityStorageException(String message) {
-        super(message);
+    public CloseProgrammeListener(Consumer<CloseProgrammeEvent> consumer)
+    {
+        super(consumer);
     }
 
-    public EntityStorageException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public EntityStorageException(Throwable cause) {
-        super(cause);
-    }
-
-    public EntityStorageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public CloseProgrammeListener(Consumer<CloseProgrammeEvent> consumer, int priority)
+    {
+        super(consumer, priority);
     }
 }
