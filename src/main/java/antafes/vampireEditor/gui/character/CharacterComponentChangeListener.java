@@ -101,9 +101,13 @@ public class CharacterComponentChangeListener extends ComponentChangeListener
     private Character resolveCharacter()
     {
         Container panel = SwingUtilities.getAncestorOfClass(BaseCharacterPanel.class, this.getComponent());
-
         if (panel instanceof BaseCharacterPanel baseCharacterPanel && baseCharacterPanel.getCharacter() != null) {
             return baseCharacterPanel.getCharacter();
+        }
+
+        Container listPanel = SwingUtilities.getAncestorOfClass(BaseCharacterListPanel.class, this.getComponent());
+        if (listPanel instanceof BaseCharacterListPanel baseCharacterListPanel && baseCharacterListPanel.getCharacter() != null) {
+            return baseCharacterListPanel.getCharacter();
         }
 
         return this.character;
