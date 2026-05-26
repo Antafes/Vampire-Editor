@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Vampire Editor (Development)
+  main:
+    web-application-type: none
+    lazy-initialization: false
+  jmx:
+    enabled: false
+
+logging:
+  level:
+    antafes: DEBUG
+    org.springframework: INFO
+

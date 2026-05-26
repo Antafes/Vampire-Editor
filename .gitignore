@@ -35,3 +35,4 @@ ci/variables.yml
 .m2/settings.xml
 /.aiassistant/
 /docs/plans/*.md
+/docs/plans/archive/
