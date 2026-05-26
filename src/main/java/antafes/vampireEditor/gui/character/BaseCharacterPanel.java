@@ -45,6 +45,13 @@ abstract public class BaseCharacterPanel extends BasePanel implements Translatab
 
     private final ArrayList<UndoManager> undoManagers = new ArrayList<>();
 
+    @Override
+    protected void init()
+    {
+        this.clearUndoHistory();
+        super.init();
+    }
+
     protected void addChangeListenerForCharacterChanged(JComponent component)
     {
         if (component instanceof JTextComponent textComponent) {

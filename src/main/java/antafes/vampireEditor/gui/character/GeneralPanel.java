@@ -195,7 +195,6 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         this.addMeritAndFlawFields();
         this.addOtherFields();
         this.fillCharacterData();
-        this.clearUndoHistory();
 
         super.init();
     }
