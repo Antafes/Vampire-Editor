@@ -84,6 +84,12 @@ public class German extends Language {
         this.getTranslations().put("openMnemonic", "f");
         this.getTranslations().put("save", "Speichern");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("edit", "Bearbeiten");
+        this.getTranslations().put("editMnemonic", "B");
+        this.getTranslations().put("undo", "Rückgängig");
+        this.getTranslations().put("undoMnemonic", "R");
+        this.getTranslations().put("redo", "Wiederherstellen");
+        this.getTranslations().put("redoMnemonic", "W");
         this.getTranslations().put("print", "Drucken");
         this.getTranslations().put("printMnemonic", "D");
         this.getTranslations().put("existingFile", "Existierende Datei");

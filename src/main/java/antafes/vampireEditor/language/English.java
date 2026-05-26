@@ -84,6 +84,12 @@ public class English extends Language {
         this.getTranslations().put("openMnemonic", "O");
         this.getTranslations().put("save", "Save");
         this.getTranslations().put("saveMnemonic", "S");
+        this.getTranslations().put("edit", "Edit");
+        this.getTranslations().put("editMnemonic", "E");
+        this.getTranslations().put("undo", "Undo");
+        this.getTranslations().put("undoMnemonic", "U");
+        this.getTranslations().put("redo", "Redo");
+        this.getTranslations().put("redoMnemonic", "R");
         this.getTranslations().put("print", "Print");
         this.getTranslations().put("printMnemonic", "P");
         this.getTranslations().put("existingFile", "Existing file");

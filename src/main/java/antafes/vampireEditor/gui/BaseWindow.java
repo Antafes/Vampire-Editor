@@ -86,6 +86,7 @@ public class BaseWindow extends javax.swing.JFrame {
     private CloseableTabbedPane charactersTabPane;
     private JButton closeAboutButton;
     private JMenuItem closeMenuItem;
+    private JMenu editMenu;
     private JRadioButtonMenuItem englishMenuItem;
     private JMenu fileMenu;
     private JRadioButtonMenuItem germanMenuItem;
@@ -97,6 +98,8 @@ public class BaseWindow extends javax.swing.JFrame {
     private JFileChooser openFileChooser;
     private JFileChooser saveFileChooser;
     private JMenuItem saveMenuItem;
+    private JMenuItem undoMenuItem;
+    private JMenuItem redoMenuItem;
     private JMenuItem openMenuItem;
     private JMenuItem printMenuItem;
     private JSeparator recentFilesTopSeparator;
@@ -157,8 +160,11 @@ public class BaseWindow extends javax.swing.JFrame {
         newNpcMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
+        undoMenuItem = new JMenuItem();
+        redoMenuItem = new JMenuItem();
         printMenuItem = new JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
+        editMenu = new JMenu();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
         languageMenu = new javax.swing.JMenu();
@@ -209,6 +215,20 @@ public class BaseWindow extends javax.swing.JFrame {
         fileMenu.add(closeMenuItem);
 
         menuBar.add(fileMenu);
+
+        editMenu.setText("Edit");
+
+        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(this::undoMenuItemActionPerformed);
+        editMenu.add(undoMenuItem);
+
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK));
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(this::redoMenuItemActionPerformed);
+        editMenu.add(redoMenuItem);
+
+        menuBar.add(editMenu);
 
         helpMenu.setText("Help");
 
@@ -470,6 +490,33 @@ public class BaseWindow extends javax.swing.JFrame {
         try {
             this.saveCurrentCharacter();
         } catch (SaveCancelledException ignored) {}
+    }
+
+    private void undoMenuItemActionPerformed(ActionEvent evt)
+    {
+        this.performTextEditAction("undo");
+    }
+
+    private void redoMenuItemActionPerformed(ActionEvent evt)
+    {
+        this.performTextEditAction("redo");
+    }
+
+    private void performTextEditAction(String actionKey)
+    {
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (!(focusOwner instanceof JComponent focusedComponent)) {
+            Toolkit.getDefaultToolkit().beep();
+            return;
+        }
+
+        Action action = focusedComponent.getActionMap().get(actionKey);
+        if (action == null || !action.isEnabled()) {
+            Toolkit.getDefaultToolkit().beep();
+            return;
+        }
+
+        action.actionPerformed(new ActionEvent(focusedComponent, ActionEvent.ACTION_PERFORMED, actionKey));
     }
 
     private void saveCurrentCharacter() throws SaveCancelledException
@@ -799,6 +846,12 @@ public class BaseWindow extends javax.swing.JFrame {
 
         this.fileMenu.setText(this.language.translate("file"));
         this.fileMenu.setMnemonic(this.language.translate("fileMnemonic").charAt(0));
+        this.editMenu.setText(this.language.translate("edit"));
+        this.editMenu.setMnemonic(this.language.translate("editMnemonic").charAt(0));
+        this.undoMenuItem.setText(this.language.translate("undo"));
+        this.undoMenuItem.setMnemonic(this.language.translate("undoMnemonic").charAt(0));
+        this.redoMenuItem.setText(this.language.translate("redo"));
+        this.redoMenuItem.setMnemonic(this.language.translate("redoMnemonic").charAt(0));
         this.closeMenuItem.setText(this.language.translate("quit"));
         this.closeMenuItem.setMnemonic(this.language.translate("quitMnemonic").charAt(0));
         this.helpMenu.setText(this.language.translate("help"));
