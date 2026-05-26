@@ -22,8 +22,11 @@
 
 package scripts.laniax.framework.event_dispatcher;
 
+import lombok.AllArgsConstructor;
+
 import java.util.function.Consumer;
 
+@AllArgsConstructor
 public class EventListener<T extends Event>
 {
     private final Consumer<T> consumer;
@@ -40,11 +43,6 @@ public class EventListener<T extends Event>
         this(consumer, 0);
     }
 
-    public EventListener(Consumer<T> consumer, int priority)
-    {
-        this.consumer = consumer;
-        this.priority = priority;
-    }
 
     public int getPriority()
     {

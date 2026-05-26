@@ -23,7 +23,7 @@
 package antafes.vampireEditor.lifecycle;
 
 import antafes.vampireEditor.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -33,15 +33,10 @@ import org.springframework.stereotype.Component;
  * This listener is triggered when the Spring application context is closed.
  */
 @Component
+@RequiredArgsConstructor
 public class ApplicationShutdownHandler
 {
     private final Configuration configuration;
-
-    @Autowired
-    public ApplicationShutdownHandler(Configuration configuration)
-    {
-        this.configuration = configuration;
-    }
 
     /**
      * Perform cleanup and resource release on application shutdown.

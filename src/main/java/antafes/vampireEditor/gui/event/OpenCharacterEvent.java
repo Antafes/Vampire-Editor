@@ -23,6 +23,7 @@
 package antafes.vampireEditor.gui.event;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import scripts.laniax.framework.event_dispatcher.Event;
 
 /**
@@ -30,13 +31,9 @@ import scripts.laniax.framework.event_dispatcher.Event;
  * The filePath must be an absolute path to the character XML file.
  */
 @Getter
+@RequiredArgsConstructor
 public class OpenCharacterEvent extends Event
 {
     private final String filePath;
-
-    public OpenCharacterEvent(String filePath)
-    {
-        this.filePath = filePath;
-    }
 }
 
