@@ -63,6 +63,7 @@ import java.util.*;
  */
 public class LooksPanel extends javax.swing.JPanel
 {
+    private final Configuration configuration;
     private final LanguageInterface language;
     private final HashMap<Component, Boolean> enteredFields;
     private final NewCharacterDialog parent;
@@ -128,12 +129,13 @@ public class LooksPanel extends javax.swing.JPanel
      * Creates new form looksPanel
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public LooksPanel(NewCharacterDialog parent)
+    public LooksPanel(NewCharacterDialog parent, Configuration configuration)
     {
         super();
+        this.configuration = configuration;
         this.parent = parent;
-        Configuration configuration = Configuration.getInstance();
         this.enteredFields = new HashMap<>();
         this.language = configuration.getLanguageObject();
 
@@ -163,7 +165,7 @@ public class LooksPanel extends javax.swing.JPanel
         backButton = new javax.swing.JButton();
         chronicleField = new javax.swing.JTextField();
         chronicleLabel = new javax.swing.JLabel();
-        clanComboBox = new ClanComboBox();
+        clanComboBox = new ClanComboBox(this.configuration);
         clanLabel = new javax.swing.JLabel();
         conceptField = new javax.swing.JTextField();
         conceptLabel = new javax.swing.JLabel();
@@ -221,6 +223,22 @@ public class LooksPanel extends javax.swing.JPanel
         clanComboBox.addActionListener(this::clanComboBoxActionPerformed);
 
         sexField.setModel(this.getSexes());
+        sexField.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus
+            ) {
+                Object displayValue = value instanceof Character.Sex sex
+                    ? sex.getLabel(LooksPanel.this.configuration)
+                    : value;
+
+                return super.getListCellRendererComponent(list, displayValue, index, isSelected, cellHasFocus);
+            }
+        });
         sexField.setName("sex"); // NOI18N
 
         sexLabel.setIcon(HelpIcon.getInstance());
@@ -280,6 +298,22 @@ public class LooksPanel extends javax.swing.JPanel
         ComponentDocumentListener documentListener = this.createDocumentListener();
         documentListener.setComponent(natureField);
         natureField.setModel(this.getNatures());
+        natureField.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus
+            ) {
+                Object displayValue = value instanceof Nature nature
+                    ? nature.getName(LooksPanel.this.configuration)
+                    : value;
+
+                return super.getListCellRendererComponent(list, displayValue, index, isSelected, cellHasFocus);
+            }
+        });
         natureField.setEditable(true);
         natureField.setName("nature"); // NOI18N
         natureField.addActionListener(evt -> {
@@ -957,7 +991,9 @@ public class LooksPanel extends javax.swing.JPanel
             Nature n1 = (Nature) o1;
             Nature n2 = (Nature) o2;
 
-            return n1.getName().compareToIgnoreCase(n2.getName());
+            return n1.getName(LooksPanel.this.configuration).compareToIgnoreCase(
+                n2.getName(LooksPanel.this.configuration)
+            );
         });
         sortedNatures.forEach(model::addElement);
 

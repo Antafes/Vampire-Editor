@@ -255,11 +255,17 @@ public class Character extends BaseEntity {
         MALE,
         FEMALE;
 
-        @Override
-        public String toString() {
-            Configuration configuration = Configuration.getInstance();
+        public String getLabel(Configuration configuration) {
+            if (configuration == null) {
+                return this.name();
+            }
 
             return configuration.getLanguageObject().translate(this.name());
+        }
+
+        @Override
+        public String toString() {
+            return this.name();
         }
     }
 

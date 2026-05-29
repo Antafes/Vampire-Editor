@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
@@ -59,9 +60,10 @@ public class AbilitiesPanel extends BaseListPanel {
      * Constructor
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public AbilitiesPanel(NewCharacterDialog parent) {
-        super(parent);
+    public AbilitiesPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     /**

@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
@@ -54,9 +55,10 @@ public class LastStepsPanel extends BasePanel {
      * Create the last steps panel.
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public LastStepsPanel(NewCharacterDialog parent) {
-        super(parent);
+    public LastStepsPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     /**

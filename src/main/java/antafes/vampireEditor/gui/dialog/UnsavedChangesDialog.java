@@ -59,6 +59,7 @@ public class UnsavedChangesDialog extends JDialog {
     }
 
     private final LanguageInterface language;
+    @Getter
     private Result userChoice = Result.CANCEL;
     private JTextArea messageArea;
     private JButton saveButton;
@@ -70,15 +71,15 @@ public class UnsavedChangesDialog extends JDialog {
      *
      * @param owner The parent frame that owns this dialog
      * @param characterName The name of the character with unsaved changes
+     * @param configuration The configuration object
      */
-    public UnsavedChangesDialog(Frame owner, String characterName) {
+    public UnsavedChangesDialog(Frame owner, String characterName, Configuration configuration) {
         super(owner, true);
 
         this.setResizable(false);
         this.setSize(new Dimension(450, 150));
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        Configuration configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
 
         this.initComponents();
@@ -206,14 +207,4 @@ public class UnsavedChangesDialog extends JDialog {
         this.setVisible(false);
         this.dispose();
     }
-
-    /**
-     * Get the user's dialog choice.
-     *
-     * @return The user's choice: SAVE, DISCARD, or CANCEL
-     */
-    public Result getUserChoice() {
-        return this.userChoice;
-    }
 }
-

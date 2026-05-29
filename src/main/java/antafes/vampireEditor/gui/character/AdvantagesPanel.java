@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Advantage;
 import antafes.vampireEditor.entity.character.AdvantageInterface;
@@ -38,6 +39,11 @@ import java.util.Objects;
  * @author Marian Pollzien
  */
 public class AdvantagesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
+    public AdvantagesPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
+
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields(AdvantageInterface.AdvantageType.BACKGROUND.getKeyPlural()).stream().map((component) -> (JSpinner) component)

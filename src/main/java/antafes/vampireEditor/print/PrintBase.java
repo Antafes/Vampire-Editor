@@ -32,6 +32,8 @@ import antafes.vampireEditor.print.element.BarLabel;
 import antafes.vampireEditor.print.element.DotElement;
 import antafes.vampireEditor.print.utility.Dot;
 import antafes.vampireEditor.print.utility.StringProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -57,15 +59,17 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
     private LanguageInterface language;
     private Class followingPage = null;
     private Class previousPage = null;
+    @Setter
+    @Getter
     private int maxY = 0;
 
-    public PrintBase(Character character) {
-        this(character, true);
+    public PrintBase(Character character, Configuration configuration) {
+        this(character, configuration, true);
     }
 
-    public PrintBase(Character character, boolean isDoubleBuffered) {
+    public PrintBase(Character character, Configuration configuration, boolean isDoubleBuffered) {
         super(isDoubleBuffered);
-        this.configuration = Configuration.getInstance();
+        this.configuration = configuration;
         this.language = configuration.getLanguageObject();
         this.innerPanel = new JPanel();
         this.pageFormat = new PageFormat();
@@ -208,30 +212,12 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
     }
 
     /**
-     * Get the maximum y in the grid that is used.
-     *
-     * @return
-     */
-    public int getMaxY() {
-        return maxY;
-    }
-
-    /**
      * Set the language.
      *
      * @param language
      */
     protected void setLanguage(LanguageInterface language) {
         this.language = language;
-    }
-
-    /**
-     * Set the maximum y in the grid that is used.
-     *
-     * @param maxY
-     */
-    public void setMaxY(int maxY) {
-        this.maxY = maxY;
     }
 
     /**
@@ -718,9 +704,9 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
      * @return
      */
     protected int getImageableWidth() {
-        Double imageableWidth = this.pageFormat.getWidth();
+        double imageableWidth = this.pageFormat.getWidth();
 
-        return imageableWidth.intValue();
+        return (int) imageableWidth;
     }
 
     /**
@@ -734,8 +720,8 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
         }
 
         try {
-            return (PrintBase) this.followingPage.getConstructor(Character.class)
-                .newInstance(this.getCharacter());
+            return (PrintBase) this.followingPage.getConstructor(Character.class, Configuration.class)
+                .newInstance(this.getCharacter(), this.getConfiguration());
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             VampireEditor.log("Failed to fetch the next page object.");
         }
@@ -754,8 +740,8 @@ public abstract class PrintBase extends JPanel implements TranslatableComponent,
         }
 
         try {
-            return (PrintBase) this.previousPage.getConstructor(Character.class)
-                .newInstance(this.getCharacter());
+            return (PrintBase) this.previousPage.getConstructor(Character.class, Configuration.class)
+                .newInstance(this.getCharacter(), this.getConfiguration());
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             VampireEditor.log("Failed to fetch the previous page object.");
         }

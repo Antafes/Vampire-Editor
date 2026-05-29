@@ -22,6 +22,7 @@
 package antafes.vampireEditor.print;
 
 import org.apache.commons.lang3.StringUtils;
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -43,8 +44,8 @@ public class General extends PrintBase {
      *
      * @param character The character to display
      */
-    public General(Character character) {
-        this(character, true);
+    public General(Character character, Configuration configuration) {
+        this(character, configuration, true);
     }
 
     /**
@@ -53,8 +54,8 @@ public class General extends PrintBase {
      * @param character        The character to display
      * @param isDoubleBuffered Activates or deactivates double buffering
      */
-    public General(Character character, boolean isDoubleBuffered) {
-        super(character, isDoubleBuffered);
+    public General(Character character, Configuration configuration, boolean isDoubleBuffered) {
+        super(character, configuration, isDoubleBuffered);
 
         this.setFollowingPage(MeritsAndFlaws.class);
     }

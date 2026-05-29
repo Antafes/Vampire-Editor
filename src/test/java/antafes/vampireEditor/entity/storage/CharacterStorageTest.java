@@ -53,8 +53,7 @@ public class CharacterStorageTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        new VampireEditor();
-        Configuration configuration = Configuration.getInstance();
+        Configuration configuration = this.configuration;
         configuration.loadProperties();
         configuration.setSaveDirPath(this.saveDir);
         configuration.setOpenDirPath(this.saveDir);
@@ -65,7 +64,7 @@ public class CharacterStorageTest extends BaseTest
             Assert.fail("Could not create test save directory", e);
         }
 
-        this.characterStorage = new CharacterStorage();
+        this.characterStorage = new CharacterStorage(this.configuration);
     }
 
     @AfterMethod
@@ -159,7 +158,7 @@ public class CharacterStorageTest extends BaseTest
 
     public void testSaveUsesDirectoryPreparedByTest() {
         Path missingSaveDir = Paths.get(this.saveDir, "missing-" + System.nanoTime());
-        Configuration configuration = Configuration.getInstance();
+        Configuration configuration = this.configuration;
         configuration.setSaveDirPath(missingSaveDir.toString());
         configuration.setOpenDirPath(missingSaveDir.toString());
 

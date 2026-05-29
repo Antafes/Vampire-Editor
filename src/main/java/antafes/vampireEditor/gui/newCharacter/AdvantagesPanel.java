@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
@@ -69,10 +70,11 @@ public class AdvantagesPanel extends BaseColumnListPanel
      * {@link #start()} and {@link #build()} must be called separately by the owner.
      *
      * @param parent The owning NewCharacterDialog
+     * @param configuration The configuration object
      */
-    public AdvantagesPanel(NewCharacterDialog parent)
+    public AdvantagesPanel(NewCharacterDialog parent, Configuration configuration)
     {
-        super();
+        super(configuration);
         this.parent = parent;
     }
 

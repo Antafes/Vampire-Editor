@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import lombok.AccessLevel;
@@ -42,9 +43,10 @@ abstract public class BasePanel extends antafes.vampireEditor.gui.BasePanel {
      * Creates new form BasePanel
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public BasePanel(NewCharacterDialog parent) {
-        super();
+    public BasePanel(NewCharacterDialog parent, Configuration configuration) {
+        super(configuration);
         this.parent = parent;
 
         this.start();

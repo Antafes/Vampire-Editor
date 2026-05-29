@@ -38,7 +38,7 @@ public class UnsavedCharactersDialogTest extends BaseTest
     public void testSingleCharacterUsesSingularMessage()
     {
         this.skipIfHeadless();
-        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of("Johannes"));
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of("Johannes"), this.configuration);
 
         String message = this.getInfoMessage(dialog);
 
@@ -51,7 +51,7 @@ public class UnsavedCharactersDialogTest extends BaseTest
     public void testMultipleCharactersUsesMultipleMessageAndList()
     {
         this.skipIfHeadless();
-        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of("Johannes", "Carolina"));
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of("Johannes", "Carolina"), this.configuration);
 
         String message = this.getInfoMessage(dialog);
 
@@ -66,7 +66,7 @@ public class UnsavedCharactersDialogTest extends BaseTest
     public void testEmptyCharacterListUsesGenericUnsavedCharactersMessage()
     {
         this.skipIfHeadless();
-        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of());
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(null, List.of(), this.configuration);
 
         String message = this.getInfoMessage(dialog);
 

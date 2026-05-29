@@ -55,7 +55,6 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        new VampireEditor();
         this.character = TestCharacterUtility.createTestCharacter();
         Assert.assertNotNull(this.character);
 
@@ -76,7 +75,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testAttributesPanelUpdateCharacterUsesAttributeGroupKeys()
     {
-        AttributesPanel panel = new AttributesPanel();
+        AttributesPanel panel = new AttributesPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -96,7 +95,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testAbilitiesPanelUpdateCharacterUsesAbilityGroupKeys()
     {
-        AbilitiesPanel panel = new AbilitiesPanel();
+        AbilitiesPanel panel = new AbilitiesPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -116,7 +115,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testAdvantagesPanelUpdateCharacterUsesAdvantageGroupKeys()
     {
-        AdvantagesPanel panel = new AdvantagesPanel();
+        AdvantagesPanel panel = new AdvantagesPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -136,7 +135,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelUpdateCharacterPersistsDemeanorConceptAndNature()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -158,7 +157,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelUpdateCharacterTrimsDemeanorAndConcept()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -175,7 +174,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelUpdateCharacterClearsNatureWhenEmpty()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -189,7 +188,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelUpdateCharacterStoresNullForBlankDemeanorAndConcept()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         Character testCharacterWithoutOptionalValues = this.character.toBuilder()
             .setDemeanor(null)
             .setConcept(null)
@@ -210,7 +209,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelNatureFieldDispatchesCharacterChangedEvent()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
 
@@ -223,7 +222,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelNullFieldTransitionDispatchesCharacterChangedEvent()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         Character testCharacterNullNature = this.character.toBuilder()
             .setNature(null)
             .build();
@@ -239,7 +238,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelWhitespaceOnlyOptionalFieldsDoNotReportChanged()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         Character testCharacterWithoutOptionalValues = this.character.toBuilder()
             .setDemeanor(null)
             .setConcept(null)
@@ -262,7 +261,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
 
     public void testGeneralPanelTrimEquivalentOptionalFieldsDoNotReportChanged()
     {
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(this.character);
         panel.start();
         this.capturedCharacterChangedEvents.clear();
@@ -282,7 +281,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
     public void testGeneralPanelNatureKeyInputEquivalentDoesNotReportChanged() throws EntityStorageException
     {
         NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         Character testCharacterWithBuiltInNature = this.character.toBuilder()
             .setNature(natureStorage.getEntity("architect"))
             .build();
@@ -299,7 +298,7 @@ public class CharacterPanelUpdateCharacterTest extends BaseTest
     public void testGeneralPanelNatureCaseOnlyDisplayInputEquivalentDoesNotReportChanged() throws EntityStorageException
     {
         NatureStorage natureStorage = StorageFactory.getStorage(StorageFactory.StorageType.NATURE);
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         Character testCharacterWithBuiltInNature = this.character.toBuilder()
             .setNature(natureStorage.getEntity("architect"))
             .build();

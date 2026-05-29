@@ -38,6 +38,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.xml.stream.XMLStreamException;
@@ -59,12 +60,16 @@ public class CharacterStorage extends BaseStorage<Character> {
     private final Configuration configuration;
     private final JAXBContext jaxbContext;
 
+
     /**
      * Create a new character storage.
+     *
+     * @param configuration The configuration object
      */
-    CharacterStorage() {
+    @Autowired
+    public CharacterStorage(Configuration configuration) {
         super();
-        this.configuration = Configuration.getInstance();
+        this.configuration = configuration;
         this.jaxbContext = JaxbBindingSupport.createContext(Character.class);
     }
 

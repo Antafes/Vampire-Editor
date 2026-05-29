@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Ability;
 import antafes.vampireEditor.entity.character.AbilityInterface;
@@ -40,6 +41,11 @@ import java.util.Objects;
 public class AbilitiesPanel extends antafes.vampireEditor.gui.character.BaseCharacterListPanel
     implements TranslatableComponent, antafes.vampireEditor.gui.character.CharacterPanelInterface
 {
+    public AbilitiesPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
+
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields(AbilityInterface.AbilityType.TALENT.getKeyPlural()).stream().map((component) -> (JSpinner) component)

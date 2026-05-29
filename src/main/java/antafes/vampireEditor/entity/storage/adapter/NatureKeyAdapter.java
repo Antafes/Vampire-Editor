@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.entity.storage.adapter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.Nature;
 import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
@@ -47,7 +48,23 @@ public class NatureKeyAdapter extends XmlAdapter<String, Nature> {
     @Override
     public String marshal(Nature nature) {
         if (nature == null) return null;
-        return nature.isManual() ? nature.getName() : nature.getKey();
+        if (!nature.isManual()) {
+            return nature.getKey();
+        }
+
+        if (nature.getNames() != null) {
+            String englishName = nature.getNames().get(Configuration.Language.ENGLISH);
+            if (englishName != null && !englishName.isBlank()) {
+                return englishName;
+            }
+
+            return nature.getNames().values().stream()
+                .filter(value -> value != null && !value.isBlank())
+                .findFirst()
+                .orElse(nature.getKey());
+        }
+
+        return nature.getKey();
     }
 }
 

@@ -22,6 +22,7 @@
 package antafes.vampireEditor.print;
 
 import org.apache.commons.lang3.StringUtils;
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -44,9 +45,10 @@ public class MeritsAndFlaws extends PrintBase {
      * Create a new looks print object.
      *
      * @param character The character to display
+     * @param configuration The configuration to use
      */
-    public MeritsAndFlaws(Character character) {
-        super(character);
+    public MeritsAndFlaws(Character character, Configuration configuration) {
+        super(character, configuration);
 
         this.setPreviousPage(General.class);
         this.setFollowingPage(Backgrounds.class);
@@ -296,7 +298,7 @@ public class MeritsAndFlaws extends PrintBase {
      * Add a table used for showing weapons.
      */
     private void addWeaponTable() {
-        JTable table = new JTable(new WeaponTableModel());
+        JTable table = new JTable(new WeaponTableModel(this.getConfiguration()));
         table.setGridColor(Color.BLACK);
         table.setShowGrid(true);
         table.setAutoscrolls(false);

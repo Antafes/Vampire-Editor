@@ -22,6 +22,8 @@
 
 package antafes.vampireEditor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -34,12 +36,20 @@ import java.awt.*;
 @ActiveProfiles("test")
 public abstract class BaseTest extends AbstractTestNGSpringContextTests
 {
-    Configuration configuration;
+    @Autowired
+    protected Configuration configuration;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @BeforeMethod
     public void setUp()
     {
-        this.configuration = Configuration.getInstance();
+        if (this.configuration == null) {
+            this.configuration = this.applicationContext.getBean(Configuration.class);
+        }
+
+        this.configuration.loadProperties();
         this.configuration.clearRecentFiles();
         this.configuration.setOpenDirPath("test/open/dir/path");
         this.configuration.setSaveDirPath("test/save/dir/path");

@@ -71,19 +71,39 @@ public class Clan extends BaseTranslatedEntity implements ClanInterface {
     }
 
     /**
+     * Get the clan nickname according to the given configuration.
+     */
+    public String getNickname(Configuration configuration) {
+        if (configuration == null) {
+            return this.getNickname();
+        }
+
+        return this.getNickname(configuration.getLanguage());
+    }
+
+    /**
+     * Get the clan nickname according to the given language.
+     */
+    public String getNickname(Configuration.Language language) {
+        String nickname = this.nicknames != null ? this.nicknames.get(language) : null;
+
+        if (nickname == null || nickname.isEmpty()) {
+            nickname = this.nicknames != null ? this.nicknames.get(Configuration.Language.ENGLISH) : null;
+        }
+
+        if (nickname == null || nickname.isEmpty()) {
+            nickname = this.getName(language);
+        }
+
+        return nickname;
+    }
+
+    /**
      * Get the clan nicknames.
      */
     @Override
     public String getNickname() {
-        Configuration configuration = Configuration.getInstance();
-
-        String nickname = this.nicknames.get(configuration.getLanguage());
-
-        if (nickname == null || nickname.isEmpty()) {
-            nickname = this.nicknames.get(Configuration.Language.ENGLISH);
-        }
-
-        return nickname;
+        return this.getNickname(Configuration.Language.ENGLISH);
     }
 
     @Override

@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Attribute;
 import antafes.vampireEditor.entity.character.AttributeInterface;
@@ -38,6 +39,11 @@ import java.util.Objects;
  * @author Marian Pollzien
  */
 public class AttributesPanel extends BaseCharacterListPanel implements TranslatableComponent, CharacterPanelInterface {
+    public AttributesPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
+
     @Override
     public void setSpinnerMaximum(int maximum) {
         this.getFields(AttributeInterface.AttributeType.PHYSICAL.getKeyPlural()).stream().map((component) -> (JSpinner) component)

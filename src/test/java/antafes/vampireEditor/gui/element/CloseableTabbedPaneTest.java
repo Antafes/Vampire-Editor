@@ -34,7 +34,7 @@ public class CloseableTabbedPaneTest extends BaseTest
 {
     public void testSetTitleAtUpdatesTabbedPaneModelAndCustomLabel()
     {
-        CloseableTabbedPane tabbedPane = new CloseableTabbedPane();
+        CloseableTabbedPane tabbedPane = new CloseableTabbedPane(this.configuration);
         tabbedPane.insertTab("Original", null, new JPanel(), null, 0);
 
         tabbedPane.setTitleAt(0, "Renamed*");

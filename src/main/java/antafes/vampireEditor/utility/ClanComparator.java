@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.Clan;
 
 import java.util.Comparator;
@@ -30,6 +31,11 @@ import java.util.Comparator;
  * @author Marian Pollzien
  */
 public class ClanComparator implements Comparator {
+    private final Configuration configuration;
+
+    public ClanComparator(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     /**
      * Compare two clans by name.
@@ -45,6 +51,6 @@ public class ClanComparator implements Comparator {
         Clan c1 = (Clan) o1;
         Clan c2 = (Clan) o2;
 
-        return c1.getName().compareToIgnoreCase(c2.getName());
+        return c1.getName(this.configuration).compareToIgnoreCase(c2.getName(this.configuration));
     }
 }

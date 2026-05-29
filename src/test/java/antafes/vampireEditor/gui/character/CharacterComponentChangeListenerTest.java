@@ -39,7 +39,7 @@ public class CharacterComponentChangeListenerTest extends BaseTest
     {
         Character expectedCharacter = TestCharacterUtility.createTestCharacter();
         Character fallbackCharacter = TestCharacterUtility.createTestCharacter();
-        GeneralPanel panel = new GeneralPanel();
+        GeneralPanel panel = new GeneralPanel(this.configuration);
         panel.setCharacter(expectedCharacter);
 
         JSpinner spinner = new JSpinner();
@@ -61,7 +61,7 @@ public class CharacterComponentChangeListenerTest extends BaseTest
     {
         Character expectedCharacter = TestCharacterUtility.createTestCharacter();
         Character fallbackCharacter = TestCharacterUtility.createTestCharacter();
-        AbilitiesPanel panel = new AbilitiesPanel();
+        AbilitiesPanel panel = new AbilitiesPanel(this.configuration);
         panel.setCharacter(expectedCharacter);
 
         JSpinner spinner = new JSpinner();

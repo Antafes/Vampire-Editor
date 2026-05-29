@@ -46,15 +46,23 @@ public enum Weighting {
     }
 
     /**
-     * Get a string representation of the weighting.
+     * Get a localized label for the weighting.
      *
-     * @return A string representation of the weighting
+     * @param configuration Configuration providing the current language
+     *
+     * @return A localized label for the weighting
      */
-    @Override
-    public String toString() {
-        Configuration configuration = Configuration.getInstance();
+    public String getLabel(Configuration configuration) {
+        if (configuration == null) {
+            return this.name();
+        }
 
         return configuration.getLanguageObject().translate(this.name());
+    }
+
+    @Override
+    public String toString() {
+        return this.name();
     }
 
     /**
@@ -70,6 +78,6 @@ public enum Weighting {
         weightings.remove(first);
         weightings.remove(second);
 
-        return weightings.get(0);
+        return weightings.getFirst();
     }
 }

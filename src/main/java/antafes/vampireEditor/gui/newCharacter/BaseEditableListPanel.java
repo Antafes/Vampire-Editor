@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
@@ -51,9 +52,10 @@ abstract public class BaseEditableListPanel extends BaseListPanel {
      * Creates new form AbilitiesPanel
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public BaseEditableListPanel(NewCharacterDialog parent) {
-        super(parent);
+    public BaseEditableListPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     /**

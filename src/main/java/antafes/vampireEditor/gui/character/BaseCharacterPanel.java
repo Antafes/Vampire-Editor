@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
@@ -44,6 +45,11 @@ abstract public class BaseCharacterPanel extends BasePanel implements Translatab
     private antafes.vampireEditor.entity.Character character = null;
 
     private final ArrayList<UndoManager> undoManagers = new ArrayList<>();
+
+    protected BaseCharacterPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
 
     @Override
     protected void init()

@@ -60,9 +60,9 @@ public class BaseColumnListPanelTest extends BaseTest
     @BeforeClass
     public void classSetUp() throws TypeNotSupportedException
     {
-        Configuration.getInstance().setLanguage(Configuration.Language.ENGLISH);
+        this.configuration.setLanguage(Configuration.Language.ENGLISH);
 
-        panel = new TestPanel();
+        panel = new TestPanel(this.configuration);
         panel.start();
         panel.build();
 
@@ -187,6 +187,11 @@ public class BaseColumnListPanelTest extends BaseTest
 
     private static class TestPanel extends BaseColumnListPanel
     {
+        private TestPanel(Configuration configuration)
+        {
+            super(configuration);
+        }
+
         @Override
         protected void init()
         {

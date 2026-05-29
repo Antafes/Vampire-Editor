@@ -22,23 +22,13 @@
 
 package antafes.vampireEditor.config;
 
-import antafes.vampireEditor.Configuration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 public class ApplicationConfiguration
 {
-    @Bean
-    public Configuration vampireConfiguration()
-    {
-        Configuration configuration = Configuration.getInstance();
-        configuration.loadProperties();
-
-        return configuration;
-    }
-
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady()
     {

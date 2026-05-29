@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
@@ -44,6 +45,11 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 public class GeneralPanel extends BaseCharacterPanel implements TranslatableComponent, CharacterPanelInterface {
+    public GeneralPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
+
     /**
      * Fill in the character data. If no character is set, nothing will be added.
      */
@@ -66,7 +72,11 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getGeneration().toString());
                         break;
                     case "nature":
-                        element.setText(this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature().toString());
+                        element.setText(
+                            this.getCharacter().getNature() == null
+                                ? ""
+                                : this.getCharacter().getNature().getName(this.getConfiguration())
+                        );
                         break;
                     case "hideout":
                         element.setText(this.getCharacter().getHideout());
@@ -84,7 +94,11 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getSire());
                         break;
                     case "clan":
-                        element.setText(this.getCharacter().getClan() == null ? "" : this.getCharacter().getClan().getName());
+                        element.setText(
+                            this.getCharacter().getClan() == null
+                                ? ""
+                                : this.getCharacter().getClan().getName(this.getConfiguration())
+                        );
                         break;
                     case "sect":
                         element.setText(this.getCharacter().getSect());

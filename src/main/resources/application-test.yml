@@ -12,3 +12,7 @@ logging:
     antafes: INFO
     org.springframework: WARN
 
+vampire:
+  config:
+    path: ${java.io.tmpdir}/vampire-editor-tests/.vampire/
+

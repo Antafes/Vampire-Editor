@@ -22,8 +22,12 @@
 package antafes.vampireEditor;
 
 import antafes.vampireEditor.language.LanguageInterface;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,10 +49,11 @@ import java.util.logging.Logger;
  *
  * @author Marian Pollzien <map@wafriv.de>
  */
+@Component
 public class Configuration
 {
-    private static Configuration instance;
     public static final String PATH = System.getProperty("user.home") + "/.vampire/";
+    private static final String CONFIG_FILE_NAME = "gui.xml";
     public static final int MAX_RECENT_FILES = 10;
     private final Properties properties;
     private final File propertiesFile;
@@ -68,9 +73,15 @@ public class Configuration
     /**
      * constructor
      */
-    private Configuration()
+    public Configuration()
     {
-        this(new File(PATH + "gui.xml"));
+        this(resolvePropertiesFile(null));
+    }
+
+    @Autowired
+    public Configuration(@Value("${vampire.config.path:}") String configuredPath)
+    {
+        this(resolvePropertiesFile(configuredPath));
     }
 
     Configuration(File propertiesFile)
@@ -81,21 +92,9 @@ public class Configuration
     }
 
     /**
-     * Create and return a singleton instance of the configuration object.
-     *
-     * @return Instance of the Configuration object
-     */
-    public static Configuration getInstance() {
-        if (Configuration.instance == null) {
-            Configuration.instance = new Configuration();
-        }
-
-        return Configuration.instance;
-    }
-
-    /**
      * load all saved properties
      */
+    @PostConstruct
     public void loadProperties()
     {
         this.properties.clear();
@@ -120,7 +119,10 @@ public class Configuration
 
     private void restoreMissingDefaults()
     {
-        String defaultDocumentsPath = new File(PATH + "../Documents/").getPath();
+        File configurationDirectory = this.propertiesFile.getParentFile();
+        String defaultDocumentsPath = configurationDirectory == null
+            ? new File(PATH + "../Documents/").getPath()
+            : new File(configurationDirectory, "../Documents/").getPath();
 
         if (isNullOrEmpty(this.properties.getProperty("openDirPath"))) {
             this.properties.setProperty("openDirPath", defaultDocumentsPath);
@@ -138,6 +140,17 @@ public class Configuration
     private static boolean isNullOrEmpty(String value)
     {
         return value == null || value.trim().isEmpty();
+    }
+
+    private static File resolvePropertiesFile(String configuredPath)
+    {
+        String basePath = isNullOrEmpty(configuredPath) ? PATH : configuredPath.trim();
+
+        if (!basePath.endsWith("/") && !basePath.endsWith("\\")) {
+            basePath += "/";
+        }
+
+        return new File(basePath + CONFIG_FILE_NAME);
     }
 
     /**

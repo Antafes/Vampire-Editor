@@ -108,9 +108,11 @@ public class BaseWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form BaseWindow
+     *
+     * @param configuration The configuration object
      */
-    public BaseWindow() {
-        this.configuration = Configuration.getInstance();
+    public BaseWindow(Configuration configuration) {
+        this.configuration = configuration;
         this.language = this.configuration.getLanguageObject();
 
         this.initComponents();
@@ -153,7 +155,7 @@ public class BaseWindow extends javax.swing.JFrame {
         };
         openFileChooser = new javax.swing.JFileChooser();
         openFileChooser.setAcceptAllFileFilterUsed(false);
-        charactersTabPane = new CloseableTabbedPane();
+        charactersTabPane = new CloseableTabbedPane(this.configuration);
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -384,7 +386,7 @@ public class BaseWindow extends javax.swing.JFrame {
     }
 
     private void showUnsavedCharactersDialog(java.util.List<CharacterTabbedPane> unsavedTabs) {
-        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(this, this.getUnsavedCharacterNames(unsavedTabs));
+        UnsavedCharactersDialog dialog = new UnsavedCharactersDialog(this, this.getUnsavedCharacterNames(unsavedTabs), this.configuration);
         int x,
             y,
             width = dialog.getWidth(),
@@ -457,7 +459,7 @@ public class BaseWindow extends javax.swing.JFrame {
         int x, y, width, height;
 
         // Add the new character dialog.
-        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, npcCreation);
+        NewCharacterDialog newDialog = new NewCharacterDialog(this, true, npcCreation, this.configuration);
         newDialog.setVisible(false);
         newDialog.setParent(this);
 
@@ -977,7 +979,7 @@ public class BaseWindow extends javax.swing.JFrame {
      */
     public void addCharacter(Character character, boolean isCharacterChanged) {
         try {
-            CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane();
+            CharacterTabbedPane characterTabbedPane = new CharacterTabbedPane(this.configuration);
             characterTabbedPane.setCharacter(character);
             characterTabbedPane.init();
             characterTabbedPane.setCharacterChanged(isCharacterChanged);
@@ -1078,7 +1080,7 @@ public class BaseWindow extends javax.swing.JFrame {
 
         File file = new File(filePath);
 
-        ShowWaitAction waitAction = new ShowWaitAction(this);
+        ShowWaitAction waitAction = new ShowWaitAction(this, this.configuration);
         waitAction.show(aVoid -> {
             CharacterStorage storage = StorageFactory.getStorage(StorageFactory.StorageType.CHARACTER);
 

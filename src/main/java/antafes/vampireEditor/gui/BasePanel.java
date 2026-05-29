@@ -24,6 +24,8 @@ package antafes.vampireEditor.gui;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,21 +42,28 @@ abstract public class BasePanel extends JPanel {
 
     private final Configuration configuration;
     private LanguageInterface language;
+    @Setter
+    @Getter
     private GroupLayout.ParallelGroup outerParallelHorizontalGroup;
+    @Setter
     private GroupLayout.ParallelGroup outerParallelVerticalGroup;
+    @Setter
     private GroupLayout.SequentialGroup outerSequentialHorizontalGroup;
+    @Setter
+    @Getter
     private GroupLayout.SequentialGroup outerSequentialVerticalGroup;
     private final Vector<Component> order;
     private final HashMap<String, ArrayList<Component>> fields;
     private boolean translateFieldLabels = true;
+    @Setter
     private boolean translateGroupLabels = true;
 
     /**
      * Creates new form AbilitiesPanel
      */
-    public BasePanel() {
+    public BasePanel(Configuration configuration) {
         super();
-        this.configuration = Configuration.getInstance();
+        this.configuration = configuration;
         this.language = this.configuration.getLanguageObject();
         this.order = new Vector<>();
         this.fields = new HashMap<>();
@@ -168,15 +177,6 @@ abstract public class BasePanel extends JPanel {
     }
 
     /**
-     * Get the outer sequential vertical group.
-     *
-     * @return
-     */
-    public GroupLayout.SequentialGroup getOuterSequentialVerticalGroup() {
-        return this.outerSequentialVerticalGroup;
-    }
-
-    /**
      * Get the outer parallel vertical group.
      *
      * @return
@@ -195,66 +195,12 @@ abstract public class BasePanel extends JPanel {
     }
 
     /**
-     * Get the outer parallel horizontal group.
-     *
-     * @return
-     */
-    public GroupLayout.ParallelGroup getOuterParallelHorizontalGroup() {
-        return this.outerParallelHorizontalGroup;
-    }
-
-    /**
-     * Set the outer parallel horizontal group.
-     *
-     * @param outerParallelHorizontalGroup
-     */
-    public void setOuterParallelHorizontalGroup(GroupLayout.ParallelGroup outerParallelHorizontalGroup) {
-        this.outerParallelHorizontalGroup = outerParallelHorizontalGroup;
-    }
-
-    /**
-     * Set the outer parallel vertical group.
-     *
-     * @param outerParallelVerticalGroup
-     */
-    public void setOuterParallelVerticalGroup(GroupLayout.ParallelGroup outerParallelVerticalGroup) {
-        this.outerParallelVerticalGroup = outerParallelVerticalGroup;
-    }
-
-    /**
-     * Set the outer sequential horizontal group.
-     *
-     * @param outerSequentialHorizontalGroup
-     */
-    public void setOuterSequentialHorizontalGroup(GroupLayout.SequentialGroup outerSequentialHorizontalGroup) {
-        this.outerSequentialHorizontalGroup = outerSequentialHorizontalGroup;
-    }
-
-    /**
-     * Set the outer sequential vertical group.
-     *
-     * @param outerSequentialVerticalGroup
-     */
-    public void setOuterSequentialVerticalGroup(GroupLayout.SequentialGroup outerSequentialVerticalGroup) {
-        this.outerSequentialVerticalGroup = outerSequentialVerticalGroup;
-    }
-
-    /**
      * Set whether the field labels should be translated or not.
      *
      * @param translateFieldLabels
      */
     protected void setTranslateFieldLabels(boolean translateFieldLabels) {
         this.translateFieldLabels = translateFieldLabels;
-    }
-
-    /**
-     * Set whether the group labels should be translated or not.
-     *
-     * @param translateGroupLabels
-     */
-    public void setTranslateGroupLabels(boolean translateGroupLabels) {
-        this.translateGroupLabels = translateGroupLabels;
     }
 
     /**
