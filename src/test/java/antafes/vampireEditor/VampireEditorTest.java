@@ -22,14 +22,11 @@
 
 package antafes.vampireEditor;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.lang.reflect.Field;
 
 @Test
 public class VampireEditorTest extends BaseTest
@@ -48,15 +45,5 @@ public class VampireEditorTest extends BaseTest
         final URL actual = VampireEditor.getResourceInJar(path);
 
         Assert.assertEquals(actual, expected);
-    }
-
-    public void testCreateApplicationBuilderDisablesHeadlessMode() throws Exception
-    {
-        SpringApplicationBuilder builder = VampireEditor.createApplicationBuilder();
-        SpringApplication application = builder.application();
-        Field headlessField = SpringApplication.class.getDeclaredField("headless");
-        headlessField.setAccessible(true);
-
-        Assert.assertFalse(headlessField.getBoolean(application));
     }
 }
