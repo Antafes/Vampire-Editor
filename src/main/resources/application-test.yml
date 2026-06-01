@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Vampire Editor (Test)
+  main:
+    web-application-type: none
+    lazy-initialization: false
+    headless: true
+  jmx:
+    enabled: false
+
+logging:
+  level:
+    antafes: INFO
+    org.springframework: WARN
+
+vampire:
+  config:
+    path: ${java.io.tmpdir}/vampire-editor-tests/.vampire/
+

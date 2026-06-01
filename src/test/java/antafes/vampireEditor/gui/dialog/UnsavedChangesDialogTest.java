@@ -50,7 +50,7 @@ public class UnsavedChangesDialogTest extends BaseTest
     public void testDefaultUserChoiceIsCancelWithoutInteraction()
     {
         this.skipIfHeadless();
-        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "Test Character");
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "Test Character", this.configuration);
 
         Assert.assertEquals(dialog.getUserChoice(), UnsavedChangesDialog.Result.CANCEL,
             "Default user choice should be CANCEL before any button is clicked");
@@ -61,7 +61,7 @@ public class UnsavedChangesDialogTest extends BaseTest
     public void testDialogCreatedWithCharacterNameDoesNotThrow()
     {
         this.skipIfHeadless();
-        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "Dracula");
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "Dracula", this.configuration);
         Assert.assertNotNull(dialog);
         dialog.dispose();
     }
@@ -69,7 +69,7 @@ public class UnsavedChangesDialogTest extends BaseTest
     public void testDialogCreatedWithEmptyCharacterNameDoesNotThrow()
     {
         this.skipIfHeadless();
-        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "");
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(null, "", this.configuration);
         Assert.assertNotNull(dialog);
         dialog.dispose();
     }

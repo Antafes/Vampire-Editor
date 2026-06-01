@@ -22,22 +22,23 @@
 
 package antafes.vampireEditor.gui.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test
-public class WeightingTest {
+public class WeightingTest extends BaseTest {
     @BeforeMethod
     public void setUp() {
-        Configuration configuration = Configuration.getInstance();
+        Configuration configuration = this.configuration;
         configuration.loadProperties();
         configuration.setLanguage(Configuration.Language.ENGLISH);
     }
 
     public void testToString() {
-        final String expected = "Primary";
+        final String expected = "PRIMARY";
         final String actual = Weighting.PRIMARY.toString();
 
         Assert.assertEquals(actual, expected);

@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
 import antafes.vampireEditor.entity.character.Attribute;
@@ -50,8 +51,8 @@ import java.util.logging.Logger;
  */
 public class AttributesPanel extends BaseListPanel {
 
-    public AttributesPanel(NewCharacterDialog parent) {
-        super(parent);
+    public AttributesPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     /**

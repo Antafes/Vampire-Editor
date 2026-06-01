@@ -60,6 +60,8 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private final boolean npcCreation;
     private final LanguageInterface language;
     @Getter
+    private final Configuration configuration;
+    @Getter
     private final Dispatcher dialogDispatcher;
     @Getter
     private int maxActiveTab = 0;
@@ -83,17 +85,19 @@ public class NewCharacterDialog extends javax.swing.JDialog {
     private javax.swing.JLabel freeAdditionalPointsLabel;
     private javax.swing.JTextField freeAdditionalPointsTextField;
 
+
     /**
      * Creates new form NewCharacterDialog
      *
      * @param parent Parent element
      * @param modal Whether the dialog should be modal or not
+     * @param configuration The configuration object
      */
-    public NewCharacterDialog(java.awt.Frame parent, boolean modal, boolean npcCreation) {
+    public NewCharacterDialog(java.awt.Frame parent, boolean modal, boolean npcCreation, Configuration configuration) {
         super(parent, modal);
 
         this.npcCreation = npcCreation;
-        Configuration configuration = Configuration.getInstance();
+        this.configuration = configuration;
         this.language = configuration.getLanguageObject();
         this.dialogDispatcher = Dispatcher.getInstance();
 
@@ -117,14 +121,14 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(this::cancelButtonActionPerformed);
 
-        this.looksPanel = new LooksPanel(this);
+        this.looksPanel = new LooksPanel(this, this.configuration);
         this.looksPanel.init();
         characterTabPane.add(this.looksPanel);
-        this.attributesPanel = new AttributesPanel(this);
+        this.attributesPanel = new AttributesPanel(this, this.configuration);
         characterTabPane.add(this.attributesPanel);
-        this.abilitiesPanel = new AbilitiesPanel(this);
+        this.abilitiesPanel = new AbilitiesPanel(this, this.configuration);
         characterTabPane.add(this.abilitiesPanel);
-        this.advantagesPanel = new AdvantagesPanel(this);
+        this.advantagesPanel = new AdvantagesPanel(this, this.configuration);
         JScrollPane advantagesScrollPane = new JScrollPane(this.advantagesPanel);
         try {
             this.advantagesPanel.start();
@@ -134,7 +138,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         }
         advantagesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(advantagesScrollPane);
-        this.lastStepsPanel = new LastStepsPanel(this);
+        this.lastStepsPanel = new LastStepsPanel(this, this.configuration);
         JScrollPane lastStepsScrollPane = new JScrollPane(this.lastStepsPanel);
         lastStepsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         characterTabPane.add(lastStepsScrollPane);
@@ -539,7 +543,7 @@ public class NewCharacterDialog extends javax.swing.JDialog {
         builder.initializeBloodPoolFromRoll(DiceRoller::rollD6);
         builder.initializeWillpowerFromCourage();
 
-        ShowWaitAction waitAction = new ShowWaitAction(this);
+        ShowWaitAction waitAction = new ShowWaitAction(this, this.configuration);
         waitAction.show(aVoid -> {
             this.parent.addCharacter(builder.build(), true);
             VampireEditor.log(new ArrayList<>(

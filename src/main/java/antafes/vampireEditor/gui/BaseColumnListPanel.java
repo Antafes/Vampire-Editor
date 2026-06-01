@@ -85,13 +85,13 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
     private HashMap<String, Integer> groupNextDynamicRow;
     private HashMap<String, Integer> groupBaseDynamicRow;
 
-    public BaseColumnListPanel()
+    public BaseColumnListPanel(Configuration configuration)
     {
         super();
 
-        this.configuration = Configuration.getInstance();
+        this.configuration = configuration;
         this.language = this.configuration.getLanguageObject();
-        this.weightingService = new WeightingService();
+        this.weightingService = new WeightingService(configuration);
     }
 
     public void start()
@@ -444,6 +444,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
 
             this.getComboBoxLabelValues(label).forEach((key, value) -> model.addElement(value));
             comboBoxLabel.setModel(model);
+            comboBoxLabel.setRenderer(this.createTranslatedEntityRenderer());
 
             if (selected != null) {
                 comboBoxLabel.setSelectedItem(selected);
@@ -625,6 +626,7 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         );
         this.getComboBoxLabelValues(comboBoxType).forEach((key, value) -> model.addElement(value));
         comboBoxLabel.setModel(model);
+        comboBoxLabel.setRenderer(this.createTranslatedEntityRenderer());
         comboBoxLabel.putClientProperty("dynamicRowAdded", false);
         comboBoxLabel.addActionListener(e -> this.onEditableComboBoxSelected(groupLabel, comboBoxLabel));
         groupPanel.add(comboBoxLabel, labelConstraints);
@@ -662,6 +664,29 @@ abstract public class BaseColumnListPanel extends JPanel implements antafes.vamp
         this.createFocusTraversalPolicy();
 
         return comboBoxLabel;
+    }
+
+    private DefaultListCellRenderer createTranslatedEntityRenderer()
+    {
+        return new DefaultListCellRenderer()
+        {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus
+            )
+            {
+                Object displayValue = value;
+                if (value instanceof BaseTranslatedEntity entity) {
+                    displayValue = entity.getName(BaseColumnListPanel.this.configuration);
+                }
+
+                return super.getListCellRendererComponent(list, displayValue, index, isSelected, cellHasFocus);
+            }
+        };
     }
 
     /**

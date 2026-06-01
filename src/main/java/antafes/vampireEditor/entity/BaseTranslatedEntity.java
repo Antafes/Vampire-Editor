@@ -49,18 +49,38 @@ public abstract class BaseTranslatedEntity extends BaseEntity {
     protected BaseTranslatedEntity() { super(); }
 
     /**
-     * Get the name of the entity according to the currently used language.
+     * Get the name of the entity according to the given configuration.
      */
-    public String getName() {
-        Configuration configuration = Configuration.getInstance();
+    public String getName(Configuration configuration) {
+        if (configuration == null) {
+            return this.getName();
+        }
 
-        String name = this.names.get(configuration.getLanguage());
+        return this.getName(configuration.getLanguage());
+    }
+
+    /**
+     * Get the name of the entity according to the given language.
+     */
+    public String getName(Configuration.Language language) {
+        String name = this.names != null ? this.names.get(language) : null;
 
         if (name == null || name.isEmpty()) {
-            name = this.names.get(Configuration.Language.ENGLISH);
+            name = this.names != null ? this.names.get(Configuration.Language.ENGLISH) : null;
+        }
+
+        if (name == null || name.isEmpty()) {
+            name = this.key;
         }
 
         return name;
+    }
+
+    /**
+     * Get the name of the entity using a stable non-localized fallback.
+     */
+    public String getName() {
+        return this.getName(Configuration.Language.ENGLISH);
     }
 
     @Override

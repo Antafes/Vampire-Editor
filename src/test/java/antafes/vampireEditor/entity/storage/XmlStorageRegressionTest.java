@@ -23,9 +23,7 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.BaseTest;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -39,14 +37,11 @@ import java.util.Comparator;
 
 @Test
 public class XmlStorageRegressionTest extends BaseTest {
-    private Configuration configuration;
     private Path tempDir;
 
     @BeforeMethod
     public void setUp() {
         super.setUp();
-        new VampireEditor();
-        this.configuration = Configuration.getInstance();
         this.configuration.loadProperties();
     }
 
@@ -96,7 +91,7 @@ public class XmlStorageRegressionTest extends BaseTest {
         StorageFactory.storageWarmUp();
         long warmupMillis = (System.nanoTime() - warmupStart) / 1_000_000;
 
-        CharacterStorage characterStorage = new CharacterStorage();
+        CharacterStorage characterStorage = new CharacterStorage(this.configuration);
         Character character = TestCharacterUtility.createTestCharacter();
         String filename = "performance-character.xml";
 
@@ -120,4 +115,3 @@ public class XmlStorageRegressionTest extends BaseTest {
             loadMillis);
     }
 }
-

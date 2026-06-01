@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.event.UpdateFreeAdditionalPointsEvent;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Test
-public class BaseColumnListPanelTest
+public class BaseColumnListPanelTest extends BaseTest
 {
     static {
         System.setProperty("java.awt.headless", "true");
@@ -59,9 +60,9 @@ public class BaseColumnListPanelTest
     @BeforeClass
     public void classSetUp() throws TypeNotSupportedException
     {
-        Configuration.getInstance().setLanguage(Configuration.Language.ENGLISH);
+        this.configuration.setLanguage(Configuration.Language.ENGLISH);
 
-        panel = new TestPanel();
+        panel = new TestPanel(this.configuration);
         panel.start();
         panel.build();
 
@@ -186,6 +187,11 @@ public class BaseColumnListPanelTest
 
     private static class TestPanel extends BaseColumnListPanel
     {
+        private TestPanel(Configuration configuration)
+        {
+            super(configuration);
+        }
+
         @Override
         protected void init()
         {

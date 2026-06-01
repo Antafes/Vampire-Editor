@@ -22,19 +22,36 @@
 
 package antafes.vampireEditor.entity.storage;
 
-import antafes.vampireEditor.Configuration;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Factory for fetching certain storages.
  */
+@Component
+@RequiredArgsConstructor
 public class StorageFactory {
     private static final HashMap<StorageType, BaseStorage<?>> storages = new HashMap<>();
+    private static StorageFactory instance;
+
+    private final AbilityStorage abilityStorage;
+    private final AdvantageStorage advantageStorage;
+    private final AttributeStorage attributeStorage;
+    private final WeaknessStorage weaknessStorage;
+    private final ClanStorage clanStorage;
+    private final MeritStorage meritStorage;
+    private final FlawStorage flawStorage;
+    private final GenerationStorage generationStorage;
+    private final RoadStorage roadStorage;
+    private final NatureStorage natureStorage;
+    private final CharacterStorage characterStorage;
+    private final EmptyEntityStorage emptyEntityStorage;
 
     @Getter
     public enum StorageType {
@@ -59,19 +76,62 @@ public class StorageFactory {
 
     }
 
+    @PostConstruct
+    public void initializeAutowiredStorages()
+    {
+        StorageFactory.instance = this;
+        if (!StorageFactory.storages.isEmpty()) {
+            return;
+        }
+
+        EnumMap<StorageType, BaseStorage<?>> autowiredStorages = new EnumMap<>(StorageType.class);
+        autowiredStorages.put(StorageType.ABILITY, this.abilityStorage);
+        autowiredStorages.put(StorageType.ADVANTAGE, this.advantageStorage);
+        autowiredStorages.put(StorageType.ATTRIBUTE, this.attributeStorage);
+        autowiredStorages.put(StorageType.WEAKNESS, this.weaknessStorage);
+        autowiredStorages.put(StorageType.CLAN, this.clanStorage);
+        autowiredStorages.put(StorageType.MERIT, this.meritStorage);
+        autowiredStorages.put(StorageType.FLAW, this.flawStorage);
+        autowiredStorages.put(StorageType.GENERATION, this.generationStorage);
+        autowiredStorages.put(StorageType.ROAD, this.roadStorage);
+        autowiredStorages.put(StorageType.NATURE, this.natureStorage);
+        autowiredStorages.put(StorageType.CHARACTER, this.characterStorage);
+        autowiredStorages.put(StorageType.EMPTY, this.emptyEntityStorage);
+
+        autowiredStorages.forEach(StorageFactory::putAndInitializeStorage);
+    }
+
+    @PreDestroy
+    public void clearStaticStorageCache()
+    {
+        StorageFactory.storages.clear();
+        StorageFactory.instance = null;
+    }
+
     /**
      * Warm up the storages to contain every available data.
+     *
+     * @throws IllegalStateException if the Spring-managed instance has not been initialized yet
      */
     public static void storageWarmUp() {
-        for (StorageType type : StorageType.values()) {
-            try {
-                BaseStorage<?> storage = (BaseStorage<?>) type.getStorageClass().getDeclaredConstructor().newInstance();
-                storage.init();
-                StorageFactory.storages.put(type, storage);
-            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-                Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, e);
-            }
+        if (!StorageFactory.storages.isEmpty()) {
+            return;
         }
+
+        if (StorageFactory.instance == null) {
+            throw new IllegalStateException(
+                "StorageFactory has not been initialized by Spring. "
+                    + "Ensure the application context is started before calling storageWarmUp()."
+            );
+        }
+
+        StorageFactory.instance.initializeAutowiredStorages();
+    }
+
+    private static void putAndInitializeStorage(StorageType type, BaseStorage<?> storage)
+    {
+        storage.init();
+        StorageFactory.storages.put(type, storage);
     }
 
     /**

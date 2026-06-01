@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.character.Flaw;
 import antafes.vampireEditor.entity.character.Merit;
@@ -31,11 +32,11 @@ import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.NatureResolutionUtility;
-import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -44,6 +45,11 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 public class GeneralPanel extends BaseCharacterPanel implements TranslatableComponent, CharacterPanelInterface {
+    public GeneralPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
+
     /**
      * Fill in the character data. If no character is set, nothing will be added.
      */
@@ -66,7 +72,11 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getGeneration().toString());
                         break;
                     case "nature":
-                        element.setText(this.getCharacter().getNature() == null ? "" : this.getCharacter().getNature().toString());
+                        element.setText(
+                            this.getCharacter().getNature() == null
+                                ? ""
+                                : this.getCharacter().getNature().getName(this.getConfiguration())
+                        );
                         break;
                     case "hideout":
                         element.setText(this.getCharacter().getHideout());
@@ -84,7 +94,11 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
                         element.setText(this.getCharacter().getSire());
                         break;
                     case "clan":
-                        element.setText(this.getCharacter().getClan() == null ? "" : this.getCharacter().getClan().getName());
+                        element.setText(
+                            this.getCharacter().getClan() == null
+                                ? ""
+                                : this.getCharacter().getClan().getName(this.getConfiguration())
+                        );
                         break;
                     case "sect":
                         element.setText(this.getCharacter().getSect());
@@ -275,8 +289,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         LinkedHashMap<String, JComponent> elementList = new LinkedHashMap<>();
         ArrayList<Merit> merits = new ArrayList<>(this.getCharacter().getMerits().values());
         ArrayList<Flaw> flaws = new ArrayList<>(this.getCharacter().getFlaws().values());
-        merits.sort(new StringComparator());
-        flaws.sort(new StringComparator());
+        merits.sort(Comparator.comparing(merit -> merit.getName(this.getConfiguration())));
+        flaws.sort(Comparator.comparing(flaw -> flaw.getName(this.getConfiguration())));
 
         merits.forEach((merit) -> {
             JLabel label = new JLabel();

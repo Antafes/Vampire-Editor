@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.print.General;
 import antafes.vampireEditor.print.PrintBase;
@@ -39,17 +40,23 @@ import java.util.logging.Logger;
  * @author Marian Pollzien
  */
 public class PrintPreviewPanel extends JPanel implements TranslatableComponent {
+    private final Configuration configuration;
     @Getter
     @Setter
     private antafes.vampireEditor.entity.Character character;
     private PrintBase page;
+
+    public PrintPreviewPanel(Configuration configuration)
+    {
+        this.configuration = configuration;
+    }
 
     /**
      * Start construction of the print preview
      */
     public void start() {
         // Initially set the general page to be shown.
-        General general = new General(this.character);
+        General general = new General(this.character, this.configuration);
         general.create();
         this.page = general;
 

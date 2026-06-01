@@ -24,7 +24,6 @@ package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Road;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -47,7 +46,6 @@ public class RoadStorageTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        new VampireEditor();
         this.roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
     }
 

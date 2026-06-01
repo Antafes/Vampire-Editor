@@ -307,7 +307,7 @@ public class ConfigurationTest extends BaseTest
         Configuration configuration = new Configuration(propertiesFile);
         configuration.loadProperties();
 
-        File defaultDocumentsPath = new File(Configuration.PATH + "../Documents/");
+        File defaultDocumentsPath = new File(propertiesFile.getParentFile(), "../Documents/");
 
         Assert.assertEquals(configuration.getOpenDirPath(), defaultDocumentsPath);
         Assert.assertEquals(configuration.getSaveDirPath(), defaultDocumentsPath);

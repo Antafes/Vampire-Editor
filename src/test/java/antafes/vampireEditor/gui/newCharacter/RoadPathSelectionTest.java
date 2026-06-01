@@ -24,7 +24,6 @@ package antafes.vampireEditor.gui.newCharacter;
 
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.character.Advantage;
@@ -42,13 +41,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import java.awt.GraphicsEnvironment;
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -67,14 +65,13 @@ public class RoadPathSelectionTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        new VampireEditor();
 
         if (GraphicsEnvironment.isHeadless()) {
             throw new SkipException("Road/path UI integration tests require a non-headless AWT environment.");
         }
 
         try {
-            this.dialog = new NewCharacterDialog(null, false, false);
+            this.dialog = new NewCharacterDialog(null, false, false, this.configuration);
             this.looksPanel = this.getField(this.dialog, "looksPanel", LooksPanel.class);
             this.advantagesPanel = this.getField(this.dialog, "advantagesPanel", AdvantagesPanel.class);
 

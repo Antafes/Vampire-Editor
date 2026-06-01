@@ -23,6 +23,7 @@
 package antafes.vampireEditor.print;
 
 import org.apache.commons.lang3.StringUtils;
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -36,9 +37,10 @@ public class Looks extends PrintBase {
      * Constructor
      *
      * @param character The character to display
+     * @param configuration The configuration to use
      */
-    public Looks(Character character) {
-        super(character);
+    public Looks(Character character, Configuration configuration) {
+        super(character, configuration);
 
         this.setPreviousPage(Backgrounds.class);
     }
@@ -183,7 +185,7 @@ public class Looks extends PrintBase {
             PositionX.LEFT1.getPosition(),
             yLeft,
             PositionX.LEFT2.getPosition(),
-            this.getCharacter().getSex() != null ? this.getCharacter().getSex().toString() : ""
+            this.getCharacter().getSex() != null ? this.getLanguage().translate(this.getCharacter().getSex().name()) : ""
         );
 
         for (int i = 0; i < 11; i++) {

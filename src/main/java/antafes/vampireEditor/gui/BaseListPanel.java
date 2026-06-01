@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 
 import javax.swing.*;
@@ -34,6 +35,11 @@ import java.util.LinkedHashMap;
  * @author Marian Pollzien
  */
 abstract public class BaseListPanel extends BasePanel {
+
+    protected BaseListPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
 
     /**
      * Add labels and spinners by the given list and under the given headline.
@@ -123,7 +129,7 @@ abstract public class BaseListPanel extends BasePanel {
         );
         field.setModel(
             new SpinnerNumberModel(
-                value > maximum ? maximum : value,
+                Math.min(value, maximum),
                 minimum,
                 maximum,
                 1

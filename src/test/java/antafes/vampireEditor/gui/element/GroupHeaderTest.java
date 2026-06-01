@@ -21,11 +21,12 @@
  */
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class GroupHeaderTest
+public class GroupHeaderTest extends BaseTest
 {
     public void testToStringReturnsText()
     {

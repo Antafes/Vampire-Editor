@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.BaseListPanel;
 import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.TranslatableComponent;
@@ -37,6 +38,11 @@ abstract public class BaseCharacterListPanel extends BaseListPanel implements Tr
     @Getter
     @Setter
     private antafes.vampireEditor.entity.Character character = null;
+
+    protected BaseCharacterListPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
 
     protected void addChangeListenerForCharacterChanged(JComponent component)
     {

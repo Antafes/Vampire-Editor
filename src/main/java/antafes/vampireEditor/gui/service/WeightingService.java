@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.service;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.event.CalculateUsedFreeAdditionalPointsEvent;
 import antafes.vampireEditor.gui.event.UpdateMaxFreeAdditionalPointsEvent;
@@ -35,16 +36,34 @@ import java.util.HashMap;
 
 public class WeightingService
 {
+    private final Configuration configuration;
     private final HashMap<String, JComboBox<Weighting>> weightingElements;
 
-    public WeightingService()
+    public WeightingService(Configuration configuration)
     {
+        this.configuration = configuration;
         this.weightingElements = new HashMap<>();
     }
 
     public @NonNull JComboBox<Weighting> createWeighting(String headline, String parent) {
         JComboBox<Weighting> weightingElement = new JComboBox<>();
         weightingElement.setModel(new DefaultComboBoxModel<>(Weighting.values()));
+        weightingElement.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus
+            ) {
+                Object displayValue = value instanceof Weighting weighting
+                    ? weighting.getLabel(WeightingService.this.configuration)
+                    : value;
+
+                return super.getListCellRendererComponent(list, displayValue, index, isSelected, cellHasFocus);
+            }
+        });
         weightingElement.setSelectedIndex(0);
 
         if (!this.weightingElements.isEmpty()) {

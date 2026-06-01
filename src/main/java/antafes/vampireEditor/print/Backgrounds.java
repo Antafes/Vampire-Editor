@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.print;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -39,9 +40,10 @@ public class Backgrounds extends PrintBase {
      * Constructor
      *
      * @param character The character to display
+     * @param configuration The configuration to use
      */
-    public Backgrounds(Character character) {
-        super(character);
+    public Backgrounds(Character character, Configuration configuration) {
+        super(character, configuration);
 
         this.setPreviousPage(MeritsAndFlaws.class);
         this.setFollowingPage(Looks.class);

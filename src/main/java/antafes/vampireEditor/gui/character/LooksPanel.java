@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.character;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.Character;
 import antafes.vampireEditor.gui.BasePanel;
 import antafes.vampireEditor.gui.TranslatableComponent;
@@ -37,6 +38,11 @@ import java.util.LinkedHashMap;
 public class LooksPanel extends BasePanel implements TranslatableComponent, CharacterPanelInterface {
     @Setter
     private antafes.vampireEditor.entity.Character character = null;
+
+    public LooksPanel(Configuration configuration)
+    {
+        super(configuration);
+    }
 
     /**
      * Fill in the character data. If no character is set, nothing will be added.
@@ -98,7 +104,9 @@ public class LooksPanel extends BasePanel implements TranslatableComponent, Char
 
                     break;
                 case "sex":
-                    element.setText(this.character.getSex() != null ? this.character.getSex().toString() : "");
+                    element.setText(
+                        this.character.getSex() != null ? this.character.getSex().getLabel(this.getConfiguration()) : ""
+                    );
                     break;
                 default:
                     break;

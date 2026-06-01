@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.utility;
 
+import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestClanUtility;
 import antafes.vampireEditor.entity.exception.EntityException;
@@ -35,15 +36,15 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 
 @Test
-public class ClanComparatorTest {
+public class ClanComparatorTest extends BaseTest {
     @BeforeMethod
     public void setUp() {
-        Configuration.getInstance().loadProperties();
+        super.setUp();
         StorageFactory.storageWarmUp();
     }
 
     public void testCompare() throws EntityException, EntityStorageException {
-        ClanComparator comparator = new ClanComparator();
+        ClanComparator comparator = new ClanComparator(this.configuration);
         Clan clan1 = TestClanUtility.createTestClan();
         Clan clan2 = TestClanUtility.createTestClan();
 
@@ -54,7 +55,7 @@ public class ClanComparatorTest {
     }
 
     public void testCompareFirstGreater() throws EntityException, EntityStorageException {
-        ClanComparator comparator = new ClanComparator();
+        ClanComparator comparator = new ClanComparator(this.configuration);
         Clan clan1 = TestClanUtility.createTestClan().toBuilder()
             .setNames(new HashMap<>())
             .addName(Configuration.Language.ENGLISH, "First test clan")
@@ -68,7 +69,7 @@ public class ClanComparatorTest {
     }
 
     public void testCompareClanWithBloodline() throws EntityException, EntityStorageException {
-        ClanComparator comparator = new ClanComparator();
+        ClanComparator comparator = new ClanComparator(this.configuration);
         Clan clan = TestClanUtility.createTestClan();
         Clan bloodline = TestClanUtility.createTestClan().toBuilder()
             .setKey("testBloodline")
@@ -82,7 +83,7 @@ public class ClanComparatorTest {
     }
 
     public void testCompareBloodlineWithBloodline() throws EntityException, EntityStorageException {
-        ClanComparator comparator = new ClanComparator();
+        ClanComparator comparator = new ClanComparator(this.configuration);
         Clan bloodline1 = TestClanUtility.createTestClan().toBuilder()
             .setBloodline(true)
             .build();

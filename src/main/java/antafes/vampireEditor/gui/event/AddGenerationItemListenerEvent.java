@@ -23,15 +23,12 @@
 package antafes.vampireEditor.gui.event;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import scripts.laniax.framework.event_dispatcher.Event;
 
+@Getter
+@RequiredArgsConstructor
 public class AddGenerationItemListenerEvent extends Event
 {
-    @Getter
     private final int adjustment;
-
-    public AddGenerationItemListenerEvent(int adjustment)
-    {
-        this.adjustment = adjustment;
-    }
 }

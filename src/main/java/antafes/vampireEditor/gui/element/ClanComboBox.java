@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.Clan;
 import antafes.vampireEditor.language.LanguageInterface;
 import antafes.vampireEditor.utility.ClanComparator;
@@ -36,12 +37,15 @@ public class ClanComboBox extends GroupedComboBox<Clan>
     private static final String CLANS_HEADER = "Clans";
     private static final String BLOODLINES_HEADER = "Bloodlines";
 
+    private final Configuration configuration;
     private LanguageInterface language;
     private Collection<Clan> clans = new ArrayList<>();
 
-    public ClanComboBox()
+    public ClanComboBox(Configuration configuration)
     {
         super();
+        this.configuration = configuration;
+        this.setItemTextProvider(clan -> clan != null ? clan.getName(this.configuration) : "");
     }
 
     /**
@@ -74,8 +78,8 @@ public class ClanComboBox extends GroupedComboBox<Clan>
             }
         });
 
-        mainClans.sort(new ClanComparator());
-        bloodlines.sort(new ClanComparator());
+        mainClans.sort(new ClanComparator(this.configuration));
+        bloodlines.sort(new ClanComparator(this.configuration));
 
         GroupedComboBoxModel<Clan> groupedModel = this.createGroupedModel(mainClans, bloodlines);
         super.setModel(groupedModel);

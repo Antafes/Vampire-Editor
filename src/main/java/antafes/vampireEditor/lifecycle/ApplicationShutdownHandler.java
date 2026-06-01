@@ -16,34 +16,36 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2018, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
-package antafes.vampireEditor.utility;
 
-import java.util.Comparator;
+package antafes.vampireEditor.lifecycle;
+
+import antafes.vampireEditor.Configuration;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 /**
- *
- * @author Marian Pollzien
+ * Handles application shutdown and resource cleanup.
+ * This listener is triggered when the Spring application context is closed.
  */
-public class StringComparator implements Comparator {
+@Component
+@RequiredArgsConstructor
+public class ApplicationShutdownHandler
+{
+    private final Configuration configuration;
 
     /**
-     * Compare two objects by name.
-     *
-     * @param o1 First object
-     * @param o2 Second object
-     *
-     * @return The value {@code 0} if the argument string is equal to this string; a value less than {@code 0} if this
-     *         string is lexicographically less than the string argument; and a value greater than {@code 0} if this
-     *         string is lexicographically greater than the string argument.
+     * Perform cleanup and resource release on application shutdown.
      */
-    @Override
-    public int compare(Object o1, Object o2) {
-        String s1 = o1.toString();
-        String s2 = o2.toString();
-
-        return s1.compareTo(s2);
+    @EventListener(ContextClosedEvent.class)
+    public void onApplicationShutdown()
+    {
+        // Save configuration on shutdown
+        this.configuration.saveProperties();
     }
 }
+

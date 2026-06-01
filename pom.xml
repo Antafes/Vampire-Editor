@@ -33,6 +33,7 @@
 
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
+        <spring.boot.version>3.5.0</spring.boot.version>
         <lombok.version>1.18.46</lombok.version>
         <jakarta.xml.bind-api.version>4.1.0-M1</jakarta.xml.bind-api.version>
         <jaxb.runtime.version>4.0.8</jaxb.runtime.version>
@@ -40,6 +41,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -49,11 +55,6 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxb.runtime.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>antafes</groupId>
-            <artifactId>event-dispatcher</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -69,6 +70,12 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.12.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

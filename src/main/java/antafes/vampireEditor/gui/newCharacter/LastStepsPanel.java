@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.BaseTranslatedEntity;
 import antafes.vampireEditor.entity.Character;
@@ -29,7 +30,6 @@ import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
-import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -54,9 +55,10 @@ public class LastStepsPanel extends BasePanel {
      * Create the last steps panel.
      *
      * @param parent Parent element
+     * @param configuration The configuration object
      */
-    public LastStepsPanel(NewCharacterDialog parent) {
-        super(parent);
+    public LastStepsPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     /**
@@ -239,7 +241,7 @@ public class LastStepsPanel extends BasePanel {
         ArrayList<SpecialFeature> list = new ArrayList<>(
             ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
-        list.sort(new StringComparator());
+        list.sort(Comparator.comparing(feature -> feature.getName(this.getConfiguration())));
 
         return list;
     }

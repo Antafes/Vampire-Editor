@@ -25,7 +25,6 @@ package antafes.vampireEditor.entity;
 import antafes.vampireEditor.BaseTest;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.TestCharacterUtility;
-import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
@@ -48,8 +47,7 @@ public class CharacterTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        new VampireEditor();
-        Configuration configuration = Configuration.getInstance();
+        Configuration configuration = this.configuration;
         configuration.loadProperties();
         configuration.setLanguage(Configuration.Language.ENGLISH);
         this.character = TestCharacterUtility.createTestCharacter();
@@ -61,7 +59,7 @@ public class CharacterTest extends BaseTest
     }
 
     public void testSexEnum() {
-        final String expected = "male";
+        final String expected = "MALE";
         final String actual = Character.Sex.MALE.toString();
 
         Assert.assertEquals(actual, expected);

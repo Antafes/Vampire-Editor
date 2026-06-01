@@ -24,15 +24,12 @@ package antafes.vampireEditor.gui.event;
 
 import antafes.vampireEditor.entity.Character;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import scripts.laniax.framework.event_dispatcher.Event;
 
+@Getter
+@RequiredArgsConstructor
 public class FillCharacterEvent extends Event
 {
-    @Getter
     private final Character.CharacterBuilder<?, ?> builder;
-
-    public FillCharacterEvent(Character.CharacterBuilder<?, ?> builder)
-    {
-        this.builder = builder;
-    }
 }

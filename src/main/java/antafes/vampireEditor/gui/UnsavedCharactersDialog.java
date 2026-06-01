@@ -51,7 +51,8 @@ public class UnsavedCharactersDialog extends JDialog
     private JButton exitButton;
     private JButton cancelButton;
 
-    public UnsavedCharactersDialog(Frame owner, List<String> characterNames)
+
+    public UnsavedCharactersDialog(Frame owner, List<String> characterNames, Configuration configuration)
     {
         super(owner, true);
 
@@ -59,7 +60,6 @@ public class UnsavedCharactersDialog extends JDialog
         this.setSize(new Dimension(450, 220));
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        Configuration configuration = Configuration.getInstance();
         this.language = configuration.getLanguageObject();
 
         this.initComponents();

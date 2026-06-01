@@ -41,7 +41,7 @@ public class AdvantageTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        Configuration.getInstance().loadProperties();
+        this.configuration.loadProperties();
         this.advantage = Advantage.builder()
             .setKey("testAdvantage")
             .addName(Configuration.Language.ENGLISH, "Test advantage")

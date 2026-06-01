@@ -32,14 +32,15 @@ import java.util.function.Function;
 class ShowWaitAction {
     protected static final long SLEEP_TIME = 3 * 1000;
     private Window window;
+    private final Configuration configuration;
 
-    public ShowWaitAction(Window window) {
+    public ShowWaitAction(Window window, Configuration configuration) {
         this.window = window;
+        this.configuration = configuration;
     }
 
     public void show(Function<Void, Void> function) {
-        Configuration configuration = Configuration.getInstance();
-        LanguageInterface language = configuration.getLanguageObject();
+        LanguageInterface language = this.configuration.getLanguageObject();
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>(){
             @Override
             protected Void doInBackground() throws Exception {

@@ -25,7 +25,6 @@ import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.exception.EntityException;
 import antafes.vampireEditor.entity.storage.adapter.*;
-import antafes.vampireEditor.utility.StringComparator;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.EqualsAndHashCode;
@@ -33,6 +32,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -195,7 +195,7 @@ public class Character extends BaseEntity {
     public ArrayList<Attribute> getAttributesByType(AttributeInterface.AttributeType type) {
         ArrayList<Attribute> attributes = (ArrayList<Attribute>) this.attributes.values().stream()
             .filter((attribute) -> (attribute.getType() == type)).collect(Collectors.toList());
-        attributes.sort(new StringComparator());
+        attributes.sort(Comparator.comparing(Object::toString));
 
         return attributes;
     }
@@ -210,7 +210,7 @@ public class Character extends BaseEntity {
     public ArrayList<Ability> getAbilitiesByType(AbilityInterface.AbilityType type) {
         ArrayList<Ability> abilities = (ArrayList<Ability>) this.abilities.values().stream()
             .filter((ability) -> (ability.getType() == type)).collect(Collectors.toList());
-        abilities.sort(new StringComparator());
+        abilities.sort(Comparator.comparing(Object::toString));
 
         return abilities;
     }
@@ -225,7 +225,7 @@ public class Character extends BaseEntity {
     public ArrayList<Advantage> getAdvantagesByType(AdvantageInterface.AdvantageType type) {
         ArrayList<Advantage> advantages = (ArrayList<Advantage>) this.advantages.values().stream()
             .filter((advantage) -> (advantage.getType() == type)).collect(Collectors.toList());
-        advantages.sort(new StringComparator());
+        advantages.sort(Comparator.comparing(Object::toString));
 
         return advantages;
     }
@@ -255,11 +255,17 @@ public class Character extends BaseEntity {
         MALE,
         FEMALE;
 
-        @Override
-        public String toString() {
-            Configuration configuration = Configuration.getInstance();
+        public String getLabel(Configuration configuration) {
+            if (configuration == null) {
+                return this.name();
+            }
 
             return configuration.getLanguageObject().translate(this.name());
+        }
+
+        @Override
+        public String toString() {
+            return this.name();
         }
     }
 

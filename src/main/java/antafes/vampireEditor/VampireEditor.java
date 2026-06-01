@@ -21,9 +21,12 @@
  */
 package antafes.vampireEditor;
 
-import antafes.eventDispatcher.Application;
-import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.BaseWindow;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import scripts.laniax.framework.event_dispatcher.Dispatcher;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,32 +51,50 @@ import java.util.logging.Logger;
  *
  * @author Marian Pollzien <map@wafriv.de>
  */
-public class VampireEditor extends Application
+@SpringBootApplication(scanBasePackages = "antafes.vampireEditor")
+public class VampireEditor
 {
     private static final boolean DEBUG = false;
     private static final String DATA_PATH = "data/";
+    private static final Dispatcher DISPATCHER = new Dispatcher();
+    private final Configuration configuration;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Configuration configuration = Configuration.getInstance();
-        configuration.loadProperties();
-        VampireEditor ve = new VampireEditor();
-        ve.openBaseWindow();
+        createApplicationBuilder()
+            .run(args)
+            .getBean(VampireEditor.class)
+            .openBaseWindow();
     }
+
+    static SpringApplicationBuilder createApplicationBuilder()
+    {
+        return new SpringApplicationBuilder(VampireEditor.class)
+            .headless(false)
+            .web(WebApplicationType.NONE);
+    }
+
+    public static Dispatcher getDispatcher()
+    {
+        return DISPATCHER;
+    }
+
 
     /**
      * Create the Vampire Editor main class.
+     *
+     * @param configuration The configuration object
      */
-    public VampireEditor() {
+    @Autowired
+    public VampireEditor(Configuration configuration) {
         VampireEditor.log(new ArrayList<>(
             Collections.singletonList(
                 "start of log (" + (DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(LocalDateTime.now()) + ")"
             )
         ));
-
-        StorageFactory.storageWarmUp();
+        this.configuration = configuration;
     }
 
     /**
@@ -134,7 +155,7 @@ public class VampireEditor extends Application
      */
     private void openBaseWindow() {
         SwingUtilities.invokeLater(() -> {
-            BaseWindow baseWindow = new BaseWindow();
+            BaseWindow baseWindow = new BaseWindow(this.configuration);
             Toolkit kit = Toolkit.getDefaultToolkit();
             Image img = kit.createImage(
                 VampireEditor.getResourceInJar("images/logo16.png")

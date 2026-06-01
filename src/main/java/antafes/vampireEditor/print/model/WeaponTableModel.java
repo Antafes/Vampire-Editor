@@ -35,8 +35,7 @@ public class WeaponTableModel implements TableModel {
     /**
      * Constructor
      */
-    public WeaponTableModel() {
-        Configuration configuration = Configuration.getInstance();
+    public WeaponTableModel(Configuration configuration) {
         LanguageInterface language = configuration.getLanguageObject();
 
         this.columnNames = new String[]{

@@ -75,7 +75,7 @@ public class ClanTest extends BaseTest
 
     public void testGetName() {
         final String expected = "Test clan";
-        final String actual = this.clan.getName();
+        final String actual = this.clan.getName(this.configuration);
 
         Assert.assertEquals(actual, expected);
     }
@@ -89,15 +89,15 @@ public class ClanTest extends BaseTest
 
     public void testGetNickname() {
         final String expected = "Test nickname";
-        final String actual = this.clan.getNickname();
+        final String actual = this.clan.getNickname(this.configuration);
 
         Assert.assertEquals(actual, expected);
     }
 
     public void testGetNicknameOtherLanguageNotExisting() {
-        Configuration.getInstance().setLanguage(Configuration.Language.GERMAN);
+        this.configuration.setLanguage(Configuration.Language.GERMAN);
         final String expected = "Test nickname";
-        final String actual = this.clan.getNickname();
+        final String actual = this.clan.getNickname(this.configuration);
 
         Assert.assertEquals(actual, expected);
     }

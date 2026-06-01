@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.newCharacter;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.gui.event.listener.ComponentChangeListener;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.utility.Weighting;
@@ -47,8 +48,8 @@ abstract public class BaseListPanel extends BasePanel {
     @Setter(AccessLevel.PROTECTED)
     private int weightingCounter = 0;
 
-    public BaseListPanel(NewCharacterDialog parent) {
-        super(parent);
+    public BaseListPanel(NewCharacterDialog parent, Configuration configuration) {
+        super(parent, configuration);
     }
 
     @Override
@@ -272,6 +273,22 @@ abstract public class BaseListPanel extends BasePanel {
     protected JComboBox<Weighting> addWeighting(String headline) {
         JComboBox<Weighting> weightingElement = new JComboBox<>();
         weightingElement.setModel(new DefaultComboBoxModel<>(Weighting.values()));
+        weightingElement.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                JList<?> list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus
+            ) {
+                Object displayValue = value instanceof Weighting weighting
+                    ? weighting.getLabel(BaseListPanel.this.getConfiguration())
+                    : value;
+
+                return super.getListCellRendererComponent(list, displayValue, index, isSelected, cellHasFocus);
+            }
+        });
         weightingElement.setSelectedIndex(0);
 
         if (!this.weightings.isEmpty()) {

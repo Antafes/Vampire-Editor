@@ -16,36 +16,24 @@
  *
  * @package Vampire Editor
  * @author Marian Pollzien <map@wafriv.de>
- * @copyright (c) 2019, Marian Pollzien
+ * @copyright (c) 2026, Marian Pollzien
  * @license https://www.gnu.org/licenses/lgpl.html LGPLv3
  */
 
-package antafes.vampireEditor.utility;
+package antafes.vampireEditor.config;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 
-@Test
-public class StringComparatorTest {
-    public void testCompare() {
-        StringComparator comparator = new StringComparator();
-        String string1 = "test string";
-        String string2 = "test string";
-
-        final int expected = 0;
-        final int actual = comparator.compare(string1, string2);
-
-        Assert.assertEquals(actual, expected);
-    }
-
-    public void testCompareFirstGreater() {
-        StringComparator comparator = new StringComparator();
-        String string1 = "test string";
-        String string2 = "test string 2";
-
-        final int expected = -2;
-        final int actual = comparator.compare(string1, string2);
-
-        Assert.assertEquals(actual, expected);
+@Configuration
+public class ApplicationConfiguration
+{
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady()
+    {
+        // Warm up storage when application is ready
+        antafes.vampireEditor.entity.storage.StorageFactory.storageWarmUp();
     }
 }
+

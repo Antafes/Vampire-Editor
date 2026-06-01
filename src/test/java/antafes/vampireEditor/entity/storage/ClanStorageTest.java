@@ -23,7 +23,6 @@
 package antafes.vampireEditor.entity.storage;
 
 import antafes.vampireEditor.BaseTest;
-import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.entity.character.Clan;
 import org.testng.Assert;
@@ -50,7 +49,7 @@ public class ClanStorageTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        Configuration.getInstance().loadProperties();
+        this.configuration.loadProperties();
         StorageFactory.storageWarmUp();
         this.clanStorage = StorageFactory.getStorage(StorageFactory.StorageType.CLAN);
     }

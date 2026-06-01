@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,11 +30,11 @@ import javax.swing.*;
 import java.awt.*;
 
 @Test
-public class CloseableTabbedPaneTest
+public class CloseableTabbedPaneTest extends BaseTest
 {
     public void testSetTitleAtUpdatesTabbedPaneModelAndCustomLabel()
     {
-        CloseableTabbedPane tabbedPane = new CloseableTabbedPane();
+        CloseableTabbedPane tabbedPane = new CloseableTabbedPane(this.configuration);
         tabbedPane.insertTab("Original", null, new JPanel(), null, 0);
 
         tabbedPane.setTitleAt(0, "Renamed*");

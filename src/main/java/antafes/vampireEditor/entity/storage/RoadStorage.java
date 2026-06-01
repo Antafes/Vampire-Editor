@@ -32,6 +32,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.NonNull;
+import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
 import java.util.*;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Storage for roads.
  */
+@Repository
 public class RoadStorage extends BaseStorage<Road> {
     /**
      * Initializes the storage and pre-loads available data.

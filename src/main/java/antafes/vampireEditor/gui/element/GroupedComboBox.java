@@ -21,7 +21,10 @@
  */
 package antafes.vampireEditor.gui.element;
 
+import lombok.Getter;
+
 import javax.swing.*;
+import java.util.function.Function;
 
 /**
  * Generic combo box that supports non-selectable group headers.
@@ -31,6 +34,7 @@ import javax.swing.*;
 public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<T>>
 {
     private ComboBoxEntry<T> lastSelectableEntry;
+    private Function<T, String> itemTextProvider = item -> item != null ? item.toString() : "";
 
     /**
      * Create a grouped combo box.
@@ -61,7 +65,7 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
             }
 
             model.addElement(new HeaderEntry<>(new GroupHeader(groupName)));
-            groupItems.forEach(item -> model.addElement(new ItemEntry<>(item)));
+            groupItems.forEach(item -> model.addElement(new ItemEntry<>(item, this.itemTextProvider)));
         });
 
         super.setModel(model);
@@ -72,6 +76,11 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
         } else {
             this.selectFirstSelectableItem();
         }
+    }
+
+    protected void setItemTextProvider(Function<T, String> itemTextProvider)
+    {
+        this.itemTextProvider = itemTextProvider != null ? itemTextProvider : (item -> item != null ? item.toString() : "");
     }
 
     /**
@@ -211,22 +220,20 @@ public class GroupedComboBox<T> extends JComboBox<GroupedComboBox.ComboBoxEntry<
      */
     public static final class ItemEntry<T> implements ComboBoxEntry<T>
     {
+        @Getter
         private final T item;
+        private final Function<T, String> textProvider;
 
-        public ItemEntry(T item)
+        public ItemEntry(T item, Function<T, String> textProvider)
         {
             this.item = item;
-        }
-
-        public T getItem()
-        {
-            return this.item;
+            this.textProvider = textProvider;
         }
 
         @Override
         public String getText()
         {
-            return this.item != null ? this.item.toString() : "";
+            return this.textProvider != null ? this.textProvider.apply(this.item) : (this.item != null ? this.item.toString() : "");
         }
 
         @Override

@@ -34,7 +34,7 @@ public class CharacterTabbedPaneTest extends BaseTest
 {
     public void testIgnoresEventsFromOtherCharacters()
     {
-        CharacterTabbedPane pane = new CharacterTabbedPane();
+        CharacterTabbedPane pane = new CharacterTabbedPane(this.configuration);
         Character tabCharacter = TestCharacterUtility.createTestCharacter();
         Assert.assertNotNull(tabCharacter);
         pane.setCharacter(tabCharacter);
@@ -55,7 +55,7 @@ public class CharacterTabbedPaneTest extends BaseTest
 
     public void testTracksDirtyStatePerComponent()
     {
-        CharacterTabbedPane pane = new CharacterTabbedPane();
+        CharacterTabbedPane pane = new CharacterTabbedPane(this.configuration);
         Character character = TestCharacterUtility.createTestCharacter();
         Assert.assertNotNull(character);
         pane.setCharacter(character);
@@ -93,7 +93,7 @@ public class CharacterTabbedPaneTest extends BaseTest
 
     public void testResetCharacterChangedClearsTrackedComponents()
     {
-        CharacterTabbedPane pane = new CharacterTabbedPane();
+        CharacterTabbedPane pane = new CharacterTabbedPane(this.configuration);
         Character character = TestCharacterUtility.createTestCharacter();
         Assert.assertNotNull(character);
         pane.setCharacter(character);

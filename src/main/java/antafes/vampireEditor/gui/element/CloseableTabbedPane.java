@@ -22,6 +22,7 @@
 
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.VampireEditor;
 import antafes.vampireEditor.gui.BaseWindow;
 import antafes.vampireEditor.gui.character.CharacterTabbedPane;
@@ -36,16 +37,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CloseableTabbedPane extends JTabbedPane {
-    public CloseableTabbedPane() {
-        this(TOP);
+    private final Configuration configuration;
+
+
+    public CloseableTabbedPane(Configuration configuration) {
+        this(TOP, configuration);
     }
 
-    public CloseableTabbedPane(int tabPlacement) {
-        this(tabPlacement, WRAP_TAB_LAYOUT);
+    public CloseableTabbedPane(int tabPlacement, Configuration configuration) {
+        this(tabPlacement, WRAP_TAB_LAYOUT, configuration);
     }
 
-    public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy) {
+    public CloseableTabbedPane(int tabPlacement, int tabLayoutPolicy, Configuration configuration) {
         super(tabPlacement, tabLayoutPolicy);
+        this.configuration = configuration;
 
         VampireEditor.getDispatcher().addListener(
             CloseSelectedCharacterTabEvent.class,
@@ -157,7 +162,7 @@ public class CloseableTabbedPane extends JTabbedPane {
         }
 
         BaseWindow baseWindow = (BaseWindow) SwingUtilities.getAncestorOfClass(BaseWindow.class, this);
-        UnsavedChangesDialog dialog = new UnsavedChangesDialog(baseWindow, characterTabbedPane.getCharacter().getName());
+        UnsavedChangesDialog dialog = new UnsavedChangesDialog(baseWindow, characterTabbedPane.getCharacter().getName(), this.configuration);
         dialog.setLocationRelativeTo(baseWindow);
         dialog.setVisible(true);
 

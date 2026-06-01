@@ -41,7 +41,7 @@ public class AbilityTest extends BaseTest
     public void setUp()
     {
         super.setUp();
-        Configuration.getInstance().loadProperties();
+        this.configuration.loadProperties();
         this.ability = Ability.builder()
             .setKey("testAbility")
             .addName(Configuration.Language.ENGLISH, "Test ability")

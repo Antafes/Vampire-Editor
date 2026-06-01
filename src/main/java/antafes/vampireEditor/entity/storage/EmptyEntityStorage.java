@@ -25,9 +25,11 @@ package antafes.vampireEditor.entity.storage;
 import antafes.vampireEditor.Configuration;
 import antafes.vampireEditor.entity.EmptyEntity;
 import antafes.vampireEditor.entity.exception.EntityStorageException;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 
+@Repository
 public class EmptyEntityStorage extends BaseStorage<EmptyEntity>
 {
     private EmptyEntity entity;

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Vampire Editor
+  main:
+    headless: false
+    web-application-type: none
+    lazy-initialization: false
+  jmx:
+    enabled: false
+
+logging:
+  level:
+    antafes: INFO

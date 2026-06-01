@@ -26,6 +26,7 @@ import antafes.vampireEditor.entity.BaseTypedTranslatedEntity;
 import antafes.vampireEditor.entity.character.EntityTypeInterface;
 
 import java.util.HashMap;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class SortingUtility
     {
         return (HashMap<String, String>) transformMap(entityMap).entrySet()
             .stream()
-            .sorted(Map.Entry.comparingByValue(new StringComparator()))
+            .sorted(Map.Entry.comparingByValue(Comparator.comparing(Object::toString)))
             .collect(
                 Collectors.toMap(
                     o -> ((Map.Entry<?, ?>) o).getKey(),
@@ -63,7 +64,7 @@ public class SortingUtility
     {
         return (HashMap<String, BaseTypedTranslatedEntity>) entityMap.entrySet()
             .stream()
-            .sorted(Map.Entry.comparingByValue(new StringComparator()))
+            .sorted(Map.Entry.comparingByValue(Comparator.comparing(Object::toString)))
             .collect(
                 Collectors.toMap(
                     o -> ((Map.Entry<?, ?>) o).getKey(),

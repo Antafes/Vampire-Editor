@@ -46,7 +46,7 @@ public class XsdValidatorTest extends BaseTest {
     @BeforeClass
     public void beforeClass() {
         try {
-            new VampireEditor();
+            new VampireEditor(this.configuration);
             System.out.println("\n========== XSD Validator Test Suite ==========");
             System.out.println("Using validator implementation: " + XsdValidator.getValidatorImplementation());
             System.out.println("Using schema: character-strict.xsd");

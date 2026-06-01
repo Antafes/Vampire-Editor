@@ -21,6 +21,7 @@
  */
 package antafes.vampireEditor.gui.element;
 
+import antafes.vampireEditor.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Test
-public class GroupedComboBoxModelTest
+public class GroupedComboBoxModelTest extends BaseTest
 {
     public void testAddGroupPreservesGroupAndItemOrder()
     {
