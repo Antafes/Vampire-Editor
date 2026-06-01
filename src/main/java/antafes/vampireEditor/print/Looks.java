@@ -181,10 +181,10 @@ public class Looks extends PrintBase {
             Integer.toString(this.getCharacter().getWeight())
         );
         this.addValueEntry(
-            this.getLanguage().translate("sex"),
+            "sex",
             PositionX.LEFT1.getPosition(),
-            this.getMaxY(),
-            PositionX.MIDDLE2.getPosition(),
+            yLeft,
+            PositionX.LEFT2.getPosition(),
             this.getCharacter().getSex() != null ? this.getLanguage().translate(this.getCharacter().getSex().name()) : ""
         );
 
