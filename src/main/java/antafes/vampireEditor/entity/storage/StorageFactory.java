@@ -102,15 +102,22 @@ public class StorageFactory {
 
     /**
      * Warm up the storages to contain every available data.
+     *
+     * @throws IllegalStateException if the Spring-managed instance has not been initialized yet
      */
     public static void storageWarmUp() {
         if (!StorageFactory.storages.isEmpty()) {
             return;
         }
 
-        if (StorageFactory.instance != null) {
-            StorageFactory.instance.initializeAutowiredStorages();
+        if (StorageFactory.instance == null) {
+            throw new IllegalStateException(
+                "StorageFactory has not been initialized by Spring. "
+                    + "Ensure the application context is started before calling storageWarmUp()."
+            );
         }
+
+        StorageFactory.instance.initializeAutowiredStorages();
     }
 
     private static void putAndInitializeStorage(StorageType type, BaseStorage<?> storage)
