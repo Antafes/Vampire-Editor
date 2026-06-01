@@ -23,6 +23,7 @@
 package antafes.vampireEditor.entity.storage;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -98,6 +99,13 @@ public class StorageFactory {
         autowiredStorages.put(StorageType.EMPTY, this.emptyEntityStorage);
 
         autowiredStorages.forEach(StorageFactory::putAndInitializeStorage);
+    }
+
+    @PreDestroy
+    public void clearStaticStorageCache()
+    {
+        StorageFactory.storages.clear();
+        StorageFactory.instance = null;
     }
 
     /**
