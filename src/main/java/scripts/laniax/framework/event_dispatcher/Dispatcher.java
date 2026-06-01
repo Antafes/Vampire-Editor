@@ -80,6 +80,11 @@ public class Dispatcher
             }
         };
 
+        ApplicationListener<?> existingAdapter = this.listenerAdapters.get(listener);
+        if (existingAdapter != null) {
+            this.multicaster.removeApplicationListener(existingAdapter);
+        }
+
         this.listenerAdapters.put(listener, adapter);
         this.multicaster.addApplicationListener(adapter);
     }
