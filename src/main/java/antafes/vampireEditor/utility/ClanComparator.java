@@ -30,7 +30,7 @@ import java.util.Comparator;
  *
  * @author Marian Pollzien
  */
-public class ClanComparator implements Comparator {
+public class ClanComparator implements Comparator<Clan> {
     private final Configuration configuration;
 
     public ClanComparator(Configuration configuration) {
@@ -40,17 +40,14 @@ public class ClanComparator implements Comparator {
     /**
      * Compare two clans by name.
      *
-     * @param o1 First object
-     * @param o2 Second object
+     * @param c1 First clan
+     * @param c2 Second clan
      *
      * @return A negative integer, zero, or a positive integer as the specified String is greater than, equal to, or
      *         less than this String, ignoring case considerations.
      */
     @Override
-    public int compare(Object o1, Object o2) {
-        Clan c1 = (Clan) o1;
-        Clan c2 = (Clan) o2;
-
+    public int compare(Clan c1, Clan c2) {
         return c1.getName(this.configuration).compareToIgnoreCase(c2.getName(this.configuration));
     }
 }
