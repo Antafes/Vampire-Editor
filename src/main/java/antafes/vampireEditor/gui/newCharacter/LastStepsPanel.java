@@ -241,7 +241,7 @@ public class LastStepsPanel extends BasePanel {
         ArrayList<SpecialFeature> list = new ArrayList<>(
             ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
-        list.sort(Comparator.comparing(Object::toString));
+        list.sort(Comparator.comparing(feature -> feature.getName(this.getConfiguration())));
 
         return list;
     }

@@ -1077,7 +1077,7 @@ public class LooksPanel extends javax.swing.JPanel
             list = roadStorage.getRoads();
             list.removeIf(road -> !road.isUniversal());
         }
-        list.sort(Comparator.comparing(Object::toString));
+        list.sort(Comparator.comparing(road -> road.getName(this.configuration)));
 
         return list;
     }
@@ -1243,7 +1243,7 @@ public class LooksPanel extends javax.swing.JPanel
         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         ArrayList<Road> childPaths = new ArrayList<>(roadStorage.getPathsForRoad(selectedRoad));
 
-        childPaths.sort(Comparator.comparing(Object::toString));
+        childPaths.sort(Comparator.comparing(road -> road.getName(this.configuration)));
         childPaths.forEach(pathModel::addElement);
 
         pathComboBox.setModel(pathModel);

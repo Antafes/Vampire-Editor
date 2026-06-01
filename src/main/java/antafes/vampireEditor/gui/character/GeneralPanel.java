@@ -289,8 +289,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         LinkedHashMap<String, JComponent> elementList = new LinkedHashMap<>();
         ArrayList<Merit> merits = new ArrayList<>(this.getCharacter().getMerits().values());
         ArrayList<Flaw> flaws = new ArrayList<>(this.getCharacter().getFlaws().values());
-        merits.sort(Comparator.comparing(Object::toString));
-        flaws.sort(Comparator.comparing(Object::toString));
+        merits.sort(Comparator.comparing(merit -> merit.getName(this.getConfiguration())));
+        flaws.sort(Comparator.comparing(flaw -> flaw.getName(this.getConfiguration())));
 
         merits.forEach((merit) -> {
             JLabel label = new JLabel();
