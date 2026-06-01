@@ -63,7 +63,6 @@ public class VampireEditor
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("VampireEditor main reached");
         createApplicationBuilder()
             .run(args)
             .getBean(VampireEditor.class)
