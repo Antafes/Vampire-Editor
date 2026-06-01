@@ -35,7 +35,7 @@
         <maven.compiler.release>25</maven.compiler.release>
         <lombok.version>1.18.46</lombok.version>
         <jakarta.xml.bind-api.version>4.1.0-M1</jakarta.xml.bind-api.version>
-        <jaxb.runtime.version>4.0.8</jaxb.runtime.version>
+        <jaxb.runtime.version>4.0.9</jaxb.runtime.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
