@@ -32,11 +32,11 @@ import antafes.vampireEditor.entity.storage.NatureStorage;
 import antafes.vampireEditor.entity.storage.StorageFactory;
 import antafes.vampireEditor.gui.TranslatableComponent;
 import antafes.vampireEditor.utility.NatureResolutionUtility;
-import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -289,8 +289,8 @@ public class GeneralPanel extends BaseCharacterPanel implements TranslatableComp
         LinkedHashMap<String, JComponent> elementList = new LinkedHashMap<>();
         ArrayList<Merit> merits = new ArrayList<>(this.getCharacter().getMerits().values());
         ArrayList<Flaw> flaws = new ArrayList<>(this.getCharacter().getFlaws().values());
-        merits.sort(new StringComparator());
-        flaws.sort(new StringComparator());
+        merits.sort(Comparator.comparing(Object::toString));
+        flaws.sort(Comparator.comparing(Object::toString));
 
         merits.forEach((merit) -> {
             JLabel label = new JLabel();

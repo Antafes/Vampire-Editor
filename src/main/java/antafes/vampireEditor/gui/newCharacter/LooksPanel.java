@@ -44,7 +44,6 @@ import antafes.vampireEditor.gui.event.listener.ComponentDocumentListener;
 import antafes.vampireEditor.gui.event.listener.VirtueValueSetListener;
 import antafes.vampireEditor.gui.utility.NewCharacterFocusTraversalPolicy;
 import antafes.vampireEditor.language.LanguageInterface;
-import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -1078,7 +1077,7 @@ public class LooksPanel extends javax.swing.JPanel
             list = roadStorage.getRoads();
             list.removeIf(road -> !road.isUniversal());
         }
-        list.sort(new StringComparator());
+        list.sort(Comparator.comparing(Object::toString));
 
         return list;
     }
@@ -1244,7 +1243,7 @@ public class LooksPanel extends javax.swing.JPanel
         RoadStorage roadStorage = StorageFactory.getStorage(StorageFactory.StorageType.ROAD);
         ArrayList<Road> childPaths = new ArrayList<>(roadStorage.getPathsForRoad(selectedRoad));
 
-        childPaths.sort(new StringComparator());
+        childPaths.sort(Comparator.comparing(Object::toString));
         childPaths.forEach(pathModel::addElement);
 
         pathComboBox.setModel(pathModel);

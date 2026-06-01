@@ -30,7 +30,6 @@ import antafes.vampireEditor.entity.character.*;
 import antafes.vampireEditor.entity.storage.*;
 import antafes.vampireEditor.gui.NewCharacterDialog;
 import antafes.vampireEditor.gui.element.WideComboBox;
-import antafes.vampireEditor.utility.StringComparator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -241,7 +241,7 @@ public class LastStepsPanel extends BasePanel {
         ArrayList<SpecialFeature> list = new ArrayList<>(
             ("merit".equals(type) ? meritStorage.getList() : flawStorage.getList()).values()
         );
-        list.sort(new StringComparator());
+        list.sort(Comparator.comparing(Object::toString));
 
         return list;
     }
