@@ -4,6 +4,7 @@ spring:
   main:
     web-application-type: none
     lazy-initialization: false
+    headless: true
   jmx:
     enabled: false
 
